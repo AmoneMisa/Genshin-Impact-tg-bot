@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {createRequire}from 'node:module';
-import {cleanSpecialIcon,specialIconCircle} from './special-icon.mjs';
+import {combinedWeatherIcons,doubleWeatherIcon,medicSpecialIcon,cleanSpecialIcon,specialIconCircle} from './special-icon.mjs';
 import {GWENT_ART}from '../../../webapp/gwent-art.js';
 const require=createRequire('C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/sharp/package.json');
 const sharp=require('sharp');
@@ -146,7 +146,12 @@ export async function prepareLayers(directory,faction,glyphs={},options={}){
  await sharp(data,{raw:info}).trim().resize(34,47,{fit:'inside'}).png().toFile(path.join(out,'layers/faction-emblem.png'));
  provenance.emblem={source:back,crop};
  }
- for(const file of fs.readdirSync(path.join(out,'layers')).filter(n=>/^effect-.*\.png$/.test(n))){const target=path.join(out,'layers',file);fs.writeFileSync(target,await cleanSpecialIcon(target));}
+ fs.writeFileSync(path.join(out,'layers/effect-double-weather.png'),await doubleWeatherIcon());
+ for(const[name,icon]of Object.entries(await combinedWeatherIcons()))fs.writeFileSync(path.join(path.join(out,'layers'),'effect-'+name+'.png'),icon);
+ for(const file of fs.readdirSync(path.join(out,'layers')).filter(n=>/^effect-.*\.png$/.test(n))){const target=path.join(out,'layers',file);fs.writeFileSync(target,await (file==='effect-recall.png'?medicSpecialIcon(target):cleanSpecialIcon(target)));}
+ provenance.customIcons['effect-recall.png']={origin:'Original supplied Witcher 3 medic heart and white cross inside special-card gold roundel',source:'../templates-v1/layers/ability-medic.png'};
+ provenance.nativeIcons={'effect-double-weather.png':{source:'/art/gwent/printed/skel_spec2.webp',crop:[0,0,90,90],extraction:'Original Skellige Storm roundel; outside scenery removed'}};
+ provenance.weatherPairs={sources:['/art/gwent/printed/spec_p1.webp','/art/gwent/printed/spec_p2.webp','/art/gwent/printed/spec_p3.webp'],composition:'Original raster frost+fog and frost+rain, new paired layouts'};
  provenance.specialIconMask={...specialIconCircle,purpose:'Remove source scenery outside gold roundels'};
  provenance.back={source:back,reusedUnchanged:true};
  fs.writeFileSync(path.join(out,'layers/provenance.json'),JSON.stringify(provenance,null,2));

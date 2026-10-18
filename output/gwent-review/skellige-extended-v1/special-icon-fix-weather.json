@@ -1,0 +1,58 @@
+{
+  "mask": {
+    "x": 44.5,
+    "y": 44.5,
+    "radius": 44.5,
+    "size": 90
+  },
+  "cards": [
+    {
+      "package": "wild-hunt-v1",
+      "id": "el-fire",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "wild-hunt-v1",
+      "id": "el-earth",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    },
+    {
+      "package": "wild-hunt-v1",
+      "id": "el-water",
+      "changeRegion": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "outsideUnchanged": true
+    }
+  ],
+  "packages": [
+    "wild-hunt-v1",
+    "eternal-fire-v1",
+    "monsters-extended-v1",
+    "nilfgaard-extended-v1",
+    "northern-realms-extended-v1",
+    "redania-v1",
+    "scoiatael-extended-v1",
+    "skellige-extended-v1",
+    "sorceresses-v1",
+    "toussaint-v1",
+    "velen-v1",
+    "witchers-v1"
+  ],
+  "sharedCopiesIdentical": true
+}

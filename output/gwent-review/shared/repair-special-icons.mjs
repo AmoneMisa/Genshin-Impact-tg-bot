@@ -3,7 +3,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {fileURLToPath} from 'node:url';
 import {createRequire} from 'node:module';
-import {cleanSpecialIcon,specialIconCircle} from './special-icon.mjs';
+import {cleanSpecialIcon,specialIconCircle,medicSpecialIcon,combinedWeatherIcons,doubleWeatherIcon,specialIconName} from './special-icon.mjs';
 const require=createRequire('C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json');
 const {chromium}=require('playwright'),sharp=require('sharp');
 const root=fileURLToPath(new URL('..',import.meta.url));
@@ -11,16 +11,20 @@ const packages=fs.readdirSync(root).map(n=>path.join(root,n)).filter(p=>fs.exist
 const url=file=>'data:image/png;base64,'+fs.readFileSync(file).toString('base64');
 const manifests=new Map(packages.map(p=>[p,JSON.parse(fs.readFileSync(path.join(p,'deck-manifest.json')))]));
 const changed=new Set(),checks=[];
+const selectedEffect=process.argv.find(a=>a.startsWith('--effect='))?.slice(9);
 const browser=await chromium.launch({headless:true,executablePath:'C:/Users/kubai/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe'});
 try{
  const page=await browser.newPage();await page.setContent('<canvas></canvas>');
  for(const [folder,manifest]of manifests){
   const layers=path.join(folder,'layers');
-  for(const file of fs.readdirSync(layers).filter(n=>/^effect-.*\.png$/.test(n))){const target=path.join(layers,file);fs.writeFileSync(target,await cleanSpecialIcon(target));}
+  fs.writeFileSync(path.join(layers,'effect-double-weather.png'),await doubleWeatherIcon());
+ for(const[name,icon]of Object.entries(await combinedWeatherIcons()))fs.writeFileSync(path.join(layers,'effect-'+name+'.png'),icon);
+  for(const file of fs.readdirSync(layers).filter(n=>/^effect-.*\.png$/.test(n))){const target=path.join(layers,file);fs.writeFileSync(target,await (file==='effect-recall.png'?medicSpecialIcon(target):cleanSpecialIcon(target)));}
   const provenanceFile=path.join(layers,'provenance.json');
-  if(fs.existsSync(provenanceFile)){const provenance=JSON.parse(fs.readFileSync(provenanceFile));provenance.specialIconMask={...specialIconCircle,purpose:'Remove source scenery outside gold roundels'};fs.writeFileSync(provenanceFile,JSON.stringify(provenance,null,2));}
-  for(const card of manifest.cards.filter(c=>c.kind==='special'&&c.quoteOrigin==='fan-written'&&!c.reuse)){
-   const art=path.join(folder,'illustrations',card.id+'.png'),icon=path.join(layers,'effect-'+card.abilities[0]+'.png');
+  if(fs.existsSync(provenanceFile)){const provenance=JSON.parse(fs.readFileSync(provenanceFile));provenance.specialIconMask={...specialIconCircle,purpose:'Remove source scenery outside gold roundels'};provenance.customIcons ||= {};provenance.customIcons['effect-recall.png']={origin:'Original supplied Witcher 3 medic heart and white cross, raster core inside special-card gold roundel',source:'../templates-v1/layers/ability-medic.png'};fs.writeFileSync(provenanceFile,JSON.stringify(provenance,null,2));}
+  const provenance=JSON.parse(fs.readFileSync(provenanceFile));provenance.nativeIcons ||= {};provenance.nativeIcons['weather-pairs']={sources:['/art/gwent/printed/spec_p1.webp','/art/gwent/printed/spec_p2.webp','/art/gwent/printed/spec_p3.webp'],composition:'Original raster frost + fog for close/ranged; original frost + rain for close/siege; new combinations, not original CDPR composite icons'};provenance.nativeIcons['effect-double-weather.png']={source:'/art/gwent/printed/skel_spec2.webp',crop:[0,0,90,90],extraction:'Original Skellige Storm roundel; only scenery outside gold rim removed'};fs.writeFileSync(provenanceFile,JSON.stringify(provenance,null,2));
+  for(const card of manifest.cards.filter(c=>c.kind==='special'&&c.quoteOrigin==='fan-written'&&!c.reuse&&(!selectedEffect||specialIconName(c.id,c.abilities[0])===selectedEffect||(selectedEffect==='weather'&&['el-fire','el-earth','el-water'].includes(c.id))))){
+   const art=path.join(folder,'illustrations',card.id+'.png'),icon=path.join(layers,'effect-'+specialIconName(card.id,card.abilities[0])+'.png');
    if(!fs.existsSync(art)||!fs.existsSync(icon))throw Error('Missing source layer for '+card.id);
    const target=path.join(folder,card.file),before=await sharp(target).ensureAlpha().raw().toBuffer({resolveWithObject:true});
    const base64=await page.evaluate(async({old,art,frame,icon})=>{
@@ -63,6 +67,6 @@ try{
    await sharp({create:{width:40+preview.length*248+(preview.length-1)*16,height:508,channels:3,background:'#141a20'}}).composite(pieces).png().toFile(path.join(folder,'preview.png'));
   }
  }
- fs.writeFileSync(path.join(root,'skellige-extended-v1/special-icon-fix.json'),JSON.stringify({mask:specialIconCircle,cards:checks,packages:[...changed].map(p=>path.basename(p)),sharedCopiesIdentical:true},null,2));
+ fs.writeFileSync(path.join(root,`skellige-extended-v1/special-icon-fix${selectedEffect?'-'+selectedEffect:''}.json`),JSON.stringify({mask:specialIconCircle,cards:checks,packages:[...changed].map(p=>path.basename(p)),sharedCopiesIdentical:true},null,2));
  console.log(JSON.stringify({repairedSourceFaces:checks.length,packages:changed.size,checked:'Original PNG pixels outside the icon square are preserved; shared copies use canonical fixed faces'}));
 }finally{await browser.close();}

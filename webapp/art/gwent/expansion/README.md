@@ -25,10 +25,10 @@ Regenerate: node scripts/ui/import-gwent-expansion.mjs
 - ef-templar: output/gwent-review/eternal-fire-v1/cards/ef-templar.webp; SHA-256 4c557849ed0590ec0a67311a15f1ed9b231286f2b5d74d9e481846bcb946a138
 - ef-witch-hunter: output/gwent-review/eternal-fire-v1/cards/ef-witch-hunter.webp; SHA-256 779d9ad901d707d8575ece6af0e06390b2dfd37e0e5ff1bf83c757d90276ca3e
 - ef-zealot: output/gwent-review/eternal-fire-v1/cards/ef-zealot.webp; SHA-256 810d20269832c2e1f46c305073f8ef6fa75c7516d10afb5483f19dbc5885a5e6
-- el-earth: output/gwent-review/wild-hunt-v1/cards/el-earth.webp; SHA-256 9cfeee6883718de73196ee96312b37f6ce209cd7565f2b554a2bb823e9744cdf
-- el-fire: output/gwent-review/wild-hunt-v1/cards/el-fire.webp; SHA-256 5986e38e430ee7fc21fb0baaf3796d7b2abd96b71845edc25a2a3aa151ff4738
-- el-water: output/gwent-review/wild-hunt-v1/cards/el-water.webp; SHA-256 227bd3420f10bc56232aba966704f97499be7f0bab40916e5244bffc49622b0c
-- ex-medic: output/gwent-review/wild-hunt-v1/cards/ex-medic.webp; SHA-256 9178f4627aaaa122843e6160f113ac2425c0cb7a77389c0db455908f36d45e47
+- el-earth: output/gwent-review/wild-hunt-v1/cards/el-earth.webp; SHA-256 5f862e5d072c84a21553ac734f256a2d3caf096b03adda84eff6e57e6e8c5462
+- el-fire: output/gwent-review/wild-hunt-v1/cards/el-fire.webp; SHA-256 387819f028ab4012a0065fdc54539e0510be9813afc564aea258156d4fb22a32
+- el-water: output/gwent-review/wild-hunt-v1/cards/el-water.webp; SHA-256 226709a07dfb14639e07206de7e5166fae5e016fb52ba465393a8eef159c3c70
+- ex-medic: output/gwent-review/wild-hunt-v1/cards/ex-medic.webp; SHA-256 ae955a5644a3f7778e1fa6bf33c8d4bc2d61e29d938fbb21abb02551b311bd79
 - ex-prep: output/gwent-review/wild-hunt-v1/cards/ex-prep.webp; SHA-256 cee922ba8fe48ff039afe66926c3b8016ba71406c03a6384f4304ea5740e65b7
 - ex-trap: output/gwent-review/wild-hunt-v1/cards/ex-trap.webp; SHA-256 a9cefe3518cdbe62b09ad6ec8ee5998783f9b77b1897cb3dd6366d3dbf09bda5
 - extended-birna: output/gwent-review/skellige-extended-v1/cards/birna.webp; SHA-256 4d1d4b4ba64790ee3f6092f93385a35043944980ec39368f6617515b3af11bd9
@@ -71,7 +71,7 @@ Regenerate: node scripts/ui/import-gwent-expansion.mjs
 - so-fireball: output/gwent-review/sorceresses-v1/cards/so-fireball.webp; SHA-256 efaff0e44584d3f697e844dd9ef38f527313da59a0c1ffa38648e7e453c9ea81
 - so-golem: output/gwent-review/sorceresses-v1/cards/so-golem.webp; SHA-256 575a0d083ce9c1b97ed281e865c197a1a4579da066dbfc4d3313dc9698cff5cb
 - so-guard: output/gwent-review/sorceresses-v1/cards/so-guard.webp; SHA-256 e5ea41f31301c84e9d24770652c8d201df067ef4de016a86ed4f927abe86b864
-- so-heal: output/gwent-review/sorceresses-v1/cards/so-heal.webp; SHA-256 370ea9dcf79395ea78d116e543020382fa773ec3fa084d710d27f41ab62a591e
+- so-heal: output/gwent-review/sorceresses-v1/cards/so-heal.webp; SHA-256 9dba0e6d5e27cfc243b8d16b7ae96831018e98b769feedbb6323c32ae6a1a17b
 - so-healer: output/gwent-review/sorceresses-v1/cards/so-healer.webp; SHA-256 1ceff2960a6b03d497d1e57995e0b53a0f01070a2e6fe8f6d6dfecefd2c90a6a
 - so-illusionist: output/gwent-review/sorceresses-v1/cards/so-illusionist.webp; SHA-256 58cbb5b3c67f0fb8d83c32084ebe986d92442cb018cc9c0a1de87d0fa7d2af93
 - so-knight: output/gwent-review/sorceresses-v1/cards/so-knight.webp; SHA-256 b5d4b8b15bff7d7f429e5cde90ee16ad648ebd46fec85939601b305da062fdf5

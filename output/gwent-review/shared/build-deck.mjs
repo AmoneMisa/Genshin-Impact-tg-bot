@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {GWENT_DECKS,TOKENS,deckFor} from '../../../webapp/gwent-decks.js';
 import {GWENT_ART} from '../../../webapp/gwent-art.js';
 import {defaultLoadout,inspectLoadout} from '../../../webapp/gwent-builder.js';
-import {cleanSpecialIcon} from './special-icon.mjs';
+import {specialIconName,medicSpecialIcon,cleanSpecialIcon} from './special-icon.mjs';
 import {dialogHeading} from '../../../webapp/dialog-heading.js';
 
 const require=createRequire('C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json');
@@ -85,7 +85,7 @@ try{
    }else if(kind==='special'){
     const effect=spec.effects?.[card.id]||{'el-fire':'fire','el-earth':'earth','el-water':'water','ex-prep':'prep','ex-trap':'trap','ex-medic':'recall'}[card.id];
     if(!effect)throw Error('Missing effect icon '+card.id);
-    record.abilities.push(effect);const icon=await cleanSpecialIcon(path.join(out,'layers',`effect-${effect}.png`));layers.push({file:'data:image/png;base64,'+icon.toString('base64'),x:0,y:0,w:90,h:90});
+    record.abilities.push(effect);const icon=await (effect==='recall'?medicSpecialIcon:cleanSpecialIcon)(path.join(out,'layers',`effect-${specialIconName(card.id,effect)}.png`));layers.push({file:'data:image/png;base64,'+icon.toString('base64'),x:0,y:0,w:90,h:90});
    }
    const result=await page.evaluate(async({art,layers,name,quote,kind})=>{
     const canvas=document.querySelector('canvas');canvas.width=310;canvas.height=585;

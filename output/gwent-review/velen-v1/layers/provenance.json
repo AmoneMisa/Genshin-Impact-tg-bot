@@ -5,6 +5,10 @@
     "effect-ambush.png": {
       "origin": "Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.",
       "frameSource": "/art/gwent/printed/spec_p1.webp"
+    },
+    "effect-recall.png": {
+      "origin": "Original supplied Witcher 3 medic heart and white cross, raster core inside special-card gold roundel",
+      "source": "../templates-v1/layers/ability-medic.png"
     }
   },
   "frame": {
@@ -35,5 +39,25 @@
     "radius": 44.5,
     "size": 90,
     "purpose": "Remove source scenery outside gold roundels"
+  },
+  "nativeIcons": {
+    "effect-double-weather.png": {
+      "source": "/art/gwent/printed/skel_spec2.webp",
+      "crop": [
+        0,
+        0,
+        90,
+        90
+      ],
+      "extraction": "Original Skellige Storm roundel; only scenery outside gold rim removed"
+    },
+    "weather-pairs": {
+      "sources": [
+        "/art/gwent/printed/spec_p1.webp",
+        "/art/gwent/printed/spec_p2.webp",
+        "/art/gwent/printed/spec_p3.webp"
+      ],
+      "composition": "Original raster frost + fog for close/ranged; original frost + rain for close/siege; new combinations, not original CDPR composite icons"
+    }
   }
 }

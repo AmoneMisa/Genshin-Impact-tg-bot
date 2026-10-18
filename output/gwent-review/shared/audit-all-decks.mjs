@@ -6,6 +6,7 @@ import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {createRequire} from 'node:module';
 import {deckFor,TOKENS} from '../../../webapp/gwent-decks.js';
+import {specialIconName} from './special-icon.mjs';
 import {GWENT_ART} from '../../../webapp/gwent-art.js';
 const require=createRequire('C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/sharp/package.json');
 const sharp=require('sharp'),root=fileURLToPath(new URL('..',import.meta.url));
@@ -77,7 +78,7 @@ for(const name of fs.readdirSync(root)){
     for(const [i,a]of icons(c).entries())result.badgePixelsChecked+=await badge(face,path.join(out,`layers/ability-${a}.png`),0,253+i*82);
    }else if(c.type==='special'){
     const a=spec.effects?.[c.id]||defaults[c.id];assert.ok(a,'No expected effect '+c.id);assert.deepEqual(card.abilities,[a]);
-    result.badgePixelsChecked+=await badge(face,path.join(out,`layers/effect-${a}.png`),0,0);
+    result.badgePixelsChecked+=await badge(face,path.join(out,`layers/effect-${specialIconName(c.id,a)}.png`),0,0);
    }
   }
  }catch(error){result.status='failed';result.error=error.message;summary.issues.push({folder:name,error:error.message});summary.status='failed';}
