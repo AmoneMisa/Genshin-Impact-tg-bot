@@ -1,0 +1,253 @@
+{
+  "images": [
+    {
+      "key": "so-apprentice",
+      "file": "illustrations/so-apprentice.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-adept",
+      "file": "illustrations/so-adept.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-healer",
+      "file": "illustrations/so-healer.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "edit",
+      "selectedVersion": 2,
+      "references": [
+        "illustrations/variants/so-healer-v1.png"
+      ]
+    },
+    {
+      "key": "so-seer",
+      "file": "illustrations/so-seer.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-war-mage",
+      "file": "illustrations/so-war-mage.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-illusionist",
+      "file": "illustrations/so-illusionist.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-knight",
+      "file": "illustrations/so-knight.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-guard",
+      "file": "illustrations/so-guard.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-golem",
+      "file": "illustrations/so-golem.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-elemental",
+      "file": "illustrations/so-elemental.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-portal-keeper",
+      "file": "illustrations/so-portal-keeper.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-margarita",
+      "file": "illustrations/so-margarita.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-sheala",
+      "file": "illustrations/so-sheala.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": [
+        "../../../webapp/art/gwent/sm/realms_sheala.jpg"
+      ]
+    },
+    {
+      "key": "so-tissaia",
+      "file": "illustrations/so-tissaia.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-fireball",
+      "file": "illustrations/so-fireball.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-teleport",
+      "file": "illustrations/so-teleport.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-heal",
+      "file": "illustrations/so-heal.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-blessing",
+      "file": "illustrations/so-blessing.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-curse",
+      "file": "illustrations/so-curse.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": []
+    },
+    {
+      "key": "so-leader-head",
+      "file": "illustrations/so-leader-head.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": [
+        "../../../webapp/art/gwent/sm/realms_philippa.jpg"
+      ]
+    },
+    {
+      "key": "so-leader-spells",
+      "file": "illustrations/so-leader-spells.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": [
+        "illustrations/so-leader-head.png"
+      ]
+    },
+    {
+      "key": "so-leader-elements",
+      "file": "illustrations/so-leader-elements.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": [
+        "illustrations/so-leader-head.png"
+      ]
+    },
+    {
+      "key": "so-leader-illusion",
+      "file": "illustrations/so-leader-illusion.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "mode": "generate",
+      "selectedVersion": 1,
+      "references": [
+        "illustrations/so-leader-head.png"
+      ]
+    }
+  ],
+  "generatedBacks": 0,
+  "backSource": "webapp/art/gwent/printed/back-sorceresses.webp",
+  "reusedSharedCards": 6,
+  "generatedFaces": 23,
+  "editRequests": 1,
+  "collectionFaces": 50,
+  "approval": "approved"
+}

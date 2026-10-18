@@ -1,0 +1,1542 @@
+{
+  "faction": "sorceresses",
+  "title": "Чародейки",
+  "approval": "approved",
+  "integrated": false,
+  "pushed": false,
+  "templateSize": {
+    "width": 310,
+    "height": 585
+  },
+  "font": "Roboto Condensed",
+  "fontMatch": "Review candidate; original game typeface not independently verified.",
+  "quotes": {
+    "generated": "Original fan-written lines, not quotations from Witcher 3.",
+    "existing": "Preserved inside user-supplied original card images."
+  },
+  "back": {
+    "file": "back.webp",
+    "source": "/art/gwent/printed/back-sorceresses.webp",
+    "reusedUnchanged": true
+  },
+  "customIcons": [
+    "swap",
+    "mage",
+    "portal",
+    "blessing",
+    "curse",
+    "fire",
+    "earth",
+    "water",
+    "prep",
+    "trap",
+    "recall"
+  ],
+  "cards": [
+    {
+      "summoned": false,
+      "id": "so-leader-head",
+      "name": "Филиппа Эйльхарт: Глава Ложи",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/so-leader-head.png",
+      "webp": "cards/so-leader-head.webp",
+      "quote": "Ложа выслушает каждого. Решать всё равно придётся нам.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "so-leader-spells",
+      "name": "Филиппа Эйльхарт: Хозяйка заклинаний",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/so-leader-spells.png",
+      "webp": "cards/so-leader-spells.webp",
+      "quote": "Тот, кто считает слова, обычно пропускает главное.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "so-leader-elements",
+      "name": "Филиппа Эйльхарт: Повелительница стихий",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/so-leader-elements.png",
+      "webp": "cards/so-leader-elements.webp",
+      "quote": "Буря не спрашивает разрешения. Я тоже.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "so-leader-illusion",
+      "name": "Филиппа Эйльхарт: Мастер иллюзий",
+      "kind": "leader",
+      "copies": 1,
+      "strength": null,
+      "rows": [],
+      "file": "cards/so-leader-illusion.png",
+      "webp": "cards/so-leader-illusion.webp",
+      "quote": "Некоторым легче поверить зеркалу, чем собственным глазам.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "avallach",
+      "name": "Таинственный эльф",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/avallach.png",
+      "webp": "cards/avallach.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "yennefer",
+      "name": "Йеннифер из Венгерберга",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/yennefer.png",
+      "webp": "cards/yennefer.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "triss",
+      "name": "Трисс Меригольд",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/triss.png",
+      "webp": "cards/triss.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "geralt",
+      "name": "Геральт из Ривии",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/geralt.png",
+      "webp": "cards/geralt.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "cirilla",
+      "name": "Цирилла",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 15,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/cirilla.png",
+      "webp": "cards/cirilla.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "dandelion",
+      "name": "Лютик",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/dandelion.png",
+      "webp": "cards/dandelion.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "zoltan",
+      "name": "Золтан Хивай",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/zoltan.png",
+      "webp": "cards/zoltan.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "emiel",
+      "name": "Эмиель Регис",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/emiel.png",
+      "webp": "cards/emiel.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "vesemir",
+      "name": "Весемир",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/vesemir.png",
+      "webp": "cards/vesemir.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "olgierd",
+      "name": "Ольгред фон Эверек",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 6,
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "file": "cards/olgierd.png",
+      "webp": "cards/olgierd.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "gaunter-darkness",
+      "name": "Гюнтер о’Дим: Тьма",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/gaunter-darkness.png",
+      "webp": "cards/gaunter-darkness.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "gaunter",
+      "name": "Гюнтер о’Дим",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 2,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/gaunter.png",
+      "webp": "cards/gaunter.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "cow",
+      "name": "Корова",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 0,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/cow.png",
+      "webp": "cards/cow.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "villentretemerth",
+      "name": "Виллентретемерт",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 7,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/villentretemerth.png",
+      "webp": "cards/villentretemerth.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "so-apprentice",
+      "name": "Ученица Аретузы",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 2,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/so-apprentice.png",
+      "webp": "cards/so-apprentice.webp",
+      "quote": "Искра погасла. На этот раз хотя бы стол уцелел.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "muster",
+        "mage"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "so-adept",
+      "name": "Адептка Ложи",
+      "kind": "unit",
+      "copies": 3,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/so-adept.png",
+      "webp": "cards/so-adept.webp",
+      "quote": "Власть начинается с умения не показать, как трудно тебе далась.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "bond",
+        "mage"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "so-healer",
+      "name": "Целительница",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 3,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/so-healer.png",
+      "webp": "cards/so-healer.webp",
+      "quote": "Дыши. Всё остальное пока оставь мне.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "medic",
+        "mage"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "so-seer",
+      "name": "Провидица",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 4,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/so-seer.png",
+      "webp": "cards/so-seer.webp",
+      "quote": "Вода спокойна. Это ещё не значит, что спокойно будущее.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "spy",
+        "mage"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "so-war-mage",
+      "name": "Боевой маг",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 5,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/so-war-mage.png",
+      "webp": "cards/so-war-mage.webp",
+      "quote": "Гром услышат позже. Сейчас им достаточно света.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "mage"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "so-illusionist",
+      "name": "Иллюзионистка",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 3,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/so-illusionist.png",
+      "webp": "cards/so-illusionist.webp",
+      "quote": "Ты уверен, что разговаривал именно со мной?",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "swap",
+        "mage"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "so-knight",
+      "name": "Рыцарь Ложи",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 6,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/so-knight.png",
+      "webp": "cards/so-knight.webp",
+      "quote": "Я дал слово женщине. Её титул к этому отношения не имеет.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "so-guard",
+      "name": "Страж Ложи",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 5,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/so-guard.png",
+      "webp": "cards/so-guard.webp",
+      "quote": "Совет ещё не окончен. Подождите с другой стороны двери.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "so-golem",
+      "name": "Голем",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 6,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/so-golem.png",
+      "webp": "cards/so-golem.webp",
+      "quote": "Он терпеливо ждёт приказа. Даже когда некому его отдать.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "so-elemental",
+      "name": "Вызванный элементаль",
+      "kind": "unit",
+      "copies": 1,
+      "strength": 5,
+      "rows": [
+        "siege"
+      ],
+      "file": "cards/so-elemental.png",
+      "webp": "cards/so-elemental.webp",
+      "quote": "Камень помнит тишину. Ветер приносит другие вести.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "morale"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "so-portal-keeper",
+      "name": "Хранительница порталов",
+      "kind": "unit",
+      "copies": 2,
+      "strength": 4,
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "file": "cards/so-portal-keeper.png",
+      "webp": "cards/so-portal-keeper.webp",
+      "quote": "Сначала скажи, куда идёшь. Потом решим, стоит ли возвращаться.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "so-margarita",
+      "name": "Маргарита Лаукс-Антиль",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/so-margarita.png",
+      "webp": "cards/so-margarita.webp",
+      "quote": "Школа нужна для того, чтобы однажды ученицы стали свободнее нас.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "mage"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "so-sheala",
+      "name": "Шеала де Тансарвиль",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "ranged"
+      ],
+      "file": "cards/so-sheala.png",
+      "webp": "cards/so-sheala.webp",
+      "quote": "Чужое одобрение ещё ни разу не сделало заклинание точнее.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "mage"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "so-tissaia",
+      "name": "Тиссая де Врис",
+      "kind": "hero",
+      "copies": 1,
+      "strength": 10,
+      "rows": [
+        "close"
+      ],
+      "file": "cards/so-tissaia.png",
+      "webp": "cards/so-tissaia.webp",
+      "quote": "Порядок на столе — первое, что ты ещё можешь изменить.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "mage"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "so-fireball",
+      "name": "Огненный шар",
+      "kind": "special",
+      "copies": 2,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/so-fireball.png",
+      "webp": "cards/so-fireball.webp",
+      "quote": "Слова кончились раньше, чем отзвучало эхо.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "fire"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "so-teleport",
+      "name": "Телепортация",
+      "kind": "special",
+      "copies": 2,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/so-teleport.png",
+      "webp": "cards/so-teleport.webp",
+      "quote": "За этой дверью не обязательно будет соседняя комната.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "portal"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "so-heal",
+      "name": "Исцеление",
+      "kind": "special",
+      "copies": 2,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/so-heal.png",
+      "webp": "cards/so-heal.webp",
+      "quote": "Она ещё не закончила спорить с судьбой.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "recall"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "so-blessing",
+      "name": "Благословение магии",
+      "kind": "special",
+      "copies": 2,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/so-blessing.png",
+      "webp": "cards/so-blessing.webp",
+      "quote": "Даже маленький свет меняет то, куда ложатся тени.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "blessing"
+      ]
+    },
+    {
+      "summoned": false,
+      "id": "so-curse",
+      "name": "Проклятие",
+      "kind": "special",
+      "copies": 2,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/so-curse.png",
+      "webp": "cards/so-curse.webp",
+      "quote": "Стекло треснуло. Отражение осталось целым.",
+      "quoteOrigin": "fan-written",
+      "source": "generated illustration with shared layers",
+      "abilities": [
+        "curse"
+      ]
+    },
+    {
+      "id": "el-fire",
+      "name": "Стихия огня",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-fire.png",
+      "webp": "cards/el-fire.webp",
+      "quote": "Он просил тепла. Огонь не умеет останавливаться.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "fire"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "el-earth",
+      "name": "Стихия земли",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-earth.png",
+      "webp": "cards/el-earth.webp",
+      "quote": "Земля помнит каждый наш шаг. И каждый долг.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "earth"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "el-water",
+      "name": "Стихия воды",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/el-water.png",
+      "webp": "cards/el-water.webp",
+      "quote": "Тихая вода первой забирается под доспех.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "water"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-prep",
+      "name": "Осадная подготовка",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-prep.png",
+      "webp": "cards/ex-prep.webp",
+      "quote": "Стену ещё не видно, а приговор уже отлит.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "prep"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-trap",
+      "name": "Ловушка",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-trap.png",
+      "webp": "cards/ex-trap.webp",
+      "quote": "На этой тропе слишком удобно идти одному.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "trap"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "id": "ex-medic",
+      "name": "Военный лекарь",
+      "kind": "special",
+      "copies": 1,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/ex-medic.png",
+      "webp": "cards/ex-medic.webp",
+      "quote": "Лежи смирно. Со смертью поговоришь после меня.",
+      "quoteOrigin": "fan-written",
+      "source": "Shared generated card reused unchanged",
+      "abilities": [
+        "recall"
+      ],
+      "summoned": false,
+      "reuse": "../wild-hunt-v1"
+    },
+    {
+      "summoned": false,
+      "id": "decoy",
+      "name": "Чучело",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/decoy.png",
+      "webp": "cards/decoy.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "commanders-horn",
+      "name": "Командирский рог",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/commanders-horn.png",
+      "webp": "cards/commanders-horn.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "scorch",
+      "name": "Казнь",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/scorch.png",
+      "webp": "cards/scorch.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "biting-frost",
+      "name": "Мороз",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/biting-frost.png",
+      "webp": "cards/biting-frost.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "impenetrable-fog",
+      "name": "Мгла",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/impenetrable-fog.png",
+      "webp": "cards/impenetrable-fog.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "torrential-rain",
+      "name": "Ливень",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/torrential-rain.png",
+      "webp": "cards/torrential-rain.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    },
+    {
+      "summoned": false,
+      "id": "clear-weather",
+      "name": "Ясное небо",
+      "kind": "special",
+      "copies": 3,
+      "strength": 0,
+      "rows": [],
+      "file": "cards/clear-weather.png",
+      "webp": "cards/clear-weather.webp",
+      "quote": null,
+      "quoteOrigin": "preserved original",
+      "source": "existing supplied card",
+      "abilities": []
+    }
+  ],
+  "missing": [],
+  "textMetrics": [
+    {
+      "id": "so-leader-head",
+      "title": {
+        "text": "Филиппа Эйльхарт: Глава Ложи",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Ложа выслушает каждого. Решать всё равно придётся нам.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-leader-spells",
+      "title": {
+        "text": "Филиппа Эйльхарт: Хозяйка заклинаний",
+        "fontSize": 21,
+        "lines": 2,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Тот, кто считает слова, обычно пропускает главное.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-leader-elements",
+      "title": {
+        "text": "Филиппа Эйльхарт: Повелительница стихий",
+        "fontSize": 21,
+        "lines": 2,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Буря не спрашивает разрешения. Я тоже.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-leader-illusion",
+      "title": {
+        "text": "Филиппа Эйльхарт: Мастер иллюзий",
+        "fontSize": 21,
+        "lines": 2,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Некоторым легче поверить зеркалу, чем собственным глазам.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-apprentice",
+      "title": {
+        "text": "Ученица Аретузы",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Искра погасла. На этот раз хотя бы стол уцелел.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-adept",
+      "title": {
+        "text": "Адептка Ложи",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Власть начинается с умения не показать, как трудно тебе далась.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-healer",
+      "title": {
+        "text": "Целительница",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Дыши. Всё остальное пока оставь мне.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-seer",
+      "title": {
+        "text": "Провидица",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Вода спокойна. Это ещё не значит, что спокойно будущее.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-war-mage",
+      "title": {
+        "text": "Боевой маг",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Гром услышат позже. Сейчас им достаточно света.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-illusionist",
+      "title": {
+        "text": "Иллюзионистка",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Ты уверен, что разговаривал именно со мной?",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-knight",
+      "title": {
+        "text": "Рыцарь Ложи",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Я дал слово женщине. Её титул к этому отношения не имеет.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-guard",
+      "title": {
+        "text": "Страж Ложи",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Совет ещё не окончен. Подождите с другой стороны двери.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-golem",
+      "title": {
+        "text": "Голем",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Он терпеливо ждёт приказа. Даже когда некому его отдать.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-elemental",
+      "title": {
+        "text": "Вызванный элементаль",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Камень помнит тишину. Ветер приносит другие вести.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-portal-keeper",
+      "title": {
+        "text": "Хранительница порталов",
+        "fontSize": 21,
+        "lines": 2,
+        "box": [
+          82,
+          451,
+          220,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Сначала скажи, куда идёшь. Потом решим, стоит ли возвращаться.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-margarita",
+      "title": {
+        "text": "Маргарита Лаукс-Антиль",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Школа нужна для того, чтобы однажды ученицы стали свободнее нас.",
+        "fontSize": 17.75,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-sheala",
+      "title": {
+        "text": "Шеала де Тансарвиль",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Чужое одобрение ещё ни разу не сделало заклинание точнее.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-tissaia",
+      "title": {
+        "text": "Тиссая де Врис",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Порядок на столе — первое, что ты ещё можешь изменить.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-fireball",
+      "title": {
+        "text": "Огненный шар",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Слова кончились раньше, чем отзвучало эхо.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-teleport",
+      "title": {
+        "text": "Телепортация",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "За этой дверью не обязательно будет соседняя комната.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-heal",
+      "title": {
+        "text": "Исцеление",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Она ещё не закончила спорить с судьбой.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-blessing",
+      "title": {
+        "text": "Благословение магии",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Даже маленький свет меняет то, куда ложатся тени.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    },
+    {
+      "id": "so-curse",
+      "title": {
+        "text": "Проклятие",
+        "fontSize": 21,
+        "lines": 1,
+        "box": [
+          10,
+          451,
+          290,
+          48
+        ]
+      },
+      "quote": {
+        "text": "Стекло треснуло. Отражение осталось целым.",
+        "fontSize": 18,
+        "lines": 2,
+        "box": [
+          8,
+          522,
+          294,
+          55
+        ]
+      }
+    }
+  ],
+  "loadout": {
+    "config": {
+      "faction": "sorceresses",
+      "ruleset": "extended",
+      "leaderId": "so-leader-head",
+      "counts": {
+        "avallach": 1,
+        "yennefer": 1,
+        "triss": 1,
+        "geralt": 1,
+        "cirilla": 1,
+        "dandelion": 1,
+        "zoltan": 1,
+        "emiel": 1,
+        "vesemir": 1,
+        "olgierd": 1,
+        "gaunter-darkness": 3,
+        "gaunter": 1,
+        "cow": 1,
+        "villentretemerth": 1,
+        "so-apprentice": 3,
+        "so-adept": 3,
+        "so-healer": 1,
+        "so-seer": 1,
+        "so-war-mage": 2,
+        "so-illusionist": 2,
+        "so-knight": 2,
+        "so-guard": 2,
+        "so-golem": 2,
+        "so-elemental": 1,
+        "so-portal-keeper": 2,
+        "so-margarita": 1,
+        "so-sheala": 1,
+        "so-tissaia": 1,
+        "so-fireball": 1,
+        "so-teleport": 1,
+        "so-heal": 1,
+        "so-blessing": 1,
+        "so-curse": 1,
+        "el-fire": 1,
+        "el-earth": 1,
+        "el-water": 1,
+        "ex-prep": 1,
+        "ex-trap": 1,
+        "ex-medic": 0,
+        "decoy": 0,
+        "commanders-horn": 0,
+        "scorch": 0,
+        "biting-frost": 0,
+        "impenetrable-fog": 0,
+        "torrential-rain": 0,
+        "clear-weather": 0
+      },
+      "arts": {}
+    },
+    "stats": {
+      "valid": true,
+      "errors": [],
+      "units": 40,
+      "specials": 10,
+      "heroes": 8,
+      "strength": 207,
+      "total": 50
+    }
+  },
+  "complete": true
+}

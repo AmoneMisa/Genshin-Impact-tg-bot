@@ -1,0 +1,70 @@
+{
+  "sharedSource": "../wild-hunt-v1/layers",
+  "sourceCommit": "7f08b270",
+  "customIcons": {
+    "ability-mage.png": {
+      "origin": "Custom fan expansion vector glyph, rasterized; not an original Witcher 3 icon",
+      "frameSource": "../templates-v1/layers/ability-medic.png",
+      "medalCenter": [
+        44,
+        38
+      ],
+      "glyphCenter": [
+        44,
+        38
+      ]
+    },
+    "ability-swap.png": {
+      "origin": "Custom fan expansion vector glyph, rasterized; not an original Witcher 3 icon",
+      "frameSource": "../templates-v1/layers/ability-medic.png",
+      "medalCenter": [
+        44,
+        38
+      ],
+      "glyphCenter": [
+        44,
+        38
+      ]
+    },
+    "effect-portal.png": {
+      "origin": "Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.",
+      "frameSource": "/art/gwent/printed/spec_p1.webp"
+    },
+    "effect-blessing.png": {
+      "origin": "Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.",
+      "frameSource": "/art/gwent/printed/spec_p1.webp"
+    },
+    "effect-curse.png": {
+      "origin": "Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.",
+      "frameSource": "/art/gwent/printed/spec_p1.webp"
+    }
+  },
+  "abilityMask": {
+    "center": [
+      44,
+      38
+    ],
+    "radius": 36.5,
+    "canvas": [
+      81,
+      81
+    ],
+    "purpose": "Remove source-card cloth and portrait outside the original medal; no added border"
+  },
+  "frame": {
+    "source": "../templates-v1/unit.png",
+    "cloth": "deep plum violet; existing stitching and parchment preserved"
+  },
+  "emblem": {
+    "source": "webapp/art/gwent/printed/back-sorceresses.webp",
+    "extraction": "Whole eight-point star and violet central jewel; geometric silhouette retains original dark shading",
+    "canvas": [
+      34,
+      36
+    ]
+  },
+  "back": {
+    "source": "webapp/art/gwent/printed/back-sorceresses.webp",
+    "reusedUnchanged": true
+  }
+}

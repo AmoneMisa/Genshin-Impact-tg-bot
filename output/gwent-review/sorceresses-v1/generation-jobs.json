@@ -1,0 +1,297 @@
+[
+  {
+    "key": "so-apprentice",
+    "faction": "sorceresses",
+    "kind": "unit",
+    "name": "Ученица Аретузы",
+    "changed": false,
+    "file": "illustrations/so-apprentice.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult woman aged 22 studying at Aretuza, short auburn bob haircut, small round freckled face, grey closed scholar robe, holding a plain small leather book and watching one tiny blue spark above her fingers. Old stone tower classroom, soft window light, curious concentration. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Искра погасла. На этот раз хотя бы стол уцелел.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-adept",
+    "faction": "sorceresses",
+    "kind": "unit",
+    "name": "Адептка Ложи",
+    "changed": false,
+    "file": "illustrations/so-adept.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult Lodge adept aged 30 with olive skin, long wavy black hair and an angular face, deep teal gown with silver embroidery, standing at an open blank spellbook in a candlelit library with a small controlled violet light above her palm. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Власть начинается с умения не показать, как трудно тебе далась.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-healer",
+    "faction": "sorceresses",
+    "kind": "unit",
+    "name": "Целительница",
+    "changed": false,
+    "file": "illustrations/so-healer.png",
+    "prompt": "Use case: precise-object-edit. Edit this existing fictional Gwent card illustration. Change only the adult sorceress healer's appearance: fair pale skin with natural warm reflected candlelight, and straight dark brown hair gathered in a neat low braided bun instead of the current thin twisted braids. She is an adult woman about 40 with a serene thoughtful face, fitting the grounded northern medieval fantasy aesthetic of The Witcher 3. Preserve her expression, head angle, body pose, exact hand positions, pale blue embroidered gown, plum cloak, silver jewelry, healing light, resting adult patient, linen, herbs, lamps, stone infirmary, framing and matte painted texture. Do not alter the patient or background. No card border, UI, text, numbers or watermark. The woman remains fully clothed. Make a polished seamless edit with consistent anatomy, shading and materials.",
+    "quote": "Дыши. Всё остальное пока оставь мне.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/variants/so-healer-v1.png"
+    ],
+    "initialGeneration": {
+      "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult sorceress healer aged 40 with dark skin, hair in neat braids and a serene broad face, pale blue robe and silver pendant. Her hands cast soft golden light above the covered arm of a resting adult soldier in an infirmary. Herbs, clean linen and warm lamps, no wounds or blood. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+      "references": [],
+      "result": "illustrations/variants/so-healer-v1.png"
+    },
+    "mode": "edit",
+    "selectedVersion": 2
+  },
+  {
+    "key": "so-seer",
+    "faction": "sorceresses",
+    "kind": "unit",
+    "name": "Провидица",
+    "changed": false,
+    "file": "illustrations/so-seer.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult seer aged 55 with pale skin, silver hair beneath a dark hood and a deeply thoughtful lined face, looking into a shallow silver bowl where a starry sky is reflected. Stone altar, restrained violet light and candles, no readable symbols. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Вода спокойна. Это ещё не значит, что спокойно будущее.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-war-mage",
+    "faction": "sorceresses",
+    "kind": "unit",
+    "name": "Боевой маг",
+    "changed": false,
+    "file": "illustrations/so-war-mage.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult male war mage aged 40 with long dark hair, a short dark beard and a weathered face, dark leather and iron-trimmed robes, directing a narrow bolt of lightning into the empty sky above a windswept scorched field. Strong pose, distant abandoned battlement, no people hit or injured. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Гром услышат позже. Сейчас им достаточно света.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-illusionist",
+    "faction": "sorceresses",
+    "kind": "unit",
+    "name": "Иллюзионистка",
+    "changed": false,
+    "file": "illustrations/so-illusionist.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult sorceress aged 35 with a blonde braided updo, high cheekbones and an amused thoughtful face, wearing an elegant closed deep violet gown. Two faint translucent fully clothed reflections echo her pose in an ornate mirror hall. Controlled silver-teal magical haze, one clear main face. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Ты уверен, что разговаривал именно со мной?",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-knight",
+    "faction": "sorceresses",
+    "kind": "unit",
+    "name": "Рыцарь Ложи",
+    "changed": false,
+    "file": "illustrations/so-knight.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult male Lodge knight aged 45 with a broad nose, short blond beard and close-cropped hair, silver-blue plate armor and a dark teal cloak, holding a steel sword at rest in the courtyard of an old magical tower. Subtle silver engraved ornament, grounded real metal. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Я дал слово женщине. Её титул к этому отношения не имеет.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-guard",
+    "faction": "sorceresses",
+    "kind": "unit",
+    "name": "Страж Ложи",
+    "changed": false,
+    "file": "illustrations/so-guard.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult female Lodge guard aged 35 with an athletic build, red hair in a tight braid, strong square jaw and a faint old cheek scar, dark steel armor and a deep teal cloak, holding a halberd by an arched stone doorway. A small lamp and dim geometric blue light above the door. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Совет ещё не окончен. Подождите с другой стороны двери.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-golem",
+    "faction": "sorceresses",
+    "kind": "unit",
+    "name": "Голем",
+    "changed": false,
+    "file": "illustrations/so-golem.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: A towering broad stone golem built from rough grey boulders with deep cracks, faint cool blue magical seams across the chest, moss at the shoulders and heavy stone fists at rest. Old tower courtyard, a small adult mage nearby for scale. A real massive stone creature, not a man in armor. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Он терпеливо ждёт приказа. Даже когда некому его отдать.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-elemental",
+    "faction": "sorceresses",
+    "kind": "unit",
+    "name": "Вызванный элементаль",
+    "changed": false,
+    "file": "illustrations/so-elemental.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: A summoned elemental: a tall humanoid silhouette of spiralling slate fragments, wind and suspended water, forming above the rocks of a narrow ravine. An adult sorceress is small below it, raising a staff. Restrained silver-blue light, natural heavy stones and spray, no neon fantasy armor. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Камень помнит тишину. Ветер приносит другие вести.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-portal-keeper",
+    "faction": "sorceresses",
+    "kind": "unit",
+    "name": "Хранительница порталов",
+    "changed": false,
+    "file": "illustrations/so-portal-keeper.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult woman aged 30 with straight shoulder-length dark hair, a calm narrow face and a flowing dark teal robe, standing beside an oval portal in a stone alcove. One hand steadies its shimmering silver-blue edge, a different distant landscape faintly visible through the opening. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Сначала скажи, куда идёшь. Потом решим, стоит ли возвращаться.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-margarita",
+    "faction": "sorceresses",
+    "kind": "unit",
+    "name": "Маргарита Лаукс-Антиль",
+    "changed": false,
+    "file": "illustrations/so-margarita.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: Recognizable adult Margarita Laux-Antille from The Witcher 3, shoulder-length wavy blonde hair, fair face, green and gold patterned gown with a necklace of three gold pendants. In a quiet Aretuza council room she holds a closed book against her waist, strong kind expression, warm candlelight and cool windows. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Школа нужна для того, чтобы однажды ученицы стали свободнее нас.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-sheala",
+    "faction": "sorceresses",
+    "kind": "unit",
+    "name": "Шеала де Тансарвиль",
+    "changed": false,
+    "file": "illustrations/so-sheala.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: Recognizable adult Sile de Tansarville, Sheala, matching the supplied original Gwent portrait for facial identity and distinctive tall winged striped cream-and-dark headdress. Elegant dark gown with cream fabric and muted red ribbons, confident severe gaze. Standing in a scholarly library, a restrained silver magical light beside her hand. Preserve her distinctive headpiece, head fully visible. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Чужое одобрение ещё ни разу не сделало заклинание точнее.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/realms_sheala.jpg"
+    ]
+  },
+  {
+    "key": "so-tissaia",
+    "faction": "sorceresses",
+    "kind": "unit",
+    "name": "Тиссая де Врис",
+    "changed": false,
+    "file": "illustrations/so-tissaia.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: Tissaia de Vries as a literary fan interpretation: an adult mature-looking woman with dark chestnut hair pinned into an immaculate bun, a severe refined face, a plain dark navy high-collared long dress and a small pearl necklace. Standing perfectly straight before an arched window at Aretuza, calmly aligning a closed book and a silver candlestick on a table. Self-contained authority, not a likeness of a television actress. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Порядок на столе — первое, что ты ещё можешь изменить.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-fireball",
+    "faction": "sorceresses",
+    "kind": "special",
+    "name": "Огненный шар",
+    "changed": false,
+    "file": "illustrations/so-fireball.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: A single incandescent ball of fire sweeping across an empty rain-dark medieval training yard, bright amber core and a curved painterly trail of sparks, wet stone reflecting the glow, a distant ruined wall in smoke. A dynamic spell scene, no people hit, no injuries. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Слова кончились раньше, чем отзвучало эхо.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-teleport",
+    "faction": "sorceresses",
+    "kind": "special",
+    "name": "Телепортация",
+    "changed": false,
+    "file": "illustrations/so-teleport.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An oval portal of restrained silver and violet light opening in a dark stone hall, a distant forest visible through the opening, drifting dust and heavy curtains blown inward. No characters. Old natural stone, warm candles against cool magic. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "За этой дверью не обязательно будет соседняя комната.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-heal",
+    "faction": "sorceresses",
+    "kind": "special",
+    "name": "Исцеление",
+    "changed": false,
+    "file": "illustrations/so-heal.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: A quiet candlelit infirmary, a resting adult knight under linen on a cot, seen small from the side, a gentle column of soft golden magical light illuminating clasped hands and a clean bandage. Herbs and brass bowls nearby. No wounds, blood or surgery, a peaceful recovery scene. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Она ещё не закончила спорить с судьбой.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-blessing",
+    "faction": "sorceresses",
+    "kind": "special",
+    "name": "Благословение магии",
+    "changed": false,
+    "file": "illustrations/so-blessing.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: A floating intricate geometric weave of silver light above a circular stone table in a dark Lodge hall, several closed books gently suspended around it. Candlelit stone and deep violet cloth, controlled refined magic. Abstract nonverbal geometry only, no letters, numbers or readable runes. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Даже маленький свет меняет то, куда ложатся тени.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-curse",
+    "faction": "sorceresses",
+    "kind": "special",
+    "name": "Проклятие",
+    "changed": false,
+    "file": "illustrations/so-curse.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An old cracked handheld mirror lying on a dark stone altar among dry thorn branches and dim candles. A black-violet wisp hangs above its surface, while its reflection remains eerily unbroken. Ominous restrained spell still life, no body parts or people. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness.",
+    "quote": "Стекло треснуло. Отражение осталось целым.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "so-leader-head",
+    "faction": "sorceresses",
+    "kind": "leader",
+    "name": "Филиппа Эйльхарт: Глава Ложи",
+    "changed": false,
+    "file": "illustrations/so-leader-head.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: Recognizable adult Philippa Eilhart in her Witcher 3 era: pale angular face, dark brown hair intricately braided into a pinned updo, a narrow opaque dark embroidered blindfold covering BOTH eyes without visible injury, composed strong mouth and commanding posture. Elegant dark plum and black embroidered sorceress gown, white raised lace collar, long sleeves and silver owl jewelry. The same adult woman in all four leader scenes. No crown or pointed wizard hat. Standing at the head of a long council table in an ornate old stone hall, one hand on a carved chair, an owl perched behind her. Clear face, regal and calculating, candlelit council chamber. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness. The reference is the original Gwent Philippa identity and painted-material guide. Create a new scene, adapt her to the Witcher 3 blindfolded appearance described above. Keep the narrow eye covering opaque; no injury detail.",
+    "quote": "Ложа выслушает каждого. Решать всё равно придётся нам.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "../../../webapp/art/gwent/sm/realms_philippa.jpg"
+    ]
+  },
+  {
+    "key": "so-leader-spells",
+    "faction": "sorceresses",
+    "kind": "leader",
+    "name": "Филиппа Эйльхарт: Хозяйка заклинаний",
+    "changed": false,
+    "file": "illustrations/so-leader-spells.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: Recognizable adult Philippa Eilhart in her Witcher 3 era: pale angular face, dark brown hair intricately braided into a pinned updo, a narrow opaque dark embroidered blindfold covering BOTH eyes without visible injury, composed strong mouth and commanding posture. Elegant dark plum and black embroidered sorceress gown, white raised lace collar, long sleeves and silver owl jewelry. The same adult woman in all four leader scenes. No crown or pointed wizard hat. Casting a controlled intricate spell above an open blank book on a library table, thin rings of silver geometric light around her hands, violet-blue reflection on her gown. Old tomes and a high window, one clear readable face. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness. Input reference is the new leader portrait from this same deck. Preserve this exact Philippa: same face, opaque eye covering, braided dark updo, age, lace collar, dark plum gown and owl jewelry. Change the pose and scene to the one described above, keeping one dominant character and the same matte painted Gwent style.",
+    "quote": "Тот, кто считает слова, обычно пропускает главное.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/so-leader-head.png"
+    ]
+  },
+  {
+    "key": "so-leader-elements",
+    "faction": "sorceresses",
+    "kind": "leader",
+    "name": "Филиппа Эйльхарт: Повелительница стихий",
+    "changed": false,
+    "file": "illustrations/so-leader-elements.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: Recognizable adult Philippa Eilhart in her Witcher 3 era: pale angular face, dark brown hair intricately braided into a pinned updo, a narrow opaque dark embroidered blindfold covering BOTH eyes without visible injury, composed strong mouth and commanding posture. Elegant dark plum and black embroidered sorceress gown, white raised lace collar, long sleeves and silver owl jewelry. The same adult woman in all four leader scenes. No crown or pointed wizard hat. Standing on a high stone balcony above a stormy medieval city, one hand raised; small separate swirls of fire, water, wind and floating stones circle her forearms. Restrained natural elements, strong central silhouette and a full visible head. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness. Input reference is the new leader portrait from this same deck. Preserve this exact Philippa: same face, opaque eye covering, braided dark updo, age, lace collar, dark plum gown and owl jewelry. Change the pose and scene to the one described above, keeping one dominant character and the same matte painted Gwent style.",
+    "quote": "Буря не спрашивает разрешения. Я тоже.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/so-leader-head.png"
+    ]
+  },
+  {
+    "key": "so-leader-illusion",
+    "faction": "sorceresses",
+    "kind": "leader",
+    "name": "Филиппа Эйльхарт: Мастер иллюзий",
+    "changed": false,
+    "file": "illustrations/so-leader-illusion.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: Recognizable adult Philippa Eilhart in her Witcher 3 era: pale angular face, dark brown hair intricately braided into a pinned updo, a narrow opaque dark embroidered blindfold covering BOTH eyes without visible injury, composed strong mouth and commanding posture. Elegant dark plum and black embroidered sorceress gown, white raised lace collar, long sleeves and silver owl jewelry. The same adult woman in all four leader scenes. No crown or pointed wizard hat. Standing in a quiet dim mirror chamber; several tall mirrors show faint altered reflections of her fully clothed silhouette, while her real face in the foreground holds a subtle confident smile. Silver reflected light, one dominant figure. Match original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle visible brushwork, matte painted surface, weathered real fabrics and stone, natural anatomy and restrained cinematic lighting. Sorceresses palette: deep plum violet, dark teal, silver, warm candle gold; restrained magical light, no neon saturation. Portrait 5:7, full bleed, strong readable silhouette at small size. Main face at x55% in upper middle, whole head and headdress visible, leftmost 23% visually quiet for later ribbon overlays. Illustration only: no card borders, UI, ribbons, parchment, letters, names, numbers, captions, watermarks or readable text. Exact Cyrillic names and literary quotes, power and gameplay icons will be added separately. All human figures are adults. No anime, glossy modern TCG rendering or television actor likeness. Input reference is the new leader portrait from this same deck. Preserve this exact Philippa: same face, opaque eye covering, braided dark updo, age, lace collar, dark plum gown and owl jewelry. Change the pose and scene to the one described above, keeping one dominant character and the same matte painted Gwent style.",
+    "quote": "Некоторым легче поверить зеркалу, чем собственным глазам.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/so-leader-head.png"
+    ]
+  }
+]
