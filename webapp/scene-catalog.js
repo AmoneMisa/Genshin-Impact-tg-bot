@@ -349,6 +349,9 @@ export const SCENE_STUDIES = Object.freeze([
   {"id":"plains-of-glory","title":"Равнины Славы","category":"hunting","environment":"woodland","asset":"plains-of-glory"},
   {"id":"fields-of-massacre","title":"Поля Резни","category":"hunting","environment":"woodland","asset":"fields-of-massacre"},
   {"id":"swamp-of-screams","title":"Болото Криков","category":"hunting","environment":"marsh","asset":"swamp-of-screams"},
+  {"id":"ivory-tower","title":"Башня Слоновой Кости","category":"hunting","environment":"woodland","asset":"ivory-tower"},
+  {"id":"devils-isle","title":"Остров Дьявола","category":"hunting","environment":"cavern","asset":"devils-isle"},
+  {"id":"pagan-temple","title":"Храм Язычников","category":"hunting","environment":"catacomb","asset":"pagan-temple"},
 ]);
 const byId=new Map(SCENE_STUDIES.map(scene=>[scene.id,scene]));
 export const sceneStudy=id=>byId.get(id==='freyaExtreme'?'freya':id)||null;

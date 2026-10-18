@@ -38,7 +38,7 @@ try{for(const {width,mode} of cases){
   return route.fulfill({contentType:({'.js':'text/javascript','.css':'text/css','.webp':'image/webp'})[path.extname(file)]||'application/octet-stream',body:fs.readFileSync(file)});
  });
  await page.goto('http://exploration.local/fixture');
- const zones=HUNT_EXPLORATION.filter(z=>(!process.env.EXPLORATION_ZONE||z.id===process.env.EXPLORATION_ZONE)&&(!selectedZones||selectedZones.includes(z.id))&&(mode==='auto'||z.id===(process.env.EXPLORATION_ZONE||selectedZones?.[0]||'plains-of-dion')));
+ const zones=HUNT_EXPLORATION.filter(z=>(!process.env.EXPLORATION_ZONE||z.id===process.env.EXPLORATION_ZONE)&&(!selectedZones||selectedZones.includes(z.id))&&(mode==='auto'||selectedZones||z.id===(process.env.EXPLORATION_ZONE||'plains-of-dion')));
  assert.ok(zones.length,'At least one exploration zone must be checked');
  for(const {id} of zones){
   now=Date.now();s={userId:1,game:{stats:{lvl:80,currentExp:0},inventory:{gold:0,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
@@ -74,9 +74,9 @@ try{for(const {width,mode} of cases){
    assert.ok(self.x+self.width/2>ground.x&&self.x+self.width/2<ground.x+ground.width&&self.y+self.height/2>ground.y&&self.y+self.height/2<ground.y+ground.height,'entry actor visible');
   }
   await check();await go('r0c1',true);
-  if(width===390&&mode==='auto')await page.screenshot({path:path.join(out,id+'-east.png')});
+  if(mode==='auto')await page.screenshot({path:path.join(out,id+'-east-'+width+'.png')});
   await go('r0c0');assert.deepEqual(s.game.hunt.field.mobs.map(m=>m.instanceId),original);
-  await go('r1c0');if(width===390&&mode==='auto')await page.screenshot({path:path.join(out,id+'-south.png')});
+  await go('r1c0');if(mode==='auto')await page.screenshot({path:path.join(out,id+'-south-'+width+'.png')});
   assert.equal((await getHuntState(s,now)).field.map.rooms.filter(r=>r.visited).length,3);
   await page.locator('.hunt-overlay [data-dismiss]').first().click();await page.waitForSelector('.hunt-overlay',{state:'detached'});
   assert.equal(await page.locator('[inert],.hunt-phaser canvas').count(),0);
