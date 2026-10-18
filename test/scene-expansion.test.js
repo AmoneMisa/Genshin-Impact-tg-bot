@@ -9,8 +9,8 @@ import {scenePreviewHtml,graciaOverviewHtml} from '../webapp/location-art.js';
 import {atlasObjects} from '../webapp/atlas-objects.js';
 
 test('scene expansion covers individual hunting studies, ten epics and every atlas city',()=>{
- assert.equal(new Set(SCENE_STUDIES.map(s=>s.id)).size,77);
- for(const [category,count] of Object.entries({hunting:42,epic:10,city:18,interior:3}))assert.equal(SCENE_STUDIES.filter(s=>s.category===category).length,count);
+ assert.equal(new Set(SCENE_STUDIES.map(s=>s.id)).size,78);
+ for(const [category,count] of Object.entries({hunting:43,epic:10,city:18,interior:3}))assert.equal(SCENE_STUDIES.filter(s=>s.category===category).length,count);
  const zones=new Set(getZones().map(z=>z.id));
  for(const scene of SCENE_STUDIES.filter(s=>s.category==='hunting'))assert.ok(zones.has(scene.id));
  assert.deepEqual(SCENE_STUDIES.filter(s=>s.category==='city').map(s=>s.id).sort(),CITIES.map(c=>c.id).sort());
@@ -36,6 +36,12 @@ test('all scene variants exist within the mobile download budget',()=>{
  for(const scene of SCENE_STUDIES)for(const compact of [true,false]){
   const file=new URL('../webapp'+sceneStudyUrl(scene.id,{compact}),import.meta.url);
   assert.ok(fs.statSync(file).size<(compact?180000:800000),scene.id+' image size');
+ }
+});
+test('single-image instances fall back to their base scene for unsupported area variants',()=>{
+ for(const scene of SCENE_STUDIES.filter(s=>s.sections===1)){
+  assert.ok(getZones().find(z=>z.id===scene.id)?.instance,scene.id);
+  for(const compact of [false,true])for(const area of [1,2])assert.equal(roomSceneUrl(scene.environment,{sceneKey:scene.id+':r0c0:area-'+area,compact}),sceneStudyUrl(scene.id,{compact}));
  }
 });
 test('art themes preserve authoritative field geometry and do not mutate it',()=>{

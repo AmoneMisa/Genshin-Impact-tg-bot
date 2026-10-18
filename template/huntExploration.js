@@ -165,6 +165,7 @@ export const HUNT_EXPLORATION = Object.freeze([
   {"id":"necropolis-pilgrims","names":["Галерея усыпальниц","У боковой арки","Тихий каменный зал"]},
   {"id":"necropolis-worship","names":["Зал древних опор","У погребальных ниш","Каменная галерея"]},
   {"id":"necropolis-patriots","names":["Проход среди опор","У резных надгробий","Дальний погребальный зал"]},
+  {"id":"necropolis-devotion","names":["Погребальная галерея","У резных опор","Дальний каменный зал"]},
 ]);
 const zones=new Map(HUNT_EXPLORATION.map(zone=>[zone.id,zone]));
 export const explorationZone=id=>zones.get(id)||null;

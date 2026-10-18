@@ -21,7 +21,7 @@ metadata = [{**{k: v for k, v in row.items() if k != 'path'},
              'notOriginalL2ClientArt': True, 'notOriginalGeodata': True} for row in rows]
 id = rows[0]['id']
 (target / (id + '.source.js')).write_text('export const LOCATION_ART = ' + json.dumps(metadata, ensure_ascii=False, indent=2) + ';\n', encoding='utf-8')
-sheet = Image.new('RGB', (1200, 292), '#15171c')
+sheet = Image.new('RGB', (400 * len(rows), 292), '#15171c')
 draw = ImageDraw.Draw(sheet)
 for index, row in enumerate(rows):
     with Image.open(target / (row['asset'] + '-mobile-v1.webp')) as source:

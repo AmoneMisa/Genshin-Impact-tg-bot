@@ -3,7 +3,10 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {HUNT_EXPLORATION} from '../../template/huntExploration.js';
-import {enterHuntField,moveHuntField,advanceHunt} from '../../functions/game/hunt/huntFight.js';
+import {getZone} from '../../functions/game/hunt/huntMobs.js';
+import {roomLayout} from '../../functions/game/hunt/huntRooms.js';
+import {roomSceneUrl} from '../../webapp/room-scene-art.js';
+import {enterHuntField,moveHuntField,advanceHunt,resetInstanceRoom} from '../../functions/game/hunt/huntFight.js';
 import {getHuntState} from '../../miniapp/hunt.js';
 import changeClass from '../../functions/game/player/changePlayerGameClass.js';
 import updateStats from '../../functions/game/player/updatePlayerStats.js';
@@ -38,7 +41,7 @@ try{for(const {width,mode} of cases){
   return route.fulfill({contentType:({'.js':'text/javascript','.css':'text/css','.webp':'image/webp'})[path.extname(file)]||'application/octet-stream',body:fs.readFileSync(file)});
  });
  await page.goto('http://exploration.local/fixture');
- const zones=HUNT_EXPLORATION.filter(z=>(!process.env.EXPLORATION_ZONE||z.id===process.env.EXPLORATION_ZONE)&&(!selectedZones||selectedZones.includes(z.id))&&(mode==='auto'||selectedZones||z.id===(process.env.EXPLORATION_ZONE||'plains-of-dion')));
+ const zones=(selectedZones?selectedZones.map(id=>({id})):HUNT_EXPLORATION).filter(z=>(!process.env.EXPLORATION_ZONE||z.id===process.env.EXPLORATION_ZONE)&&(mode==='auto'||selectedZones||z.id===(process.env.EXPLORATION_ZONE||'plains-of-dion')));
  assert.ok(zones.length,'At least one exploration zone must be checked');
  for(const {id} of zones){
   now=Date.now();s={userId:1,game:{stats:{lvl:80,currentExp:0},inventory:{gold:0,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
@@ -49,13 +52,13 @@ try{for(const {width,mode} of cases){
   async function check(){
    const dto=await getHuntState(s,now);
    assert.equal(await page.locator('.hunt-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false,id+' overflow');
-   assert.match(await page.locator('#hunt-heading').getAttribute('title'),new RegExp(dto.field.room.landmark));
+   assert.match(await page.locator('#hunt-heading').getAttribute('title'),new RegExp(dto.field.room.landmark||getZone(id).title));
    assert.ok(await page.locator('.hunt-iso-actor[data-hunt-halt]').count());
    if(!['unavailable','missing-art'].includes(mode))await page.waitForFunction(async field=>{
     const {paintedRoomScene}=await import('/room-scene-art.js');const compact=document.querySelector('.hunt-ground').clientWidth<480;
     const image=paintedRoomScene(field.environment,{sceneKey:field.sceneKey,compact});return image?.naturalWidth===(compact?768:1536);
    },dto.field);
-   if(mode==='unavailable')assert.match(await page.locator('.hunt-isometric-terrain image').first().getAttribute('href'),new RegExp(dto.field.room.id==='r0c0'?id:id+'-area-'));
+   if(mode==='unavailable')assert.equal(await page.locator('.hunt-isometric-terrain image').first().getAttribute('href'),roomSceneUrl(dto.field.environment,{sceneKey:dto.field.sceneKey,compact:width<500}));
   }
   async function go(room,viaExit=false){
    // Navigate using the same accessible local map, then keep the entry actor in view.
@@ -73,11 +76,25 @@ try{for(const {width,mode} of cases){
    const self=await page.locator('.hunt-iso-actor[data-hunt-halt]').boundingBox(),ground=await page.locator('.hunt-ground').boundingBox();
    assert.ok(self.x+self.width/2>ground.x&&self.x+self.width/2<ground.x+ground.width&&self.y+self.height/2>ground.y&&self.y+self.height/2<ground.y+ground.height,'entry actor visible');
   }
-  await check();await go('r0c1',true);
+  await check();
+  const zone=getZone(id);
+  if(zone.instance){
+   const rooms=roomLayout(zone).rooms;
+   const phases=zone.instance.kind==='labyrinth'?zone.instance.stages.slice(1).map((_,i)=>({id:rooms[0].id,floor:i+2})):zone.instance.kind==='rift'?[rooms.at(-1)]:[];
+   for(const phase of phases){
+    resetInstanceRoom(s,phase.id,now,phase.floor||1);quiet();
+    await page.locator('.hunt-overlay [data-dismiss]').first().click();
+    await page.waitForSelector('.hunt-overlay',{state:'detached'});
+    await page.evaluate(()=>openRoom());await page.waitForSelector('.hunt-ground');await check();
+   }
+   if(mode==='auto')await page.screenshot({path:path.join(out,id+'-instance-'+width+'.png')});
+  }else{
+  await go('r0c1',true);
   if(mode==='auto')await page.screenshot({path:path.join(out,id+'-east-'+width+'.png')});
   await go('r0c0');assert.deepEqual(s.game.hunt.field.mobs.map(m=>m.instanceId),original);
   await go('r1c0');if(mode==='auto')await page.screenshot({path:path.join(out,id+'-south-'+width+'.png')});
   assert.equal((await getHuntState(s,now)).field.map.rooms.filter(r=>r.visited).length,3);
+  }
   await page.locator('.hunt-overlay [data-dismiss]').first().click();await page.waitForSelector('.hunt-overlay',{state:'detached'});
   assert.equal(await page.locator('[inert],.hunt-phaser canvas').count(),0);
  }
