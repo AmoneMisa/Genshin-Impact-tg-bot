@@ -357,6 +357,7 @@ export const SCENE_STUDIES = Object.freeze([
   {"id":"field-of-whispers","title":"Поле Шёпота","category":"hunting","environment":"desert","asset":"field-of-whispers"},
   {"id":"catacomb-heretic","title":"Катакомбы Еретиков","category":"hunting","environment":"catacomb","asset":"catacomb-heretic"},
   {"id":"catacomb-branded","title":"Катакомбы Отлучённых","category":"hunting","environment":"catacomb","asset":"catacomb-branded"},
+  {"id":"catacomb-apostate","title":"Катакомбы Отступников","category":"hunting","environment":"catacomb","asset":"catacomb-apostate"},
 ]);
 const byId=new Map(SCENE_STUDIES.map(scene=>[scene.id,scene]));
 export const sceneStudy=id=>byId.get(id==='freyaExtreme'?'freya':id)||null;
