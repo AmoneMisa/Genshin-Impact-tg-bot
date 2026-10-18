@@ -24,6 +24,7 @@ import {flaskHtml} from './inventory.js';
 import {createCombatSocial} from './combat-social.js';
 import {l2NavigationIcon} from './art/l2-navigation-art.js';
 import {ensureFeatureStyles} from './feature-styles.js';
+import {visibleFieldMobs} from './hunt-visible-actors.js';
 
 // Hunting fields (Lineage II style): pick a zone, fight one mob at a time in real time with skills,
 // potions and shots. Blue and red champions are tougher and pay much more.
@@ -46,6 +47,7 @@ const REASONS = {room_in_combat:'Нельзя уйти из комнаты, по
   combat_data_missing:'Для этого действия ещё нет проверенных данных дальности.',
 };
 REASONS.pvp_line_of_sight='Цель скрыта за препятствием.';
+Object.assign(REASONS,{stairs_required:'Подойди к лестнице на карте комнаты.',invalid_floor:'Этот переход недоступен.',ship_required:'Сначала пройди к кораблю через Остров Дьявола.',party_not_ready:'Вся группа должна подойти ко входу на корабль и выйти из боя.',instance_party_required:'Вход на корабль открывает лидер группы.',candle_too_far:'Подойди к свече.',candle_already_lit:'Эта свеча уже зажжена.',quick_travel_combat:'Сначала выйди из боя.',npc_too_far:'Подойди к хранителю портала.'});
 Object.assign(REASONS,{no_party:'Ты не состоишь в группе.',not_leader:'Это действие доступно лидеру группы.',target_in_party:'Игрок уже состоит в группе.',already_member:'Игрок уже в вашей группе.',party_full:'Группа заполнена.',unknown_player:'Игрок недоступен.',not_member:'Игрок не в вашей группе.',invalid_supplies:'Проверь настройки ACP: порог должен быть от 1 до 99%.',empty_hotbar:'Оставь хотя бы одно действие или умение.'});
 const POTION_REASONS = {
   potion_empty: 'Это зелье закончилось.',
@@ -66,6 +68,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   try{shotsCollapsed=(localStorage.getItem('hunt:supplies-collapsed')??localStorage.getItem('hunt:shots-collapsed'))==='1';}catch{}
   let pending = false;
   let openingWindow=false;
+  let travelDialog=null;
   let feedback = '';
   let lastLog = state.log?.[0]?.text || '';
   let dropOpen = false;
@@ -95,6 +98,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   let pollTimer = 0;
   const close = () => {
     if(closed)return;closed=true;
+    travelDialog?.close();
     cancelAnimationFrame(animation);window.clearInterval(timer);mapObserver.disconnect();fieldRenderer.destroy();
     document.removeEventListener('visibilitychange',visibility);
     overlay.removeEventListener('keydown',keyboard);
@@ -146,6 +150,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     try {
       const payload = await api(path, { method: 'POST', body: JSON.stringify(body || {}) });
       take(payload);
+      if(payload.world&&!payload.hunt)take({hunt:await api('/api/hunt')});
       return payload;
     } catch (error) {
       take(error.payload);
@@ -311,7 +316,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   function mapHtml(field){
     const map=field.map;if(!map)return '';
     const cells=map.rooms.map(r=>{
-      const label=r.visited?escapeHtml(r.name):'Не исследовано';
+      const label=(r.visited?escapeHtml(r.name):'Не исследовано')+(r.passages?.length?' · '+escapeHtml(r.passages.join(', ')):'');
       const count=r.mobs===null?'?':r.mobs+'/'+r.cap;
       const cls='hunt-room'+(r.current?' current':'')+(r.big?' big':'')+(r.visited?' visited':'')+(r.adjacent?' near':'');
       return '<button type="button" class="'+cls+'" '+(r.adjacent?'data-room="'+escapeHtml(r.id)+'"':'disabled')+' style="grid-column:'+(r.col+1)+';grid-row:'+(r.row+1)+'" title="'+label+(map.exploration?'':' · '+(r.big?'большая':'малая')+' комната')+'" aria-label="'+label+(r.current?' (ты здесь)':'')+'"><b>'+(r.current?icon('flag'):r.big?'▣':'▫')+'</b><small>'+count+'</small></button>';
@@ -337,15 +342,43 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     const m=isoMatrix(viewport);
     return `<svg class="hunt-range" viewBox="0 0 ${viewport.width} ${viewport.height}" aria-hidden="true"><g transform="matrix(${m.a/1000},${m.b/1000},${m.c/1000},${m.d/1000},${m.e},${m.f})">${shape}</g></svg>`;
   }
-  function worldStyle(point,id=null){const p=isoPoint(point,viewport),offset=labelOffsets.get(id)||{x:0,y:0};return `--label-x:${offset.x}px;--label-y:${offset.y}px;left:${p.x}px;top:${p.y}px;--map-marker-anchor:translate(-50%,-100%);z-index:${10+Math.round((point.x+point.y)*10)}`;}
+  function worldStyle(point,id=null,layer=null){const p=isoPoint(point,viewport),offset=labelOffsets.get(id)||{x:0,y:0};return `--label-x:${offset.x}px;--label-y:${offset.y}px;left:${p.x}px;top:${p.y}px;--map-marker-anchor:translate(-50%,-100%);z-index:${layer??10+Math.round((point.x+point.y)*10)}`;}
   function playerMarker(player,self=false){
     const selected=!self&&String(player.userId)===String(playerTarget);
     return `<button type="button" class="${self?'hunt-hero-marker':'hunt-player-marker'} hunt-iso-actor ui-map-marker ui-player-presence ui-pvp-${player.pvp?.status||'neutral'} ${selected?'selected':''}" ${self?'data-hunt-halt':`data-pvp-target="${player.userId}"`} style="${worldStyle(player,self?'self':String(player.userId))}" aria-label="${escapeHtml(player.name||'Ты')}${player.clanName?' · '+escapeHtml(player.clanName):''}" ${self?'':'aria-pressed="'+selected+'"'}><span class="hunt-actor-label"><span class="hunt-presence-name ui-pvp-name">${escapeHtml(player.name||'Ты')}</span>${player.clanName?`<span class="hunt-presence-clan">${escapeHtml(player.clanName)}</span>`:''}</span><span class="hunt-iso-avatar"><img src="${classArtUrl(player.className,player.gender)}" alt=""></span></button>`;
   }
+  function levelMarkers(field){
+    const seen=new Set(),markers=[];
+    const marker=(point,label,symbol,attribute)=>`<button type="button" class="ui-map-marker hunt-iso-actor" ${attribute} style="${worldStyle(point,null,40)}" aria-label="${escapeHtml(label)}" title="${escapeHtml(label)}"><span class="hunt-actor-label"><span class="hunt-mob-name">${escapeHtml(label)}</span></span><span class="hunt-iso-avatar" aria-hidden="true">${symbol}</span></button>`;
+    for(const [index,d] of (field.level?.destinations||[]).entries())if(d.room===field.room.id){
+      const key=d.point.x+':'+d.point.y;if(seen.has(key))continue;seen.add(key);
+      markers.push(marker(d.point,d.mode==='teleport'?d.name:d.floor>field.floor?'Лестница вверх':'Лестница вниз',d.mode==='teleport'?'◇':'↟',`data-level-marker="${index}"`));
+    }
+    for(const npc of field.level?.npcs||[])if(!seen.has(npc.x+':'+npc.y))markers.push(marker(npc,npc.name,'◇',`data-level-npc="${escapeHtml(npc.name)}"`));
+    for(const candle of field.ship?.candles||[])markers.push(marker(candle,`Свеча ${candle.id} · ${{unlit:'не зажжена',burning:'разгорается',red:'красная',blue:'синяя'}[candle.state]}`,{unlit:'♧',burning:'♨',red:'🔴',blue:'🔵'}[candle.state],`data-ship-candle="${candle.id}"`));
+    const boss=field.ship?.boss||field.level?.boss&&{id:field.level.boss,point:{x:.5,y:.5}};
+    if(boss)markers.push(marker(boss.point,boss.id==='zaken'?'Закен найден':'Вход к боссу','⚔',`data-location-boss="${boss.id}"`));
+    return markers.join('');
+  }
+  function showLevelTravel(){
+    const field=state.field;if(!field?.level)return;
+    const dialog=document.createElement('dialog');dialog.className='game-dialog-panel l2-window';dialog.setAttribute('aria-label','Переходы между этажами');
+    travelDialog?.close();travelDialog=dialog;
+    dialog.innerHTML=dialogHeading(field.level.title)+`<p>Подойди к лестнице или хранителю портала. Их комнаты отмечены на карте.</p>`+(field.ship?`<p>Синих свечей: ${field.ship.blue}/4. Найди четыре синие свечи, чтобы обнаружить Закена.</p>`:'')+field.level.destinations.map((d,i)=>`<button type="button" class="ui-button" data-travel-choice="${i}" ${pending||d.room!==field.room.id?'disabled':''}>${escapeHtml(d.title)}${d.gold?' · '+formatNumber(d.gold)+' аден':''}${d.room!==field.room.id?' · в другом зале':d.near?'':' · подойти'}</button>`).join('')+(field.map?`<details><summary>Карта этажа</summary>${mapHtml(field)}</details>`:'');
+    document.body.append(dialog);dialog.showModal();
+    dialog.addEventListener('close',()=>dialog.remove(),{once:true});dialog.querySelector('[data-dismiss]').onclick=()=>dialog.close();
+    dialog.addEventListener('click',async event=>{
+      const choice=event.target.closest('[data-travel-choice]'),room=event.target.closest('[data-room]');
+      if(choice){const d=field.level.destinations[Number(choice.dataset.travelChoice)];dialog.close();await run(d.near?'/api/world/action':'/api/hunt/move',d.near?{action:'floor',floor:d.floor}:{point:d.point});render();}
+      else if(room){dialog.close();await run('/api/hunt/move',{direction:'room:'+room.dataset.room});render();}
+    });
+    dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
+  }
   function fieldHtml() {
     const field=state.field;if(!field)return '';
     const room=field.room||{};
-    const actors=[...(state.players||[]).map(p=>({...p,id:String(p.userId),labelHeight:p.clanName?28:14})),{...state.player,x:field.x,y:field.y,id:'self',labelHeight:state.player.clanName?28:14},...field.mobs.map(m=>({...m,id:m.instanceId,labelHeight:38}))];
+    const visibleMobs=visibleFieldMobs(field);
+    const actors=[...(state.players||[]).map(p=>({...p,id:String(p.userId),labelHeight:p.clanName?28:14})),{...state.player,x:field.x,y:field.y,id:'self',labelHeight:state.player.clanName?28:14},...visibleMobs.map(m=>({...m,id:m.instanceId,labelHeight:38}))];
     const selected=playerTarget?String(playerTarget):field.target;
     actors.sort((a,b)=>Number(b.id===selected)-Number(a.id===selected));
     labelOffsets=isoLabelOffsets(actors,viewport);
@@ -356,14 +389,15 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       <div class="hunt-ground hunt-isometric" tabindex="0" role="group" aria-label="Изометрическая комната: нажми на землю для движения, потяни для обзора.">
       <div class="hunt-world" style="transform:translate(${camera.x}px,${camera.y}px) scale(${camera.zoom})">
       ${isoTerrain(field,viewport)}${areaHtml()}${strikeHtml()}
+      ${levelMarkers(field)}
       ${(state.players||[]).map(p=>playerMarker(p)).join('')}
-      ${field.mobs.map(m=>`<button type="button" class="hunt-actor hunt-iso-actor ui-map-marker ${!playerTarget&&m.instanceId===field.target?'selected ':''}${m.aggro?'aggro':''}" data-target="${escapeHtml(m.instanceId)}" style="${worldStyle(m,m.instanceId)}" aria-label="${escapeHtml(m.name)} · ${Math.round(m.hpPercent)}% HP" aria-pressed="${!playerTarget&&m.instanceId===field.target}"><span class="hunt-actor-label"><span class="hunt-mob-name">${escapeHtml(m.name)}</span><span class="hunt-mob-percent">${Math.round(m.hpPercent)}%</span></span><span class="hunt-iso-avatar">${huntMobUrl(m)?`<img src="${huntMobUrl(m)}" alt="" decoding="async">`:icon('ghost')}</span></button>`).join('')}
+      ${visibleMobs.map(m=>`<button type="button" class="hunt-actor hunt-iso-actor ui-map-marker ${!playerTarget&&m.instanceId===field.target?'selected ':''}${m.aggro?'aggro':''}" data-target="${escapeHtml(m.instanceId)}" style="${worldStyle(m,m.instanceId)}" aria-label="${escapeHtml(m.name)} · ${Math.round(m.hpPercent)}% HP" aria-pressed="${!playerTarget&&m.instanceId===field.target}"><span class="hunt-actor-label"><span class="hunt-mob-name">${escapeHtml(m.name)}</span><span class="hunt-mob-percent">${Math.round(m.hpPercent)}%</span></span><span class="hunt-iso-avatar">${huntMobUrl(m)?`<img src="${huntMobUrl(m)}" alt="" decoding="async">`:icon('ghost')}</span></button>`).join('')}
       ${playerMarker({...state.player,x:field.x,y:field.y},true)}
       ${field.action?.phase==='cast'?`<span class="hunt-cast" style="${worldStyle(field)}" role="progressbar" aria-label="${escapeHtml(field.action.name||'Применение умения')}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(100*(1-Math.max(0,field.action.until-state.now)/Math.max(1,field.action.spatial?.windup||1)))}"><span>${escapeHtml(field.action.name||'Применение умения')}</span><i style="--cast-time:${Math.max(0,field.action.until-state.now)}ms"></i></span>`:''}
       ${field.path?.length?`<span class="hunt-destination" style="${worldStyle(field.path.at(-1))}" aria-hidden="true">＋</span>`:''}
       ${exits}
       </div>
-      ${field.mobs.length?'':`<div class="hunt-field-cleared">Здесь нет монстров</div>`}
+      ${field.mobs.length||field.level?.npcs?.length||field.ship?'':`<div class="hunt-field-cleared">Здесь нет монстров</div>`}
       </div>
     </section>`;
   }
@@ -471,9 +505,11 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     if(!peer)playerTarget=null;
     const body = [];
     const focused=document.activeElement;
-    const focusKey=focused&&content.contains(focused)?['data-skill','data-attack','data-next-target','data-hunt-halt','data-target','data-room','data-bar-tab','data-supply','data-target-drop','data-shots-collapse','data-shots','data-acp','data-acp-threshold','data-combat-action','data-pin-action','data-hunt-open','data-system-chat'].find(key=>focused.hasAttribute(key)):null;
+    const focusKey=focused&&content.contains(focused)?['data-skill','data-attack','data-next-target','data-hunt-halt','data-target','data-room','data-bar-tab','data-supply','data-target-drop','data-level-travel','data-level-marker','data-ship-candle','data-location-boss','data-level-npc','data-shots-collapse','data-shots','data-acp','data-acp-threshold','data-combat-action','data-pin-action','data-hunt-open','data-system-chat'].find(key=>focused.hasAttribute(key)):null;
     const focusValue=focusKey?focused.getAttribute(focusKey):null;
-    const locationTitle=[state.field?.title,state.field?.room?.landmark].filter(Boolean).join(' · ')||'Бой';
+    const titleParts=state.field?.title?.split(' · ')||[];
+    const displayTitle=state.field?.level&&titleParts.length>1?[...titleParts.slice(1),titleParts[0]].join(' · '):state.field?.title;
+    const locationTitle=[displayTitle,state.field?.room?.landmark].filter(Boolean).join(' · ')||'Бой';
     if(state.field&&displayedRoom!==state.field.sceneKey){
       const entry=isoPoint(state.field,viewport);
       camera={zoom:camera.zoom,x:(viewport.width/2-entry.x)*camera.zoom,y:(viewport.height/2-entry.y)*camera.zoom};
@@ -486,6 +522,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       body.push('<section class="hunt-scene" aria-label="Бой в локации">',fieldHtml(),'<div class="hunt-top-hud">',playerVitals(player),targetHud(),'<div class="hunt-status-side">',effectsHud(),'</div></div><div class="hunt-scene-dock ui-combat-dock">');
       if (dead&&!state.world?.mode) body.push(`<div class="boss-dead">Воскрешение · ${formatDuration(player.respawnRemainMs)}</div>`);
       body.push('<section class="hunt-controls ui-hud-content" aria-label="Боевые действия">');
+      if(state.field?.level)body.push('<button type="button" class="ui-button ui-compact" data-level-travel>Переходы и карта этажа</button>');
       const action=state.field?.action;
       const actionText=action?escapeHtml(action.name||'Умение')+' · '+(action.phase==='cast'?'Применение…':'Подходим к цели'):state.field?.pendingRoom?'Идём к выходу':state.field?.autoAttack?'Автоатака оружием':state.field?.path?.length?'Перемещение':'';
       if(actionText)body.push(`<div class="hunt-action-state" role="status">${actionText}</div>`);
@@ -497,7 +534,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       if(state.field?.map)body.push(`<details data-combat-details="rooms"><summary>${state.field.map.exploration?'Участки':'Комнаты'} · ${escapeHtml(state.field.room.name)}</summary>${mapHtml(state.field)}</details>`);
       body.push('<details class="hunt-extra" data-combat-details="travel"><summary>Перемещение и припасы</summary><div class="hunt-utility">');
       body.push('<button type="button" class="ui-button ui-compact" data-world-exit>Пешком к городу</button><button type="button" class="ui-button ui-compact" data-flee>Свиток возвращения</button>');
-      if(state.field?.floors>1)body.push(`<div class="hunt-field-actions"><button type="button" class="ui-button ui-compact" data-world-stairs="-1" ${state.field.floor<=1?'disabled':''}>Этаж ниже</button><span>Этаж ${state.field.floor}/${state.field.floors}</span><button type="button" class="ui-button ui-compact" data-world-stairs="1" ${state.field.floor>=state.field.floors?'disabled':''}>Этаж выше</button></div>`);
+      if(state.field?.floors>1&&!state.field.level)body.push(`<div class="hunt-field-actions"><button type="button" class="ui-button ui-compact" data-world-stairs="-1" ${state.field.floor<=1?'disabled':''}>Этаж ниже</button><span>Этаж ${state.field.floor}/${state.field.floors}</span><button type="button" class="ui-button ui-compact" data-world-stairs="1" ${state.field.floor>=state.field.floors?'disabled':''}>Этаж выше</button></div>`);
       body.push(shotsHtml(),vitalityHtml(),'</div></details><div class="hunt-view-controls"><button class="ui-button ui-compact" data-view-zoom="-1" aria-label="Уменьшить масштаб">−</button><button class="ui-button ui-compact" data-view-reset>Вернуть обзор</button><button class="ui-button ui-compact" data-view-zoom="1" aria-label="Увеличить масштаб">+</button></div>');
       if(state.lastLoot)body.push('<button type="button" class="ui-button ui-compact" data-last-loot>Последняя добыча</button>');
       body.push(`<details data-combat-details="acp"><summary>ACP · автозелья</summary><div class="hunt-utility"><label><input type="checkbox" data-acp ${state.supplies?.enabled?'checked':''}> Автоиспользование банок</label><label>Использовать ниже, % <input type="number" min="1" max="99" step="1" data-acp-threshold value="${state.supplies?.threshold||70}"></label><small>При включённом ACP кнопки банок над панелью включают и выключают их автоиспользование. HP повторяется после завершения лечения, MP — не чаще раза в секунду. Только пока открыт бой.</small></div></details>`);
@@ -605,6 +642,15 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     content.querySelectorAll('[data-view-zoom]').forEach(b=>b.addEventListener('click',()=>{camera.zoom=Math.max(.75,Math.min(1.65,camera.zoom+Number(b.dataset.viewZoom)*.15));applyCamera();}));
     content.querySelector('[data-view-reset]')?.addEventListener('click',()=>{camera={zoom:1,x:0,y:0};applyCamera();});
     content.querySelector('[data-world-exit]')?.addEventListener('click',async()=>{await run('/api/world/action',{action:'walk_exit'});render();});
+    content.querySelector('[data-level-travel]')?.addEventListener('click',showLevelTravel);
+    content.querySelectorAll('[data-level-marker]').forEach(b=>b.addEventListener('click',async()=>{const d=state.field.level.destinations[Number(b.dataset.levelMarker)];if(d.near)showLevelTravel();else {await run('/api/hunt/move',{point:d.point});render();}}));
+    content.querySelectorAll('[data-level-npc]').forEach(b=>b.addEventListener('click',()=>say(b.dataset.levelNpc)));
+    content.querySelectorAll('[data-ship-candle]').forEach(b=>b.addEventListener('click',async()=>{const c=state.field.ship.candles.find(c=>c.id===Number(b.dataset.shipCandle));if(c.state!=='unlit')return;if(c.near)await run('/api/world/action',{action:'ship_candle',candle:c.id});else await run('/api/hunt/move',{point:{x:c.x,y:c.y}});render();}));
+    content.querySelectorAll('[data-location-boss]').forEach(b=>b.addEventListener('click',async()=>{
+      if(Math.hypot(state.field.x-.5,state.field.y-.5)>.1){await run('/api/hunt/move',{point:{x:.5,y:.5}});render();return;}
+      if(pending)return;pending=true;
+      try{const {openBossGame}=await import('./boss.js');await openBossGame({api,renderState,haptic,statusElement,initialBoss:b.dataset.locationBoss,fromLocation:true});close();}catch(error){say(error.message);}finally{pending=false;}
+    }));
     content.querySelectorAll('[data-world-stairs]').forEach(b=>b.addEventListener('click',async()=>{await run('/api/world/action',{action:'floor',floor:(state.field?.floor||1)+Number(b.dataset.worldStairs)});render();}));
     content.querySelectorAll('[data-zone-kind]').forEach(b=>b.addEventListener('click',()=>{zoneKind=b.dataset.zoneKind;render();}));
     content.querySelector('[data-soul-select]')?.addEventListener('change',async e=>{const [color,stage]=e.target.value.split(':');await run('/api/soul/select',{color:color||null,stage:Number(stage)});render();});

@@ -23,6 +23,7 @@ const REASONS = {
 
 export const EPIC_ENTRY_REASONS = {
     boss_location_unknown: 'Для этого босса пока не определена точка появления.',
+    boss_gate_required: 'Подойди ко входу в покои босса. Закена сначала нужно найти с помощью свечей.',
     ...REASONS,
     unknown_epic: 'Такого эпического босса нет.',
     epic_level_too_low: 'Твой уровень слишком низок для этого босса.',
@@ -35,13 +36,13 @@ export const EPIC_ENTRY_REASONS = {
   };
 
 // The boss screen opens on the clan boss (called with a Clan Boss Sigil; the world bosses are in the list of the crown).
-export async function loadBossEntryState(api,{destination=null}={}) {
-  if(destination)return api('/api/boss/summon',{method:'POST',body:JSON.stringify({epic:destination,teleport:true})});
+export async function loadBossEntryState(api,{destination=null,fromLocation=false}={}) {
+  if(destination)return api('/api/boss/summon',{method:'POST',body:JSON.stringify({epic:destination,teleport:true,...(fromLocation?{fromLocation:true}:{})})});
   return { boss: await api('/api/boss'), summoned: false, state: null };
 }
 
-export async function openBossGame({ api, renderState, haptic, statusElement, initialView, initialBoss }) {
-  const entry = await loadBossEntryState(api,{destination:initialBoss});
+export async function openBossGame({ api, renderState, haptic, statusElement, initialView, initialBoss,fromLocation=false }) {
+  const entry = await loadBossEntryState(api,{destination:initialBoss,fromLocation});
   // Load the destination before mounting, so failed quest navigation keeps its screen.
   let initialEpic = initialView === 'world' ? await api('/api/boss/epic') : null;
   let state = entry.boss;

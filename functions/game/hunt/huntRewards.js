@@ -85,9 +85,10 @@ export {LOOT_KINDS};
 export function grantKillRewards(session, mob, mobDef, {random = Math.random, now = Date.now()} = {}) {
     const level = Math.max(1, Number(session.game.stats?.lvl) || 1);
     const tier = mob.champion ? CHAMPIONS[mob.champion] : null;
+    const result = {exp: 0, sp: 0, gold: 0, items: [], shared: [], party: [], champion: mob.champion || null, leveledUp: false, bonus: 1};
+    if(mobDef?.rewardless)return result;
     const academyGain = recordAcademyEvent(session, 'mob_kill', {now, mob: {level: mob.level, zone: mob.zone, name: mobDef?.name || mob.name}});
     const passDrops = academyGain.drops;
-    const result = {exp: 0, sp: 0, gold: 0, items: [], shared: [], party: [], champion: mob.champion || null, leveledUp: false, bonus: 1};
     // a pass of an epic boss that dropped (the quest item itself, bound to the hero)
     result.items.push(...passDrops.map(drop => ({item: `pass_${drop.pass}`, name: drop.item, icon: '🗝️', amount: drop.amount || 1})));
     // A party shares the loot of a kill by its loot mode (the killer keeps everything outside a party).

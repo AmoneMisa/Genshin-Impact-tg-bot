@@ -9,6 +9,7 @@ import {l2OnDamageReceived,l2PreventDeath,l2TransferDamage} from '../player/l2Ef
 import { CHAMPIONS, HUNT } from './huntConfig.js';
 import {tickSoulDots} from '../equipment/soulCrystalCombat.js';
 import { buildMob, getMobDef, getZone, heroStats } from './huntMobs.js';
+import {locationLevel,locationLevels} from './locationLevels.js';
 import { grantKillRewards } from './huntRewards.js';
 import castSkill from '../player/castSkill.js';
 import isPlayerCanUseSkill from '../player/isPlayerCanUseSkill.js';
@@ -48,15 +49,25 @@ export function ensureHunt(session) {
     const field = game.hunt.field;
     if (field && !field.room) {
         // a field saved before the rooms: it is the entrance room of its zone
-        field.room = roomLayout(getZone(game.hunt.zone)).startId;
+        field.room = roomLayout(getZone(game.hunt.zone),field.floor||1).startId;
         field.rooms = {};
         field.visited = [field.room];
         field.respawns = [];
     }
     if(field&&field.layoutVersion!==4){
-        const room=roomById(getZone(game.hunt.zone),field.room);
+        const room=roomById(getZone(game.hunt.zone),field.room,field.floor||1);
         field.walls=room?.walls||[];field.layoutVersion=4;field.path=[];delete field.action;delete field.autoAttack;delete field.pendingRoom;
         for(const actor of [field,...(field.mobs||[])]){Object.assign(actor,nearestOpenPoint(actor,field.walls));actor.path=[];}
+    }
+    if(field&&locationLevels(game.hunt.zone)&&field.levelVersion!==1){
+        const zone=getZone(game.hunt.zone);field.floor=locationLevel(zone.id,field.floor||1)?.number||1;
+        const layout=roomLayout(zone,field.floor),room=roomById(zone,field.room,field.floor)||layout.rooms[0],old=[...(field.mobs||[])];
+        const now=Date.now();field.mobs=populateRoom(session,zone,room,{now,random:Math.random}).map(fresh=>{
+            const index=old.findIndex(m=>m.mobId===fresh.mobId);if(index<0)return fresh;
+            const [saved]=old.splice(index,1);return {...fresh,instanceId:saved.instanceId,currentHp:Math.min(fresh.hp,saved.currentHp)};
+        });
+        Object.assign(field,{room:room.id,rooms:{},floorStates:{},respawns:[],visited:[room.id],walls:room.walls||[],target:field.mobs[0]?.instanceId||null,levelVersion:1,path:[]});
+        stopHuntAction(field,now);Object.assign(field,nearestOpenPoint(field,field.walls));
     }
     if (game.hunt.field) game.hunt.mob = game.hunt.field.mobs.find(m => m.instanceId === game.hunt.field.target) || null;
     return game.hunt;
@@ -274,13 +285,19 @@ function advanceSingleHunt(session, now = Date.now(), random = Math.random) {
 
 
 /** Builds room actors with original NPC aggression and social clans. */
-function populateRoom(session, zone, room, {now, random, count = room.cap, prefix = `${now}:${room.id}`}) {
+function populateRoom(session, zone, room, {now, random, count = room.cap, prefix = `${now}:f${session.game.hunt?.field?.floor||1}:${room.id}`,sourceSlot=null}) {
     const stage=zone.instance?.stages?.[(session.game.hunt?.field?.floor||1)-1];
+    if(zone.instance?.kind==='labyrinth'&&(session.game.hunt?.field?.floor||1)>=3)count=Math.min(count,1);
     const definitions=zone.mobs.filter(m=>(stage||room.mobIds||zone.mobs.map(m=>m.id)).includes(m.id));
+    const source=room.spawns?.flatMap((s,index)=>Array.from({length:s.count},()=>({...s,source:index})));
+    if(source&&source.length===0)return [];
     const pool=definitions.length?definitions:zone.mobs;
     const offset = Math.min(pool.length - 1, Math.floor(random() * pool.length));
     return slotPositions(count).map((slot, index) => {
-        const mob = buildMob(zone, pool[(offset + index) % pool.length], {now, random, className: session.game.gameClass.stats.name});
+        const placement=source?.[sourceSlot??index];
+        const def=placement?getMobDef(zone,placement.id):pool[(offset + index) % pool.length];
+        const mob = buildMob(zone, def, {now, random,champion:def.rewardless?null:undefined, className: session.game.gameClass.stats.name});
+        if(placement)Object.assign(mob,{sourceRoom:room.id,sourceSlot:sourceSlot??index,sourcePosition:placement.coordinateSource==='point'?{x:placement.x,y:placement.y,z:placement.z}:null,sourceTerritory:placement.polygon?.length?{polygon:placement.polygon,minZ:placement.minZ,maxZ:placement.maxZ}:null,sourceRespawnMs:placement.respawnMs,sourceRespawnRandomMs:placement.respawnRandomMs});
         return {...mob, instanceId: `${prefix}:${index}`, ai: AI_ROLES[index % AI_ROLES.length],
             aggro: false, ...nearestOpenPoint(slot,room.walls), buffs: []};
     });
@@ -295,12 +312,13 @@ function settleRespawns(session, hunt, now, random) {
     field.respawns = field.respawns.filter(entry => entry.at > now);
     const zone = getZone(hunt.zone);
     for (const entry of due) {
-        const room = roomById(zone, entry.room);
+        const room = roomById(zone, entry.room,field.floor||1);
         if (!room) continue;
         const bucket = entry.room === field.room ? field.mobs : (field.rooms[entry.room] ||= {mobs: []}).mobs;
         if (bucket.length >= room.cap) continue;
         field.seq = number(field.seq) + 1;
-        const [fresh] = populateRoom(session, zone, room, {now, random, count: 1, prefix: `${now}:${room.id}:r${field.seq}`});
+        const [fresh] = populateRoom(session, zone, room, {now, random, count: 1,sourceSlot:entry.sourceSlot??null, prefix: `${now}:${room.id}:r${field.seq}`});
+        if(!fresh)continue;
         // a new monster appears somewhere in the upper part of the area
         fresh.x = .12 + random() * .76;
         fresh.y = .12 + random() * .43;
@@ -316,9 +334,9 @@ function settleRespawns(session, hunt, now, random) {
 function enterRoom(session, hunt, roomIdValue, now, random) {
     const zone = getZone(hunt.zone);
     const field = hunt.field;
-    const from = roomById(zone, field.room), to = roomById(zone, roomIdValue);
+    const from = roomById(zone, field.room,field.floor||1), to = roomById(zone, roomIdValue,field.floor||1);
     if (!to || !adjacent(from, to)) return {ok: false, reason: 'room_not_adjacent'};
-    const train = field.mobs.filter(m => m.aggro && m.currentHp > 0);
+    const train = session.game.world?.instanceId?[]:field.mobs.filter(m => m.aggro && m.currentHp > 0);
     field.rooms[from.id] = {mobs: field.mobs.filter(m => !train.includes(m))};
     const stored = field.rooms[to.id];
     delete field.rooms[to.id];
@@ -362,26 +380,35 @@ export function startHunt(session, zoneId, {now = Date.now(), random = Math.rand
 }
 
 /** A persistent small battlefield. Moves/selection/attacks all run under the inventory lock. */
-export function enterHuntField(session, zoneId, {now = Date.now(), random = Math.random, targetMobId = null} = {}) {
+export function enterHuntField(session, zoneId, {now = Date.now(), random = Math.random, targetMobId = null,floor=null} = {}) {
     const zone = getZone(zoneId);
     if (!zone) return {ok: false, reason: 'unknown_zone'};
+    floor??=locationLevels(zoneId)?.entryFloor||1;
+    let entryRoom=null;
+    if(targetMobId&&locationLevels(zoneId)){
+        const sourceFloor=locationLevels(zoneId).floors.find(f=>f.rooms.some(r=>r.spawns.some(s=>s.id===String(targetMobId))));
+        if(!sourceFloor)return {ok:false,reason:'unknown_zone'};
+        floor=sourceFloor.number;entryRoom=sourceFloor.rooms.find(r=>r.spawns.some(s=>s.id===String(targetMobId))).id;
+    }
     const hunt = ensureHunt(session);
     advanceHunt(session, now, random);
     if (hunt.mob || hunt.field) return {ok: false, reason: 'already_fighting'};
     if (isDead(session, now)) return {ok: false, reason: 'dead'};
     if (!session.game.gameClass?.skills?.length) return {ok: false, reason: 'no_combat_class'};
-    const layout = roomLayout(zone);
-    const room = roomById(zone, layout.startId);
-    const mobs = populateRoom(session, zone, room, {now, random});
-    if(targetMobId){
+    const layout = roomLayout(zone,floor);
+    const room = roomById(zone, entryRoom||layout.startId,floor);
+    const mobs = populateRoom(session, zone, room, {now, random,prefix:`${now}:f${floor}:${room.id}`});
+    if(targetMobId&&!locationLevels(zoneId)){
         const definition=getMobDef(zone,targetMobId);
         if(!definition)return {ok:false,reason:'unknown_zone'};
         const slot=mobs[0];
         mobs[0]={...buildMob(zone,definition,{now,random,className:session.game.gameClass.stats.name}),instanceId:slot.instanceId,ai:slot.ai,aggressive:slot.aggressive,aggro:false,x:slot.x,y:slot.y,buffs:[]};
     }
     hunt.zone = zone.id;
-    hunt.field = {mobs, target: mobs[0]?.instanceId || null, x: .5, y: .95, seenAt: now, moveAt:now, path:[], walls:room.walls||[],layoutVersion:4, room: room.id, rooms: {}, visited: [room.id], respawns: [], seq: mobs.length};
-    hunt.mob = mobs[0] || null;
+    const initialTarget=targetMobId?mobs.find(m=>m.mobId===String(targetMobId))||mobs[0]:mobs[0];
+    hunt.field = {floor,mobs, target: mobs[0]?.instanceId || null, x: .5, y: .95, seenAt: now, moveAt:now, path:[], walls:room.walls||[],layoutVersion:4,levelVersion:locationLevel(zone.id,floor)?1:null, room: room.id, rooms: {}, visited: [room.id], respawns: [], seq: mobs.length};
+    hunt.field.target=initialTarget?.instanceId||null;
+    hunt.mob = initialTarget || null;
     hunt.playerDebuffs = [];
     hunt.lastActionAt = now;
     pushLog(hunt, '⚑', `${zone.title}: выбери цель или подойди к монстрам.`, now);
@@ -389,8 +416,33 @@ export function enterHuntField(session, zoneId, {now = Date.now(), random = Math
 }
 
 export function resetInstanceRoom(session,roomId,now=Date.now(),floor=1){
-    const hunt=ensureHunt(session),zone=getZone(hunt.zone),room=roomById(zone,roomId);if(!room)return false;
+    const hunt=ensureHunt(session),zone=getZone(hunt.zone),room=roomById(zone,roomId,floor);if(!room)return false;
     const field=hunt.field;stopHuntAction(field,now);field.floor=floor;field.room=room.id;field.mobs=populateRoom(session,zone,room,{now,random:Math.random,count:zone.instance?.kind==='labyrinth'&&floor>=3?1:room.cap});field.target=field.mobs[0]?.instanceId||null;field.walls=room.walls||[];field.path=[];field.x=.5;field.y=.95;field.moveAt=now;delete field.pendingRoom;hunt.mob=field.mobs[0]||null;hunt.lastActionAt=now;return true;
+}
+
+/** Bank the entire floor, including pending respawns. A staircase never rerolls it. */
+export function changeHuntFloor(session,floor,{now=Date.now(),random=Math.random,arrival=null}={}){
+ const hunt=ensureHunt(session),field=hunt.field,zone=getZone(hunt.zone);
+ if(!field||!Number.isInteger(floor)||floor<1||floor>(zone.floors||1))return {ok:false,reason:'invalid_floor'};
+ const previous=field.floor||1;
+ if(previous===floor)return {ok:false,reason:'invalid_floor'};
+ const banks=field.floorStates||={};
+ const snapshot=()=>Object.fromEntries(['mobs','room','rooms','respawns','visited','walls','target','seq','levelVersion'].map(k=>[k,field[k]]));
+ banks[previous]=snapshot();stopHuntAction(field,now);
+ const layout=roomLayout(zone,floor),level=locationLevel(zone.id,floor);
+ const landing=arrival||level?.stairs[floor>previous?'down':'up'];
+ const room=roomById(zone,landing?.room||layout.startId,floor);
+ field.floor=floor;
+ if(banks[floor])Object.assign(field,banks[floor]);
+ else Object.assign(field,{mobs:[],room:room.id,rooms:{},respawns:[],visited:[room.id],walls:room.walls||[],target:null,seq:0,levelVersion:level?1:null});
+ // Walk into the landing while retaining the rest of that floor's rooms.
+ if(field.room!==room.id){field.rooms[field.room]={mobs:field.mobs};field.mobs=field.rooms[room.id]?.mobs||populateRoom(session,zone,room,{now,random});delete field.rooms[room.id];field.room=room.id;field.walls=room.walls||[];}
+ else if(!banks[floor])field.mobs=populateRoom(session,zone,room,{now,random});
+ field.target=field.mobs[0]?.instanceId||null;field.visited=[...new Set([...field.visited,room.id])];
+ Object.assign(field,landing?.point||{x:.9,y:.1},{floor,seenAt:now,moveAt:now,path:[]});
+ for(const mob of field.mobs){mob.lastMoveAt=now;mob.nextAttackAt=Math.max(mob.nextAttackAt||0,now+mob.attackMs);}
+ hunt.mob=field.mobs.find(m=>m.instanceId===field.target)||null;
+ return {ok:true,floor};
 }
 export function selectHuntTarget(session, targetId, now = Date.now()) {
     const changed = advanceHunt(session, now).length > 0;
@@ -409,11 +461,11 @@ export function moveHuntField(session, direction, now = Date.now(), random = Mat
     const changed = advanceHunt(session, now).length > 0;
     const hunt = ensureHunt(session);
     if (!hunt.field || isDead(session, now)) return {ok: false, reason: 'no_field', changed};
-    const field=hunt.field,zone=getZone(hunt.zone),room=roomById(zone,field.room);
+    const field=hunt.field,zone=getZone(hunt.zone),room=roomById(zone,field.room,field.floor||1);
     if(zone.instance?.kind==='rift'&&typeof direction==='string')return {ok:false,reason:'rift_jump_only'};
     let target=direction;
     if (typeof direction === 'string' && direction.startsWith('room:')) {
-        const to=roomById(zone,direction.slice(5));
+        const to=roomById(zone,direction.slice(5),field.floor||1);
         if(!adjacent(room,to))return {ok:false,reason:'room_not_adjacent'};
         target={x:to.col>room.col?.95:to.col<room.col?.05:.5,y:to.row>room.row?.95:to.row<room.row?.05:.5};
         field.pendingRoom=to.id;
@@ -560,7 +612,7 @@ function finishKill(session,hunt,mob,{random,now,deferLoot=false}){
     if (hunt.field) {
         const index=hunt.field.mobs.findIndex(m=>m.instanceId===mob.instanceId);
         if(index>=0)hunt.field.mobs.splice(index,1);
-        if(!session.game.world?.instanceId)(hunt.field.respawns ||= []).push({at: now + HUNT.mobRespawnMs, room: hunt.field.room});
+        if(!session.game.world?.instanceId&&!mob.rewardless)(hunt.field.respawns ||= []).push({at:now+(mob.sourceRespawnMs??HUNT.mobRespawnMs)+Math.round((random()*2-1)*(mob.sourceRespawnRandomMs||0)),room:mob.sourceRoom||hunt.field.room,sourceSlot:mob.sourceSlot??null});
         hunt.field.target = hunt.field.mobs[0]?.instanceId || null;
         hunt.mob = hunt.field.mobs[0] || null;
     } else hunt.mob=null;

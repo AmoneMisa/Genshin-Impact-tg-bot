@@ -7,6 +7,8 @@ import { advanceHunt, ensureHunt, mobDto, enterHuntField, moveHuntField, selectH
 import { huntDropPreview, LOOT_KINDS } from '../functions/game/hunt/huntRewards.js';
 import { getZone, getMobDef } from '../functions/game/hunt/huntMobs.js';
 import { roomLayout, roomById, adjacent, groundHeight } from '../functions/game/hunt/huntRooms.js';
+import {levelTransitions,locationLevel} from '../functions/game/hunt/locationLevels.js';
+import {shipDto} from '../functions/game/world/zakenShip.js';
 import {fieldPvpStatus,fieldPvpSkillBlock} from '../functions/game/hunt/fieldPvpState.js';
 import {memberName} from './social.js';
 import { potionBarDto, skillDto } from './boss.js';
@@ -116,21 +118,22 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
 function fieldDto(hunt, now, session) {
     const field = hunt.field;
     const zone = getZone(hunt.zone);
-    const layout = roomLayout(zone);
-    const current = roomById(zone, field.room) || layout.rooms[0];
+    const layout = roomLayout(zone,field.floor||1);
+    const current = roomById(zone, field.room,field.floor||1) || layout.rooms[0];
+    const level=locationLevel(zone.id,field.floor||1);
     const visited = new Set(field.visited || [current.id]);
     const pending = (field.respawns || []).filter(entry => entry.room === current.id);
     const nextSpawnMs = pending.length ? Math.max(0, Math.min(...pending.map(entry => entry.at)) - now) : 0;
     return {
     x: field.x, y: field.y, runSpeed:getSpeed(session), walls:field.walls||[], path: field.path || [], moveAt: field.moveAt, floor: field.floor || 1, floors:zone?.floors||(zone?.id==='tower-of-insolence'?14:1), target: field.target,
-        autoAttack:Boolean(field.autoAttack),attack:weaponSpatial(session,now),pendingRoom:field.pendingRoom||null,
+        autoAttack:Boolean(field.autoAttack),attack:weaponSpatial(session,now),pendingRoom:field.pendingRoom||null,ship:shipDto(session,now),
         lastStrike:field.lastStrike&&now-field.lastStrike.at<900?field.lastStrike:null,
         action:field.action?{...field.action,name:session.game.gameClass.skills[field.action.index]?.name,
             spatial:skillSpatial(session,session.game.gameClass.skills[field.action.index],now)}:null,
         exits:layout.map?layout.rooms.filter(r=>adjacent(current,r)).map(r=>({id:r.id,name:visited.has(r.id)?r.name:'Не исследовано',
             side:r.col>current.col?'east':r.col<current.col?'west':r.row>current.row?'south':'north'})):[],
-        title: zone?.title,sceneKey:`${hunt.zone}:${current.id}${current.sceneVariant?':area-'+current.sceneVariant:''}`,environment:current.environment,layoutSource:current.layoutSource,
-        room: {id: current.id, name: current.name, landmark:current.landmark||null, big: current.big, cap: current.cap, height: groundHeight(current.cap)},
+        title:level?.title||zone?.title,level:levelTransitions(zone.id,field),sceneKey:`${hunt.zone}:${current.id}${level?':floor-'+(field.floor||1):current.sceneVariant?':area-'+current.sceneVariant:''}`,environment:current.environment,layoutSource:current.layoutSource,
+        room: {id: current.id, name: current.name, landmark:level?(layout.map?'Зал '+(current.row*layout.cols+current.col+1):null):current.landmark||null, big: current.big, cap: current.cap, height: groundHeight(current.cap)},
         map: layout.map ? {
             cols: layout.cols, rows: layout.rows,exploration:Boolean(layout.exploration),
             rooms: layout.rooms.map(room => ({
@@ -138,6 +141,7 @@ function fieldDto(hunt, now, session) {
                 current: room.id === current.id,
                 visited: visited.has(room.id),
                 adjacent: adjacent(current, room),
+                passages:levelTransitions(zone.id,{...field,room:room.id})?.destinations.filter(d=>d.room===room.id).map(d=>d.title)||[],
                 // a room the hero knows shows its name and how many monsters stand there now
                 name: visited.has(room.id) ? room.name : '',
                 mobs: room.id === current.id ? field.mobs.length : visited.has(room.id) ? (field.rooms?.[room.id]?.mobs.length ?? 0) : null,

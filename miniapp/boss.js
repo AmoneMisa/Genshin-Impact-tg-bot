@@ -43,6 +43,12 @@ import {getHotbar,HOTBAR_MAX} from '../functions/game/player/hotbar.js';
 import {battleSpecialDto,excludeToggleSkills} from './battleSpecial.js';
 import {quickTravelBlock,siegePoint,ensureWorld,CITIES} from '../functions/game/world/world.js';
 import bossPositions from '../template/worldBossMap.js';
+import {locationBossGate} from '../functions/game/world/zakenShip.js';
+
+export async function enterBossFromLocation(session,chatId,name,now=Date.now()){
+ if(!locationBossGate(session,name,now))return {ok:false,reason:'boss_gate_required'};
+ return enterBossFromAtlas(session,chatId,name,now);
+}
 
 /** Direct map entry uses the same encounter, party/pass/lock rules as the existing boss entry. */
 export async function enterBossFromAtlas(session,chatId,name,now=Date.now()){

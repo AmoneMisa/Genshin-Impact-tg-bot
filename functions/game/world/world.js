@@ -3,7 +3,8 @@ import {teleportPrice} from '../runes/labRunes.js';
 import {pointInPolygon, findPath, advancePath} from './navigation.js';
 import getSpeed from '../player/getters/getSpeed.js';
 import {l2MoveMultiplier,l2ActionBlock} from '../player/l2Effects.js';
-import {enterHuntField, advanceHunt, moveHuntField, resetInstanceRoom,stopHuntAction} from '../hunt/huntFight.js';
+import {enterHuntField, advanceHunt, moveHuntField, resetInstanceRoom,stopHuntAction,changeHuntFloor} from '../hunt/huntFight.js';
+import {levelTransitions} from '../hunt/locationLevels.js';
 import {spendMaterials, addMaterial} from '../player/materials.js';
 import {getZone} from '../hunt/huntMobs.js';
 import holdings from '../../../template/worldHoldings.js';
@@ -12,6 +13,7 @@ import {markWorldDeath} from './death.js';
 import {questTargets} from './questTargets.js';
 import {outdoorPoint,arriveHoldingEntrance,leaveHolding,ENTRANCE_SIZE} from './holdingEntry.js';
 import {townTravelQuote} from './townTravel.js';
+import {createShipVoyage,shipInstance,lightShipCandle,tickShip} from './zakenShip.js';
 
 export {CITIES,REGIONS,LOCATIONS,CITY_NPCS};
 export const CITY_SIZE=14000;
@@ -193,16 +195,46 @@ export function worldAction(session,body,now=Date.now()){
     }
     if(body.action==='floor'){
         const f=session.game.hunt?.field,l=LOCATIONS.find(l=>l.id===w.location),floor=Number(body.floor);
-        if(!f||!Number.isInteger(floor)||floor<1||floor>l.floors||Math.abs(floor-(f.floor||1))!==1)return {ok:false,reason:'invalid_floor'};
+        if(w.mode!=='location'||!f||!l||session.game.hunt.zone!==l.id||!Number.isInteger(floor)||floor<1||floor>l.floors||floor===(f.floor||1))return {ok:false,reason:'invalid_floor'};
+        const blocked=l2ActionBlock(session,{move:true},now);if(blocked)return {ok:false,reason:blocked};
         if(l.instance?.kind==='labyrinth'&&floor>(f.floor||1)&&f.mobs.some(m=>m.currentHp>0))return {ok:false,reason:'objectives_remaining'};
-        if(Math.hypot(f.x-.9,f.y-.1)>.1)return {ok:false,reason:'stairs_required'};
-        const old=f.floor||1;f.floors||={};f.floors[old]={mobs:f.mobs,room:f.room,rooms:f.rooms,respawns:f.respawns,visited:f.visited,walls:f.walls};
-        const stored=f.floors[floor];
-        if(stored)Object.assign(f,stored);else {session.game.hunt.field=null;session.game.hunt.mob=null;const r=enterHuntField(session,w.location,{now});if(!r.ok){session.game.hunt.field=f;return r;}Object.assign(f,session.game.hunt.field);session.game.hunt.field=f;}
-        if(!stored)resetInstanceRoom(session,f.room,now,floor);
-        stopHuntAction(f,now);f.floor=floor;f.x=.9;f.y=.1;session.game.hunt.mob=f.mobs.find(m=>m.instanceId===f.target)||null;return {ok:true};
+        const transitions=levelTransitions(l.id,f),destination=transitions?.destinations.find(d=>d.floor===floor);
+        if(transitions&&!destination||!transitions&&Math.abs(floor-(f.floor||1))!==1)return {ok:false,reason:'invalid_floor'};
+        if(transitions?!destination?.near:Math.hypot(f.x-.9,f.y-.1)>.1)return {ok:false,reason:'stairs_required'};
+        if(destination?.mode==='teleport'){const denied=quickTravelBlock(session,now);if(denied)return {ok:false,reason:denied};}
+        const gold=destination?.gold||0;if(session.game.inventory.gold<gold)return {ok:false,reason:'not_enough_gold'};
+        if(l.id==='devils-isle'&&floor>=4&&!shipInstance(session)){
+            if(f.floor!==3||floor!==4)return {ok:false,reason:'ship_required'};
+            return enterZakenShip(session,now);
+        }
+        const result=changeHuntFloor(session,floor,{now,arrival:destination?.arrival});
+        if(result.ok){session.game.inventory.gold-=gold;if(l.id==='devils-isle'&&floor===3)w.instanceId=null;}
+        return result;
+    }
+    if(body.action==='ship_candle'){
+        const denied=l2ActionBlock(session,{move:true},now);if(denied)return {ok:false,reason:denied};
+        if(!alive(session))return {ok:false,reason:'dead'};
+        return lightShipCandle(session,Number(body.candle),now);
     }
     return {ok:false,reason:'invalid_action'};
+}
+export function enterZakenShip(session,now=Date.now(),random=Math.random){
+ const chat=session.ownerDocument?.();if(!chat)return {ok:false,reason:'ship_required'};
+ const members=session.game.party?partyMembers(chat,session):[session];
+ if(session.game.party&&String(session.game.party.leaderId)!==String(session.userId))return {ok:false,reason:'instance_party_required'};
+ if(!members.length||members.some(m=>{
+  const w=m.game.world,f=m.game.hunt?.field,d=f&&levelTransitions('devils-isle',f)?.destinations.find(d=>d.floor===4);
+  return !alive(m)||w?.mode!=='location'||w.location!=='devils-isle'||f?.floor!==3||!d?.near||quickTravelBlock(m,now)||w.instanceId;
+ }))return {ok:false,reason:'party_not_ready'};
+ const store=chat.game.worldInstances||={};
+ let instance=store[session.game.world.zakenVoyage];
+ if(!instance||instance.until<=now||members.some(m=>!instance.members.includes(String(m.userId)))){
+  if(Object.values(store).filter(i=>i.until>now).length>=64)return {ok:false,reason:'instance_busy'};
+  const id=`zaken-ship:${session.game.party?.id||session.userId}:${now}`;
+  instance=createShipVoyage(id,members,now,random);store[id]=instance;
+ }
+ for(const m of members){changeHuntFloor(m,4,{now});m.game.world.instanceId=instance.id;m.game.world.zakenVoyage=instance.id;m.needsSave=true;}
+ bindWorldInstances(chat,now);return {ok:true,instanceId:instance.id};
 }
 export function enterWorldInstance(chat,session,locationId,now=Date.now()){
     const w=advanceWorld(session,now),l=LOCATIONS.find(l=>l.id===locationId),rule=l?.instance;
@@ -234,6 +266,7 @@ export function enterWorldInstance(chat,session,locationId,now=Date.now()){
 export function bindWorldInstances(chat,now=Date.now()) {
     const store=chat.game?.worldInstances||{};
     const all=[...(chat.members||[]),...(chat.$locals?.guests||[])];
+    for(const instance of Object.values(store))tickShip(instance,now);
     for(const instance of Object.values(store))if(instance.nextJumpAt&&instance.nextJumpAt<=now&&instance.until>now){
         instance.stage++;instance.nextJumpAt=now+300000;const zone=getZone(instance.location),rooms=zone?.riftRooms||[];const room=rooms[instance.stage%rooms.length];
         if(room){instance.rooms={};for(const member of all)if(member.game.world?.instanceId===instance.id&&member.game.hunt?.field){resetInstanceRoom(member,room.id,now);member.needsSave=true;}}

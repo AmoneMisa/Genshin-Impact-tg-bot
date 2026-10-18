@@ -15,7 +15,7 @@ import saveSession from '../../functions/getters/saveSession.js';
 import getClan from '../../functions/game/clans/getClan.js';
 import { memberName } from '../social.js';
 import { getArenaState, attackArena } from '../arena.js';
-import { getBossState, getEpicState, summonBossForMiniApp, enterBossFromAtlas, useBossSkill } from '../boss.js';
+import { getBossState, getEpicState, summonBossForMiniApp, enterBossFromAtlas, enterBossFromLocation, useBossSkill } from '../boss.js';
 import { getZoneLoot, getHuntState, setAutoShotsForMiniApp, startHuntForMiniApp, useHuntSkillForMiniApp, setHotbarForMiniApp, useSpecialForMiniApp, moveHuntForMiniApp, targetHuntForMiniApp } from '../hunt.js';
 import { setHuntAttack } from '../../functions/game/hunt/huntFight.js';
 import { worldAction, advanceWorld, ensureWorld, bindWorldInstances } from '../../functions/game/world/world.js';
@@ -91,12 +91,13 @@ export const bossSummon = guarded('boss summon', async (req, res) => {
   const epic = typeof body?.epic === 'string' && body.epic ? body.epic : null;
   const { scope, clan, world } = await bossScope(context, epic);
   if (!world && !clan) return sendResult(res, { ok: false, reason: 'no_clan' }, context);
-  const result = await withLock(`${scope}:boss`, async () => {
+  const result = await withLock('clan:world',()=>withLock(`${scope}:boss`, async () => {
     context.session = await getSession(scope, context.userId);
-    const summoned = body.teleport&&world ? await enterBossFromAtlas(context.session,scope,epic) : await summonBossForMiniApp(context.session, scope, epic, { memberCount: clan?.members.length ?? null });
+    if(body.fromLocation){await loadWorldInstances(context.session);bindWorldInstances(context.session.ownerDocument());advanceWorld(context.session);}
+    const summoned = body.fromLocation&&world ? await enterBossFromLocation(context.session,scope,epic) : body.teleport&&world ? await enterBossFromAtlas(context.session,scope,epic) : await summonBossForMiniApp(context.session, scope, epic, { memberCount: clan?.members.length ?? null });
     if (summoned.ok) await saveSession(context.session);
     return summoned;
-  });
+  }));
   context.session = await getSession(context.chatId, context.userId);
   if (result.ok && clan) {
     const summoner = memberName(context.session);

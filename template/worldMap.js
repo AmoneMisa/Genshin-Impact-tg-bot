@@ -1,4 +1,5 @@
 import {HUNTING_EXPANSION_LOCATIONS} from './huntingExpansion.js';
+import {LOCATION_LEVELS} from './locationLevels.js';
 import {SETTLEMENTS,SETTLEMENT_NPCS,GATEKEEPER_CORRECTIONS} from './worldSettlements.js';
 // Original H5 entrance coordinates; selection polygons and teleport tariffs are project policy.
 const BASE_CITIES=[{"id":"aden","name":"Аден","x":147450,"y":27064,"gk":"Elisa"},{"id":"giran","name":"Гиран","x":83400,"y":147900,"gk":"Clarissa"},{"id":"rune","name":"Руна","x":43840,"y":-47700,"gk":"Stanislava"},{"id":"goddard","name":"Годдард","x":147000,"y":-57000,"gk":"Tatiana"},{"id":"oren","name":"Орен","x":82900,"y":53200,"gk":"Valentina"},{"id":"dion","name":"Дион","x":18700,"y":145000,"gk":"Trisha"},{"id":"gludio","name":"Глудио","x":-14000,"y":123000,"gk":"Bella"},{"id":"schuttgart","name":"Шутгарт","x":87300,"y":-143000,"gk":"Ragara"},{"id":"gludin","name":"Глудин","x":-83000,"y":150000,"gk":"Richlin"},{"id":"heine","name":"Хейн","x":111400,"y":219400,"gk":"Flauen"}];
@@ -9,4 +10,4 @@ const BASE_CITY_NPCS=[{"id":"aden:npc:0","name":"Elisa","role":"Хранител
 export const CITIES=[...BASE_CITIES.map(c=>GATEKEEPER_CORRECTIONS[c.id]?{...c,gk:GATEKEEPER_CORRECTIONS[c.id].name}:c),...SETTLEMENTS];
 export const CITY_NPCS=[...BASE_CITY_NPCS.map(n=>n.gateway&&GATEKEEPER_CORRECTIONS[n.city]?{...n,...GATEKEEPER_CORRECTIONS[n.city],adapted:false}:n),...SETTLEMENT_NPCS];
 
-export const LOCATIONS=[...BASE_LOCATIONS.filter(l=>!HUNTING_EXPANSION_LOCATIONS.some(extra=>extra.id===l.id)),...HUNTING_EXPANSION_LOCATIONS];
+export const LOCATIONS=[...BASE_LOCATIONS.filter(l=>!HUNTING_EXPANSION_LOCATIONS.some(extra=>extra.id===l.id)),...HUNTING_EXPANSION_LOCATIONS].map(l=>LOCATION_LEVELS[l.id]?{...l,floors:LOCATION_LEVELS[l.id].floors.length}:l);

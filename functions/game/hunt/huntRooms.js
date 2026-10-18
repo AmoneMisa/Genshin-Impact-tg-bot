@@ -1,4 +1,5 @@
 import {explorationZone,explorationSection} from '../../../template/huntExploration.js';
+import {locationLevel} from './locationLevels.js';
 // Rooms of a zone. A catacomb is a grid of rooms (columns x rows, like a dungeon map): the hero walks between
 // neighbouring rooms, every room holds its own monsters and they come back some time after they were killed.
 // A big hall holds 11-12 monsters, a small chamber 3-5. Each open-field section holds FIELD_CAP monsters.
@@ -43,11 +44,13 @@ export function roomEnvironment(zone){
 }
 
 /** {cols, rows, startId, rooms: [{id, row, col, big, cap, name}]} of a zone; reviewed fields have a local fork. */
-export function roomLayout(zone) {
+export function roomLayout(zone,floor=1) {
     const key = zone?.id || 'none';
-    if (layouts.has(key)) return layouts.get(key);
+    const level=locationLevel(key,floor),cacheKey=level?key+':'+floor:key;
+    if (layouts.has(cacheKey)) return layouts.get(cacheKey);
     let layout;
-    if(zone?.instance?.kind==='rift'){const rooms=(zone.riftRooms||[]).map((r,i)=>({...r,row:Math.floor(i/3),col:i%3,big:r.cap>=10,name:'Комната Разлома '+(i+1),walls:[{x:.35,y:.45,w:.3,h:.08}]}));layout={cols:3,rows:Math.ceil(rooms.length/3),startId:rooms[0].id,map:false,rooms};}
+    if(level){layout={cols:level.cols,rows:level.rows,startId:level.startId,map:level.rooms.length>1,level:floor,rooms:level.rooms.map(r=>({...r,big:r.cap>=10,landmark:level.title,walls:[]}))};}
+    else if(zone?.instance?.kind==='rift'){const rooms=(zone.riftRooms||[]).map((r,i)=>({...r,row:Math.floor(i/3),col:i%3,big:r.cap>=10,name:'Комната Разлома '+(i+1),walls:[{x:.35,y:.45,w:.3,h:.08}]}));layout={cols:3,rows:Math.ceil(rooms.length/3),startId:rooms[0].id,map:false,rooms};}
     else if (zone?.instance && zone.instance.kind !== 'rift') {
         layout={cols:1,rows:1,startId:roomId(0,0),map:false,rooms:[{id:roomId(0,0),row:0,col:0,big:true,cap:zone.instance.kind==='labyrinth'?8:1,name:zone.title,walls:zone.instance.kind==='labyrinth'?[{x:.35,y:.4,w:.3,h:.08}]:[]}]};
     } else if (explorationZone(key) && zone?.kind !== 'catacomb') {
@@ -76,10 +79,10 @@ export function roomLayout(zone) {
         });
         layout = {cols: GRID_COLS, rows: GRID_ROWS, startId: roomId(0, 0), map: true, rooms};
     }
-    const environment=roomEnvironment(zone),indoor=['catacomb','necropolis'].includes(environment);
+    const environment=level?.environment||roomEnvironment(zone),indoor=['catacomb','necropolis','ship'].includes(environment);
     for(const room of layout.rooms){
         room.environment=environment;room.layoutSource='adapted';
-        const section=explorationSection(key,room.id);
+        const section=level?null:explorationSection(key,room.id);
         if(section){room.landmark=section.name;room.sceneVariant=section.index;}
         // Stable per-room variation, with clear central aisles and cardinal doorways.
         const random=seeded(`scenery:${key}:${room.id}`);
@@ -92,11 +95,11 @@ export function roomLayout(zone) {
         room.walls=[...(room.walls||[]).map(w=>({...w,kind:w.kind||'stone'})),...features];
         if(environment==='necropolis')room.walls.push({x:.1,y:.54,w:.07,h:.13,kind:'sarcophagus'},{x:.8,y:.18,w:.1,h:.07,kind:'sarcophagus'});
     }
-    layouts.set(key, layout);
+    layouts.set(cacheKey, layout);
     return layout;
 }
 
-export const roomById = (zone, id) => roomLayout(zone).rooms.find(room => room.id === id) || null;
+export const roomById = (zone, id,floor=1) => roomLayout(zone,floor).rooms.find(room => room.id === id) || null;
 
 /** True when the two rooms share a wall (one step along a row or a column). */
 export const adjacent = (a, b) => Boolean(a && b) && Math.abs(a.row - b.row) + Math.abs(a.col - b.col) === 1;

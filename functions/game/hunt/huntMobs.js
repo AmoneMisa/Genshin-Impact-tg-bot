@@ -4,6 +4,7 @@ import catacombs from '../../../template/catacombsTemplate.js';
 import necropolises from '../../../template/necropolisesTemplate.js';
 import worldZones from '../../../template/worldZones.js';
 import {HUNTING_EXPANSION} from '../../../template/huntingExpansion.js';
+import {LOCATION_LEVELS,ZAKEN_SHIP} from '../../../template/locationLevels.js';
 import npcAi from '../../../template/l2NpcAi.js';
 export function npcBehaviour(id){
     const ai=npcAi[id];
@@ -12,7 +13,8 @@ export function npcBehaviour(id){
 import {NPC_ATTRIBUTES,NPC_ATTRIBUTE_ATTACKS} from '../../../template/l2AttributeRules.js';
 const catIds=new Set(catacombs.map(z=>z.id));
 const expansionIds=new Set(HUNTING_EXPANSION.map(z=>z.id));
-const zones=[...fields.filter(z=>!catIds.has(z.id)&&!expansionIds.has(z.id)),...catacombs,...necropolises,...worldZones,...HUNTING_EXPANSION].sort((a,b)=>a.level-b.level);
+const referenceZones=[...fields.filter(z=>!catIds.has(z.id)&&!expansionIds.has(z.id)),...catacombs,...necropolises,...worldZones,...HUNTING_EXPANSION];
+const zones=referenceZones.map(z=>LOCATION_LEVELS[z.id]?{...z,mobs:[...LOCATION_LEVELS[z.id].mobs,...(z.id==='devils-isle'?ZAKEN_SHIP.mobs:[])],floors:LOCATION_LEVELS[z.id].floors.length}:z).sort((a,b)=>a.level-b.level);
 for(const z of zones)for(const m of z.mobs)m.resist ||= NPC_ATTRIBUTES[m.id] || {};
 import getClassStats from '../player/getters/getGameClassStatsFromTemplate.js';
 import { CHAMPIONS, CHAMPION_MIN_LEVEL, HUNT } from './huntConfig.js';
@@ -28,7 +30,8 @@ export const getMobDef = (zone, mobId) => zone?.mobs.find(mob => mob.id === Stri
 // "A typical mob of that level": the median of a real stat over every extracted mob within WINDOW levels, so
 // each mob can be compared with its neighbours (hp x1.4 means 40% tougher than usual there).
 const WINDOW = 5;
-const allMobs = zones.flatMap(zone => zone.mobs);
+// New encounter coverage must not silently rebalance every unrelated hunting zone.
+const allMobs = referenceZones.flatMap(zone => zone.mobs);
 const medians = new Map();
 function typical(key, level) {
     const cacheKey = `${key}:${level}`;
@@ -95,6 +98,7 @@ export function buildMob(zone, mobDef, {now = Date.now(), random = Math.random, 
     return {
         zone: zone.id,
         mobId: mobDef.id,
+        rewardless:Boolean(mobDef.rewardless),
         ...npcBehaviour(mobDef.id),
         name: mobDef.name,
         level: mobDef.level,

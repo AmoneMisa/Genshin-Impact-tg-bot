@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {HUNT_EXPLORATION,explorationSection} from '../template/huntExploration.js';
+import {locationLevel} from '../functions/game/hunt/locationLevels.js';
 import {getZone} from '../functions/game/hunt/huntMobs.js';
 import {roomLayout,adjacent} from '../functions/game/hunt/huntRooms.js';
 import {findPath,insideObstacle} from '../functions/game/world/navigation.js';
@@ -27,11 +28,11 @@ test('painted zones have reachable adapted sections and preserve dungeon network
  assert.equal(HUNT_EXPLORATION.length,51);
  for(const {id} of HUNT_EXPLORATION){
   const zone=getZone(id),layout=roomLayout(zone);assert.ok(zone);assert.ok(layout.map);
-  assert.equal(layout.rooms.length,zone.kind==='catacomb'?12:3);
+  assert.equal(layout.rooms.length,locationLevel(id)?.rooms.length||(zone.kind==='catacomb'?12:3));
   const reached=new Set([layout.startId]);let previous=0;
   while(previous!==reached.size){previous=reached.size;for(const room of layout.rooms)if(layout.rooms.some(r=>reached.has(r.id)&&adjacent(r,room)))reached.add(room.id);}
   assert.equal(reached.size,layout.rooms.length);
-  assert.equal(new Set(layout.rooms.map(r=>r.sceneVariant)).size,3);
+  assert.equal(new Set(layout.rooms.map(r=>r.sceneVariant)).size,locationLevel(id)?1:3);
   for(const room of layout.rooms){
    assert.equal(room.layoutSource,'adapted');assert.ok(room.landmark);
    for(const neighbour of layout.rooms.filter(r=>adjacent(room,r))){
