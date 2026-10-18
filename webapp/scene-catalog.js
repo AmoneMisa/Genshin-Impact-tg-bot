@@ -374,6 +374,7 @@ export const SCENE_STUDIES = Object.freeze([
   {"id":"kamaloka-26","title":"Камалока · 26","category":"hunting","environment":"catacomb","asset":"kamaloka-26","sections":1},
   {"id":"kamaloka-33","title":"Камалока · 33","category":"hunting","environment":"catacomb","asset":"kamaloka-33","sections":1},
   {"id":"kamaloka-36","title":"Камалока · 36","category":"hunting","environment":"catacomb","asset":"kamaloka-36","sections":1},
+  {"id":"kamaloka-43","title":"Камалока · 43","category":"hunting","environment":"catacomb","asset":"kamaloka-43","sections":1},
 ]);
 const byId=new Map(SCENE_STUDIES.map(scene=>[scene.id,scene]));
 export const sceneStudy=id=>byId.get(id==='freyaExtreme'?'freya':id)||null;
