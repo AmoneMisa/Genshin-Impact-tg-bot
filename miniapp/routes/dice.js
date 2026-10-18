@@ -8,6 +8,10 @@ import { playerName } from '../../functions/game/player/playerName.js';
 import { diceAction, diceState, diceFingerprint, emptyDice } from '../diceLobby.js';
 import { collectCreditsFrom, returnStake, takeStake, walletOf } from '../gwentWallet.js';
 import { loadFriends, findByNickname } from './gwent.js';
+import { gwentAppBase } from '../gwent-sharing.js';
+import { addDiceLinks, pushDiceNotice } from '../dice-sharing.js';
+import { diceAppLink } from '../../webapp/dice-links.js';
+import { presence } from '../social.js';
 
 // Dice poker between players. One shared record (key 'dice' next to the Gwent lobby), read and written under a
 // global lock; the hero is always saved before the lobby, as in routes/gwent.js.
@@ -29,6 +33,7 @@ async function handle(req, res, mutation) {
   const context = await authorize(req);
   const body = mutation ? await readJsonBody(req, 4096) : null;
   const now = Date.now();
+  const params = new URL(req.url, 'http://localhost').searchParams;
   const result = await withLock(`${context.chatId}:dice`, async () => {
     const me = String(context.userId);
     const people = await loadFriends(context.session, now);
@@ -36,7 +41,7 @@ async function handle(req, res, mutation) {
     let strangers = [];
     if (mutation && body?.action === 'invite' && typeof body.targetNickname === 'string') {
       const found = await findByNickname(body.targetNickname);
-      if (!found) return { ok: false, reason: 'Игрок с таким ником не найден', error: 'Игрок с таким ником не найден' };
+      if (!found) return { run: { ok: false, reason: 'Игрок с таким ником не найден', error: 'Игрок с таким ником не найден' }, people };
       people[found.id] = found.person;
       body.targetId = found.id; strangers = [found.id];
     }
@@ -44,7 +49,7 @@ async function handle(req, res, mutation) {
     try {
       run = await withLobby(async data => {
         const early = collectCreditsFrom(data, context.session);
-        const out = mutation ? diceAction(data, me, body, now, undefined, { people, strangers, wallet: walletOf(context.session) }) : diceState(data, me, now, { people });
+        const out = mutation ? diceAction(data, me, body, now, undefined, { people, strangers, wallet: walletOf(context.session) }) : diceState(data, me, now, { people, invite: params.get('invite') });
         const stake = out.charge;
         delete out.charge;
         credited = [...early, ...collectCreditsFrom(data, context.session)];
@@ -63,9 +68,20 @@ async function handle(req, res, mutation) {
       run.wallet = walletOf(context.session);
       if (credited.length) run.credited = credited;
     }
-    return run;
+    return { run, people };
   });
-  return sendJson(res, result.ok === false ? 409 : 200, result);
+  const { run: answer, people } = result;
+  const base = await gwentAppBase();
+  if (answer.ok !== false) {
+    addDiceLinks(answer, base);
+    if (answer.notify) {
+      const notice = answer.notify; delete answer.notify;
+      const person = people[notice.userId];
+      // Players in the app see the invitation themselves; only the others get a message. A failed message must not fail the action.
+      if (!(person && presence(person.lastSeenAt, now).online)) pushDiceNotice(notice, diceAppLink(base, notice.inviteId)).catch(() => {});
+    }
+  }
+  return sendJson(res, answer.ok === false ? 409 : 200, answer);
 }
 export const diceRead = guarded('dice state', (req, res) => handle(req, res, false));
 export const diceWrite = guarded('dice action', (req, res) => handle(req, res, true));

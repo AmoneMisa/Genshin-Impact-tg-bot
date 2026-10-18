@@ -1,4 +1,5 @@
 import { parseGwentEntry } from './gwent-links.js';
+import { parseDiceEntry } from './dice-links.js';
 import {updateDeathPopup} from './death-popup.js';
 import {bindFeatureLinks} from './feature-links.js';
 import {requestJson} from './request-json.js';
@@ -390,7 +391,9 @@ async function boot() {
       else status.textContent='Доступ к админке есть только у владельца бота.';
     }
     const gwentEntry = parseGwentEntry(tg?.initDataUnsafe?.start_param);
-    if (gwentEntry) await launchFeature({id:'gwent',title:'Гвинт'},render,{initialInvite:gwentEntry.kind==='invite'?gwentEntry.token:null,initialWatch:gwentEntry.kind==='watch'?gwentEntry.token:null});
+    if (gwentEntry) await launchFeature({id:'gwent',title:'Гвинт',status:'webgl'},render,{initialInvite:gwentEntry.kind==='invite'?gwentEntry.token:null,initialWatch:gwentEntry.kind==='watch'?gwentEntry.token:null});
+    const diceEntry = parseDiceEntry(tg?.initDataUnsafe?.start_param);
+    if (diceEntry) await launchFeature({id:'dicePoker',title:'Кости',status:'webgl'},render,{initialInvite:diceEntry.token});
     showHelloNotices({ api, haptic }).catch(error => console.warn('[notices]', error));
   } catch (error) {
     console.error(error);

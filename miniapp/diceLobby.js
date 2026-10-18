@@ -20,7 +20,10 @@ const secure = () => (crypto.randomInt(0, 6) + 0.5) / 6;
 
 export const emptyDice = () => ({ invites: [], matches: [], credits: [] });
 
-const current = (data, id) => data.matches.find(match => match.players.includes(id) && !match.dismissed.includes(id));
+const mine = (data, id) => data.matches.filter(match => match.players.includes(id) && !match.dismissed.includes(id));
+/** The match to show: a running one first, else the latest that was not closed yet. */
+const current = (data, id) => mine(data, id).find(match => match.state.phase === 'playing') || mine(data, id).at(-1);
+const playing = (data, id) => current(data, id)?.state.phase === 'playing';
 const roomFor = (data, id) => data.invites.find(invite => invite.status === 'pending' && invite.from === id);
 
 function freshGame(rng, round = 1, wins = [0, 0]) {
@@ -31,6 +34,8 @@ function startMatch(data, one, two, now, rng, stake) {
   const match = { id: randomUUID(), players: [one.userId, two.userId], names: [one.name, two.name], dismissed: [], revision: 0, startedAt: now, deadline: now + THROW_TTL,
     stake: stake ? { ...stake, holders: [one.userId, two.userId], settled: false } : null, state: { phase: 'playing', winner: null }, game: freshGame(rng) };
   data.matches.push(match);
+  // A finished match of these players is closed when they start the next one.
+  for (const other of data.matches) if (other !== match && other.state.phase === 'matchOver') for (const id of match.players) if (other.players.includes(id) && !other.dismissed.includes(id)) other.dismissed.push(id);
   for (const invite of data.invites) if (invite.status === 'pending' && match.players.includes(invite.from)) closeInvite(data, invite, 'cancelled', now);
   return match;
 }
@@ -82,7 +87,7 @@ const nameOf = (people, id, saved) => people[id]?.name || saved || 'Игрок';
 const friendsOf = (people, a, b) => (people[a]?.friends || []).map(String).includes(String(b)) && (people[b]?.friends || []).map(String).includes(String(a));
 
 function inviteView(people, invite) {
-  return { id: invite.id, from: invite.from, fromName: nameOf(people, invite.from, invite.fromName), to: invite.to, toName: nameOf(people, invite.to, invite.toName),
+  return { id: invite.id, from: invite.from, fromName: nameOf(people, invite.from, invite.fromName), to: invite.to, toName: invite.to ? nameOf(people, invite.to, invite.toName) : null, open: !invite.to, rematch: !!invite.rematch,
     stake: invite.stake || null, expiresAt: invite.expiresAt, status: invite.status };
 }
 
@@ -92,7 +97,7 @@ export function diceMatchView(match, userId) {
   if (me < 0) return null;
   const open = game.phase !== 'throw';
   const winnerOf = value => (value === 'draw' ? 'draw' : value === me ? 'me' : 'opponent');
-  return { id: match.id, round: game.round, phase: game.phase, deadline: match.deadline, opponent: match.names[you],
+  return { id: match.id, round: game.round, phase: game.phase, deadline: match.deadline, opponent: match.names[you], opponentId: match.players[you],
     wins: { me: game.wins[me], opponent: game.wins[you] }, dice: game.dice[me], rolls: game.rolls[me], done: game.done[me], opponentDone: game.done[you], opponentRolls: game.rolls[you],
     opponentDice: open ? game.dice[you] : null, ready: game.ready[me], opponentReady: game.ready[you],
     result: game.result ? { winner: winnerOf(game.result.winner), me: game.result.hands[me], opponent: game.result.hands[you] } : null,
@@ -105,13 +110,15 @@ export function diceMatchView(match, userId) {
  * `people` maps a user id to `{ name, friends, lastSeenAt }` for the player and everybody the request needs
  * (their friends, a player found by nickname).
  */
-export function diceState(data, userId, now = Date.now(), { people = {}, rng = secure } = {}) {
+export function diceState(data, userId, now = Date.now(), { people = {}, rng = secure, invite = null } = {}) {
   const id = String(userId);
   sweep(data, now, rng);
   const match = current(data, id);
   const friends = (people[id]?.friends || []).map(String).filter(friend => people[friend] && friendsOf(people, id, friend)).map(friend => ({ userId: friend, name: people[friend].name,
-    ...presence(people[friend].lastSeenAt, now), busy: !!current(data, friend) })).sort((a, b) => Number(b.online) - Number(a.online) || a.name.localeCompare(b.name, 'ru'));
-  return { ok: true, serverNow: now, match: match ? diceMatchView(match, id) : null, friends,
+    ...presence(people[friend].lastSeenAt, now), busy: playing(data, friend) })).sort((a, b) => Number(b.online) - Number(a.online) || a.name.localeCompare(b.name, 'ru'));
+  const shown = invite ? data.invites.find(item => item.id === invite && (!item.to || item.to === id || item.from === id)) : null;
+  if (invite && !shown) return fail('Приглашение недоступно');
+  return { ok: true, serverNow: now, match: match ? diceMatchView(match, id) : null, friends, ...(shown ? { invitation: { ...inviteView(people, shown), mine: shown.from === id } } : {}),
     incoming: data.invites.filter(invite => invite.status === 'pending' && invite.to === id).map(invite => inviteView(people, invite)),
     outgoing: data.invites.filter(invite => invite.status === 'pending' && invite.from === id).map(invite => inviteView(people, invite)) };
 }
@@ -122,23 +129,29 @@ export function diceAction(data, userId, body, now = Date.now(), rng = secure, o
   const id = String(userId), people = options.people || {};
   sweep(data, now, rng);
   const match = current(data, id);
-  let charge = null;
-  if (body.action === 'invite') {
-    if (match) return fail('Сначала завершите текущую игру');
-    const target = String(body.targetId ?? '');
-    const stranger = (options.strangers || []).map(String).includes(target);
-    if (!target || target === id || !people[target] || !(stranger || friendsOf(people, id, target))) return fail('Выберите друга или игрока по нику');
-    if (current(data, target)) return fail('Игрок уже в игре');
-    const parsed = parseStake(body.stake);
+  let charge = null, notify = null;
+  if (body.action === 'invite' || body.action === 'rematch') {
+    if (playing(data, id)) return fail('Сначала завершите текущую игру');
+    const rematch = body.action === 'rematch';
+    // A rematch goes to the opponent of the finished match, with the same stake; a link is open to anybody.
+    const finished = rematch ? match : null;
+    if (rematch && (!finished || finished.id !== body.matchId || finished.state.phase !== 'matchOver')) return fail('Реванш доступен после окончания матча');
+    const open = !rematch && body.open === true;
+    const target = open ? null : rematch ? finished.players.find(player => player !== id) : String(body.targetId ?? '');
+    const stranger = !rematch && (options.strangers || []).map(String).includes(target);
+    if (!open && (!target || target === id || (!rematch && (!people[target] || !(stranger || friendsOf(people, id, target)))))) return fail('Выберите друга или игрока по нику');
+    if (target && playing(data, target)) return fail('Игрок уже в игре');
+    const parsed = rematch ? { ok: true, stake: finished.stake ? { currency: finished.stake.currency, amount: finished.stake.amount } : null } : parseStake(body.stake);
     if (!parsed.ok) return fail(parsed.error);
     const stake = parsed.stake;
-    const same = data.invites.find(invite => invite.status === 'pending' && invite.from === id && invite.to === target && (invite.stake?.currency ?? null) === (stake?.currency ?? null) && (invite.stake?.amount ?? null) === (stake?.amount ?? null));
+    const same = data.invites.find(invite => invite.status === 'pending' && invite.from === id && (invite.to ?? null) === target && (invite.stake?.currency ?? null) === (stake?.currency ?? null) && (invite.stake?.amount ?? null) === (stake?.amount ?? null));
     if (!same) {
       if (data.invites.filter(invite => invite.status === 'pending' && invite.from === id).length >= 3) return fail('Можно создать не больше трёх приглашений одновременно');
       const broke = cannotPay(stake, options.wallet);
       if (broke) return fail(broke);
-      data.invites.push({ id: randomUUID(), from: id, to: target, createdAt: now, expiresAt: now + INVITE_TTL, status: 'pending', fromName: nameOf(people, id), toName: nameOf(people, target), ...(stake ? { stake } : {}) });
+      data.invites.push({ id: randomUUID(), from: id, to: target, createdAt: now, expiresAt: now + INVITE_TTL, status: 'pending', fromName: nameOf(people, id), toName: target ? nameOf(people, target) : null, ...(rematch ? { rematch: true } : {}), ...(stake ? { stake } : {}) });
       charge = stake;
+      if (target) notify = { kind: rematch ? 'rematch' : 'invite', userId: target, fromName: nameOf(people, id), inviteId: data.invites.at(-1).id };
     }
   } else if (body.action === 'cancel_invite' || body.action === 'decline_invite') {
     const invite = data.invites.find(item => item.id === body.inviteId && item.status === 'pending');
@@ -148,13 +161,14 @@ export function diceAction(data, userId, body, now = Date.now(), rng = secure, o
   } else if (body.action === 'accept_invite') {
     const invite = data.invites.find(item => item.id === body.inviteId && item.status === 'pending');
     if (!invite) return fail('Приглашение уже закрыто или истекло');
-    if (invite.to !== id) return fail('Это приглашение другому игроку');
-    if (match || current(data, invite.from)) return fail('Один из игроков уже в игре');
+    if (invite.to ? invite.to !== id : invite.from === id) return fail('Это приглашение другому игроку');
+    if (playing(data, id) || playing(data, invite.from)) return fail('Один из игроков уже в игре');
     const broke = cannotPay(invite.stake, options.wallet);
     if (broke) return fail(broke);
-    invite.status = 'accepted';
+    invite.status = 'accepted'; invite.to = id;
     startMatch(data, { userId: invite.from, name: nameOf(people, invite.from, invite.fromName) }, { userId: id, name: nameOf(people, id) }, now, rng, invite.stake);
     charge = invite.stake || null;
+    notify = { kind: 'start', userId: invite.from, fromName: nameOf(people, id), inviteId: invite.id };
   } else if (['throw', 'stand', 'ready', 'surrender'].includes(body.action)) {
     if (!match || match.id !== body.matchId) return fail('Матч не найден');
     if (match.state.phase !== 'playing') return fail('Матч завершён');
@@ -184,7 +198,7 @@ export function diceAction(data, userId, body, now = Date.now(), rng = secure, o
     match.dismissed.push(id);
   } else return fail('Неизвестное действие');
   settleStakes(data, now);
-  return { ...diceState(data, id, now, { people, rng }), ...(charge ? { charge } : {}) };
+  return { ...diceState(data, id, now, { people, rng }), ...(charge ? { charge } : {}), ...(notify ? { notify } : {}) };
 }
 
 export const diceFingerprint = data => JSON.stringify([

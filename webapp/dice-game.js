@@ -14,12 +14,12 @@ const POLL_MS = 2500;
  * Dice poker. Against the tavern's player it is played here on the device; against another player (when the app
  * is connected, `api`) the server throws the dice and can hold a stake.
  */
-export function openDiceGame({ api = null, haptic = () => {} } = {}) {
+export function openDiceGame({ api = null, haptic = () => {}, initialInvite = null } = {}) {
   if (document.querySelector('.dice-overlay')) return;
   installOverlayA11y();
   // screen: start | lobby (pick a player) | ai (against the tavern) | online (a match with a player)
-  let screen = 'start', level = 'hard', match = null, keep = new Set(), fresh = new Set(), busy = false, note = '', closed = false, surrenderArmed = false;
-  let net = { friends: [], incoming: [], outgoing: [], match: null }, wallet = null, stakeChoice = '', pollTimer = null, requestId = 0;
+  let screen = api && initialInvite ? 'lobby' : 'start', focusedInvite = api ? initialInvite : null, level = 'hard', match = null, keep = new Set(), fresh = new Set(), busy = false, note = '', closed = false, surrenderArmed = false;
+  let net = { friends: [], incoming: [], outgoing: [], invitation: null, match: null }, wallet = null, stakeChoice = '', pollTimer = null, requestId = 0;
   const timers = new Set();
   const reduced = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   const later = (fn, ms) => { const id = setTimeout(() => { timers.delete(id); if (!closed) fn(); }, ms); timers.add(id); };
@@ -80,14 +80,17 @@ export function openDiceGame({ api = null, haptic = () => {} } = {}) {
   // ---- against another player ----
   function lobbyScreen() {
     const rows = net.friends.map(friend => `<div class="ui-inset-row dice-person"><div><strong>${esc(friend.name)}</strong><small>${esc(friend.busy ? 'В игре' : friend.text)}</small></div>${button('Пригласить', `data-invite="${esc(friend.userId)}" ${friend.busy ? 'disabled' : ''}`)}</div>`).join('');
-    const invite = (item, outgoing) => `<article class="ui-inset-row dice-person"><div><strong>${esc(outgoing ? item.toName : item.fromName)}</strong><small>${item.stake ? `Ставка: ${stakeText(item.stake)}` : 'Без ставки'} · ${Math.max(0, Math.ceil((item.expiresAt - Date.now()) / 60000))} мин.</small></div>
-      <div class="dice-actions">${outgoing ? button('Отменить', `data-cancel-invite="${item.id}"`) : `${button('Принять', `data-accept-invite="${item.id}"`, true)}${button('Отклонить', `data-decline-invite="${item.id}"`)}`}</div></article>`;
-    return `${net.incoming.length ? `<h3>Вас приглашают</h3>${net.incoming.map(item => invite(item, false)).join('')}` : ''}
+    const invite = (item, outgoing) => `<article class="ui-inset-row dice-person"><div><strong>${esc(outgoing ? (item.toName || 'Приглашение по ссылке') : item.fromName)}</strong><small>${item.stake ? `Ставка: ${stakeText(item.stake)}` : 'Без ставки'} · ${Math.max(0, Math.ceil((item.expiresAt - Date.now()) / 60000))} мин.</small></div>
+      <div class="dice-actions">${outgoing ? `${item.url ? button('Копировать ссылку', `data-copy-invite="${item.id}"`) : ''}${button('Отменить', `data-cancel-invite="${item.id}"`)}` : `${button('Принять', `data-accept-invite="${item.id}"`, true)}${item.open ? '' : button('Отклонить', `data-decline-invite="${item.id}"`)}`}</div>
+      ${outgoing && item.url ? `<input class="dice-share-link" aria-label="Ссылка приглашения" readonly value="${esc(item.url)}">` : ''}</article>`;
+    const linked = net.invitation && net.invitation.status === 'pending' && !net.invitation.mine && !net.incoming.some(item => item.id === net.invitation.id) ? net.invitation : null;
+    return `${linked ? `<h3>Приглашение по ссылке</h3>${invite(linked, false)}` : ''}${net.incoming.length ? `<h3>Вас приглашают</h3>${net.incoming.map(item => invite(item, false)).join('')}` : ''}
       <h3>Ставка</h3><label class="dice-field">На что играем<select name="dice-stake">${STAKE_CHOICES.map(([value, label]) => `<option value="${value}" ${value === stakeChoice ? 'selected' : ''}>${label}</option>`).join('')}</select></label>
       ${wallet ? `<p class="dice-hint">У вас: ${stakeText({ currency: 'gold', amount: wallet.gold })} · ${stakeText({ currency: 'luckCoins', amount: wallet.luckCoins })}.</p>` : ''}
       <p class="dice-hint">Ставка списывается, когда вы отправляете приглашение или принимаете чужое. Победитель забирает всё. Ничья, отказ и истёкшее приглашение возвращают ставку; сдача — поражение.</p>
       ${net.outgoing.length ? `<h3>Вы пригласили</h3>${net.outgoing.map(item => invite(item, true)).join('')}` : ''}
       <h3>Друзья</h3>${rows || '<p class="dice-hint">Добавьте друга в разделе друзей, чтобы пригласить его.</p>'}
+      <h3>Пригласить по ссылке</h3><div class="dice-actions">${button('Создать ссылку', 'data-create-link')}</div>
       <h3>Пригласить по нику</h3><div class="dice-actions"><label class="dice-field">Ник игрока<input type="text" data-invite-nick maxlength="16" autocomplete="off" placeholder="Ник в игре"></label>${button('Пригласить', 'data-invite-nick-go')}</div>${noteHtml()}`;
   }
   function stakeLine(stake) {
@@ -110,11 +113,16 @@ export function openDiceGame({ api = null, haptic = () => {} } = {}) {
     else if (inRound) controls = `<p class="dice-hint" role="status">${view.opponentDone ? 'Считаем результат…' : 'Ждём соперника…'}</p>`;
     else controls = `${verdict ? `<p class="dice-verdict" role="status" data-winner="${over ? view.winner : result.winner}">${verdict}</p>` : ''}${view.endReason ? `<p class="dice-hint">${esc(view.endReason)}</p>` : ''}${stakeLine(view.stake)}
       <div class="dice-actions">${over ? button('Закрыть', 'data-dismiss-match', true) : button(view.ready ? 'Ждём соперника…' : 'Дальше', `data-ready ${view.ready ? 'disabled' : ''}`, true)}</div>`;
+    const offered = over ? net.incoming.find(item => item.rematch && item.from === view.opponentId) : null;
+    const asked = over ? net.outgoing.find(item => item.rematch) : null;
+    const rematch = !over ? '' : offered ? `<p class="dice-hint" role="status">${esc(view.opponent)} предлагает реванш${offered.stake ? `: ставка ${stakeText(offered.stake)}` : ''}.</p><div class="dice-actions">${button('Принять реванш', `data-accept-invite="${offered.id}"`, true)}${button('Отклонить', `data-decline-invite="${offered.id}"`)}</div>`
+      : asked ? `<p class="dice-hint" role="status">Ждём ответа соперника…</p><div class="dice-actions">${button('Отменить реванш', `data-cancel-invite="${asked.id}"`)}</div>`
+        : `<div class="dice-actions">${button(view.stake ? `Реванш · ставка ${stakeText(view.stake)}` : 'Реванш', 'data-rematch')}</div>`;
     const surrender = !over ? `<div class="dice-actions">${button(surrenderArmed ? 'Точно сдаться?' : 'Сдаться', 'data-surrender')}</div>` : '';
     return `${scoreHtml(view.round, view.wins.me, view.wins.opponent)}${over ? '' : stakeLine(view.stake)}
       <section class="dice-side" aria-label="${esc(view.opponent)}"><h3>${esc(view.opponent)}</h3>${diceRow(opponentDice, { tag: 'a', label: 'Кости соперника' })}<p class="dice-hand">${result ? result.opponent : inRound ? (view.opponentDone ? 'Остановился' : `Бросков: ${view.opponentRolls}`) : ''}</p></section>
       <section class="dice-side" aria-label="Вы"><h3>Вы</h3>${diceRow(view.dice, { mine: true, canKeep: inRound && !view.done && !busy, tag: 'p', label: 'Ваши кости' })}<p class="dice-hand">${evaluate(view.dice).name}</p></section>
-      ${noteHtml()}${controls}${surrender}${combinations()}`;
+      ${noteHtml()}${controls}${rematch}${surrender}${combinations()}`;
   }
 
   function render() {
@@ -152,7 +160,7 @@ export function openDiceGame({ api = null, haptic = () => {} } = {}) {
     if (data.wallet) wallet = data.wallet;
     if (data.credited?.length) note = `Получено: ${data.credited.map(stakeText).join(', ')}`;
     const before = net.match;
-    net = { friends: data.friends || [], incoming: data.incoming || [], outgoing: data.outgoing || [], match: data.match || null };
+    net = { friends: data.friends || [], incoming: data.incoming || [], outgoing: data.outgoing || [], invitation: data.invitation || null, match: data.match || null };
     if (net.match) {
       if (!before || before.id !== net.match.id || before.round !== net.match.round) keep = new Set();
       fresh = new Set(net.match.dice.map((value, i) => (before?.id === net.match.id && before.round === net.match.round && before.dice[i] !== value ? `p${i}` : null)).filter(Boolean));
@@ -169,19 +177,20 @@ export function openDiceGame({ api = null, haptic = () => {} } = {}) {
     catch (error) {
       if (closed) return;
       note = error.message || 'Не удалось выполнить действие';
-      try { accept(await api('/api/dice')); note = error.message || note; render(); } catch { /* the message stays */ }
+      try { accept(await api(readUrl())); note = error.message || note; render(); } catch { /* the message stays */ }
     } finally { busy = false; if (!closed) { render(); schedulePoll(); } }
   }
   async function refresh() {
     const token = ++requestId;
-    try { const data = await api('/api/dice'); if (!closed && token === requestId && !busy) accept(data); }
-    catch { /* the next poll tries again */ }
+    try { const data = await api(readUrl()); if (!closed && token === requestId && !busy) accept(data); }
+    catch (error) { if (focusedInvite && !closed) { focusedInvite = null; note = error.message || 'Приглашение недоступно'; render(); } /* otherwise the next poll tries again */ }
   }
   function schedulePoll() {
     clearTimeout(pollTimer);
     if (closed || document.hidden || !api || !(screen === 'lobby' || screen === 'online')) return;
     pollTimer = setTimeout(async () => { if (!busy) await refresh(); schedulePoll(); }, POLL_MS);
   }
+  const readUrl = () => `/api/dice${focusedInvite ? `?invite=${encodeURIComponent(focusedInvite)}` : ''}`;
   const onVisibility = () => { if (!document.hidden) { refresh(); schedulePoll(); } };
   document.addEventListener('visibilitychange', onVisibility);
 
@@ -208,14 +217,17 @@ export function openDiceGame({ api = null, haptic = () => {} } = {}) {
     else if (d.die !== undefined) { const i = Number(d.die); if (keep.has(i)) keep.delete(i); else keep.add(i); render(); panel.querySelector(`[data-die="${i}"]`)?.focus({ preventScroll: true }); }
     else if ('reroll' in d) { if (screen === 'ai') throwDice(); else await send({ action: 'throw', matchId: net.match.id, round: net.match.round, rolls: net.match.rolls, keep: [...keep] }); }
     else if ('stand' in d) { if (screen === 'ai') stand(); else await send({ action: 'stand', matchId: net.match.id, round: net.match.round, rolls: net.match.rolls }); }
+    else if ('createLink' in d) await send({ action: 'invite', open: true, ...stakeBodyOf(stakeChoice) });
+    else if (d.copyInvite) { const item = net.outgoing.find(entry => entry.id === d.copyInvite); if (item?.url) { try { await navigator.clipboard.writeText(item.url); note = 'Ссылка скопирована'; } catch { note = 'Скопируйте выделенную ссылку'; } render(); panel.querySelector('.dice-share-link')?.select?.(); } }
+    else if ('rematch' in d) await send({ action: 'rematch', matchId: net.match.id });
     else if (d.invite) await send({ action: 'invite', targetId: d.invite, ...stakeBodyOf(stakeChoice) });
     else if ('inviteNickGo' in d) {
       const nick = panel.querySelector('[data-invite-nick]')?.value.trim();
       if (!nick) { note = 'Введите ник игрока'; render(); return; }
       await send({ action: 'invite', targetNickname: nick, ...stakeBodyOf(stakeChoice) });
     }
-    else if (d.acceptInvite) await send({ action: 'accept_invite', inviteId: d.acceptInvite });
-    else if (d.declineInvite) await send({ action: 'decline_invite', inviteId: d.declineInvite });
+    else if (d.acceptInvite) { focusedInvite = null; await send({ action: 'accept_invite', inviteId: d.acceptInvite }); }
+    else if (d.declineInvite) { focusedInvite = null; await send({ action: 'decline_invite', inviteId: d.declineInvite }); }
     else if (d.cancelInvite) await send({ action: 'cancel_invite', inviteId: d.cancelInvite });
     else if ('ready' in d) await send({ action: 'ready', matchId: net.match.id });
     else if ('dismissMatch' in d) { await send({ action: 'dismiss', matchId: net.match.id }); }
@@ -227,4 +239,5 @@ export function openDiceGame({ api = null, haptic = () => {} } = {}) {
     closed = true; timers.forEach(clearTimeout); timers.clear(); clearTimeout(pollTimer); document.removeEventListener('visibilitychange', onVisibility); overlay.remove();
   }
   render();
+  if (screen === 'lobby') refresh().then(schedulePoll);
 }

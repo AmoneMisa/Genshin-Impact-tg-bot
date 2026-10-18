@@ -29,3 +29,5 @@ body .game-overlay>.dice-panel{width:min(100%,460px);max-width:460px}
 .dice-field{display:grid;gap:var(--space-1);flex:1 1 160px;min-width:0}
 .dice-stake{margin:0;text-align:center;font-weight:700}
 .dice-stake[data-outcome=lost],.dice-verdict[data-winner=opponent]{color:var(--danger,#d86a5a)}
+.dice-share-link{box-sizing:border-box;width:100%}
+.dice-person{flex-wrap:wrap}

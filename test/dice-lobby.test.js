@@ -124,3 +124,51 @@ test('a stake that cannot be paid stops the invitation and the acceptance', () =
   assert.equal(act(data, 2, { action: 'accept_invite', inviteId: data.invites[0].id }, { w: { gold: 100 } }).ok, false);
   assert.equal(data.matches.length, 0);
 });
+
+test('a link invitation is open to anyone but its author, shows the stake, and starts the match for the one who accepts', () => {
+  const data = emptyDice();
+  const made = act(data, 1, { action: 'invite', open: true, stake: { currency: 'gold', amount: 100 } });
+  assert.deepEqual(made.charge, { currency: 'gold', amount: 100 });
+  assert.equal(made.notify, undefined, 'a link has nobody to notify');
+  const id = data.invites[0].id;
+  const seen = diceState(data, 3, 1000, { people, invite: id });
+  assert.equal(seen.invitation.open, true);
+  assert.equal(seen.invitation.mine, false);
+  assert.equal(diceState(data, 1, 1000, { people, invite: id }).invitation.mine, true);
+  assert.equal(diceState(data, 3, 1000, { people, invite: 'nope' }).ok, false);
+  assert.equal(act(data, 1, { action: 'accept_invite', inviteId: id }).ok, false, 'the author cannot take their own invitation');
+  assert.equal(act(data, 3, { action: 'decline_invite', inviteId: id }).ok, false, 'an open invitation is not declined, only left');
+  const accepted = act(data, 3, { action: 'accept_invite', inviteId: id });
+  assert.equal(accepted.match.opponent, 'Anna');
+  assert.deepEqual(accepted.charge, { currency: 'gold', amount: 100 });
+  assert.equal(accepted.notify.userId, '1');
+  assert.equal(act(data, 2, { action: 'accept_invite', inviteId: id }).ok, false, 'taken only once');
+});
+
+test('invitations and acceptances name who to notify', () => {
+  const data = emptyDice();
+  const sent = act(data, 1, { action: 'invite', targetId: 2 });
+  assert.deepEqual({ kind: sent.notify.kind, userId: sent.notify.userId, fromName: sent.notify.fromName }, { kind: 'invite', userId: '2', fromName: 'Anna' });
+  assert.equal(act(data, 1, { action: 'invite', targetId: 2 }).notify, undefined, 'the same invitation does not notify twice');
+});
+
+test('a rematch repeats the stake, goes to the same opponent and needs a finished match', () => {
+  const { data, match } = started({ currency: 'gold', amount: 250 });
+  assert.equal(act(data, 1, { action: 'rematch', matchId: match.id }).ok, false, 'not while the match is running');
+  act(data, 1, { action: 'surrender', matchId: match.id });
+  const asked = act(data, 2, { action: 'rematch', matchId: match.id });
+  assert.deepEqual(asked.charge, { currency: 'gold', amount: 250 });
+  assert.equal(asked.notify.kind, 'rematch');
+  assert.equal(asked.match.opponentId, '1');
+  assert.equal(act(data, 2, { action: 'rematch', matchId: match.id }).charge, undefined, 'asking twice does not charge twice');
+  const view = diceState(data, 1, 1000, { people });
+  assert.equal(view.incoming[0].rematch, true);
+  assert.equal(act(data, 1, { action: 'accept_invite', inviteId: view.incoming[0].id }, { w: { gold: 10 } }).ok, false, 'the opponent must cover the stake too');
+  const taken = act(data, 1, { action: 'accept_invite', inviteId: view.incoming[0].id });
+  assert.equal(taken.ok, true);
+  assert.equal(taken.match.stake.amount, 250);
+  assert.equal(taken.match.phase, 'throw');
+  assert.equal(taken.match.id === match.id, false);
+  assert.equal(data.matches.length, 2);
+  assert.equal(diceState(data, 2, 1000, { people }).match.id, taken.match.id, 'the running match is shown, not the old result');
+});
