@@ -386,6 +386,7 @@ export const SCENE_STUDIES = Object.freeze([
   {"id":"labyrinth-49","title":"Лабиринт Бездны · 49","category":"hunting","environment":"catacomb","asset":"labyrinth-49","sections":1},
   {"id":"labyrinth-59","title":"Лабиринт Бездны · 59","category":"hunting","environment":"catacomb","asset":"labyrinth-59","sections":1},
   {"id":"labyrinth-69","title":"Лабиринт Бездны · 69","category":"hunting","environment":"catacomb","asset":"labyrinth-69","sections":1},
+  {"id":"labyrinth-78","title":"Лабиринт Бездны · 78","category":"hunting","environment":"catacomb","asset":"labyrinth-78","sections":1},
 ]);
 const byId=new Map(SCENE_STUDIES.map(scene=>[scene.id,scene]));
 export const sceneStudy=id=>byId.get(id==='freyaExtreme'?'freya':id)||null;
