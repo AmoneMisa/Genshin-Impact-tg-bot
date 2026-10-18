@@ -1,6 +1,6 @@
 # Покрытие охотничьих локаций
 
-Индивидуальные рисунки: **45 из 76** зон, включая подземелья и инстансы. Общие тематические фоны: **31**.
+Индивидуальные рисунки: **46 из 76** зон, включая подземелья и инстансы. Общие тематические фоны: **30**.
 
 Это оценка окружения, а не подтверждение полной реализации всех механик High Five. Локальные комнаты и рисунки являются художественной адаптацией, не оригинальной геодатой.
 
@@ -34,6 +34,7 @@
 | Лес Изгоев | 3 |
 | Кладбище Адена | 3 |
 | Катакомбы Отступников | 3 |
+| Некрополь Патриотов | 3 |
 | Поля Резни | 3 |
 | Долина Святых | 3 |
 | Башня Наглости | 3 |
@@ -70,7 +71,6 @@
 - Камалока · 53 (kamaloka-53)
 - Разлом Измерений · 3 (rift-3)
 - Камалока · 56 (kamaloka-56)
-- Некрополь Патриотов (necropolis-patriots)
 - Лабиринт Бездны · 59 (labyrinth-59)
 - Некрополь Посвящения (necropolis-devotion)
 - Камалока · 63 (kamaloka-63)
@@ -95,6 +95,17 @@
 Общий визуальный референс Семи Печатей: `art-source/location-references/catacomb-reference.jpg` и `catacomb-hall-reference.jpg`, архивные игровые скриншоты с отметкой L2Dom. Палитра, резные опоры, ниши и кладка используются для художественной адаптации. Точный билд и принадлежность каждого снимка конкретному подземелью не установлены; различия композиций не выдаются за уникальную архитектуру оригинальных зон. [Обзор катакомб и некрополей L2Dom](https://l2dom.ru/lokacii/catacomb-necropolis.php). Эта серия не подтверждает перенос условий Семи Печатей, Маммонов или оригинальной геодаты. Координаты Атласа, цены, NPC, дроп и награды не меняются.
 
 Проверка продолжения: `EXPLORATION_ZONES=<id> node scripts/ui/check-hunt-exploration.mjs`, ширины 320/390/1100 px, reduced motion и сенсорное управление; на 320 px — также без WebGL, Phaser и рисунков. Проверяются переходы, возврат, разные сцены, видимость героя, отсутствие переполнения и очистка окна. Бюджеты: 180 КБ mobile и 800 КБ desktop.
+
+- [Некрополь Жертвоприношений: превью](necropolis-sacrifice.jpg) · [промпты и происхождение](../webapp/art/world/scenes/necropolis-sacrifice.source.js)
+- [Катакомбы Еретиков: превью](catacomb-heretic.jpg) · [промпты и происхождение](../webapp/art/world/scenes/catacomb-heretic.source.js)
+- [Некрополь Пилигримов: превью](necropolis-pilgrims.jpg) · [промпты и происхождение](../webapp/art/world/scenes/necropolis-pilgrims.source.js)
+- [Некрополь Поклонения: превью](necropolis-worship.jpg) · [промпты и происхождение](../webapp/art/world/scenes/necropolis-worship.source.js)
+- [Катакомбы Отлучённых: превью](catacomb-branded.jpg) · [промпты и происхождение](../webapp/art/world/scenes/catacomb-branded.source.js)
+- [Катакомбы Отступников: превью](catacomb-apostate.jpg) · [промпты и происхождение](../webapp/art/world/scenes/catacomb-apostate.source.js)
+- [Некрополь Патриотов: превью](necropolis-patriots.jpg) · [промпты и происхождение](../webapp/art/world/scenes/necropolis-patriots.source.js)
+- [Катакомбы Ведьм: превью](catacomb-witch.jpg) · [промпты и происхождение](../webapp/art/world/scenes/catacomb-witch.source.js)
+- [Катакомбы Тёмных Знамений: превью](catacomb-dark-omens.jpg) · [промпты и происхождение](../webapp/art/world/scenes/catacomb-dark-omens.source.js)
+- [Катакомбы Запретного Пути: превью](catacomb-forbidden-path.jpg) · [промпты и происхождение](../webapp/art/world/scenes/catacomb-forbidden-path.source.js)
 
 Последняя серия: Пещера Гигантов, Лагерь Сел Махум и Поле Шёпота. По три связанных адаптированных участка на зону: девять рисунков, desktop 1536×1024 и mobile 768×512. Превью: [высокоуровневые локации](high-level-hunting.jpg); полные промпты и происхождение: `webapp/art/world/scenes/high-level-hunting.source.js`; игровые скриншоты и ссылки: `art-source/location-references/high-level-hunting/sources.js`.
 

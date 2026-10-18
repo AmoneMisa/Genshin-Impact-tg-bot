@@ -63,11 +63,11 @@ try{for(const {width,mode} of cases){
     const arrow=page.locator('.hunt-exit[data-room="'+room+'"]'),a=await arrow.boundingBox(),g=await page.locator('.hunt-ground').boundingBox();
     const cx=g.x+g.width/2,cy=g.y+g.height*.42;
     await page.mouse.move(cx,cy);await page.mouse.down();await page.mouse.move(cx+(cx-a.x-a.width/2),cy+(cy-a.y-a.height/2),{steps:8});await page.mouse.up();
-    await arrow.click();
+    await Promise.all([page.waitForResponse(r=>new URL(r.url()).pathname==='/api/hunt/move'),arrow.click()]);
    }else{
     await page.locator('[data-bar-edit]').click();
     if(await page.locator('[data-combat-details="rooms"]').getAttribute('open')===null)await page.locator('[data-combat-details="rooms"]>summary').click();
-    await page.locator('.hunt-map [data-room="'+room+'"]').click();await page.locator('[data-bar-cancel]').click();
+    await Promise.all([page.waitForResponse(r=>new URL(r.url()).pathname==='/api/hunt/move'),page.locator('.hunt-map [data-room="'+room+'"]').click()]);await page.locator('[data-bar-cancel]').click();
    }
    assert.equal(s.game.hunt.field.room,room);await check();
    const self=await page.locator('.hunt-iso-actor[data-hunt-halt]').boundingBox(),ground=await page.locator('.hunt-ground').boundingBox();
