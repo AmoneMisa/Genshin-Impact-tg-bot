@@ -370,6 +370,7 @@ export const SCENE_STUDIES = Object.freeze([
   {"id":"necropolis-saints","title":"Некрополь Святых","category":"hunting","environment":"necropolis","asset":"necropolis-saints","sections":3},
   {"id":"necropolis-disciples","title":"Некрополь Учеников","category":"hunting","environment":"necropolis","asset":"necropolis-disciples","sections":3},
   {"id":"hellbound","title":"Хеллбаунд","category":"hunting","environment":"desert","asset":"hellbound","sections":3},
+  {"id":"kamaloka-23","title":"Камалока · 23","category":"hunting","environment":"catacomb","asset":"kamaloka-23","sections":1},
 ]);
 const byId=new Map(SCENE_STUDIES.map(scene=>[scene.id,scene]));
 export const sceneStudy=id=>byId.get(id==='freyaExtreme'?'freya':id)||null;
