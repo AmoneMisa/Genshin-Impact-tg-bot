@@ -161,6 +161,7 @@ export const HUNT_EXPLORATION = Object.freeze([
   {"id":"catacomb-witch","names":["Тёмный проход","У резного карниза","Зал синих плит"]},
   {"id":"catacomb-dark-omens","names":["Сумрачный зал","У древних рельефов","Галерея колонн"]},
   {"id":"catacomb-forbidden-path","names":["Древний проход","У каменных оснований","Зал дальних арок"]},
+  {"id":"necropolis-sacrifice","names":["Погребальный проход","У каменных ниш","Зал резных плит"]},
 ]);
 const zones=new Map(HUNT_EXPLORATION.map(zone=>[zone.id,zone]));
 export const explorationZone=id=>zones.get(id)||null;
