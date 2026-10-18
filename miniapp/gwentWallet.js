@@ -17,8 +17,11 @@ export function walletOf(session) {
  * remembers, so a credit is never paid twice even if the lobby could not be saved afterwards.
  * Returns what was paid.
  */
-export function collectCredits(lobby, session) {
-  const data = lobby.gwent, id = String(session.userId);
+export const collectCredits = (lobby, session) => collectCreditsFrom(lobby.gwent, session);
+
+/** The same for any lobby record that keeps `credits` (Gwent, dice). */
+export function collectCreditsFrom(data, session) {
+  const id = String(session.userId);
   const mine = (data.credits || []).filter(entry => entry.userId === id);
   if (!mine.length) return [];
   const game = session.game ||= {}, inventory = game.inventory ||= {};

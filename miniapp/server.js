@@ -5,6 +5,7 @@ import { requestUrl as parseRequestUrl, requestBoundary } from './requestBoundar
 import { academyAction, academyState, badges, bootstrap, buildsAction, buildsState, characterState, classBuffsCast, classBuffsState, classQuestsAction, classQuestsState, feedbackSubmit, formsSave, formsState, noticesState, passivesLearn, passivesState, playerCard, playerProfileClass, playerProfileGender, playerProfileNickname, playerProfileRace, playerProfileState, playerProfileSubclass, playerSkillsEnchant, playerSkillsLearn, playerSkillsRoute, playerSkillsState, titlesAssign, titlesState, updatesSettings, updatesState } from './routes/profile.js';
 import { arcadeReset, arcadeRoll, arcadeStart, arcadeState, elementsAction, elementsState, fishingAction, point21Action, point21State, stealAttack, stealState } from './routes/games.js';
 import { gwentRead, gwentWrite } from './routes/gwent.js';
+import { diceRead, diceWrite } from './routes/dice.js';
 import { alchemyBrew, alchemyState, auctionBuy, auctionCancel, auctionList, auctionState, chestOpen, chestState, equipmentAction, equipmentCraft, equipmentNpcCraft, equipmentRecipe, equipmentScroll, equipmentState, exchangeBuy, exchangeState, gachaResolve, gachaRoll, gachaState, goldTransferSend, goldTransferState, inventoryDiscard, inventorySell, inventoryState, inventoryUse, luckShopBuy, luckShopState, merchantsBuy, merchantsConvert, merchantsState, shopBuy, shopSealExchange, shopSealState, shopState, starsInvoice, swordRoll, swordState, tattoosAction, tattoosState, tradeAction, tradeRead, warehouseState, warehouseTransfer } from './routes/economy.js';
 import { adminNotice, adminPromo, adminState, adminToolsRun, adminToolsState, bonusClaim, bonusState, clanAction, clanActivity, clanQuiz, clanState, horoscopeGenerate, horoscopeSettings, horoscopeShare, horoscopeState, loginRewardsAction, loginRewardsState, mailAction, mailClaim, mailState, partyAction, partyState, promoRedeem, socialFriend, socialState } from './routes/community.js';
 import { arenaAttack, arenaState, bossEpic, bossSkill, bossState, bossSummon, combatChat, huntAttack, huntDrop, huntFlee, huntHotbar, huntLoot, huntMove, huntSkill, huntSpecial, huntStart, huntState, huntSupplies, huntTarget, sealExchange, shotsAuto, soulCharge, soulSelect, worldRequest } from './routes/hunt.js';
@@ -81,6 +82,8 @@ export default function startMiniAppServer() {
     if (route === 'GET /api/player') return playerCard(req, res, requestUrl);
     if (route === 'GET /api/steal') return stealState(req, res);
     if (route === 'POST /api/steal/attack') return stealAttack(req, res);
+    if (route === 'GET /api/dice') return diceRead(req, res);
+    if (route === 'POST /api/dice/action') return diceWrite(req, res);
     if (route === 'GET /api/gwent') return gwentRead(req, res);
     if (route === 'POST /api/gwent/action') return gwentWrite(req, res);
     if (route === 'GET /api/point21') return point21State(req, res);

@@ -24,3 +24,8 @@ body .game-overlay>.dice-panel{width:min(100%,460px);max-width:460px}
 .dice-combination-list .ui-inset-row{flex-direction:column;align-items:flex-start;gap:var(--space-1);padding:var(--space-2)}
 @media (max-width:360px){.dice-die{width:46px;height:46px}.dice-row{gap:var(--space-1)}}
 @media (prefers-reduced-motion:reduce){.dice-die.rolling{animation:none}.dice-die.kept{transform:none}}
+.dice-person{display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);padding:var(--space-2)}
+.dice-person>div:first-child{display:grid;gap:var(--space-1);min-width:0}
+.dice-field{display:grid;gap:var(--space-1);flex:1 1 160px;min-width:0}
+.dice-stake{margin:0;text-align:center;font-weight:700}
+.dice-stake[data-outcome=lost],.dice-verdict[data-winner=opponent]{color:var(--danger,#d86a5a)}

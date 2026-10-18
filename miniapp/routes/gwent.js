@@ -24,7 +24,7 @@ function personOf(character) {
 }
 
 /** The player's friends of every chat (a hero is shared by all chats), cached for half a minute. */
-async function loadFriends(session, now) {
+export async function loadFriends(session, now) {
   const ids = (Array.isArray(session.game?.friends) ? session.game.friends : []).map(Number).filter(Number.isSafeInteger).slice(0, 50);
   const cached = friendsCache.get(session.userId);
   if (cached && now - cached.at < FRIENDS_CACHE_MS && cached.key === ids.join(',')) return cached.people;
@@ -40,7 +40,7 @@ async function loadFriends(session, now) {
 }
 
 /** Looks a player up by in-game nickname. Returns `{ id, person }` or null. */
-async function findByNickname(value) {
+export async function findByNickname(value) {
   const checked = validatePlayerNickname(value);
   if (!checked.ok) return null;
   const character = await Character.findOne({ 'data.game.nicknameKey': checked.key }, { userId: 1, 'data.game.nickname': 1, 'data.game.friends': 1, 'data.game.lastSeenAt': 1 }).lean();

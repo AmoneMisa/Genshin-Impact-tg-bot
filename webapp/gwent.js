@@ -11,6 +11,7 @@ import { createMatch, createTable, TABLE_SEATS, legalPlays, playCard, passRound,
 import { sfx, withMusic, GWENT_TRACKS } from './audio.js';
 import { stockQuantity } from './stock-quantity.js';
 import { abilitiesHtml, cardAbilityHtml } from './gwent-abilities.js';
+import { STAKE_CHOICES, stakeBodyOf, stakeText } from './stakes.js';
 import { decideAi, AI_LEVELS, DEFAULT_AI_LEVEL, normalizeAiLevel } from './gwent-ai.js';
 
 const FACTIONS = RULESETS.extended.factions; // every faction; a rule set allows some of them
@@ -27,10 +28,6 @@ const CHOICES = { revive: 'Выберите отряд для медика', tak
 const image = (key, className = '', alt = '', source = GWENT_ART[key]) => source ? `<img class="${className}" src="${source}" alt="${esc(alt)}" loading="lazy" decoding="async" draggable="false">` : '';
 const button = (label, attrs = '', primary = false, variant = '') => `<button type="button" class="ui-button ui-compact${primary ? ' primary' : ''}${variant ? ' ' + variant : ''}" ${attrs}>${label}</button>`;
 const aria = label => `aria-label="${esc(label)}"`;
-// Stakes of friendly online games: the currency and the amount in one choice, e.g. `gold:1000`.
-const STAKE_UNITS = { gold: 'адены', luckCoins: 'CoL' };
-const stakeText = ({ currency, amount }) => `${amount.toLocaleString('ru-RU')} ${STAKE_UNITS[currency]}`;
-const STAKE_CHOICES = [['', 'Без ставки'], ...[100, 1000, 10000, 100000, 1000000].map(amount => [`gold:${amount}`, stakeText({ currency: 'gold', amount })]), ...[1, 5, 10, 50, 100].map(amount => [`luckCoins:${amount}`, stakeText({ currency: 'luckCoins', amount })])];
 
 /** One card component used on the battlefield, in the hand and in the deck editor. */
 export function gwentCardHtml(card, value = card.strength, { selectable = false, selected = false, target = false, action = '', compact = false, artIndex = card.artIndex ?? 0, label = null, ruleset = card.ruleset || 'classic' } = {}) {
@@ -82,7 +79,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   const artSource = (id, index, rules = artRuleset()) => cardArtSource(id, index, rules);
   let notice = '', tone = '', onlineError = '', serverOffset = 0, stakeChoice = '', wallet = null;
   /** The chosen stake as the server expects it, or nothing. */
-  const stakeBody = () => { const [currency, amount] = stakeChoice.split(':'); return currency ? { stake: { currency, amount: Number(amount) } } : {}; };
+  const stakeBody = () => stakeBodyOf(stakeChoice);
   let lobby = {friends:[],incoming:[],outgoing:[],games:[],room:null}, focusedInvite = initialInvite, invitation = null, watchId = initialWatch, renderedLobbyKey = '';
   const lobbyKey = () => JSON.stringify(lobby) + JSON.stringify([...lobby.incoming,...lobby.outgoing,...invitation ? [invitation] : []].map(i=>[Math.max(0,Math.ceil((i.expiresAt-Date.now()-serverOffset)/60000)),i.canPushAt>Date.now()+serverOffset]));
   if (initialInvite) screen = 'friends';
