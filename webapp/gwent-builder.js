@@ -107,7 +107,7 @@ export function leaderDescription(leader) {
   const e = leader.effect;
   const row = { close: 'ближнего боя', ranged: 'дальнего боя', siege: 'осады' };
   if (e.type === 'double') return `Удваивает силу обычных отрядов ряда ${row[e.row]}.`;
-  if (e.type === 'weather') return `Применяет погоду: ${{ close: 'Мороз', ranged: 'Мгла', siege: 'Ливень', clear: 'Ясное небо' }[e.weather]}.`;
+  if (e.type === 'weather') return `Применяет погоду: ${[e.weather].flat().map(weather => ({ close: 'Мороз', ranged: 'Мгла', siege: 'Ливень', clear: 'Ясное небо' })[weather]).join(' и ')}.`;
   if (e.type === 'scorchRow') return `Уничтожает сильнейшие обычные отряды вражеского ряда ${row[e.target]}, если сила его ряда ${row[e.cond]} не меньше ${e.threshold}.`;
   return ({ 'passive-bran': 'Постоянно: отряды теряют в погоде половину силы.', 'passive-extra-draw': 'Постоянно: дополнительная карта в начале раунда.',
     shuffleGraveyards: 'Возвращает карты из отбоя обеих сторон в колоды.', reveal: 'Показывает три карты из руки противника.',

@@ -212,7 +212,7 @@ const BASE_GWENT_ART = Object.freeze({
 });
 // Decorative faction crests are separate from the reviewed printed card faces.
 const EXTENDED_ART = Object.fromEntries(['wild-hunt', 'witchers', 'toussaint', 'velen', 'redania', 'sorceresses', 'eternal-fire']
-  .flatMap(id => ['shield', 'banner'].map(kind => [`${kind}:${id}`, `/art/gwent/factions/${id}.svg`])));
+  .flatMap(id => [[`shield:${id}`, `/art/gwent/factions/${id}-crest.png`], [`banner:${id}`, `/art/gwent/factions/${id}-banner.webp`]]));
 // Deck backs of the extended factions are full printed card backs.
 const EXTENDED_BACKS = Object.fromEntries(['wild-hunt', 'witchers', 'toussaint', 'velen', 'redania', 'sorceresses', 'eternal-fire']
   .map(id => [`back:${id}`, `/art/gwent/printed/back-${id}.webp`]));

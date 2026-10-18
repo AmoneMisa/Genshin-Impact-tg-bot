@@ -9,7 +9,8 @@ import { cardArtOptions, cardArtSource } from './gwent-art-options.js';
 import { buildDeck, aiLoadout, defaultLoadout, inspectLoadout, repairLoadout, filterCards, cardTraits, leaderDescription } from './gwent-builder.js';
 import { createMatch, createTable, TABLE_SEATS, legalPlays, playCard, passRound, resolveChoice, rowValuesFor, scores, teamScores } from './gwent-engine.js';
 import { sfx, withMusic, GWENT_TRACKS } from './audio.js';
-import { abilitiesHtml } from './gwent-abilities.js';
+import { stockQuantity } from './stock-quantity.js';
+import { abilitiesHtml, cardAbilityHtml } from './gwent-abilities.js';
 import { decideAi, AI_LEVELS, DEFAULT_AI_LEVEL, normalizeAiLevel } from './gwent-ai.js';
 
 const FACTIONS = RULESETS.extended.factions; // every faction; a rule set allows some of them
@@ -222,19 +223,17 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     const all = filterCards(draft, filters), maxPage = Math.max(0, Math.ceil(all.length / 18) - 1); page = Math.min(page, maxPage);
     return `<div class="gwent-catalog-heading"><span role="status">Найдено карт: ${all.length}</span>${button('Сбросить фильтры', 'data-reset-filters')}</div>
       <div class="gwent-builder-grid">${all.slice(page * 18, page * 18 + 18).map(([card, limit]) => {
-        const count = draft.counts[card.id] || 0, capped = count >= limit || card.type === 'special' && inspectLoadout(draft).specials >= 10;
+        const count = draft.counts[card.id] || 0;
         return `<article class="gwent-builder-card">${cardHtml(card, card.strength, { action: `data-preview-id="${card.id}"`, artIndex: draft.arts?.[card.id] ?? 0 })}
           <small>${card.rows?.map(row => ROW_LABELS[row]).join(' / ') || 'Особая карта'}</small>
-          <div class="gwent-copy-controls">${button(controlIcon('minus'), `data-adjust="${card.id}" data-delta="-1" ${aria(`Убрать: ${card.name}`)} ${count ? '' : 'disabled'}`)}
-          <span aria-label="${count} из ${limit} копий">${count} / ${limit}</span>${button(controlIcon('plus'), `data-adjust="${card.id}" data-delta="1" ${aria(`Добавить: ${card.name}`)} ${capped ? 'disabled' : ''}`)}</div>
-          ${cardArtOptions(card.id, ruleset).length > 1 ? button('Выбрать арт', `data-art-card="${card.id}"`) : ''}</article>`;
+          ${button(`В колоде: ${count} / ${limit}`, `data-card-quantity="${card.id}" ${aria(`Количество копий: ${card.name}`)}`)}</article>`;
       }).join('') || '<p class="gwent-hint">Карты не найдены. Измените фильтры.</p>'}</div>
       <nav class="gwent-pagination" aria-label="Страницы карт">${button('Назад', `data-page="-1" ${page ? '' : 'disabled'}`)}<span>${page + 1} / ${maxPage + 1}</span>${button('Далее', `data-page="1" ${page < maxPage ? '' : 'disabled'}`)}</nav>`;
   }
   function leaderScreen() {
     return `<p class="gwent-hint">Один лидер на матч. Выберите его способность.</p><div class="gwent-leader-list">${deckNow(faction).leaders.map(leader => `<div class="gwent-leader-entry"><button type="button" class="ui-button ui-illustrated-choice gwent-leader-choice" data-select-leader="${leader.id}" aria-label="${esc(leader.name)}" aria-pressed="${draft.leaderId === leader.id}">
       ${image(leader.id, 'gwent-leader-art', '', artSource(leader.id, draft.arts?.[leader.id]))}<span>${GWENT_PRINTED_CARDS.has(leader.id) ? '' : `<strong>${esc(leader.name)}</strong>`}<small>${esc(leaderDescription(leader))}</small></span><span class="ui-selection-mark" aria-hidden="true">${draft.leaderId === leader.id ? controlIcon('check') : ''}</span></button>
-      ${cardArtOptions(leader.id, ruleset).length > 1 ? button('Выбрать арт', `data-art-card="${leader.id}"`) : ''}</div>`).join('')}</div>`;
+      ${button('Посмотреть карту', `data-preview-id="${leader.id}"`)}</div>`).join('')}</div>`;
   }
   function artPickerHtml() {
     const options = cardArtOptions(artCard.id, ruleset), chosen = draft.arts?.[artCard.id] ?? 0;
@@ -418,8 +417,11 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       return `<p class="gwent-hint">${kind === 'deck' ? 'Порядок карт в колоде скрыт от игроков.' : 'Карты в отбое'}</p><div class="gwent-pile-grid">${cards.map(card => cardHtml(card, card.strength)).join('') || (kind === 'graveyard' ? '<p>Отбой пуст</p>' : '')}</div>${button('Вернуться к матчу', 'data-close-preview')}`;
     }
     if (!preview) return '';
-    return `<div class="gwent-card-detail">${image(preview.id, 'gwent-detail-art', '', artSource(preview.id, preview.artIndex))}<div>${GWENT_PRINTED_CARDS.has(preview.id) ? '' : `<h3>${esc(preview.name)}</h3>`}<p>${preview.type === 'leader' ? esc(leaderDescription(preview)) : esc(cardTraits(preview) || 'Обычный отряд')}</p>
-      ${preview.type === 'unit' ? `<p>Базовая сила: ${preview.strength}</p><p>${preview.rows.map(row => ROW_LABELS[row]).join(' / ')}</p>` : ''}</div></div>${button('Назад', 'data-close-preview')}`;
+    return `<div class="gwent-card-detail"><button type="button" class="ui-button ui-card-art gwent-detail-image" data-zoom-card aria-label="Увеличить карту: ${esc(preview.name)}">${image(preview.id, 'gwent-detail-art', '', artSource(preview.id, preview.artIndex))}</button><div><h3>${esc(preview.name)}</h3>
+      ${preview.type === 'leader' ? `<p>${esc(leaderDescription(preview))}</p>` : cardAbilityHtml(preview)}
+      ${preview.type === 'unit' ? `<p>Базовая сила: ${preview.strength}</p><p>${preview.rows.map(row => ROW_LABELS[row]).join(' / ')}</p>` : ''}</div></div>
+      <p class="gwent-hint">Нажмите на изображение, чтобы увеличить карту.</p>
+      ${draft && screen !== 'match' && cardArtOptions(preview.id, ruleset).length > 1 ? button('Выбрать арт', `data-art-card="${preview.id}"`) : ''}${button('Назад', 'data-close-preview')}`;
   }
 
   function render() {
@@ -668,7 +670,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
   }
   function editDeck() { draftReturn = screen; draft = structuredClone(loadouts[keyOf()]); filters = { sort: 'name' }; page = 0; go('editor'); }
   function cardById(id) {
-    const card = deckNow(faction).cards.find(([card]) => card.id === id)?.[0];
+    const card = deckNow(faction).cards.find(([card]) => card.id === id)?.[0] || deckNow(faction).leaders.find(card => card.id === id);
     return card ? { ...card, artIndex: (draft || loadouts[keyOf()]).arts?.[id] ?? 0 } : null;
   }
   async function close() {
@@ -733,7 +735,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     } else if ('selectArt' in d && artCard && draft) {
       const index = Number(d.selectArt);
       if (Number.isInteger(index) && index >= 0 && index < cardArtOptions(artCard.id, ruleset).length) {
-        draft.arts ||= {}; draft.arts[artCard.id] = index; artCard = null; render();
+        draft.arts ||= {}; draft.arts[artCard.id] = index; if (preview?.id === artCard.id) preview.artIndex = index; artCard = null; render();
       }
     } else if ('closeArt' in d) { artCard = null; render(); }
     else if (d.selectFaction) { faction = d.selectFaction; render(); }
@@ -743,13 +745,24 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     else if ('leaders' in d) { leaderReturn = screen; go('leaders'); }
     else if (d.selectLeader) { draft.leaderId = d.selectLeader; go(leaderReturn); }
     else if ('clearDeck' in d) { draft.counts = {}; render(); }
-    else if ('resetDeck' in d) { const { leaderId, arts } = draft; draft = defaultLoadout(faction); draft.leaderId = leaderId; draft.arts = arts || {}; render(); }
+    else if ('resetDeck' in d) { const { leaderId, arts } = draft; draft = defaultLoadout(faction, ruleset); draft.leaderId = leaderId; draft.arts = arts || {}; render(); }
     else if ('saveDeck' in d) await saveDeck();
-    else if (d.adjust) {
-      const [card, limit] = deckNow(faction).cards.find(([card]) => card.id === d.adjust);
-      const next = (draft.counts[card.id] || 0) + Number(d.delta);
-      if (next >= 0 && next <= limit && !(Number(d.delta) > 0 && card.type === 'special' && inspectLoadout(draft).specials >= 10)) draft.counts[card.id] = next;
-      updateCatalog();
+    else if (d.cardQuantity && draft) {
+      const currentDraft = draft;
+      const [card, limit] = deckNow(faction).cards.find(([card]) => card.id === d.cardQuantity);
+      const count = draft.counts[card.id] || 0;
+      const max = card.type === 'special' ? Math.min(limit, 10 - inspectLoadout(draft).specials + count) : limit;
+      const next = await stockQuantity({row:{kind:'card',title:card.name,count},action:'Изменить количество',owner:panel,max,min:0,value:count,range:true,note:`В колоде: ${count}. Лимит карты: ${limit}.${card.type === 'special' ? ' Не более 10 особых карт в колоде.' : ''}`});
+      if (next !== null && draft === currentDraft && !closed) { draft.counts[card.id] = next; updateCatalog(); }
+    } else if ('zoomCard' in d && preview) {
+      const dialog = document.createElement('dialog'); dialog.className = 'game-dialog-panel gwent-card-zoom';
+      dialog.innerHTML = `${dialogHeading(preview.name)}${image(preview.id, 'gwent-zoom-art', '', artSource(preview.id, preview.artIndex))}`;
+      const dismiss = () => { dialog.close(); dialog.remove(); };
+      dialog.querySelector('[data-dismiss]').onclick = dismiss;
+      dialog.addEventListener('overlay-escape', event => { event.preventDefault(); event.stopPropagation(); dismiss(); });
+      dialog.addEventListener('cancel', event => { event.preventDefault(); dismiss(); });
+      dialog.addEventListener('click', event => { event.stopPropagation(); if(event.target === dialog) dismiss(); });
+      overlay.append(dialog); dialog.showModal();
     } else if ('resetFilters' in d) { filters = { sort: 'name' }; page = 0; render(); }
     else if ('page' in d) { page += Number(d.page); updateCatalog(); panel.querySelector('[data-catalog]').scrollIntoView({ block: 'start' }); }
     else if ('start' in d) {

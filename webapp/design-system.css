@@ -1518,3 +1518,12 @@ body .game-overlay .overlay-panel .ui-button.ui-card-art:focus-visible{outline:2
 .ui-disclosure-summary::-webkit-details-marker{display:none}
 .ui-disclosure-summary>svg{width:16px;height:16px;flex:none}
 details[open]>.ui-disclosure-summary>svg{rotate:180deg}
+
+/* Shared quantity dialog also serves card copy selection without item artwork. */
+.stock-quantity{--dialog-width:340px;--dialog-padding:var(--space-3)}
+.stock-quantity .stock-transfer{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-3);padding:0;border:0;background:transparent}
+.stock-quantity .quantity-item{display:flex;align-items:center;gap:var(--space-3);overflow-wrap:anywhere}
+.stock-quantity label{display:grid;gap:var(--space-2)}
+.stock-quantity input{width:100%;min-width:0;box-sizing:border-box}
+.stock-quantity [type=range]{min-height:44px;accent-color:var(--gold)}
+.stock-quantity .storage-actions{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:var(--space-2)}

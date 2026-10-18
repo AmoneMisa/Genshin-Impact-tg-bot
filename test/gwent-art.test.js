@@ -9,6 +9,14 @@ import { EXTENDED_GWENT_ART } from '../webapp/gwent-expansion-art.js';
 import { defaultLoadout, buildDeck, inspectLoadout } from '../webapp/gwent-builder.js';
 import { createMatch } from '../webapp/gwent-engine.js';
 
+test('extended faction selectors use reviewed raster crests and separate unlabelled banners', () => {
+  for (const faction of RULESETS.extended.factions.filter(id => !RULESETS.classic.factions.includes(id))) {
+    assert.match(GWENT_ART['shield:' + faction], /-crest\.png$/);
+    assert.match(GWENT_ART['banner:' + faction], /-banner\.webp$/);
+    for (const kind of ['shield', 'banner']) assert.ok(fs.existsSync('webapp' + GWENT_ART[kind + ':' + faction]));
+  }
+});
+
 test('every playable card, token and leader uses a complete supplied card; backs match factions', () => {
   // The five original factions use the supplied card images; the extended factions and their squirrel token are drawn by the interface.
   const cards = [...DECK_IDS.flatMap(id => [...GWENT_DECKS[id].cards.map(([card]) => card), ...GWENT_DECKS[id].leaders]), ...Object.values(TOKENS).filter(token => !['squirrel', 'wisp'].includes(token.id))];

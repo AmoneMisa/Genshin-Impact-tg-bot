@@ -1,10 +1,12 @@
+import { cardTraits, leaderDescription } from './gwent-builder.js';
+import { ROW_LABELS } from './gwent-decks.js';
 import { escapeHtml as esc } from './escape-html.js';
 
 /** What each card ability does. `extended` marks abilities that exist only under the extended rules. */
 const ABILITIES = [
   ['Герой', 'Не подвержен погоде, рогу и способностям карт. Не может быть уничтожен.'],
   ['Шпион', 'Выкладывается в ряд противника и приносит очки противнику, но вы берёте две карты из колоды.'],
-  ['Медик', 'При розыгрыше возвращает на стол сильнейший обычный отряд из вашего отбоя.'],
+  ['Медик', 'При розыгрыше позволяет выбрать обычный отряд из вашего отбоя и вернуть его на стол.'],
   ['Связь', 'Отряды с одним названием в ряду усиливают друг друга: сила умножается на число таких карт.'],
   ['Прилив сил', 'Все остальные отряды этого ряда получают +1 к силе.'],
   ['Командирский рог', 'Удваивает силу обычных отрядов ряда. Действует один рог на ряд.'],
@@ -30,4 +32,24 @@ const ABILITIES = [
 /** The ability guide shown from the deck screen and from the match menu. */
 export function abilitiesHtml() {
   return `<dl class="gwent-abilities">${ABILITIES.map(([name, text, extended]) => `<div class="ui-inset-row gwent-ability${extended ? ' extended' : ''}"><dt>${esc(name)}</dt><dd>${esc(text)}</dd></div>`).join('')}</dl>`;
+}
+
+/** Readable card effects use the same descriptions as the ability guide. */
+export function cardAbilityHtml(card) {
+  const names = cardTraits(card).split(' · ').filter(Boolean);
+  if (card.onPlay?.type === 'selfBoost') names.push('Усиление при розыгрыше');
+  if (!names.length) return '<p>Обычный отряд. Добавляет свою силу к очкам выбранного ряда.</p>';
+  return `<dl class="gwent-abilities">${names.map(name => {
+    const key = ['Берсерк', 'Мардрём'].includes(name) ? 'Мардрём и берсерк' : name;
+    let text = ABILITIES.find(([label]) => label === key)?.[1] || '';
+    if (name === 'Усиление при розыгрыше') text = `При розыгрыше получает +${card.onPlay.amount} к силе, если у противника на столе есть маг.`;
+    if (name === 'Казнь' && card.onPlay?.type === 'scorchRow') text = leaderDescription({effect:card.onPlay});
+    if (card.special === 'weather') text = card.weather === 'clear' ? 'Снимает всю погоду со стола.' : `Снижает силу обычных отрядов обеих сторон до 1 в рядах: ${[card.weather].flat().map(row => ROW_LABELS[row]).join(', ')}. Герои не подвержены погоде; учитывается способность фракции.`;
+    if (card.special === 'teleport') text = 'Перемещает один ваш обычный отряд в другой ряд по вашему выбору. Героя перенести нельзя.';
+    if (card.special === 'boost') text = `Даёт вашему обычному отряду +${card.amount} к силе до конца раунда (не более +6 суммарно).`;
+    if (card.special === 'strike') text = `Наносит обычному отряду противника ${card.amount} урона.${card.mageBonus ? ` Против мага: ещё +${card.mageBonus}.` : ''} Если силы не осталось, отряд уничтожен.`;
+    if (card.special === 'curse' || card.special === 'blessing') text = `${card.special === 'curse' ? 'Снижает' : 'Повышает'} силу обычных отрядов выбранного ${card.special === 'curse' ? 'вражеского' : 'вашего'} ряда на ${card.amount || 1} до конца раунда.`;
+    if (card.special === 'recall') text = `Возвращает выбранный обычный отряд из вашего отбоя в руку.${card.maxBase != null ? ` Базовая сила — не выше ${card.maxBase}.` : ''}`;
+    return `<div class="ui-inset-row gwent-ability"><dt>${esc(name)}</dt><dd>${esc(text)}</dd></div>`;
+  }).join('')}</dl>`;
 }
