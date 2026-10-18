@@ -24,7 +24,7 @@ function walk(s,id,now){
  advanceHunt(s,now+20000,()=>.5);assert.equal(s.game.hunt.field.room,id);
 }
 test('painted zones have reachable adapted sections and preserve dungeon networks',()=>{
- assert.equal(HUNT_EXPLORATION.length,43);
+ assert.equal(HUNT_EXPLORATION.length,44);
  for(const {id} of HUNT_EXPLORATION){
   const zone=getZone(id),layout=roomLayout(zone);assert.ok(zone);assert.ok(layout.map);
   assert.equal(layout.rooms.length,zone.kind==='catacomb'?12:3);
