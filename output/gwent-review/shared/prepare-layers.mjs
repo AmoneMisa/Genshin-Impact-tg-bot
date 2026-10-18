@@ -43,12 +43,12 @@ export async function prepareLayers(directory,faction,glyphs={}){
  }
  provenance.abilityMask={center:[44,38],radius:36.5,canvas:[81,81],purpose:'Remove source-card cloth and portrait outside the original medal; no added border'};
  const back='webapp'+GWENT_ART['back:'+faction];fs.copyFileSync(back,path.join(out,'back.webp'));
- if(['witchers','toussaint','velen','redania','sorceresses'].includes(faction)){
+ if(['witchers','toussaint','velen','redania','sorceresses','eternal-fire'].includes(faction)){
   const tintCloth=(pixels,i)=>{
    const r=pixels[i],g=pixels[i+1],b=pixels[i+2];
    if(b>r*1.15&&b>g*1.05){
     const light=.2126*r+.7152*g+.0722*b;
-    const colors={witchers:[12+light*.48,15+light*.52,19+light*.57],toussaint:[35+light*.85,8+light*.22,18+light*.38],velen:[14+light*.42,20+light*.48,10+light*.25],redania:[28+light*.88,4+light*.12,7+light*.17],sorceresses:[22+light*.4,10+light*.16,39+light*.8]};
+    const colors={witchers:[12+light*.48,15+light*.52,19+light*.57],toussaint:[35+light*.85,8+light*.22,18+light*.38],velen:[14+light*.42,20+light*.48,10+light*.25],redania:[28+light*.88,4+light*.12,7+light*.17],sorceresses:[22+light*.4,10+light*.16,39+light*.8],'eternal-fire':[40+light*.95,17+light*.48,7+light*.16]};
     const color=colors[faction];
     color.forEach((v,c)=>pixels[i+c]=Math.round(Math.min(255,v)));
    }
@@ -66,7 +66,7 @@ export async function prepareLayers(directory,faction,glyphs={}){
    for(let i=0;i<raw.data.length;i+=4)tintCloth(raw.data,i);
    const png=await sharp(raw.data,{raw:raw.info}).png().toBuffer();fs.writeFileSync(target,png);
   }
-  provenance.frame={source:'../templates-v1/unit.png',cloth:({witchers:'graphite and steel',toussaint:'wine burgundy',velen:'swamp olive',redania:'dark crimson',sorceresses:'deep plum violet'}[faction])+'; existing stitching and parchment preserved'};
+  provenance.frame={source:'../templates-v1/unit.png',cloth:({witchers:'graphite and steel',toussaint:'wine burgundy',velen:'swamp olive',redania:'dark crimson',sorceresses:'deep plum violet','eternal-fire':'charred copper and ember ochre'}[faction])+'; existing stitching and parchment preserved'};
   if(faction==='witchers'){
   // Trace the whole silver medallion, excluding the surrounding belt. Keep dark facial details opaque.
   const points='106,166 128,186 140,176 151,184 169,181 185,184 200,176 210,185 234,164 229,198 244,209 230,220 257,239 223,245 250,282 214,270 214,300 191,280 183,319 157,319 151,280 126,303 130,269 89,282 119,249 84,240 114,220 94,210 115,202';
@@ -104,12 +104,21 @@ export async function prepareLayers(directory,faction,glyphs={}){
    }
    await sharp(pixels,{raw:meta}).trim().resize(34,36,{fit:'contain',background:'#00000000'}).png().toFile(path.join(out,'layers/faction-emblem.png'));
    provenance.emblem={source:back,crop,extraction:'White crowned eagle and gold feet from the ready back; red-cloth chroma removed, dark details retained',canvas:[34,36]};
-  }else{
+  }else if(faction==='sorceresses'){
    const points='170,159 184,211 226,184 199,224 251,240 199,254 226,296 184,269 170,320 157,269 112,296 139,254 90,240 139,225 112,184 157,211';
    const mask=Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="340" height="510"><polygon points="${points}" fill="white"/></svg>`);
    const source=await sharp(back).ensureAlpha().composite([{input:mask,blend:'dest-in'}]).png().toBuffer();
    await sharp(source).trim().resize(34,36,{fit:'contain',background:'#00000000'}).png().toFile(path.join(out,'layers/faction-emblem.png'));
    provenance.emblem={source:back,extraction:'Whole eight-point star and violet central jewel; geometric silhouette retains original dark shading',canvas:[34,36]};
+  }else{
+   const crop={left:85,top:151,width:170,height:180};
+   const {data:pixels,info:meta}=await sharp(back).extract(crop).ensureAlpha().raw().toBuffer({resolveWithObject:true});
+   for(let y=0;y<meta.height;y++)for(let x=0;x<meta.width;x++){
+    const i=(y*meta.width+x)*4,r=pixels[i],g=pixels[i+1],b=pixels[i+2];
+    if(Math.hypot(x+crop.left-170,y+crop.top-242)>99||(r>g*1.7&&r>b*1.8))pixels[i+3]=0;
+   }
+   await sharp(pixels,{raw:meta}).trim().resize(34,36,{fit:'contain',background:'#00000000'}).png().toFile(path.join(out,'layers/faction-emblem.png'));
+   provenance.emblem={source:back,crop,extraction:'Original gold flame, bowl and rays from ready back; red cloth and outside belt removed',canvas:[34,36]};
   }
  }else{
  const m=await sharp(back).metadata(),crop={left:Math.round(m.width*.28),top:Math.round(m.height*.34),width:Math.round(m.width*.44),height:Math.round(m.height*.34)};

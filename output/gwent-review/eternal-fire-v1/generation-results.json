@@ -1,0 +1,178 @@
+{
+  "images": [
+    {
+      "key": "ef-templar",
+      "file": "illustrations/ef-templar.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-flagellant",
+      "file": "illustrations/ef-flagellant.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-witch-hunter",
+      "file": "illustrations/ef-witch-hunter.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-zealot",
+      "file": "illustrations/ef-zealot.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-crossbowman",
+      "file": "illustrations/ef-crossbowman.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-inquisitor",
+      "file": "illustrations/ef-inquisitor.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-confessor",
+      "file": "illustrations/ef-confessor.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-purifier",
+      "file": "illustrations/ef-purifier.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-pyre-master",
+      "file": "illustrations/ef-pyre-master.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-ram",
+      "file": "illustrations/ef-ram.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-caleb",
+      "file": "illustrations/ef-caleb.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-high-priest",
+      "file": "illustrations/ef-high-priest.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-prophet",
+      "file": "illustrations/ef-prophet.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-purge",
+      "file": "illustrations/ef-purge.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-interrogation",
+      "file": "illustrations/ef-interrogation.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-bonfire",
+      "file": "illustrations/ef-bonfire.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": []
+    },
+    {
+      "key": "ef-leader-inquisitor",
+      "file": "illustrations/ef-leader-inquisitor.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": [
+        "illustrations/ef-caleb.png"
+      ]
+    },
+    {
+      "key": "ef-leader-flame",
+      "file": "illustrations/ef-leader-flame.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": [
+        "illustrations/ef-caleb.png"
+      ]
+    },
+    {
+      "key": "ef-leader-judge",
+      "file": "illustrations/ef-leader-judge.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": [
+        "illustrations/ef-caleb.png"
+      ]
+    },
+    {
+      "key": "ef-leader-accuser",
+      "file": "illustrations/ef-leader-accuser.png",
+      "complete": true,
+      "tool": "built-in image_gen",
+      "selectedPrompt": "generation-jobs.json",
+      "references": [
+        "illustrations/ef-caleb.png"
+      ]
+    }
+  ],
+  "generatedBacks": 0,
+  "backSource": "webapp/art/gwent/printed/back-eternal-fire.webp",
+  "reusedSharedCards": 6,
+  "generatedFaces": 20,
+  "collectionFaces": 47,
+  "approval": "approved"
+}

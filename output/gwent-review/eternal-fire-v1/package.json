@@ -1,0 +1,45 @@
+{
+  "faction": "eternal-fire",
+  "prefix": "ef-",
+  "reuse": {
+    "el-fire": "../wild-hunt-v1",
+    "el-earth": "../wild-hunt-v1",
+    "el-water": "../wild-hunt-v1",
+    "ex-prep": "../wild-hunt-v1",
+    "ex-trap": "../wild-hunt-v1",
+    "ex-medic": "../wild-hunt-v1"
+  },
+  "frames": {
+    "unit": "layers/unit-frame.png"
+  },
+  "emblemSlot": {
+    "x": 24,
+    "y": 438,
+    "w": 34,
+    "h": 36
+  },
+  "emblemAxisX": 41,
+  "previewIds": [
+    "ef-templar",
+    "ef-witch-hunter",
+    "ef-caleb",
+    "ef-high-priest",
+    "ef-leader-inquisitor"
+  ],
+  "effects": {
+    "ef-purge": "fire",
+    "ef-interrogation": "interrogation",
+    "ef-bonfire": "fire"
+  },
+  "customIcons": [
+    "swap",
+    "mage",
+    "interrogation",
+    "fire",
+    "earth",
+    "water",
+    "prep",
+    "trap",
+    "recall"
+  ]
+}

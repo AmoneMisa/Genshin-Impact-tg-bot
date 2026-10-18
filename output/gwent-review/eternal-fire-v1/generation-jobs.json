@@ -1,0 +1,250 @@
+[
+  {
+    "key": "ef-templar",
+    "faction": "eternal-fire",
+    "kind": "unit",
+    "name": "Храмовник",
+    "changed": false,
+    "file": "illustrations/ef-templar.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult Temple Guard warrior aged 35 with fair skin, broad face and a trimmed brown beard, a steel helmet leaving the face visible, white worn tabard with a stylized golden flame over steel plate. Heavy mace held at rest and a plain shield, standing at a torchlit Novigrad church doorway. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "Щит не спрашивает, кто стоит за ним. Я спрашиваю.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-flagellant",
+    "faction": "eternal-fire",
+    "kind": "unit",
+    "name": "Флагеллант",
+    "changed": false,
+    "file": "illustrations/ef-flagellant.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult gaunt pale male religious penitent aged 50, hollow thoughtful eyes, greying close-cropped hair and stubble, weathered off-white linen robe and rope belt, walking in a quiet candle procession through a dusk city street. A coiled cord hangs unused at his belt. Peaceful processional moment, uninjured figure. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "Чем громче поют вокруг, тем тише он слышит себя.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-witch-hunter",
+    "faction": "eternal-fire",
+    "kind": "unit",
+    "name": "Охотник на ведьм",
+    "changed": false,
+    "file": "illustrations/ef-witch-hunter.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult grim Novigrad witch hunter aged 40 with fair skin, a narrow weathered face and a dark moustache, black broad-brimmed hat, worn dark leather coat, a crossbow slung across his back and a low torch held to one side. Searching a foggy stone alley, flame medallion on his chest, no attack or victim. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "Не торопись отвечать. Я ещё не задал вопрос.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-zealot",
+    "faction": "eternal-fire",
+    "kind": "unit",
+    "name": "Фанатик",
+    "changed": false,
+    "file": "illustrations/ef-zealot.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult fair-skinned male zealot aged 30 with a shaved head, wide intense eyes and a lean angular face, scorched off-white full robe and a rope belt, holding a raised torch while speaking before a distant crowd of adult townspeople. Ember sparks, smoke and old church stone, no violence. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "Он так долго смотрел на огонь, что перестал замечать тени.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-crossbowman",
+    "faction": "eternal-fire",
+    "kind": "unit",
+    "name": "Арбалетчик Вечного Огня",
+    "changed": false,
+    "file": "illustrations/ef-crossbowman.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult male Temple Guard crossbowman aged 25 with fair skin, curly brown hair and a clean-shaven face, white surcoat with a gold flame insignia, aiming a mechanically convincing heavy wooden crossbow from a church parapet over Novigrad. Warm torchlight and distant smoke, no one struck. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "С колокольни каждый переулок кажется тупиком.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-inquisitor",
+    "faction": "eternal-fire",
+    "kind": "unit",
+    "name": "Инквизитор",
+    "changed": false,
+    "file": "illustrations/ef-inquisitor.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult inquisitor aged 55 with fair skin, a long clean-shaven face and greying hair beneath a tall dark hat, black coat and closed collar, holding a closed plain ledger and a small flame-shaped pendant in a dim stone archive. One hanging lantern, iron keys and tall shelves, no readable writing. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "В этой книге нет пустых страниц. Только незаполненные имена.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-confessor",
+    "faction": "eternal-fire",
+    "kind": "unit",
+    "name": "Исповедник",
+    "changed": false,
+    "file": "illustrations/ef-confessor.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult elderly male confessor aged 65 with fair skin, lined face and a full white beard beneath a grey hood, listening beside a wooden lattice screen in a candlelit church. Calm unreadable expression, plain layered robes and flame pendant, quiet atmosphere. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "Говори тише. Стены здесь слушают не хуже меня.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-purifier",
+    "faction": "eternal-fire",
+    "kind": "unit",
+    "name": "Очиститель",
+    "changed": false,
+    "file": "illustrations/ef-purifier.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult stocky fair-skinned temple servant aged 45 with a reddish short beard, soot-marked leather apron over an off-white tunic and a white hood lowered on his shoulders. Carrying a low torch beside an unattended woodpile in a rain-dark town square. Smoke and stone arches, no victims or burning people. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "Зола не рассказывает, кто первым поднёс факел.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-pyre-master",
+    "faction": "eternal-fire",
+    "kind": "unit",
+    "name": "Мастер костров",
+    "changed": false,
+    "file": "illustrations/ef-pyre-master.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult burly fair-skinned wood handler aged 50 with a broad nose, close-cropped dark hair and a thick greying beard, leather apron over a dark work shirt. Standing beside stacked bundled wood in a cobbled Novigrad square, a handcart and distant church towers. Soot on gloves, evening torchlight, no execution or injuries. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "Он знает цену каждой вязанке. О прочем не спрашивает.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-ram",
+    "faction": "eternal-fire",
+    "kind": "unit",
+    "name": "Таран Храма",
+    "changed": false,
+    "file": "illustrations/ef-ram.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: A heavy iron-capped oak battering ram suspended by chains inside a wheeled timber shelter with a weathered off-white flame banner. Adult Temple Guard acolytes stand small beside it outside a closed medieval gate at dusk. Clear whole machine silhouette, smoke and warm torchlight, no combat. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "Дубовые двери тоже умеют молиться. Их просто плохо слышно.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-caleb",
+    "faction": "eternal-fire",
+    "kind": "unit",
+    "name": "Калеб Менге",
+    "changed": false,
+    "file": "illustrations/ef-caleb.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: Recognizable Caleb Menge from The Witcher 3: an adult middle-aged pale man with a bald closely shaved head, prominent stern forehead, a long angular face, strong dark eyebrows, thin hard mouth, narrow watchful eyes and a faint old vertical forehead scar. Clean-shaven or very short dark stubble, no full beard, no long black hair. Dark studded leather armor with broad worn red leather straps, a thick rope belt, gloves and a small Eternal Fire flame medallion. Grounded game character appearance, not a crowned monarch. Standing in a torchlit Novigrad square with Temple Guard silhouettes behind, one gloved hand resting on his belt, grim direct three-quarter portrait, full head visible. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "У каждого молчания есть причина. Я привык её находить.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-high-priest",
+    "faction": "eternal-fire",
+    "kind": "unit",
+    "name": "Верховный жрец",
+    "changed": false,
+    "file": "illustrations/ef-high-priest.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult elderly fair-skinned high priest of the fictional Eternal Fire, long neatly kept white beard and a thin severe face, ash-white and muted gold robes with a pointed flame-shaped ceremonial headpiece. Holding a golden flame sceptre before a stone altar and a large brass brazier. Fictional flame motifs, no real-world religious crosses. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "Пока горит этот свет, площадь будет смотреть сюда.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-prophet",
+    "faction": "eternal-fire",
+    "kind": "unit",
+    "name": "Безумный пророк",
+    "changed": false,
+    "file": "illustrations/ef-prophet.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An adult fair-skinned ragged prophet aged 60 with a long ash-grey beard, unkempt dark-grey hair and deeply lined intense face, gesturing with open hands before a bonfire on an old rooftop terrace. Tattered off-white robe, orange embers in the air and a distant adult crowd below, no attack or injuries. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "Они смеются над моими словами. Зато слушают.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-purge",
+    "faction": "eternal-fire",
+    "kind": "special",
+    "name": "Очищение огнём",
+    "changed": false,
+    "file": "illustrations/ef-purge.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An empty medieval timber street after dark, one abandoned wooden building burning in the distance, orange light reflecting on rain-dark cobblestones, drifting smoke and closed shutters. No people, no bodies, no graphic destruction. A grounded ominous fire scene. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "К утру у этой улицы будет другое небо.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-interrogation",
+    "faction": "eternal-fire",
+    "kind": "special",
+    "name": "Допрос с пристрастием",
+    "changed": false,
+    "file": "illustrations/ef-interrogation.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: An empty stone interview chamber, one plain wooden chair before a heavy desk, a closed blank ledger, an iron ring of keys and a single hanging lamp casting long shadows. Dust in warm light, quiet oppressive atmosphere. No people, weapons, injuries or torture in progress. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "Стул ещё пуст. Вопросы уже приготовлены.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-bonfire",
+    "faction": "eternal-fire",
+    "kind": "special",
+    "name": "Костёр",
+    "changed": false,
+    "file": "illustrations/ef-bonfire.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: A large ceremonial bonfire in a cobbled Novigrad square at dusk, orange flames and flying embers, rough stone buildings and a few distant adult watchers beside the cathedral. No stake, prisoners or burning people, fire itself is the focal point. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing.",
+    "quote": "С площади давно разошлись. Огонь остался говорить сам с собой.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": []
+  },
+  {
+    "key": "ef-leader-inquisitor",
+    "faction": "eternal-fire",
+    "kind": "leader",
+    "name": "Калеб Менге: Великий инквизитор",
+    "changed": false,
+    "file": "illustrations/ef-leader-inquisitor.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: Recognizable Caleb Menge from The Witcher 3: an adult middle-aged pale man with a bald closely shaved head, prominent stern forehead, a long angular face, strong dark eyebrows, thin hard mouth, narrow watchful eyes and a faint old vertical forehead scar. Clean-shaven or very short dark stubble, no full beard, no long black hair. Dark studded leather armor with broad worn red leather straps, a thick rope belt, gloves and a small Eternal Fire flame medallion. Grounded game character appearance, not a crowned monarch. Seated behind a dark desk with closed unmarked papers and one candle in an old stone chamber, hands folded, severe attentive expression. Clear face, leather armor visible beneath a dark coat. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing. Input reference is the new Caleb Menge hero portrait for this same deck. Preserve this exact man: bald head, long scarred face, age, narrow eyes, dark studded armor, red straps and rope belt. Change the pose and setting to the separate leader scene described above, keeping the same grounded matte painted Gwent style. One dominant clear face, full head visible.",
+    "quote": "Я предпочитаю, чтобы признание начиналось с правды.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/ef-caleb.png"
+    ]
+  },
+  {
+    "key": "ef-leader-flame",
+    "faction": "eternal-fire",
+    "kind": "leader",
+    "name": "Калеб Менге: Хранитель огня",
+    "changed": false,
+    "file": "illustrations/ef-leader-flame.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: Recognizable Caleb Menge from The Witcher 3: an adult middle-aged pale man with a bald closely shaved head, prominent stern forehead, a long angular face, strong dark eyebrows, thin hard mouth, narrow watchful eyes and a faint old vertical forehead scar. Clean-shaven or very short dark stubble, no full beard, no long black hair. Dark studded leather armor with broad worn red leather straps, a thick rope belt, gloves and a small Eternal Fire flame medallion. Grounded game character appearance, not a crowned monarch. Holding a raised torch beside a large sacred brass brazier in a night plaza, orange light on his stern face and an off-white flame banner behind. Fully visible face and head, no execution or victims. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing. Input reference is the new Caleb Menge hero portrait for this same deck. Preserve this exact man: bald head, long scarred face, age, narrow eyes, dark studded armor, red straps and rope belt. Change the pose and setting to the separate leader scene described above, keeping the same grounded matte painted Gwent style. One dominant clear face, full head visible.",
+    "quote": "Пламя видно издалека. Пусть помнят, где его берегут.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/ef-caleb.png"
+    ]
+  },
+  {
+    "key": "ef-leader-judge",
+    "faction": "eternal-fire",
+    "kind": "leader",
+    "name": "Калеб Менге: Судья",
+    "changed": false,
+    "file": "illustrations/ef-leader-judge.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: Recognizable Caleb Menge from The Witcher 3: an adult middle-aged pale man with a bald closely shaved head, prominent stern forehead, a long angular face, strong dark eyebrows, thin hard mouth, narrow watchful eyes and a faint old vertical forehead scar. Clean-shaven or very short dark stubble, no full beard, no long black hair. Dark studded leather armor with broad worn red leather straps, a thick rope belt, gloves and a small Eternal Fire flame medallion. Grounded game character appearance, not a crowned monarch. At a raised wooden bench in a dark stone hall, one hand resting on a closed ledger, the other on the bench edge. Dark formal coat over his studded leather, two adult witnesses distant in shadow, flickering candles, clear face. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing. Input reference is the new Caleb Menge hero portrait for this same deck. Preserve this exact man: bald head, long scarred face, age, narrow eyes, dark studded armor, red straps and rope belt. Change the pose and setting to the separate leader scene described above, keeping the same grounded matte painted Gwent style. One dominant clear face, full head visible.",
+    "quote": "Дверь закрыта. Теперь взвесим ваши слова.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/ef-caleb.png"
+    ]
+  },
+  {
+    "key": "ef-leader-accuser",
+    "faction": "eternal-fire",
+    "kind": "leader",
+    "name": "Калеб Менге: Обличитель",
+    "changed": false,
+    "file": "illustrations/ef-leader-accuser.png",
+    "prompt": "Use case: stylized-concept. Create one independent illustration for a custom Witcher 3 Gwent card. Subject: Recognizable Caleb Menge from The Witcher 3: an adult middle-aged pale man with a bald closely shaved head, prominent stern forehead, a long angular face, strong dark eyebrows, thin hard mouth, narrow watchful eyes and a faint old vertical forehead scar. Clean-shaven or very short dark stubble, no full beard, no long black hair. Dark studded leather armor with broad worn red leather straps, a thick rope belt, gloves and a small Eternal Fire flame medallion. Grounded game character appearance, not a crowned monarch. Standing at a wooden pulpit in a smoky church square, one arm extended toward a distant gathering of adult townspeople, stern commanding face, Temple Guard banners and warm firelight. No singled-out victim, no fighting or injuries. Match the original 2015 Witcher 3 Gwent grounded painterly fantasy realism: subtle brushwork, matte painted texture, worn wool and leather, real iron and old stone, convincing anatomy and cinematic restrained light. Eternal Fire palette: soot black, ash white, burnt copper, ember orange and tarnished gold. Full-bleed portrait 5:7, face or focal point around x55% in upper middle, entire head visible, leftmost 23% visually quiet for later overlays. Illustration only. No card border, UI, ribbon, parchment, letters, names, numbers, captions, watermark or readable text. Exact Cyrillic names and literary quotes, digits and gameplay icons are separate fixed layers. All human figures are adults. No glossy modern TCG render, anime or modern clothing. Input reference is the new Caleb Menge hero portrait for this same deck. Preserve this exact man: bald head, long scarred face, age, narrow eyes, dark studded armor, red straps and rope belt. Change the pose and setting to the separate leader scene described above, keeping the same grounded matte painted Gwent style. One dominant clear face, full head visible.",
+    "quote": "Кто-то в толпе уже понял, что речь идёт о нём.",
+    "quoteOrigin": "Original fan-written line; not game dialogue.",
+    "references": [
+      "illustrations/ef-caleb.png"
+    ]
+  }
+]

@@ -1,0 +1,68 @@
+{
+  "sharedSource": "../wild-hunt-v1/layers",
+  "sourceCommit": "7f08b270",
+  "customIcons": {
+    "ability-mage.png": {
+      "origin": "Custom fan expansion vector glyph, rasterized; not an original Witcher 3 icon",
+      "frameSource": "../templates-v1/layers/ability-medic.png",
+      "medalCenter": [
+        44,
+        38
+      ],
+      "glyphCenter": [
+        44,
+        38
+      ]
+    },
+    "ability-swap.png": {
+      "origin": "Custom fan expansion vector glyph, rasterized; not an original Witcher 3 icon",
+      "frameSource": "../templates-v1/layers/ability-medic.png",
+      "medalCenter": [
+        44,
+        38
+      ],
+      "glyphCenter": [
+        44,
+        38
+      ]
+    },
+    "effect-interrogation.png": {
+      "origin": "Fan expansion vector glyph; not claimed to be an original Witcher 3 UI icon.",
+      "frameSource": "/art/gwent/printed/spec_p1.webp"
+    }
+  },
+  "abilityMask": {
+    "center": [
+      44,
+      38
+    ],
+    "radius": 36.5,
+    "canvas": [
+      81,
+      81
+    ],
+    "purpose": "Remove source-card cloth and portrait outside the original medal; no added border"
+  },
+  "frame": {
+    "source": "../templates-v1/unit.png",
+    "cloth": "charred copper and ember ochre; existing stitching and parchment preserved"
+  },
+  "emblem": {
+    "source": "webapp/art/gwent/printed/back-eternal-fire.webp",
+    "crop": {
+      "left": 85,
+      "top": 151,
+      "width": 170,
+      "height": 180
+    },
+    "extraction": "Original gold flame, bowl and rays from ready back; red cloth and outside belt removed",
+    "canvas": [
+      34,
+      36
+    ]
+  },
+  "back": {
+    "source": "webapp/art/gwent/printed/back-eternal-fire.webp",
+    "reusedUnchanged": true
+  }
+}
