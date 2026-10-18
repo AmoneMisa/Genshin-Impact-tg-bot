@@ -146,6 +146,9 @@ export const HUNT_EXPLORATION = Object.freeze([
   {"id":"bee-hive","names":["Тропа у пасеки","У каменной ограды","Луговая поляна"]},
   {"id":"alligator-beach","names":["Илистый берег","У камышовой заводи","Пальмовая отмель"]},
   {"id":"timak-outpost","names":["Подступы к заставе","У дерева с тотемами","За деревянной оградой"]},
+  {"id":"plains-of-glory","names":["Открытая равнина","У скального склона","Тропа среди лугов"]},
+  {"id":"fields-of-massacre","names":["Тропа между елями","У старой стены","Каменистая поляна"]},
+  {"id":"swamp-of-screams","names":["Сухая болотная тропа","У кольцевой заводи","Мшистая низина"]},
 ]);
 const zones=new Map(HUNT_EXPLORATION.map(zone=>[zone.id,zone]));
 export const explorationZone=id=>zones.get(id)||null;
