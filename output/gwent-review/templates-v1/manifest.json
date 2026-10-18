@@ -1,0 +1,301 @@
+{
+  "version": 1,
+  "status": "review",
+  "size": {
+    "width": 310,
+    "height": 585
+  },
+  "notIntegrated": true,
+  "layout": {
+    "illustration": {
+      "x": 0,
+      "y": 0,
+      "width": 310,
+      "height": 435
+    },
+    "parchment": {
+      "x": 0,
+      "y": 435,
+      "width": 310,
+      "height": 150
+    },
+    "name": {
+      "x": 82,
+      "y": 451,
+      "width": 220,
+      "height": 48
+    },
+    "quote": {
+      "x": 8,
+      "y": 522,
+      "width": 294,
+      "height": 55
+    },
+    "power": {
+      "x": 0,
+      "y": 0,
+      "width": 90,
+      "height": 90
+    },
+    "row": {
+      "x": 0,
+      "y": 154,
+      "width": 80,
+      "height": 80
+    },
+    "abilities": {
+      "x": 0,
+      "y": 253,
+      "width": 80,
+      "height": 80
+    }
+  },
+  "fields": {
+    "name": "card.name",
+    "power": "card.strength",
+    "quote": null,
+    "row": "card.rows",
+    "abilities": "icons only"
+  },
+  "rules": [
+    "Quote is literary text only; empty when absent.",
+    "Never place traits, card type, row names, rules or ability descriptions in quote.",
+    "Icons are raster assets, never font glyphs.",
+    "No extra outer gold border.",
+    "Every layer has one common position; no individual card CSS adjustments."
+  ],
+  "templates": [
+    {
+      "kind": "unit",
+      "file": "unit.png",
+      "quote": "",
+      "textBaked": false,
+      "powerBaked": false
+    },
+    {
+      "kind": "hero",
+      "file": "hero.png",
+      "quote": "",
+      "textBaked": false,
+      "powerBaked": false
+    },
+    {
+      "kind": "special",
+      "file": "special.png",
+      "quote": "",
+      "textBaked": false,
+      "powerBaked": false
+    },
+    {
+      "kind": "leader",
+      "file": "leader.png",
+      "quote": "",
+      "textBaked": false,
+      "powerBaked": false
+    },
+    {
+      "kind": "back",
+      "file": "back.png",
+      "emblem": null
+    }
+  ],
+  "icons": {
+    "close": {
+      "file": "layers/row-close.png",
+      "source": "webapp/art/gwent/icons/card_row_close.png"
+    },
+    "ranged": {
+      "file": "layers/row-ranged.png",
+      "source": "webapp/art/gwent/icons/card_row_ranged.png"
+    },
+    "siege": {
+      "file": "layers/row-siege.png",
+      "source": "webapp/art/gwent/icons/card_row_siege.png"
+    },
+    "bond": {
+      "file": "layers/ability-bond.png",
+      "source": "webapp/art/gwent/printed/sev_10.webp",
+      "sourceCard": "blue-stripes",
+      "crop": {
+        "left": 0,
+        "top": 253,
+        "width": 81,
+        "height": 81
+      }
+    },
+    "spy": {
+      "file": "layers/ability-spy.png",
+      "source": "webapp/art/gwent/printed/sev_7.webp",
+      "sourceCard": "thaler",
+      "crop": {
+        "left": 0,
+        "top": 253,
+        "width": 81,
+        "height": 81
+      }
+    },
+    "medic": {
+      "file": "layers/ability-medic.png",
+      "source": "webapp/art/gwent/printed/sev_19.webp",
+      "sourceCard": "dun-banner-medic",
+      "crop": {
+        "left": 0,
+        "top": 253,
+        "width": 81,
+        "height": 81
+      }
+    },
+    "morale": {
+      "file": "layers/ability-morale.png",
+      "source": "webapp/art/gwent/printed/sev_4.webp",
+      "sourceCard": "kaedweni-expert",
+      "crop": {
+        "left": 0,
+        "top": 253,
+        "width": 81,
+        "height": 81
+      }
+    },
+    "muster": {
+      "file": "layers/ability-muster.png",
+      "source": "webapp/art/gwent/printed/neit_6.webp",
+      "sourceCard": "gaunter",
+      "crop": {
+        "left": 0,
+        "top": 253,
+        "width": 81,
+        "height": 81
+      }
+    },
+    "horn": {
+      "file": "layers/ability-horn.png",
+      "source": "webapp/art/gwent/printed/neit_1.webp",
+      "sourceCard": "dandelion",
+      "crop": {
+        "left": 0,
+        "top": 253,
+        "width": 81,
+        "height": 81
+      }
+    },
+    "scorch": {
+      "file": "layers/ability-scorch.png",
+      "source": "webapp/art/gwent/printed/neit_5.webp",
+      "sourceCard": "villentretemerth",
+      "crop": {
+        "left": 0,
+        "top": 253,
+        "width": 81,
+        "height": 81
+      }
+    }
+  },
+  "powers": {
+    "hero-0": {
+      "file": "layers/power-hero-0.png",
+      "sourceCard": "avallach",
+      "value": 0,
+      "hero": true
+    },
+    "hero-7": {
+      "file": "layers/power-hero-7.png",
+      "sourceCard": "yennefer",
+      "value": 7,
+      "hero": true
+    },
+    "hero-15": {
+      "file": "layers/power-hero-15.png",
+      "sourceCard": "geralt",
+      "value": 15,
+      "hero": true
+    },
+    "unit-2": {
+      "file": "layers/power-unit-2.png",
+      "sourceCard": "dandelion",
+      "value": 2,
+      "hero": false
+    },
+    "unit-5": {
+      "file": "layers/power-unit-5.png",
+      "sourceCard": "zoltan",
+      "value": 5,
+      "hero": false
+    },
+    "unit-6": {
+      "file": "layers/power-unit-6.png",
+      "sourceCard": "vesemir",
+      "value": 6,
+      "hero": false
+    },
+    "unit-4": {
+      "file": "layers/power-unit-4.png",
+      "sourceCard": "gaunter-darkness",
+      "value": 4,
+      "hero": false
+    },
+    "unit-0": {
+      "file": "layers/power-unit-0.png",
+      "sourceCard": "cow",
+      "value": 0,
+      "hero": false
+    },
+    "unit-7": {
+      "file": "layers/power-unit-7.png",
+      "sourceCard": "villentretemerth",
+      "value": 7,
+      "hero": false
+    },
+    "hero-10": {
+      "file": "layers/power-hero-10.png",
+      "sourceCard": "hjalmar",
+      "value": 10,
+      "hero": true
+    },
+    "unit-12": {
+      "file": "layers/power-unit-12.png",
+      "sourceCard": "olaf",
+      "value": 12,
+      "hero": false
+    },
+    "hero-8": {
+      "file": "layers/power-hero-8.png",
+      "sourceCard": "myshovur",
+      "value": 8,
+      "hero": true
+    },
+    "unit-1": {
+      "file": "layers/power-unit-1.png",
+      "sourceCard": "poor-infantry",
+      "value": 1,
+      "hero": false
+    },
+    "unit-8": {
+      "file": "layers/power-unit-8.png",
+      "sourceCard": "catapult",
+      "value": 8,
+      "hero": false
+    },
+    "unit-10": {
+      "file": "layers/power-unit-10.png",
+      "sourceCard": "black-archer",
+      "value": 10,
+      "hero": false
+    },
+    "unit-3": {
+      "file": "layers/power-unit-3.png",
+      "sourceCard": "rotten-mangonel",
+      "value": 3,
+      "hero": false
+    },
+    "unit-9": {
+      "file": "layers/power-unit-9.png",
+      "sourceCard": "stefan",
+      "value": 9,
+      "hero": false
+    }
+  },
+  "unverified": [
+    "AI parchment and ribbon texture are draft material, not a pixel-for-pixel extraction.",
+    "Exact title and quotation typeface has not been verified; text is not baked into templates."
+  ]
+}

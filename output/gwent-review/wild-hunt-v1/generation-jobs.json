@@ -1,0 +1,408 @@
+[
+  {
+    "key": "wh-spectre",
+    "name": "Призрак Охоты",
+    "card": {
+      "id": "wh-spectre",
+      "name": "Призрак Охоты",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 2,
+      "muster": "wh-spectre"
+    },
+    "quote": "За ним приходит холод.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: A spectral Aen Elle warrior with emaciated skull-faced black helmet emerging from icy fog, long frost-coated blade, silent advancing pose. No horse. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-red-rider",
+    "name": "Красный всадник",
+    "card": {
+      "id": "wh-red-rider",
+      "name": "Красный всадник",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 5,
+      "bond": "wh-rider"
+    },
+    "quote": "Мы не призраки. Молись, чтобы были.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: One imposing Red Rider Aen Elle elf on a black war horse, rust-red tattered cloak streaming over skeletal dark armour, snow storm and a ruined battleground behind. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-ice-warrior",
+    "name": "Ледяной воин",
+    "card": {
+      "id": "wh-ice-warrior",
+      "name": "Ледяной воин",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 4
+    },
+    "quote": "Железо можно разбить. Зиму — нет.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: Heavy armoured Wild Hunt foot soldier, jagged closed black helmet and heavy frost-rimed plate, two-handed sword planted in frozen earth, sturdy full-body silhouette. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-banner",
+    "name": "Знаменосец Охоты",
+    "card": {
+      "id": "wh-banner",
+      "name": "Знаменосец Охоты",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 2,
+      "morale": true
+    },
+    "quote": "Пока видно знамя, Охота не окончена.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: A gaunt Wild Hunt standard bearer hoisting a torn dark-blue banner with a pale crowned skull insignia through blowing snow, angular black plate and silver frost. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-scout",
+    "name": "Лазутчик Охоты",
+    "card": {
+      "id": "wh-scout",
+      "name": "Лазутчик Охоты",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 3,
+      "spy": true
+    },
+    "quote": "Он уже знает, куда ты побежишь.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: A stealthy lean elven scout in dark layered armour crouching behind icy stone, half-hidden face under a narrow helm, watching a distant camp through blue dusk. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-aen-elle-archer",
+    "name": "Лучник Aen Elle",
+    "card": {
+      "id": "wh-aen-elle-archer",
+      "name": "Лучник Aen Elle",
+      "type": "unit",
+      "rows": [
+        "ranged"
+      ],
+      "strength": 4
+    },
+    "quote": "Сквозь туман летит не ветер.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: An Aen Elle archer in elegant angular dark armour drawing a long black bow, frost on the bow limbs, pale elven face, cold woodland ruins, arrow tip aimed slightly down and right. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-portal-mage",
+    "name": "Чародей порталов",
+    "card": {
+      "id": "wh-portal-mage",
+      "name": "Чародей порталов",
+      "type": "unit",
+      "rows": [
+        "ranged"
+      ],
+      "strength": 5,
+      "swap": true,
+      "mage": true
+    },
+    "quote": "Для беглеца это стена. Для меня — дверь.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: An Aen Elle sorcerer extending an arm into a restrained violet-blue portal, ornate black robes and dark metal shoulder plates, concentrated pale face, wisps of frost and old stone arches. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-navigator",
+    "name": "Навигатор",
+    "card": {
+      "id": "wh-navigator",
+      "name": "Навигатор",
+      "type": "unit",
+      "rows": [
+        "ranged"
+      ],
+      "strength": 3,
+      "medic": true
+    },
+    "quote": "В пустоте нет дорог. Есть те, кто их помнит.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: An elven navigator with a skeletal visor and long dark cloak tracing a map of branching icy gateways in the air, restrained spectral lights, weathered stone threshold, solemn and scholarly. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-winter-witch",
+    "name": "Зимняя ведунья",
+    "card": {
+      "id": "wh-winter-witch",
+      "name": "Зимняя ведунья",
+      "type": "unit",
+      "rows": [
+        "ranged"
+      ],
+      "strength": 6,
+      "onPlay": {
+        "type": "scorchRow",
+        "target": "ranged",
+        "cond": "ranged",
+        "threshold": 10
+      }
+    },
+    "quote": "Не бойся снега. Бойся тишины под ним.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: A stern elderly elven winter witch with pale weathered face, ash-white hair, dark wool and bone ornaments, one hand summoning dense low frost, snow-laden black trees behind. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-frost-hound",
+    "name": "Ледяная гончая",
+    "card": {
+      "id": "wh-frost-hound",
+      "name": "Ледяная гончая",
+      "type": "unit",
+      "rows": [
+        "close",
+        "ranged"
+      ],
+      "strength": 4,
+      "agile": true,
+      "muster": "wh-hound"
+    },
+    "quote": "След заметёт. Запах страха останется.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: A single powerful Witcher 3 Wild Hunt hound formed of black angular crystalline carapace and icy spikes, four-legged predatory stance, frozen breath, snow-covered rocks. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-ghost-ship",
+    "name": "Корабль-призрак",
+    "card": {
+      "id": "wh-ghost-ship",
+      "name": "Корабль-призрак",
+      "type": "unit",
+      "rows": [
+        "siege"
+      ],
+      "strength": 6,
+      "bond": "wh-ship"
+    },
+    "quote": "Паруса молчат. Под килем стонет лёд.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: An ominous spectral elven longship with torn frost-coated sails, dark narrow prow and rib-like wooden hull trapped amid misty broken sea ice, no prominent people. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-ice-catapult",
+    "name": "Ледяная катапульта",
+    "card": {
+      "id": "wh-ice-catapult",
+      "name": "Ледяная катапульта",
+      "type": "unit",
+      "rows": [
+        "siege"
+      ],
+      "strength": 8
+    },
+    "quote": "Даже камень подчиняется зиме.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: A massive grim elven siege catapult of black wood and iron with frost-crusted arm and ice-bound counterweight, ruined fortress in blue-grey distance, snow swirling around machinery. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-caranthir",
+    "name": "Карантир",
+    "card": {
+      "id": "wh-caranthir",
+      "name": "Карантир",
+      "type": "unit",
+      "rows": [
+        "ranged"
+      ],
+      "strength": 10,
+      "hero": true
+    },
+    "quote": "Ты видишь поле битвы. Я вижу выходы из него.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: Recognizable Caranthir Ar-Feiniel from The Witcher 3: tall black pointed horned closed mask helmet, angular dark armour, long mage staff, blue portal light behind, commanding impassive pose. Not Eredin. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-eredin-guard",
+    "name": "Страж Эредина",
+    "card": {
+      "id": "wh-eredin-guard",
+      "name": "Страж Эредина",
+      "type": "unit",
+      "rows": [
+        "close"
+      ],
+      "strength": 10,
+      "hero": true
+    },
+    "quote": "К королю ведёт одна дорога. Через нас.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: An elite royal guard of Eredin, massive ridged black armour and menacing skeletal full-face helm, broad dark sword held vertically, austere frost-covered fortress background. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "el-fire",
+    "name": "Стихия огня",
+    "card": {
+      "id": "el-fire",
+      "name": "Стихия огня",
+      "type": "special",
+      "special": "weather",
+      "strength": 0,
+      "weather": [
+        "close",
+        "ranged"
+      ]
+    },
+    "quote": "Он просил тепла. Огонь не умеет останавливаться.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: A war-torn medieval field being overtaken by natural tongues of fire and ash, blackened timber barricades, ochre smoke, a tiny distant silhouette in a cloak seeking escape. No modern objects. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Neutral special-action illustration, grounded Witcher world; palette appropriate to this scene. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "el-earth",
+    "name": "Стихия земли",
+    "card": {
+      "id": "el-earth",
+      "name": "Стихия земли",
+      "type": "special",
+      "special": "weather",
+      "strength": 0,
+      "weather": [
+        "close",
+        "siege"
+      ]
+    },
+    "quote": "Земля помнит каждый наш шаг. И каждый долг.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: A violent fissure splitting muddy battlefield earth and heaving broken stones upward beneath a medieval timber palisade, heavy roots and ancient rock, muted ochre and iron-grey light. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Neutral special-action illustration, grounded Witcher world; palette appropriate to this scene. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "el-water",
+    "name": "Стихия воды",
+    "card": {
+      "id": "el-water",
+      "name": "Стихия воды",
+      "type": "special",
+      "special": "weather",
+      "strength": 0,
+      "weather": [
+        "ranged",
+        "siege"
+      ]
+    },
+    "quote": "Тихая вода первой забирается под доспех.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: A sudden torrent flooding a ruined medieval ford, turbulent cold water breaking over shields and abandoned stakes, rain and leaden sky, dramatic but naturalistic. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Neutral special-action illustration, grounded Witcher world; palette appropriate to this scene. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "ex-prep",
+    "name": "Осадная подготовка",
+    "card": {
+      "id": "ex-prep",
+      "name": "Осадная подготовка",
+      "type": "special",
+      "special": "boost",
+      "strength": 0,
+      "amount": 5
+    },
+    "quote": "Стену ещё не видно, а приговор уже отлит.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: A grim medieval siege crew preparing a huge trebuchet before dawn, hauling ropes and stacking rough stone ammunition outside a distant curtain wall, practical weathered equipment. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Neutral special-action illustration, grounded Witcher world; palette appropriate to this scene. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "ex-trap",
+    "name": "Ловушка",
+    "card": {
+      "id": "ex-trap",
+      "name": "Ловушка",
+      "type": "special",
+      "special": "strike",
+      "strength": 0,
+      "amount": 4
+    },
+    "quote": "На этой тропе слишком удобно идти одному.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: A carefully concealed medieval iron jaw trap and taut snare cord half hidden beneath wet forest leaves, an unwary boot just beyond focus in the distance, tense low viewpoint, no injury or gore. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Neutral special-action illustration, grounded Witcher world; palette appropriate to this scene. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "ex-medic",
+    "name": "Военный лекарь",
+    "card": {
+      "id": "ex-medic",
+      "name": "Военный лекарь",
+      "type": "special",
+      "special": "recall",
+      "strength": 0,
+      "maxBase": 5
+    },
+    "quote": "Лежи смирно. Со смертью поговоришь после меня.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: A weary medieval field surgeon kneeling beside a wounded armoured soldier, linen bandages and leather satchel, practical compassionate expression, rain-dark battlefield, restrained wounds without gore. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Neutral special-action illustration, grounded Witcher world; palette appropriate to this scene. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-leader-lord",
+    "name": "Эредин: Владыка Охоты",
+    "card": {
+      "id": "wh-leader-lord",
+      "name": "Эредин: Владыка Охоты",
+      "effect": {
+        "type": "double",
+        "row": "close"
+      }
+    },
+    "quote": "Миры меняются. Охота продолжается.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: Recognizable Eredin Breacc Glas, King of the Wild Hunt from The Witcher 3, wearing distinctive skeletal black crown helmet and ribbed plate, seated imperiously on a frost-covered dark throne, steel sword in hand. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-leader-portals",
+    "name": "Эредин: Хранитель порталов",
+    "card": {
+      "id": "wh-leader-portals",
+      "name": "Эредин: Хранитель порталов",
+      "effect": {
+        "type": "moveAny"
+      }
+    },
+    "quote": "Расстояние спасает лишь от тех, кто ходит пешком.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: Recognizable Eredin in his skeletal crown helm and ribbed black armour, standing before a towering elliptical blue portal with snow being drawn into it, his left hand directing mounted Hunt through the gateway. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-leader-winter",
+    "name": "Эредин: Зимний король",
+    "card": {
+      "id": "wh-leader-winter",
+      "name": "Эредин: Зимний король",
+      "effect": {
+        "type": "weather",
+        "weather": "close"
+      }
+    },
+    "quote": "Скоро вашим кострам нечего будет согревать.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: Recognizable Eredin in skeletal crown and dark angular armour standing on a frozen rampart, heavy frost and a blizzard swallowing a distant battlefield, low calm heroic composition, sinister authority. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "wh-leader-traitor",
+    "name": "Эредин: Коварный",
+    "card": {
+      "id": "wh-leader-traitor",
+      "name": "Эредин: Коварный",
+      "effect": {
+        "type": "takeEnemyGraveyard"
+      }
+    },
+    "quote": "Верность — слово, которым удобно прикрывать страх.",
+    "quoteOrigin": "Original fan-written text for this project, not a quotation from the game.",
+    "prompt": "Create ONE standalone portrait illustration for a custom The Witcher 3 Gwent card, subject: Recognizable Eredin with pale elven face exposed, long black hair, severe narrow angular features and dark plated armour, shadowed palace interior, cold calculating gaze, one gloved hand concealing a small dagger. Style reference: supplied original Gwent painted art; closely match its grounded dark-fantasy painterly realism, visible subtle brushwork, weathered fabric and iron, cinematic but muted light, anatomically convincing subjects and restrained colour. Keep a coherent Wild Hunt deck palette: ice blue, desaturated midnight steel, black iron, pale snow; no excessive glowing cyan or modern effects. Composition: flat 5:7 portrait scene, full bleed, major subject centered around x55% and y45%; keep leftmost 23% visually quiet because a ribbon and badges will be composited there. Main face or defining action must lie in upper middle, no cropping of heads. NO card frame, no border, no ribbon, no parchment, no medallions, NO letters, names, numbers, quotes, icon glyphs, watermarks or captions anywhere. Illustration only; every card layout element and exact Cyrillic will be inserted later using one fixed template. No anime, no glossy 3D trading card render, no unrelated fantasy franchise."
+  },
+  {
+    "key": "back-wild-hunt",
+    "name": "Рубашка Дикой Охоты",
+    "kind": "back",
+    "prompt": "Create ONE complete flat Gwent card BACK for a custom Wild Hunt faction. Match reference card-back layout faithfully: tall portrait card with rounded corners, indigo midnight-blue diamond-hatched fabric, broad curved aged silver belt around a circular center medallion, tiny matching insignias at all four corners. Central insignia: a simple pale silver skull wearing a narrow angular three-spiked frost crown, instantly readable in silhouette; repeat this same emblem small at the four corners. Restrained Witcher 3 card-back material rendering, worn woven cloth, silver patina, no glossy modern TCG, no new outer gold frame, no perspective, no backdrop, no words, letters or numbers. Output only the card back."
+  }
+]

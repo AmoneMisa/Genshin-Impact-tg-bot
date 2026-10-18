@@ -1,0 +1,98 @@
+{
+  "generatedThisRun": [
+    {
+      "key": "wh-banner",
+      "file": "illustrations/wh-banner.png"
+    },
+    {
+      "key": "wh-scout",
+      "file": "illustrations/wh-scout.png"
+    },
+    {
+      "key": "wh-aen-elle-archer",
+      "file": "illustrations/wh-aen-elle-archer.png"
+    },
+    {
+      "key": "wh-portal-mage",
+      "file": "illustrations/wh-portal-mage.png"
+    },
+    {
+      "key": "wh-navigator",
+      "file": "illustrations/wh-navigator.png"
+    },
+    {
+      "key": "wh-frost-hound",
+      "file": "illustrations/wh-frost-hound.png"
+    },
+    {
+      "key": "wh-caranthir",
+      "file": "illustrations/wh-caranthir.png"
+    },
+    {
+      "key": "wh-ghost-ship",
+      "file": "illustrations/wh-ghost-ship.png"
+    },
+    {
+      "key": "wh-eredin-guard",
+      "file": "illustrations/wh-eredin-guard.png"
+    },
+    {
+      "key": "wh-winter-witch",
+      "file": "illustrations/wh-winter-witch.png"
+    },
+    {
+      "key": "wh-ice-catapult",
+      "file": "illustrations/wh-ice-catapult.png"
+    },
+    {
+      "key": "el-earth",
+      "file": "illustrations/el-earth.png"
+    },
+    {
+      "key": "el-fire",
+      "file": "illustrations/el-fire.png"
+    },
+    {
+      "key": "ex-prep",
+      "file": "illustrations/ex-prep.png"
+    },
+    {
+      "key": "el-water",
+      "file": "illustrations/el-water.png"
+    },
+    {
+      "key": "ex-trap",
+      "file": "illustrations/ex-trap.png"
+    },
+    {
+      "key": "wh-leader-lord",
+      "file": "illustrations/wh-leader-lord.png"
+    },
+    {
+      "key": "ex-medic",
+      "file": "illustrations/ex-medic.png"
+    },
+    {
+      "key": "wh-leader-portals",
+      "file": "illustrations/wh-leader-portals.png"
+    },
+    {
+      "key": "wh-leader-winter",
+      "file": "illustrations/wh-leader-winter.png"
+    },
+    {
+      "key": "wh-leader-traitor",
+      "file": "illustrations/wh-leader-traitor.png"
+    }
+  ],
+  "existing": [
+    "wh-spectre",
+    "wh-red-rider",
+    "wh-ice-warrior"
+  ],
+  "skipped": [
+    "back-wild-hunt"
+  ],
+  "reason": "User confirmed backs are already finished; use existing printed back unchanged.",
+  "tool": "built-in image_gen"
+}

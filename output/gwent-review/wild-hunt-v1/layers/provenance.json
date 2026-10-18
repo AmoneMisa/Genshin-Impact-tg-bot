@@ -1,0 +1,66 @@
+{
+  "customIcons": {
+    "ability-swap.png": {
+      "origin": "Custom icon for fan expansion, not an original Witcher 3 client icon",
+      "commonBorderSource": "templates-v1/layers/ability-medic.png",
+      "representation": "swap"
+    },
+    "ability-mage.png": {
+      "origin": "Custom icon for fan expansion, not an original Witcher 3 client icon",
+      "commonBorderSource": "templates-v1/layers/ability-medic.png",
+      "representation": "mage"
+    },
+    "effect-fire.png": {
+      "origin": "Custom icon for fan expansion, not an original Witcher 3 client icon",
+      "commonBorderSource": "/art/gwent/printed/spec_p1.webp",
+      "representation": "fire"
+    },
+    "effect-earth.png": {
+      "origin": "Custom icon for fan expansion, not an original Witcher 3 client icon",
+      "commonBorderSource": "/art/gwent/printed/spec_p1.webp",
+      "representation": "earth"
+    },
+    "effect-water.png": {
+      "origin": "Custom icon for fan expansion, not an original Witcher 3 client icon",
+      "commonBorderSource": "/art/gwent/printed/spec_p1.webp",
+      "representation": "water"
+    },
+    "effect-prep.png": {
+      "origin": "Custom icon for fan expansion, not an original Witcher 3 client icon",
+      "commonBorderSource": "/art/gwent/printed/spec_p1.webp",
+      "representation": "prep"
+    },
+    "effect-trap.png": {
+      "origin": "Custom icon for fan expansion, not an original Witcher 3 client icon",
+      "commonBorderSource": "/art/gwent/printed/spec_p1.webp",
+      "representation": "trap"
+    },
+    "effect-recall.png": {
+      "origin": "Custom icon for fan expansion, not an original Witcher 3 client icon",
+      "commonBorderSource": "/art/gwent/printed/spec_p1.webp",
+      "representation": "recall"
+    }
+  },
+  "rowAgile": {
+    "source": "/art/gwent/printed/skoa_12.webp",
+    "crop": {
+      "left": 0,
+      "top": 154,
+      "width": 81,
+      "height": 81
+    }
+  },
+  "emblem": {
+    "source": "webapp/art/gwent/printed/back-wild-hunt.webp",
+    "crop": {
+      "left": 95,
+      "top": 179,
+      "width": 150,
+      "height": 153
+    }
+  },
+  "back": {
+    "source": "webapp/art/gwent/printed/back-wild-hunt.webp",
+    "status": "Existing finished back reused unchanged"
+  }
+}
