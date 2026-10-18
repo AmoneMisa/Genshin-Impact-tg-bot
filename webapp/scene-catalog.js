@@ -366,6 +366,7 @@ export const SCENE_STUDIES = Object.freeze([
   {"id":"necropolis-worship","title":"Некрополь Поклонения","category":"hunting","environment":"necropolis","asset":"necropolis-worship"},
   {"id":"necropolis-patriots","title":"Некрополь Патриотов","category":"hunting","environment":"necropolis","asset":"necropolis-patriots"},
   {"id":"necropolis-devotion","title":"Некрополь Посвящения","category":"hunting","environment":"necropolis","asset":"necropolis-devotion","sections":3},
+  {"id":"necropolis-martyrdom","title":"Некрополь Мучеников","category":"hunting","environment":"necropolis","asset":"necropolis-martyrdom","sections":3},
 ]);
 const byId=new Map(SCENE_STUDIES.map(scene=>[scene.id,scene]));
 export const sceneStudy=id=>byId.get(id==='freyaExtreme'?'freya':id)||null;
