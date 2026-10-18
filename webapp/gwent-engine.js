@@ -14,7 +14,7 @@
 //   Monsters keep one random non-hero unit on the board after each round, Skellige return two random
 //   non-hero units from the graveyard to the board at the start of round 3.
 // - Bond multiplies a unit by the number of same-bond units in its row.
-// - Morale adds +1 to every other unit in its row. Horn (unit or special) doubles non-hero units in its row.
+// - Morale adds +1 after bond. Horn doubles non-hero units, excluding a unit horn's own bearer.
 // - Muster summons every other card of its group from the deck into the same row ("twin" = same name).
 // - Weather sets the base strength of non-hero units in its row to 1 (both players).
 // - Spy is played onto the opponent's board, and its owner draws 2 cards.
@@ -46,7 +46,7 @@
 //
 // Assumptions not confirmed by a source: a drawn round gives both players a round win, after a drawn
 // round the side that did not start it starts, Scoiatael decide only the first turn of the match, weather sets the base strength
-// to 1 before bond, morale and horn, King Bran halves strength in weather, and a leader's doubling
+// to 1 before bond, morale and horn, and a leader's doubling
 // lasts until the end of the round. Choices that the original leaves to the player are made
 // by the player through a pending choice (see askChoice / resolveChoice).
 
@@ -226,23 +226,29 @@ function offerMulligan(state, side, remaining) {
 
 /**
  * Strength of every card in one row. `opts`: `doubled` (leader doubling, unless a horn is present)
- * and `halve` (King Bran: units lose half their strength in weather).
+ * and `halve` (King Bran: weather halves base strength before other modifiers).
  */
 export function rowValues(row, weatherActive = false, opts = {}) {
-  const horn = row.some(card => card.horn || card.special === 'horn');
+  const specialHorn = row.some(card => card.special === 'horn');
+  const unitHorns = row.filter(card => card.type === 'unit' && card.horn).length;
   const morales = row.filter(card => card.type === 'unit' && card.morale).length;
   const bondCounts = {};
   for (const card of row) if (card.type === 'unit' && card.bond) bondCounts[card.bond] = (bondCounts[card.bond] || 0) + 1;
   return row.map(card => {
     if (card.type !== 'unit') return 0;
     if (card.hero) return card.strength;
-    let base = weatherActive ? Math.min(card.strength, opts.weatherBase ?? 1) : card.strength;
+    // Bran replaces the weather penalty; it does not halve an already weathered row.
+    let base = !weatherActive ? card.strength : opts.halve
+      ? Math.floor(card.strength / 2)
+      : Math.min(card.strength, opts.weatherBase ?? 1);
     if (opts.rowMod && card.strength > 0) base = Math.max(1, base + opts.rowMod); // curse and blessing
     if (card.bonus) base = Math.max(1, base + card.bonus); // boost and strike
-    let value = base + morales - (card.morale ? 1 : 0);
+    let value = base;
     if (card.bond) value *= bondCounts[card.bond];
-    if (horn || opts.doubled) value *= 2;
-    if (opts.halve && weatherActive) value = Math.floor(value / 2);
+    value += morales - (card.morale ? 1 : 0);
+    // A unit horn affects every other unit. Separate horns may boost its bearer,
+    // but all horn sources and the leader still give only one doubling.
+    if (specialHorn || unitHorns > (card.horn ? 1 : 0) || opts.doubled) value *= 2;
     return opts.cap ? Math.min(value, opts.cap) : value;
   });
 }
@@ -250,7 +256,7 @@ export function rowValues(row, weatherActive = false, opts = {}) {
 /** Row values with the side's leader and passive effects applied. */
 export function rowValuesFor(state, side, row) {
   const mine = state.sides[side];
-  return rowValues(mine.rows[row], state.weather[row], { doubled: mine.doubled[row], halve: mine.kingBran, weatherBase: mine.faction === 'velen' ? 3 : 1, rowMod: mine.mods?.[row] || 0, cap: state.ruleset === 'extended' ? 15 : 0 });
+  return rowValues(mine.rows[row], state.weather[row], { doubled: mine.doubled[row], halve: mine.kingBran && !mine.leaderCancelled, weatherBase: mine.faction === 'velen' ? 3 : 1, rowMod: mine.mods?.[row] || 0, cap: state.ruleset === 'extended' ? 15 : 0 });
 }
 
 /** Total strength of one side. Spies count for the side whose row they stand in. */

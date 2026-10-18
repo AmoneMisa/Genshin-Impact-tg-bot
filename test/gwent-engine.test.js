@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { SKELLIGE_DECK, GWENT_DECKS, DECK_IDS, expandDeck } from '../webapp/gwent-decks.js';
 import { chooseAiAction } from '../webapp/gwent-ai.js';
-import { createMatch, legalPlays, playCard, passRound, resolveChoice, aiChoiceId, rowValues, sideScore, scores, SIDES } from '../webapp/gwent-engine.js';
+import { createMatch, legalPlays, playCard, passRound, resolveChoice, aiChoiceId, rowValues, rowValuesFor, sideScore, scores, SIDES } from '../webapp/gwent-engine.js';
 
 const seeded = seed => () => {
   seed = (seed * 16807) % 2147483647;
@@ -56,7 +56,69 @@ test('bond multiplies each unit by the number of same-bond units in its row', ()
 
 test('horn doubles non-hero units in its row, heroes are unaffected', () => {
   const row = [make('draig-bon-dhu'), make('holger-blackhand'), make('hjalmar')];
-  assert.deepEqual(rowValues(row), [4, 8, 10]);
+  assert.deepEqual(rowValues(row), [2, 8, 10]);
+});
+
+test('bond multiplies base strength before morale; horn doubles the resulting strength once', () => {
+  const row = [make('catapult'), make('catapult'), make('kaedweni-expert')];
+  assert.deepEqual(rowValues(row), [17, 17, 1]);
+  assert.deepEqual(rowValues([...row, make('commanders-horn')]), [34, 34, 2, 0]);
+  assert.deepEqual(rowValues([...row, make('commanders-horn')], false, { doubled: true }), [34, 34, 2, 0]);
+  assert.deepEqual(rowValues(row, true), [3, 3, 1]);
+  assert.deepEqual(rowValues([...row, make('commanders-horn')], true), [6, 6, 2, 0]);
+});
+
+test('multiple morale sources add together without boosting themselves or heroes', () => {
+  const row = [make('catapult'), make('catapult'), make('kaedweni-expert'), make('kaedweni-expert'), make('geralt')];
+  assert.deepEqual(rowValues(row), [18, 18, 2, 2, 15]);
+});
+
+test('unit horns do not boost themselves, but another horn or leader can boost their bearer', () => {
+  const row = [make('dandelion'), make('holger-blackhand')];
+  assert.deepEqual(rowValues(row), [2, 8]);
+  assert.deepEqual(rowValues([...row, make('commanders-horn')]), [4, 8, 0]);
+  assert.deepEqual(rowValues([...row, make('dandelion')]), [4, 8, 4]);
+  assert.deepEqual(rowValues(row, false, { doubled: true }), [4, 8]);
+  assert.deepEqual(rowValues(row, true), [1, 2]);
+});
+
+test('Bran halves original base strength under weather, before bond, morale and horn', () => {
+  const row = [make('craite'), make('craite'), make('olaf'), make('dandelion'), make('hjalmar')];
+  assert.deepEqual(rowValues(row, true, { halve: true }), [14, 14, 12, 2, 10]);
+  assert.deepEqual(rowValues(row, false, { halve: true }), rowValues(row));
+  assert.deepEqual(rowValues([make('cow'), make('holger-blackhand')], true, { halve: true }), [0, 2]);
+});
+
+test('Bran weather protection applies only to his side and can be cancelled by the enemy leader', () => {
+  const state = emptyMatch();
+  state.weather.siege = true;
+  state.sides.player.kingBran = true;
+  state.sides.ai.kingBran = false;
+  state.sides.player.rows.siege = [make('war-longship')];
+  state.sides.ai.rows.siege = [make('war-longship')];
+  assert.deepEqual(rowValuesFor(state, 'player', 'siege'), [3]);
+  assert.deepEqual(rowValuesFor(state, 'ai', 'siege'), [1]);
+  state.sides.ai.leader = { id: 'cancel', uid: 9001, type: 'leader', effect: { type: 'cancelEnemyLeader' } };
+  state.turn = 'ai';
+  state.sides.player.hand = [make('holger-blackhand')];
+  state.sides.ai.hand = [make('holger-blackhand')];
+  const next = playCard(state, 'ai', 9001).state;
+  assert.equal(next.sides.player.leaderCancelled, true);
+  assert.deepEqual(rowValuesFor(next, 'player', 'siege'), [1]);
+});
+
+test('scorch uses corrected bonded and morale-boosted strength to pick its targets', () => {
+  const state = emptyMatch();
+  state.sides.player.kingBran = state.sides.ai.kingBran = false;
+  state.sides.player.rows.siege = [make('catapult'), make('catapult'), make('kaedweni-expert')];
+  state.sides.ai.rows.close = [{ ...make('holger-blackhand'), strength: 18 }];
+  const scorch = make('scorch');
+  state.sides.player.hand = [scorch, make('holger-blackhand')];
+  state.sides.ai.hand = [make('holger-blackhand')];
+  state.turn = 'player';
+  const next = playCard(state, 'player', scorch.uid).state;
+  assert.equal(next.sides.player.rows.siege.length, 3);
+  assert.equal(next.sides.ai.rows.close.length, 0);
 });
 
 test('an agile unit can only be placed in one of its rows', () => {

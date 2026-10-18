@@ -44,6 +44,7 @@ export function cardAbilityHtml(card) {
     let text = ABILITIES.find(([label]) => label === key)?.[1] || '';
     if (name === 'Усиление при розыгрыше') text = `При розыгрыше получает +${card.onPlay.amount} к силе, если у противника на столе есть маг.`;
     if (name === 'Казнь' && card.onPlay?.type === 'scorchRow') text = leaderDescription({effect:card.onPlay});
+    if (name === 'Командирский рог' && card.horn) text = 'Удваивает силу других обычных отрядов своего ряда. Себя не усиливает; несколько рогов не складываются.';
     if (card.special === 'weather') text = card.weather === 'clear' ? 'Снимает всю погоду со стола.' : `Снижает силу обычных отрядов обеих сторон до 1 в рядах: ${[card.weather].flat().map(row => ROW_LABELS[row]).join(', ')}. Герои не подвержены погоде; учитывается способность фракции.`;
     if (card.special === 'teleport') text = 'Перемещает один ваш обычный отряд в другой ряд по вашему выбору. Героя перенести нельзя.';
     if (card.special === 'boost') text = `Даёт вашему обычному отряду +${card.amount} к силе до конца раунда (не более +6 суммарно).`;
