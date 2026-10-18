@@ -73,7 +73,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   let forceAttack = false;
   let previewSkill=null,closed=false,lastFrame=0;
   let viewport={width:320,height:400},camera={zoom:1,x:0,y:0},labelOffsets=new Map(),drag=null,ignoreMapClick=false;
-  let displayedRoom=state.field?.sceneKey||null;
+  let displayedRoom=null;
   const fieldRenderer=createHuntRenderer();
   const mapObserver=new ResizeObserver(entries=>{const box=entries[0]?.contentRect;if(box&&Math.abs(box.width-viewport.width)+Math.abs(box.height-viewport.height)>2){viewport={width:box.width,height:box.height};render();}});
   const detailsOpen=new Set();

@@ -54,6 +54,8 @@ try{for(const {width,mode} of cases){
    assert.equal(await page.locator('.hunt-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false,id+' overflow');
    assert.match(await page.locator('#hunt-heading').getAttribute('title'),new RegExp(dto.field.room.landmark||getZone(id).title));
    assert.ok(await page.locator('.hunt-iso-actor[data-hunt-halt]').count());
+   const actor=await page.locator('.hunt-iso-actor[data-hunt-halt]').boundingBox(),ground=await page.locator('.hunt-ground').boundingBox();
+   assert.ok(actor.x+actor.width/2>ground.x&&actor.x+actor.width/2<ground.x+ground.width&&actor.y+actor.height/2>ground.y&&actor.y+actor.height/2<ground.y+ground.height,id+' entry actor visible');
    if(!['unavailable','missing-art'].includes(mode))await page.waitForFunction(async field=>{
     const {paintedRoomScene}=await import('/room-scene-art.js');const compact=document.querySelector('.hunt-ground').clientWidth<480;
     const image=paintedRoomScene(field.environment,{sceneKey:field.sceneKey,compact});return image?.naturalWidth===(compact?768:1536);
