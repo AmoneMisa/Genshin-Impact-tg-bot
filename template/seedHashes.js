@@ -29,7 +29,7 @@ export default {
     hennaData: '9e367918bc772f57da0f91b782abe0d7b6b88123',
     hunting: 'cd9602c8012929baec462d4c53b488eb22244d87',
     l2Items: '80faa51eb7dd2ef4fddad3e054a9a9965733ffbd',
-    l2Loot: 'd8feba0482a16e737bc68b4cd884f77e7f496693',
+    l2Loot: 'cfd02a5baf657dc1b18f3c59cc2051c458f0e1ce',
     l2Recipes: '273a5c6a82defb3fadbef96dc578041ed5ee1ab6',
     merchantData: 'cb057a49e2be8925cbba1059579220292572e43d',
     saPrices: 'f236bdcdfd657ce76ea4b44a97de7e6b87414675',
