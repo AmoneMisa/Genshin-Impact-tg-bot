@@ -82,17 +82,20 @@ test('Gracian Survivor is 75+, charges its fixed fee once; ferry travels on its 
  advanceWorld(s,trip.until-1);assert.equal(s.game.world.city,'gludio-airship-field');advanceWorld(s,trip.until);
  assert.equal(s.game.world.city,base.id);assert.equal(s.game.inventory.gold,850000);
 });
-test('Tiat admits 36–45 assembled players, rejects missing peers and keeps shared stages after serialization',()=>{
- const {chat,members,a}=party(36);
- assert.equal(worldAction(a,{action:'floor',floor:2},NOW).reason,'seed_assembly_required');
- const create=worldAction(a,{action:'seed_assembly',seedMode:'tiat'},NOW);assert.equal(create.ok,true);
- for(const i of [9,18,27])assert.equal(worldAction(members[i],{action:'seed_join',seedMode:'tiat',assembly:create.assembly},NOW).ok,true);
- members[35].game.hunt.field.x=.1;
+test('Tiat admits one nine-player party without a command channel, rejects missing peers and keeps shared stages after serialization',()=>{
+ const short=party(8);
+ assert.equal(worldAction(short.a,{action:'floor',floor:2},NOW).reason,'seed_raid_size');
+ const oversized=party(10);oversized.members[9].game.party={...oversized.a.game.party};
+ assert.equal(worldAction(oversized.a,{action:'floor',floor:2},NOW).reason,'seed_raid_size');
+ const {chat,members,a}=party(9);
+ assert.equal(worldAction(members[1],{action:'floor',floor:2},NOW).reason,'not_leader');
+ assert.equal(worldAction(a,{action:'seed_assembly',seedMode:'tiat'},NOW).reason,'invalid_action');
+ members[8].game.hunt.field.x=.1;
  assert.equal(worldAction(a,{action:'floor',floor:2},NOW).reason,'party_not_ready');assert.equal(a.game.hunt.field.floor,1);
- members[35].game.hunt.field.x=.9;
+ members[8].game.hunt.field.x=.9;
  assert.equal(worldAction(a,{action:'floor',floor:2},NOW).ok,true);
  const instance=chat.game.worldInstances[a.game.world.instanceId];
- assert.equal(instance.members.length,36);assert.equal(instance.until-NOW,130*60000);
+ assert.equal(instance.members.length,9);assert.equal(instance.until-NOW,130*60000);
  assert.equal(a.game.hunt.field.mobs,members[1].game.hunt.field.mobs);
  const f=a.game.hunt.field,d=levelTransitions('seed-of-destruction',f).destinations.find(d=>d.floor===3);Object.assign(f,{room:d.room,...d.point});
  assert.equal(worldAction(a,{action:'floor',floor:3},NOW).reason,'objectives_remaining');

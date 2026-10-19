@@ -144,7 +144,8 @@ for id,title,nid,asset,file in [('seed-of-destruction','Семя Разруше�
   stage('Коридоры',[r for r in spawns if r['sourceGroup'].startswith('CORRIDOR_')],[18777])
   stage('Крепость',[r for r in spawns if r['sourceGroup'].startswith(('SCOUTPASS_','PREFORT_','FORT_'))],[18778])
   stage('Трон Тиат',[exact_spawn(29163,-250400,207271,-11961,'addSpawn(TIAT)'),exact_spawn(29162,-250154,207203,-11970,'addSpawn(NAEZD)')],[29163])
-  seed_modes['tiat']={'location':id,'title':'Штурм Тиат','startFloor':2,'lastFloor':7,'partyMin':36,'partyMax':45,'minLevel':75,'maxLevel':85,'durationMs':130*60000,'instanceId':110,'commandChannel':True}
+  # Agreed game exception: Tiat needs one full party, without a command channel.
+  seed_modes['tiat']={'location':id,'title':'Штурм Тиат','startFloor':2,'lastFloor':7,'partyMin':9,'partyMax':9,'minLevel':75,'maxLevel':85,'durationMs':130*60000,'instanceId':110,'commandChannel':False}
  else:
   for k in range(1,6):stage('Зал Страданий · '+str(k),literal_spawns(file,['ROOM_'+str(k)+'_MOBS']))
   stage('Зал Страданий · Близнецы',literal_spawns(file,['TWIN_SPAWNS']),[25665,25666])

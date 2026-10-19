@@ -18,6 +18,7 @@ export default {
  "· свиток:": "· o‘ram:",
  "· Убийство мирного игрока: PK и карма": "· Tinch o‘yinchini o‘ldirish: PK va karma",
  "(ты здесь)": "(sen shu yerdasan)",
+ "{0} · {1} игроков · {2}–{3} ур.": "{0} · {1} o‘yinchi · {2}–{3}-dar.",
  "{0} · {1} ур.": "{0} · {1}-dar.",
  "{0}: включено.": "{0}: yoqildi.",
  "{0}Враг повержен: +{1} опыта{2}, +{3} SP{4}{5}{6}": "{0}Dushman mag‘lub etildi: +{1} tajriba{2}, +{3} SP{4}{5}{6}",

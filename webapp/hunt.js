@@ -370,7 +370,9 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     const actions=document.createElement('div');actions.className='ui-action-stack';
     actions.innerHTML=(field.links||[]).map((l,i)=>`<button type="button" class="ui-button" data-link-choice="${i}" ${l.room!==field.room.id?'disabled':''}>${escapeHtml(l.title)}${l.near?'':' · подойти'}</button>`).join('');
     if(field.seed&&field.floor===1){
-      actions.innerHTML+=`<details><summary>Экспедиция в Семя</summary><div class="ui-action-stack"><label>Маршрут<select data-seed-mode>${field.seed.modes.map(m=>`<option value="${m.key}">${escapeHtml(m.title)} · ${m.partyMin}–${m.partyMax} игроков · ${m.minLevel}–${m.maxLevel} ур.</option>`).join('')}</select></label>${field.seed.assembly?`<p>Собрано ${field.seed.assembly.count} игроков.</p><label>Код объединения<input readonly value="${escapeHtml(field.seed.assembly.id)}"></label>`:''}<button class="ui-button" type="button" data-seed-create>Создать объединение групп</button><label>Код лидера<input data-seed-code maxlength="160" autocomplete="off"></label><button class="ui-button" type="button" data-seed-join>Присоединить свою группу</button></div></details>`;
+      const assemblyModes=field.seed.modes.filter(m=>m.commandChannel);
+      actions.innerHTML+=field.seed.modes.filter(m=>!m.commandChannel).map(m=>`<p>${escapeHtml(m.title)} · ${m.partyMin===m.partyMax?m.partyMin:m.partyMin+'–'+m.partyMax} игроков · ${m.minLevel}–${m.maxLevel} ур.</p>`).join('');
+      if(assemblyModes.length)actions.innerHTML+=`<details><summary>Экспедиция в Семя</summary><div class="ui-action-stack"><label>Маршрут<select data-seed-mode>${assemblyModes.map(m=>`<option value="${m.key}">${escapeHtml(m.title)} · ${m.partyMin}–${m.partyMax} игроков · ${m.minLevel}–${m.maxLevel} ур.</option>`).join('')}</select></label>${field.seed.assembly?`<p>Собрано ${field.seed.assembly.count} игроков.</p><label>Код объединения<input readonly value="${escapeHtml(field.seed.assembly.id)}"></label>`:''}<button class="ui-button" type="button" data-seed-create>Создать объединение групп</button><label>Код лидера<input data-seed-code maxlength="160" autocomplete="off"></label><button class="ui-button" type="button" data-seed-join>Присоединить свою группу</button></div></details>`;
       if(state.zone==='seed-of-infinity')actions.innerHTML+=`<details><summary>Задания Тепиоса</summary><div class="ui-action-stack"><button class="ui-button" type="button" data-seed-quest="694">Пройти Зал Страданий · 75–82</button><button class="ui-button" type="button" data-seed-quest="696">Завоевать Зал Гибели · знак Кецеруса</button></div></details>`;
     }
     dialog.append(actions);enhanceSelects(dialog);
@@ -379,7 +381,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     dialog.addEventListener('click',async event=>{
       const seedButton=event.target.closest('[data-seed-create],[data-seed-join],[data-seed-quest]'),linkButton=event.target.closest('[data-link-choice]');
       if(seedButton){
-        const seedMode=dialog.querySelector('[data-seed-mode]').value,assembly=dialog.querySelector('[data-seed-code]').value;
+        const seedMode=dialog.querySelector('[data-seed-mode]')?.value,assembly=dialog.querySelector('[data-seed-code]')?.value;
         dialog.close();
         if(Math.hypot(field.x-.9,field.y-.1)>.1)await run('/api/hunt/move',{point:{x:.9,y:.1}});
         else await run('/api/world/action',seedButton.hasAttribute('data-seed-quest')?{action:'seed_quest',quest:Number(seedButton.dataset.seedQuest)}:{action:seedButton.hasAttribute('data-seed-create')?'seed_assembly':'seed_join',seedMode,assembly});

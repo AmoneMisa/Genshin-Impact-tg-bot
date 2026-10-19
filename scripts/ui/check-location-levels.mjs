@@ -40,7 +40,7 @@ try{for(const {width,mode} of configurations){
  });
  await page.goto('http://levels.local/fixture');
  const floors=Object.entries(LOCATION_LEVELS).flatMap(([id,z])=>z.floors.map(f=>({id,f})));
- const focused=floors.filter(({id,f})=>id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4||id==='tower-of-insolence'&&f.number===12||id==='cruma-tower'&&f.number===3);
+ const focused=floors.filter(({id,f})=>id==='seed-of-destruction'&&f.number===1||id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4||id==='tower-of-insolence'&&f.number===12||id==='cruma-tower'&&f.number===3);
  const cases=mode==='auto'?(process.env.LOCATION_LEVEL_SMOKE?focused:floors):floors.filter(({id,f})=>id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4);
  for(const {id,f} of cases){
   now=Date.now();s={userId:1,game:{stats:{lvl:80,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
@@ -54,6 +54,10 @@ try{for(const {width,mode} of configurations){
   if(id==='ivory-tower'&&f.number===3){await page.locator('[data-level-travel]').focus();await page.waitForTimeout(850);assert.equal(await page.locator('[data-level-travel]').evaluate(n=>n===document.activeElement),true,'navigation focus survives polling');}
   await page.locator('[data-level-travel]').click();const dialog=page.locator('dialog[open]');await dialog.waitFor();
   assert.equal(await dialog.evaluate(n=>n.scrollWidth>n.clientWidth+1),false,'travel overflow '+id);
+  if(id==='seed-of-destruction'&&f.number===1){
+   assert.equal(await dialog.locator('[data-seed-create],[data-seed-join],[data-seed-mode],[data-seed-code]').count(),0,'Tiat needs no command channel controls');
+   assert.ok((await dialog.innerText()).includes('Штурм Тиат · 9 игроков'),'Tiat shows the nine-player requirement');
+  }
   await dialog.locator('[data-dismiss]').focus();assert.equal(await dialog.locator('[data-dismiss]').evaluate(n=>n===document.activeElement),true);
   if(id==='ivory-tower'&&f.number===3){
    const choice=dialog.locator('[data-travel-choice]').first();assert.equal(await choice.isDisabled(),false);
