@@ -63,7 +63,7 @@ test('hall entry enforces ownership and a city approach reaches the original doo
  assert.equal(hallAction(s,clan,h,record,{action:'hall_leave'},NOW).ok,true);
 });
 test('Ketra, Varka and Monastery share original NPCs and atlas destinations',()=>{
- for(const [id,count] of [['ketra-outpost',13],['varka-outpost',14],['monastery-of-silence',9]]){
+ for(const [id,count] of [['ketra-outpost',22],['varka-outpost',22],['monastery-of-silence',9]]){
   const zone=getZone(id);assert.ok(zone);assert.equal(zone.mobs.length,count);assert.equal(LOCATIONS.filter(l=>l.id===id).length,1);
  }
  const c=CITIES.find(c=>c.id==='orc-village'),npc=CITY_NPCS.find(n=>n.city===c.id&&n.gateway),point=cityPoint(c,npc);

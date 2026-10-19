@@ -66,7 +66,12 @@ try{for(const {width,mode} of configurations){
   for(const [kind,color] of [['aggressive','rgb(255, 116, 116)'],['social','rgb(112, 201, 255)']])for(const node of await page.locator(`.ui-npc-name[data-disposition="${kind}"]`).all())assert.equal(await node.evaluate(n=>getComputedStyle(n).color),color,kind+' name color');
   if(id==='ivory-tower'&&f.number===3){await page.locator('[data-level-travel]').focus();await page.waitForTimeout(850);assert.equal(await page.locator('[data-level-travel]').evaluate(n=>n===document.activeElement),true,'navigation focus survives polling');}
   await page.locator('[data-level-travel]').click();const dialog=page.locator('dialog[open]');await dialog.waitFor();
+  if(await dialog.evaluate(n=>n.scrollWidth>n.clientWidth+1)){
+   await page.screenshot({path:path.join(out,`${id}-${width}-overflow.png`)});
+   console.log(await dialog.evaluate(n=>[...n.querySelectorAll('*')].filter(e=>e.getBoundingClientRect().right>n.getBoundingClientRect().right).map(e=>({tag:e.tagName,class:e.className,text:e.textContent.slice(0,80),width:e.getBoundingClientRect().width}))));
+  }
   assert.equal(await dialog.evaluate(n=>n.scrollWidth>n.clientWidth+1),false,'travel overflow '+id);
+  if(id==='necropolis-sacrifice'&&mode==='auto')await page.screenshot({path:path.join(out,`${id}-${width}-travel.png`)});
   if(id==='seed-of-destruction'&&f.number===1){
    assert.equal(await dialog.locator('[data-seed-create],[data-seed-join],[data-seed-mode],[data-seed-code]').count(),0,'Tiat needs no command channel controls');
    assert.ok((await dialog.innerText()).includes('Штурм Тиат · 9 игроков'),'Tiat shows the nine-player requirement');

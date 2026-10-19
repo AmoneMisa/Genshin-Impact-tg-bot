@@ -16,7 +16,7 @@ function part(text){
  const known=translate(text);return /[А-Яа-яЁё]/.test(known)?null:known;
 }
 for(const row of extractCatalog()){
- if(!row.files.some(f=>/^(?:template\/(?:location-levels|world-extension|raidLocations|graciaTravel|seedInstances|huntingExploration)|webapp\/(?:hunt\.js|world-map\.js|location-art\.js|world-extension-scenes\.js)|functions\/game\/world\/)/.test(f))&&!rules[row.text])continue;
+ if(!row.files.some(f=>/^(?:template\/(?:location-levels|field-populations|world-extension|raidLocations|graciaTravel|seedInstances|huntingExploration)|webapp\/(?:hunt\.js|world-map\.js|location-art\.js|world-extension-scenes\.js)|functions\/game\/world\/)/.test(f))&&!rules[row.text])continue;
  let value=rules[row.text]||part(row.text);
  if(!value&&row.text.includes(' · ')){
   const pieces=row.text.split(' · ').map(part);if(pieces.every(p=>p!==null))value=pieces.join(' · ');

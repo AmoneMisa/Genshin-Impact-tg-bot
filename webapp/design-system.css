@@ -856,6 +856,7 @@ a:focus-visible {
 .game-dialog-heading h2 {
   flex: 1;
   min-width: 0;
+  overflow-wrap: anywhere;
   margin: 0;
   color: var(--gold-bright);
   font: 700 21px/1.2 var(--serif);

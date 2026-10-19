@@ -15,7 +15,7 @@ import fs from 'node:fs';
 function hero(){const s={userId:1,game:{stats:{lvl:76},inventory:{gold:1000000,materials:{},equipment:{items:[]}},effects:[],equipmentStats:{},builds:{}}};change(s,'warrior');update(s);return s;}
 test('all fourteen Seven Signs dungeons have real encounter data and a single atlas entry',()=>{
  const entries=LOCATIONS.filter(l=>l.dungeonType);assert.equal(entries.length,14);assert.equal(necropolises.length,8);
- for(const n of necropolises){const l=LOCATIONS.find(l=>l.id===n.id);assert.deepEqual({x:l.x,y:l.y},n.entrance);assert.ok(n.mobs.length>=3);assert.ok(n.mobs.every(m=>Number.isFinite(m.expShare)&&m.hp>0));assert.equal(getZone(n.id),n);}
+ for(const n of necropolises){const l=LOCATIONS.find(l=>l.id===n.id),zone=getZone(n.id);assert.deepEqual({x:l.x,y:l.y},n.entrance);assert.ok(zone.mobs.length>=3);assert.ok(zone.mobs.every(m=>Number.isFinite(m.expShare)&&m.hp>0));assert.deepEqual(zone.entrance,n.entrance);assert.ok(n.mobs.every(m=>zone.mobs.some(source=>source.id===m.id)),'original quest targets remain in the expanded population');}
  assert.equal(atlasObjects({locations:LOCATIONS},'dungeons',null,true).length,14);
  assert.ok(atlasObjects({locations:LOCATIONS},'hunt',null,true).every(l=>!l.dungeonType));
 });
