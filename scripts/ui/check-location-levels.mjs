@@ -73,6 +73,10 @@ try{for(const {width,mode} of configurations){
   assert.equal(await page.locator('.hunt-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false,id+' overflow '+width);
   const heading=await page.locator('#hunt-heading').textContent();assert.ok(f.title.split(' · ').every(part=>heading.includes(part)));
   assert.ok(await page.locator('[data-target]').count()<=(width<500?8:16));
+  for(const image of await page.locator('.hunt-actor img').all()){
+   assert.match(await image.getAttribute('src'),/^\/art\/npcs\/l2\/\d+-128\.webp$/,'exact NPC photograph');
+   await image.evaluate(img=>img.decode());
+  }
   for(const [kind,color] of [['aggressive','rgb(255, 116, 116)'],['social','rgb(112, 201, 255)']])for(const node of await page.locator(`.ui-npc-name[data-disposition="${kind}"]`).all())assert.equal(await node.evaluate(n=>getComputedStyle(n).color),color,kind+' name color');
   if(id==='ivory-tower'&&f.number===3){await page.locator('[data-level-travel]').focus();await page.waitForTimeout(850);assert.equal(await page.locator('[data-level-travel]').evaluate(n=>n===document.activeElement),true,'navigation focus survives polling');}
   await page.locator('[data-level-travel]').click();const dialog=page.locator('dialog[open]');await dialog.waitFor();

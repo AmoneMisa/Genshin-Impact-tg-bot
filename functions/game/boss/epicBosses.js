@@ -4,6 +4,7 @@ import {isVortexBoss} from '../world/dragonVortex.js';
 // chat in chat.epicBosses[name] = {killedAt, respawnAt, kills}. A kill also rolls the boss's epic jewellery.
 import bossTemplates from '../../../template/bossTemplate.js';
 import L2_BOSS_ART from '../../../webapp/l2-boss-art.js';
+import {npcPhotoUrl} from '../../../webapp/art/l2-npc-art.js';
 import {needsPass, partyNeeded} from '../../../template/epicPasses.js';
 import { findEpicItem, getCatalog, instantiate, canClassUse } from '../equipment/catalog.js';
 import {epicWeaponChance} from './worldBosses.js';
@@ -128,7 +129,7 @@ export function worldBossList(records = {}, fighting = {}, now = Date.now()) {
             referenceStats: world.reference || null,
             weaponChance: epicWeaponChance(name),
             weapons: getCatalog().filter(item => item.epicWeapon && item.raidBoss === name).map(item => ({name:item.name,kind:item.kind,grade:item.grade,minLevel:84})),
-            image: L2_BOSS_ART[name]?.image || null,
+            image: npcPhotoUrl(L2_BOSS_ART[name],256)||L2_BOSS_ART[name]?.image||null,
             respawnHours: template.epic.respawnHours,
             windowHours: template.epic.windowHours,
             jewelChance: template.epic.jewelChance,
@@ -157,7 +158,7 @@ export function epicList(chat, now = Date.now()) {
             minLevel: template.epic.minLevel,
             location: template.world?.location || '',
             referenceStats: template.world?.reference || null,
-            image: L2_BOSS_ART[template.name]?.image || null,
+            image: npcPhotoUrl(L2_BOSS_ART[template.name],256)||L2_BOSS_ART[template.name]?.image||null,
             respawnHours: template.epic.respawnHours,
             windowHours: template.epic.windowHours,
             jewelChance: template.epic.jewelChance,

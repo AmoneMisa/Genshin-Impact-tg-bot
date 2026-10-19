@@ -1,18 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import zones from '../template/huntingTemplate.js';
-import {HUNT_MOB_ART,huntMobUrl,huntZoneUrl} from '../webapp/art/hunt-art.js';
+import {getZones} from '../functions/game/hunt/huntMobs.js';
+import {huntMobUrl,huntZoneUrl} from '../webapp/art/hunt-art.js';
+import sources from '../webapp/art/npcs/l2/source.js';
 import {materialIcon,materialIconInfo} from '../webapp/material-icons.js';
 import {shotIcon,paintedIconHtml} from '../webapp/art/painted-icon-art.js';
-test('every real hunting enemy and zone resolves to published mobile paintings',()=>{
+test('hunting NPCs resolve by exact source ID to original mobile screenshots or an explicit missing entry',()=>{
  const ids=new Set();
- for(const zone of zones){assert.ok(fs.existsSync('webapp'+huntZoneUrl(zone)));for(const mob of zone.mobs){ids.add(mob.id);for(const size of [128,256])assert.ok(fs.existsSync('webapp'+huntMobUrl(mob,size)),mob.name);}}
- assert.equal(ids.size,200);assert.equal(HUNT_MOB_ART.length,12);
+ const missing=new Set(sources.missing.map(m=>m.id));
+ for(const zone of getZones()){assert.ok(fs.existsSync('webapp'+huntZoneUrl(zone)));for(const mob of zone.mobs){
+  ids.add(mob.id);const asset=sources.assets[mob.id];
+  if(!asset){assert.ok(missing.has(mob.id),mob.name);assert.equal(huntMobUrl(mob),null);continue;}
+  assert.equal(asset.name,mob.name);assert.match(asset.sha256,/^[a-f0-9]{64}$/);
+  for(const size of [128,256]){const url=huntMobUrl(mob,size);assert.equal(url,`/art/npcs/l2/${mob.id}-${size}.webp`);assert.ok(fs.existsSync('webapp'+url),mob.name);assert.equal(huntMobUrl({mobId:mob.id},size),url);}
+ }}
+ assert.ok(ids.size>1000);
  assert.equal(huntMobUrl({id:'../../unknown'}),null);
- const insect=JSON.parse(fs.readFileSync('art-source/hunt-ui/jobs.json')).find(j=>j.key==='mob-insect');
- assert.match(insect.prompt,/beetle/);assert.match(insect.prompt,/no spider/);
- assert.equal(fs.existsSync('webapp/art/hunt/mobs/spider-128.webp'),false);
+ assert.equal(huntMobUrl({id:'unavailable',role:'Воин'}),null,'no approximate role portrait for a missing NPC');
+ assert.equal(huntMobUrl({id:'20006',name:'Different display name'}),huntMobUrl({id:'20006'}),'names cannot change identity');
 });
 test('materials keep original quality and element art and shots cannot become scroll art',()=>{
  assert.deepEqual(materialIconInfo('lifestone_top_S84'),{icon:'lifestone',grade:'S84',quality:'top'});

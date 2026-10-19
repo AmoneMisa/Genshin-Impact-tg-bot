@@ -15,6 +15,7 @@
 import { familyOf } from './class-family.js';
 import { menuArtFor } from './menu-art.js';
 import L2_BOSS_ART from './l2-boss-art.js';
+import {npcPhotoUrl} from './art/l2-npc-art.js';
 import {createBossRoomStage} from './boss-room.js';
 
 export const BOSS_ART = Object.freeze({
@@ -63,7 +64,7 @@ export function skillFxForClass(className) {
 }
 
 export function bossArtUrl(name) {
-  if (L2_BOSS_ART[name]) return L2_BOSS_ART[name].image;
+  if (L2_BOSS_ART[name]) return npcPhotoUrl(L2_BOSS_ART[name],256)||L2_BOSS_ART[name].image;
   return BOSS_ART[name] ? `/art/bosses/${BOSS_ART[name].art || name}.webp` : null;
 }
 
