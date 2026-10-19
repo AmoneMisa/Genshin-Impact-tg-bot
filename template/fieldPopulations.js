@@ -10,4 +10,5 @@ import z7 from './field-populations/plains-of-glory.js';
 import z8 from './field-populations/outlaw-forest.js';
 import z9 from './field-populations/fields-of-massacre.js';
 import z10 from './field-populations/cemetery.js';
-export const FIELD_POPULATIONS = {"plains-of-dion":z0,"cruma-marshlands":z1,"turek-orcs":z2,"brekas-stronghold":z3,"alligator-beach":z4,"sea-of-spores":z5,"timak-outpost":z6,"plains-of-glory":z7,"outlaw-forest":z8,"fields-of-massacre":z9,"cemetery":z10};
+import z11 from './field-populations/valley-of-saints.js';
+export const FIELD_POPULATIONS = {"plains-of-dion":z0,"cruma-marshlands":z1,"turek-orcs":z2,"brekas-stronghold":z3,"alligator-beach":z4,"sea-of-spores":z5,"timak-outpost":z6,"plains-of-glory":z7,"outlaw-forest":z8,"fields-of-massacre":z9,"cemetery":z10,"valley-of-saints":z11};
