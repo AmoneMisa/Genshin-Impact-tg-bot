@@ -443,7 +443,7 @@ function enterRoom(session, hunt, roomIdValue, now, random,{entry=null,silent=fa
     field.mobs.push(...train.map(m => ({...m,x:to.col>from.col?.025:to.col<from.col?.975:.5,
         y:to.row>from.row?.025:to.row<from.row?.975:.5,lastMoveAt:now,path:[]})));
     // monsters killed there while the hero was away that were due to return come in at once
-    for (const mob of field.mobs) { mob.lastMoveAt = now;Object.assign(mob,nearestOpenPoint(mob,to.walls));mob.path=[]; }
+    for (const mob of field.mobs) { mob.lastMoveAt = now;Object.assign(mob,nearestOpenPoint(mob,to.walls));mob.path=[];delete mob.pursuit; }
     field.room = to.id;
     field.walls=to.walls||[];
     stopHuntAction(field,now);

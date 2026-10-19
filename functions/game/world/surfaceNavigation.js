@@ -36,13 +36,13 @@ export function surfaceRouteStep(legs){
  return {path:leg.path,crossing:next?{room:next.room,exit:leg.path.at(-1),entry:next.start,destination:next.path.at(-1),route:legs.slice(1)}:null};
 }
 
-/** range is cell-local and comes only from the server's combat metadata. */
-export function planSurfaceApproach(field,target,range,layout,current){
+/** Only trusted server callers choose the cell-local stopping range. */
+export function planSurfaceApproach(field,target,range,layout,current,work=null){
  if(!Number.isFinite(range)||range<=0)return null;
- return planSurfaceRoute(field,target,layout,current,{range});
+ return planSurfaceRoute(field,target,layout,current,{range,work});
 }
 
-export function planSurfaceRoute(field,point,layout,current,{range=null}={}){
+export function planSurfaceRoute(field,point,layout,current,{range=null,work=null}={}){
  if(![field.x,field.y,point?.x,point?.y].every(Number.isFinite))return null;
  if(field.x<0||field.x>1||field.y<0||field.y>1)return null;
  const rooms=layout.rooms.filter(r=>Math.abs(r.col-current.col)<=1&&Math.abs(r.row-current.row)<=1);
@@ -55,12 +55,14 @@ export function planSurfaceRoute(field,point,layout,current,{range=null}={}){
  if(approach){
   const distance=Math.hypot(field.x-point.x,field.y-point.y),share=Math.min(1,range/Math.max(1e-10,distance));
   const stand={x:point.x+(field.x-point.x)*share,y:point.y+(field.y-point.y)*share};
-  if(clear(stand,point,walls)){const direct=planSurfaceRoute(field,stand,layout,current);if(direct)return direct;}
+  if(clear(stand,point,walls)){const direct=planSurfaceRoute(field,stand,layout,current,{work});if(direct)return direct;if(work?.deferred)return null;}
  }
  // Preserve a clear direct walk, including the exact transverse border coordinate.
  if(!approach&&dx===0&&dy===0&&clear(field,point,walls))return {path:[{x:point.x,y:point.y}],crossing:null};
  const direct=planFieldCrossing(field,point,layout,current);
  if(!approach&&direct&&clear(field,point,walls))return {path:[direct.exit],crossing:{...direct,route:[{room:direct.room,start:direct.entry,path:[direct.destination]}]}};
+ // A caller may limit expensive searches across a crowd. Direct walking needs no search token.
+ if(work){if(work.remaining<=0){work.deferred=true;return null;}work.remaining--;}
  const key=(x,y)=>(y+N)*WIDTH+x+N;
  const xy=k=>({x:k%WIDTH-N,y:Math.floor(k/WIDTH)-N});
  const center=k=>{const p=xy(k);return {x:(p.x+.5)/N,y:(p.y+.5)/N};};

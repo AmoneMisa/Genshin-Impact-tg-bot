@@ -13,6 +13,8 @@ import {createShipVoyage} from '../../functions/game/world/zakenShip.js';
 import {ensureWorld,worldAction,bindWorldInstances} from '../../functions/game/world/world.js';
 import {getHuntState} from '../../miniapp/hunt.js';
 import {fieldPeers,useFieldPvpSkill} from '../../functions/game/hunt/fieldPvp.js';
+import {actorEntries,battleActor,battleWalls} from '../../functions/game/hunt/huntNeighborhood.js';
+import {clearLine} from '../../functions/game/hunt/huntSpatial.js';
 import changeClass from '../../functions/game/player/changePlayerGameClass.js';
 import updateStats from '../../functions/game/player/updatePlayerStats.js';
 const {chromium}=createRequire(process.env.PLAYWRIGHT_PACKAGE||'C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json')('playwright');
@@ -24,14 +26,14 @@ try{for(const {width,mode} of configurations){
  const page=await browser.newPage({viewport:{width,height:900},reducedMotion:'reduce',hasTouch:width<500}),errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  if(mode==='canvas')await page.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return /webgl/i.test(type)?null:original.call(this,type,...args);};});
- let s,chat,now,combatWalk=false;
+ let s,chat,now,combatWalk=false,pursuitMobId=null;
  const state=()=>getHuntState(s,now,fieldPeers(chat,s,now));
- const quiet=()=>{if(!s.game.hunt?.field)return;ensureHunt(s,now,()=>.5);const f=s.game.hunt.field;[...f.mobs,...Object.values(f.rooms||{}).flatMap(r=>r.mobs||[])].forEach(m=>{m.aggroRange=0;m.aggro=false;m.nextAttackAt=now+1e9;});};
+ const quiet=()=>{if(!s.game.hunt?.field)return;ensureHunt(s,now,()=>.5);const f=s.game.hunt.field;[...f.mobs,...Object.values(f.rooms||{}).flatMap(r=>r.mobs||[])].forEach(m=>{m.aggroRange=0;if(m.instanceId!==pursuitMobId)m.aggro=false;m.nextAttackAt=now+1e9;});};
  await page.route('**/*',async route=>{
   const u=new URL(route.request().url()).pathname;
   if(u==='/fixture')return route.fulfill({contentType:'text/html',body:`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${styles}<body><script type="module">import {openHuntGame} from '/hunt.js';window.openRoom=()=>openHuntGame({haptic:()=>{},renderState:()=>{},statusElement:document.createElement('span'),api:async(url,options)=>{const r=await fetch(url,options);const p=await r.json();if(!r.ok)throw Object.assign(new Error(p.reason),{payload:p});return p;}});</script></body>`});
   if(u==='/vendor/phaser/phaser.esm.min.js')return route.fulfill(mode==='unavailable'?{status:404}:{contentType:'text/javascript',body:fs.readFileSync('node_modules/phaser/dist/phaser.esm.min.js')});
-  if(u==='/api/hunt')return route.fulfill({json:await state()});
+  if(u==='/api/hunt'){if(pursuitMobId){now+=2500;quiet();}return route.fulfill({json:await state()});}
   if(u==='/api/hunt/target'||u==='/api/hunt/skill'){
    const body=route.request().postDataJSON(),result=u==='/api/hunt/target'?selectHuntTarget(s,body.targetId,now):body.targetUserId?useFieldPvpSkill(chat,s,body.targetUserId,body.skillIndex,{now,force:body.force,random:()=>.5}):useHuntSkill(s,body.skillIndex,{now,random:()=>.5});
    assert.ok(result.ok);
@@ -184,6 +186,19 @@ try{for(const {width,mode} of configurations){
     assert.equal(field.action,undefined);assert.equal(field.crossing,undefined);assert.equal(await page.locator('.hunt-overlay').count(),1);
     if(mode==='auto')await page.screenshot({path:path.join(out,`combat-detour-${width}.png`)});
    }finally{combatWalk=false;combatRoom.walls=originalWalls;field.walls=originalWalls;}
+   const pursuer=field.mobs[0];assert.ok(pursuer);const pursuitRoom=layout.rooms.find(r=>r.id===field.room),pursuitWalls=pursuitRoom.walls;
+   try{
+    pursuitRoom.walls=[{x:.45,y:0,w:.1,h:1}];Object.assign(field,{walls:pursuitRoom.walls,x:.63,y:.63,target:pursuer.instanceId});
+    Object.assign(pursuer,{x:.37,y:.37,aggro:true,ai:'fighter',lastMoveAt:now});pursuitMobId=pursuer.instanceId;
+    let crossed=false,arrived=false;
+    for(let step=0;step<30&&!arrived;step++){
+     await page.waitForTimeout(800);const owners=actorEntries(s.game.hunt).filter(a=>a.mob.instanceId===pursuitMobId);assert.equal(owners.length,1);crossed||=owners[0].room.id!==pursuitRoom.id;
+     const view=battleActor(s.game.hunt,pursuitMobId);arrived=Math.hypot(view.x-field.x,view.y-field.y)<=.2+1e-9&&clearLine(view,field,battleWalls(s.game.hunt));
+     assert.equal(await page.locator(`[data-target="${pursuitMobId}"]`).count(),1,'one visible canonical pursuer');
+    }
+    assert.ok(crossed,'NPC physically walks through a neighbouring bank');assert.ok(arrived,'NPC reaches an unobstructed attack position');assert.ok(field.mobs.includes(pursuer));
+    assert.equal(await page.locator('.hunt-overlay').count(),1);if(mode==='auto')await page.screenshot({path:path.join(out,`npc-pursuit-${width}.png`)});
+   }finally{pursuitMobId=null;pursuer.aggro=false;pursuitRoom.walls=pursuitWalls;field.walls=pursuitWalls;}
   }
   if((FIELD_POPULATIONS[id]||id==='ivory-tower'&&f.number===3||f.ship)&&mode==='auto')await page.screenshot({path:path.join(out,`${id}-${stage??f.number}-${width}.png`)});
   await page.locator('.hunt-overlay [data-dismiss]').first().click();await page.waitForSelector('.hunt-overlay',{state:'detached'});

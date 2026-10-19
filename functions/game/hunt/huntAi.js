@@ -3,8 +3,9 @@ export const AI_ROLES = ['fighter', 'healer', 'mage'];
 export const AI_LABELS = {fighter: 'Воин', healer: 'Целитель', mage: 'Маг'};
 import {isBossStunned} from '../boss/bossDebuffs.js';
 import {l2HasControl,l2MoveMultiplier} from '../player/l2Effects.js';
-import {findPath,advancePath,travelPath,insideObstacle} from '../world/navigation.js';
-import {battleField,neighborhood,actorEntries,firstBoundary} from './huntNeighborhood.js';
+import {findPath,advancePath} from '../world/navigation.js';
+import {battleField,neighborhood,actorEntries} from './huntNeighborhood.js';
+import {pursueNeighborhood} from './huntPursuit.js';
 import {clearLine} from './huntSpatial.js';
 import {npcBehaviour,NPC_AI_VERSION} from './huntMobs.js';
 
@@ -67,36 +68,6 @@ export function pursuePlayer(hunt, now) {
         }
     }
     return moved;
-}
-
-/** Move canonical actors in their own cells; crossing transfers ownership without cloning. */
-function pursueNeighborhood(hunt,now){
- const field=hunt.field,area=neighborhood(hunt);let moved=false;
- for(const actor of actorEntries(hunt)){
-  const mob=actor.mob;if(!mob.aggro||mob.currentHp<=0)continue;
-  const seconds=Math.max(0,Math.min(5,(now-(mob.lastMoveAt??now))/1000));mob.lastMoveAt=now;
-  if(isBossStunned(mob,now)||l2HasControl(mob,'Root',now)||l2HasControl(mob,'ImmobileBuff',now))continue;
-  const hero={x:field.x+area.current.col-actor.room.col,y:field.y+area.current.row-actor.room.row};
-  const distance=Math.hypot(hero.x-mob.x,hero.y-mob.y),stop=mob.ai==='mage'?.4:.2;
-  let budget=Math.min(Math.max(0,distance-stop),seconds*.09*l2MoveMultiplier(mob,now));
-  let room=actor.room,bucket=actor.bucket;
-  for(let hops=0;budget>0&&hops<3;hops++){
-   const target={x:field.x+area.current.col-room.col,y:field.y+area.current.row-room.row};
-   const edge=firstBoundary(mob,target),destination=edge?.exit||{x:Math.max(.02,Math.min(.98,target.x)),y:Math.max(.02,Math.min(.98,target.y))};
-   const next=edge&&area.rooms.find(r=>r.col===room.col+edge.dx&&r.row===room.row+edge.dy);
-   if(edge&&(!next||insideObstacle(edge.entry,next.walls)))break;
-   if(!mob.path?.length||Math.hypot((mob.destination?.x??-10)-destination.x,(mob.destination?.y??-10)-destination.y)>.02){
-    mob.destination=destination;mob.path=findPath(mob,destination,room.id===field.room?field.walls:room.walls,{margin:edge?0:.02})||[];
-   }
-   if(!mob.path.length)break;
-   budget=travelPath(mob,budget);mob.moveAt=now;moved=true;
-   if(mob.path.length||!edge||Math.hypot(mob.x-edge.exit.x,mob.y-edge.exit.y)>1e-7)break;
-   const index=bucket.indexOf(mob);if(index<0)break;bucket.splice(index,1);
-   Object.assign(mob,edge.entry);mob.path=[];delete mob.destination;
-   room=next;bucket=room.id===field.room?field.mobs:(field.rooms[room.id]||={mobs:[]}).mobs;bucket.push(mob);
-  }
- }
- return moved;
 }
 
 export function canMobReach(hunt, mob,session=null,now=Date.now()) {

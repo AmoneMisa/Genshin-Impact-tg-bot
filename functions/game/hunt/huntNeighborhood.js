@@ -93,14 +93,14 @@ export function syncResidentRooms(hunt,now,populate){
  const field=hunt?.field,area=neighborhood(hunt);if(!field||!area)return false;
  field.rooms??={};
  const active=new Set(area.rooms.map(r=>r.id)),previous=new Set(field.residentRooms||[field.room]);
- for(const id of previous)if(!active.has(id))for(const mob of field.rooms[id]?.mobs||[]){mob.aggro=false;mob.path=[];mob.lastMoveAt=now;}
+ for(const id of previous)if(!active.has(id))for(const mob of field.rooms[id]?.mobs||[]){mob.aggro=false;mob.path=[];delete mob.pursuit;mob.lastMoveAt=now;}
  for(const room of area.rooms){
   if(room.id!==field.room&&!Object.hasOwn(field.rooms,room.id)){
    field.seq=(Number(field.seq)||0)+1;
    field.rooms[room.id]={mobs:populate(area.zone,room,`${now}:${room.id}:n${field.seq}`)};
   }
   if(!previous.has(room.id))for(const mob of room.id===field.room?field.mobs:field.rooms[room.id].mobs){
-   mob.lastMoveAt=now;mob.moveAt=now;mob.path=[];delete mob.destination;
+   mob.lastMoveAt=now;mob.moveAt=now;mob.path=[];delete mob.destination;delete mob.pursuit;
    mob.nextAttackAt=Math.max(mob.nextAttackAt||0,now+mob.attackMs);
   }
  }

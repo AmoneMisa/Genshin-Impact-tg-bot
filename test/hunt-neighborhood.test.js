@@ -59,7 +59,7 @@ test('line of sight is rechecked at cast completion, and a neighbour can retalia
  assert.equal(h.field.action.phase,'cast');const hp=m.currentHp,mp=s.game.gameClass.stats.mp;
  withWalls([{x:0,y:.2,w:.02,h:.7}],()=>advanceHunt(s,NOW+4000,()=>.5));
  assert.equal(m.currentHp,hp);assert.equal(s.game.gameClass.stats.mp,mp);assert.equal(h.field.action,undefined);
- Object.assign(m,{aggro:true,ai:'fighter',nextAbilityAt:NOW+1e12,nextAttackAt:NOW+5000});
+ Object.assign(m,{aggro:true,ai:'fighter',nextAbilityAt:NOW+1e12,nextAttackAt:NOW+5000,lastMoveAt:NOW+5000});
  const heroHp=s.game.gameClass.stats.hp;
  withWalls([{x:0,y:.2,w:.02,h:.7}],()=>advanceHunt(s,NOW+5000,()=>.99));assert.equal(s.game.gameClass.stats.hp,heroHp);
  m.nextAttackAt=NOW+6000;advanceHunt(s,NOW+6000,()=>.99);assert.ok(s.game.gameClass.stats.hp<heroHp);
