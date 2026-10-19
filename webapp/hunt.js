@@ -439,7 +439,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   function fieldHtml() {
     const field=state.field;if(!field)return '';
     const room=field.room||{};
-    const visibleMobs=visibleFieldMobs(field);
+    const visibleMobs=visibleFieldMobs(field,viewport.width<500?8:16);
     const actors=[...(state.players||[]).map(p=>({...p,id:String(p.userId),labelHeight:p.clanName?28:14})),{...state.player,x:field.x,y:field.y,id:'self',labelHeight:state.player.clanName?28:14},...visibleMobs.map(m=>({...m,id:m.instanceId,labelHeight:38}))];
     const selected=playerTarget?String(playerTarget):field.target;
     actors.sort((a,b)=>Number(b.id===selected)-Number(a.id===selected));

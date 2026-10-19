@@ -26,7 +26,7 @@ for(const row of WORLD){
  const scene=sceneStudy(zone?.id),environment=level?.environment||scene?.environment||'woodland';
  result[row.id]={name:row.name,region:city.id,zone:zone?.id||null,location:zone?zone.name+(floor&&levels.length>1?' · '+floor+' этаж':''):'Окрестности '+city.name,
   sceneKey:zone?`${zone.id}:r${r}c${col}:floor-${floor||1}`:null,environment,
-  gate:row.id===25035?{floor:1,room:'r0c0',point:{x:.5,y:.5}}:level&&!p.instance?{floor,room:`r${r}c${col}`,point:{x:.5,y:.5}}:null,
+  gate:level&&!p.instance?{floor,room:`r${r}c${col}`,point:{x:.5,y:.5}}:row.id===25035?{floor:1,room:'r0c0',point:{x:.5,y:.5}}:null,
   associationSource:'geographic-source-anchor',sceneGeometry:'adapted',sourcePosition:p};
 }
 fs.writeFileSync('template/raidLocations.js','// Original world points; geographic associations and local room markers are authored.\nexport const RAID_LOCATIONS='+JSON.stringify(result)+';\n');

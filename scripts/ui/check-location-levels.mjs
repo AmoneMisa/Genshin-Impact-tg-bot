@@ -5,6 +5,9 @@ import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {LOCATION_LEVELS} from '../../template/locationLevels.js';
 import {enterHuntField,moveHuntField,advanceHunt} from '../../functions/game/hunt/huntFight.js';
+import {roomLayout,adjacent} from '../../functions/game/hunt/huntRooms.js';
+import {getZone} from '../../functions/game/hunt/huntMobs.js';
+import {FIELD_POPULATIONS} from '../../template/fieldPopulations.js';
 import {createShipVoyage} from '../../functions/game/world/zakenShip.js';
 import {ensureWorld,worldAction,bindWorldInstances} from '../../functions/game/world/world.js';
 import {getHuntState} from '../../miniapp/hunt.js';
@@ -50,10 +53,16 @@ try{for(const {width,mode} of configurations){
   chat={game:{},members:[s]};s.ownerDocument=()=>chat;
   if(f.ship){const instance=createShipVoyage('fixture',[s],now,()=>0);chat.game.worldInstances={fixture:instance};s.game.world.instanceId='fixture';bindWorldInstances(chat,now);}
   if(id==='dragon-valley'){s.game.inventory.materials.l2_17248=1;const v=DRAGON_VORTICES[0];Object.assign(s.game.hunt.field,{room:v.room,...v.point});}
+  if(FIELD_POPULATIONS[id]){
+   const layout=roomLayout(getZone(id)),target=[...layout.rooms].sort((a,b)=>b.cap-a.cap)[0],queue=[[s.game.hunt.field.room]],seen=new Set(queue[0]);let path=[];
+   while(queue.length){const next=queue.shift(),last=layout.rooms.find(r=>r.id===next.at(-1));if(last.id===target.id){path=next;break;}for(const r of layout.rooms)if(!seen.has(r.id)&&adjacent(last,r)){seen.add(r.id);queue.push([...next,r.id]);}}
+   for(const room of path.slice(1)){quiet();assert.ok(moveHuntField(s,'room:'+room,now).ok);now+=30000;advanceHunt(s,now,()=>.5);quiet();assert.equal(s.game.hunt.field.room,room);}
+   assert.equal(s.game.hunt.field.mobs.length,target.cap,'densest source room');
+  }
   quiet();await page.evaluate(()=>openRoom());await page.waitForSelector('.hunt-ground');
   assert.equal(await page.locator('.hunt-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false,id+' overflow '+width);
   const heading=await page.locator('#hunt-heading').textContent();assert.ok(f.title.split(' · ').every(part=>heading.includes(part)));
-  assert.ok(await page.locator('[data-target]').count()<=24);
+  assert.ok(await page.locator('[data-target]').count()<=(width<500?8:16));
   if(id==='ivory-tower'&&f.number===3){await page.locator('[data-level-travel]').focus();await page.waitForTimeout(850);assert.equal(await page.locator('[data-level-travel]').evaluate(n=>n===document.activeElement),true,'navigation focus survives polling');}
   await page.locator('[data-level-travel]').click();const dialog=page.locator('dialog[open]');await dialog.waitFor();
   assert.equal(await dialog.evaluate(n=>n.scrollWidth>n.clientWidth+1),false,'travel overflow '+id);
@@ -85,7 +94,7 @@ try{for(const {width,mode} of configurations){
    await page.locator('[data-ship-candle]').first().click();await page.waitForTimeout(100);
    assert.equal(Object.keys(chat.game.worldInstances.fixture.candles).length,1);
   }
-  if((id==='ivory-tower'&&f.number===3||f.ship)&&mode==='auto')await page.screenshot({path:path.join(out,`${id}-${f.number}-${width}.png`)});
+  if((FIELD_POPULATIONS[id]||id==='ivory-tower'&&f.number===3||f.ship)&&mode==='auto')await page.screenshot({path:path.join(out,`${id}-${f.number}-${width}.png`)});
   await page.locator('.hunt-overlay [data-dismiss]').first().click();await page.waitForSelector('.hunt-overlay',{state:'detached'});
   assert.equal(await page.locator('dialog[open],[inert],.hunt-phaser canvas').count(),0);
  }
