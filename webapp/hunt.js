@@ -29,7 +29,10 @@ import {visibleFieldMobs} from './hunt-visible-actors.js';
 // Hunting fields (Lineage II style): pick a zone, fight one mob at a time in real time with skills,
 // potions and shots. Blue and red champions are tougher and pay much more.
 
-const REASONS = {room_in_combat:'Нельзя уйти из комнаты, пока монстры в бою: сначала победи их или отступи.',room_not_adjacent:'В эту комнату нельзя пройти напрямую.',no_active_crystal:'Выбери кристалл души.',no_soul_crystal:'Этот кристалл уже израсходован.',soul_level:'Прокачка кристаллов доступна с 40 уровня.',soul_max_stage:'Кристалл достиг 17 уровня.',soul_wrong_mob:'Душа этого монстра не подходит для текущей ступени.',soul_hp:'Используй кристалл, когда HP монстра будет не выше 50%.',soul_already_charged:'Кристалл уже использован на этом монстре.',invalid_seals:'Недостаточно камней печати.',
+const REASONS = {
+  vortex_required:'Сначала призовите босса через Dragon Vortex в Долине Драконов.',
+  vortex_bone_required:'Нужна Large Dragon Bone для призыва.',
+  vortex_cooldown:'Dragon Vortex восстанавливается одну минуту после призыва.',room_in_combat:'Нельзя уйти из комнаты, пока монстры в бою: сначала победи их или отступи.',room_not_adjacent:'В эту комнату нельзя пройти напрямую.',no_active_crystal:'Выбери кристалл души.',no_soul_crystal:'Этот кристалл уже израсходован.',soul_level:'Прокачка кристаллов доступна с 40 уровня.',soul_max_stage:'Кристалл достиг 17 уровня.',soul_wrong_mob:'Душа этого монстра не подходит для текущей ступени.',soul_hp:'Используй кристалл, когда HP монстра будет не выше 50%.',soul_already_charged:'Кристалл уже использован на этом монстре.',invalid_seals:'Недостаточно камней печати.',
   effect_betray:'На тебе предательство.',effect_distrust:'На тебе смятение.',
   pvp_invalid_target:'Игрок недоступен для нападения.',pvp_not_here:'Игрок покинул локацию.',pvp_out_of_range:'Подойди ближе к игроку.',pvp_force_required:'Для атаки мирного игрока включи принудительную атаку.',pvp_stunned:'Ты оглушён.',pvp_silenced:'Магия заблокирована молчанием.',
   unknown_zone: 'Такой зоны нет.',
@@ -358,9 +361,27 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     for(const candle of field.ship?.candles||[])markers.push(marker(candle,`Свеча ${candle.id} · ${{unlit:'не зажжена',burning:'разгорается',red:'красная',blue:'синяя'}[candle.state]}`,{unlit:'♧',burning:'♨',red:'🔴',blue:'🔵'}[candle.state],`data-ship-candle="${candle.id}"`));
     for(const [i,link] of (field.links||[]).entries())if(link.room===field.room.id)markers.push(marker(link.point,link.title,'↗',`data-region-link="${i}"`));
     const boss=field.ship?.boss||field.level?.boss&&{id:field.level.boss,point:{x:.5,y:.5}};
-    for(const raid of field.level?.raids||[])markers.push(marker(raid.point,raid.name,'⚔',`data-location-boss="${escapeHtml(raid.name)}"`));
+    for(const v of field.vortices||[])if(v.here)markers.push(marker(v.point,v.name,'⚔',`data-dragon-vortex="${v.id}"`));
+    for(const raid of field.raids||field.level?.raids||[])markers.push(marker(raid.point,raid.name,'⚔',`data-location-boss="${escapeHtml(raid.name)}"`));
     if(boss)markers.push(marker(boss.point,boss.id==='zaken'?'Закен найден':'Вход к боссу','⚔',`data-location-boss="${boss.id}"`));
     return markers.join('');
+  }
+  async function showDragonVortex(id){
+    const v=state.field?.vortices?.find(v=>v.id===id);if(!v?.here)return;
+    if(!v.near){await run('/api/hunt/move',{point:v.point});render();return;}
+    const payload=await run('/api/world/action',{action:'vortex_list',vortex:id});if(!payload?.ok||closed)return;
+    const dialog=document.createElement('dialog');dialog.className='game-dialog-panel l2-window';
+    travelDialog?.close();travelDialog=dialog;
+    dialog.innerHTML=dialogHeading('Dragon Vortex')+'<p>Одна Large Dragon Bone призывает случайного дракона. Повторный призыв — через минуту.</p><button class="ui-button primary" data-vortex-summon>Призвать дракона · Large Dragon Bone ×1</button>'+payload.encounters.map(e=>`<button class="ui-button" data-vortex-join="${escapeHtml(e.id)}">${escapeHtml(e.name)}</button>`).join('');
+    dialog.querySelector('[data-vortex-summon]').disabled=!(state.field.vortexBoneCount>0);
+    document.body.append(dialog);dialog.showModal();dialog.addEventListener('close',()=>dialog.remove(),{once:true});
+    dialog.querySelector('[data-dismiss]').onclick=()=>dialog.close();
+    dialog.addEventListener('click',async event=>{
+      const button=event.target.closest('[data-vortex-summon],[data-vortex-join]');if(!button)return;
+      dialog.close();const result=await run('/api/world/action',{action:'dragon_vortex',vortex:id,encounter:button.dataset.vortexJoin});
+      if(!result?.ok||closed)return;
+      const {openBossGame}=await import('./boss.js');await openBossGame({api,renderState,haptic,statusElement,initialBoss:result.bossName,fromLocation:true});close();
+    });
   }
   function showLevelTravel(){
     const field=state.field;if(!field?.level)return;
@@ -664,6 +685,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     content.querySelector('[data-world-exit]')?.addEventListener('click',async()=>{await run('/api/world/action',{action:'walk_exit'});render();});
     content.querySelector('[data-level-travel]')?.addEventListener('click',showLevelTravel);
     content.querySelectorAll('[data-level-marker]').forEach(b=>b.addEventListener('click',async()=>{const d=state.field.level.destinations[Number(b.dataset.levelMarker)];if(d.near)showLevelTravel();else {await run('/api/hunt/move',{point:d.point});render();}}));
+    content.querySelectorAll('[data-dragon-vortex]').forEach(b=>b.addEventListener('click',()=>showDragonVortex(b.dataset.dragonVortex)));
     content.querySelectorAll('[data-region-link]').forEach(b=>b.addEventListener('click',showLevelTravel));
     content.querySelectorAll('[data-level-npc]').forEach(b=>b.addEventListener('click',()=>say(b.dataset.levelNpc)));
     content.querySelectorAll('[data-ship-candle]').forEach(b=>b.addEventListener('click',async()=>{const c=state.field.ship.candles.find(c=>c.id===Number(b.dataset.shipCandle));if(c.state!=='unlit')return;if(c.near)await run('/api/world/action',{action:'ship_candle',candle:c.id});else await run('/api/hunt/move',{point:{x:c.x,y:c.y}});render();}));

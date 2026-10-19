@@ -1,3 +1,4 @@
+import {DRAGON_VORTICES} from '../../template/dragonVortex.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
@@ -31,7 +32,8 @@ try{for(const {width,mode} of configurations){
    return route.fulfill({json:{...result,hunt:await getHuntState(s,now)}});
   }
   if(u==='/api/world/action'){
-   const result=worldAction(s,route.request().postDataJSON(),now);bindWorldInstances(chat,now);quiet();
+   const body=route.request().postDataJSON();
+   const result=body.action==='vortex_list'?{ok:true,encounters:[]}:worldAction(s,body,now);bindWorldInstances(chat,now);quiet();
    return route.fulfill({status:result.ok?200:409,json:{...result,world:{}}});
   }
   if(mode==='missing-art'&&u.startsWith('/art/world/scenes/'))return route.fulfill({status:404});
@@ -40,13 +42,14 @@ try{for(const {width,mode} of configurations){
  });
  await page.goto('http://levels.local/fixture');
  const floors=Object.entries(LOCATION_LEVELS).flatMap(([id,z])=>z.floors.map(f=>({id,f})));
- const focused=floors.filter(({id,f})=>id==='pagan-temple'&&f.number>=3||id==='seed-of-destruction'&&f.number===1||id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4||id==='tower-of-insolence'&&f.number===12||id==='cruma-tower'&&f.number===3);
- const cases=mode==='auto'?(process.env.LOCATION_LEVEL_SMOKE?focused:floors):floors.filter(({id,f})=>id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4);
+ const focused=floors.filter(({id,f})=>id==='dragon-valley'||id==='pagan-temple'&&f.number>=3||id==='seed-of-destruction'&&f.number===1||id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4||id==='tower-of-insolence'&&f.number===12||id==='cruma-tower'&&f.number===3);
+ const cases=process.env.LOCATION_LEVEL_ZONE?floors.filter(({id})=>id===process.env.LOCATION_LEVEL_ZONE):mode==='auto'?(process.env.LOCATION_LEVEL_SMOKE?focused:floors):floors.filter(({id,f})=>id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4);
  for(const {id,f} of cases){
   now=Date.now();s={userId:1,game:{stats:{lvl:80,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
   changeClass(s,'humanFighter');updateStats(s);ensureWorld(s,now);enterHuntField(s,id,{now,floor:f.number,random:()=>.5});Object.assign(s.game.world,{mode:'location',location:id});
   chat={game:{},members:[s]};s.ownerDocument=()=>chat;
   if(f.ship){const instance=createShipVoyage('fixture',[s],now,()=>0);chat.game.worldInstances={fixture:instance};s.game.world.instanceId='fixture';bindWorldInstances(chat,now);}
+  if(id==='dragon-valley'){s.game.inventory.materials.l2_17248=1;const v=DRAGON_VORTICES[0];Object.assign(s.game.hunt.field,{room:v.room,...v.point});}
   quiet();await page.evaluate(()=>openRoom());await page.waitForSelector('.hunt-ground');
   assert.equal(await page.locator('.hunt-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false,id+' overflow '+width);
   const heading=await page.locator('#hunt-heading').textContent();assert.ok(f.title.split(' · ').every(part=>heading.includes(part)));
@@ -65,6 +68,17 @@ try{for(const {width,mode} of configurations){
    await page.locator('[data-level-travel]').click();await page.locator('dialog[open] [data-travel-choice]').first().click();
    await page.waitForTimeout(100);assert.notEqual(s.game.hunt.field.floor,3,'Ivory teleporter changes floor after approach');
   }else await dialog.locator('[data-dismiss]').click();
+  if(id==='dragon-valley'){
+   await page.locator('[data-dragon-vortex]').first().click();const vortexDialog=page.locator('dialog[open]');await vortexDialog.waitFor();
+   assert.equal(await vortexDialog.locator('[data-vortex-summon]').count(),1);
+   assert.equal(await vortexDialog.evaluate(n=>n.scrollWidth>n.clientWidth+1),false,'vortex dialog overflow');
+   await vortexDialog.locator('[data-vortex-summon]').focus();assert.equal(await vortexDialog.locator('[data-vortex-summon]').evaluate(n=>n===document.activeElement),true);
+   if(mode==='auto')await page.screenshot({path:path.join(out,`dragon-vortex-${width}.png`)});
+   await page.keyboard.press('Escape');await vortexDialog.waitFor({state:'detached'});
+   s.game.inventory.materials.l2_17248=0;await page.locator('[data-dragon-vortex]').first().click();await page.locator('dialog[open]').waitFor();
+   assert.equal(await page.locator('dialog[open] [data-vortex-summon]').isDisabled(),true,'summoning requires a bone');
+   await page.keyboard.press('Escape');
+  }
   if(f.ship){
    assert.ok(await page.locator('[data-ship-candle]').count());
    await page.locator('[data-ship-candle]').first().click();await page.waitForTimeout(100);

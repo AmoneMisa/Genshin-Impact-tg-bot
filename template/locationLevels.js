@@ -1,4 +1,5 @@
 // Local room grids are adaptations, not client geodata.
+import {withPaganRoutes} from './paganRoutes.js';
 import level0 from './location-levels/tower-of-insolence.js';
 import level1 from './location-levels/cruma-tower.js';
 import level2 from './location-levels/ivory-tower.js';
@@ -6,7 +7,6 @@ import level3 from './location-levels/garden-of-eva.js';
 import level4 from './location-levels/giants-cave.js';
 import level5 from './location-levels/monastery-of-silence.js';
 import level6 from './location-levels/imperial-tomb.js';
-import {withPaganRoutes} from './paganRoutes.js';
 import level7 from './location-levels/pagan-temple.js';
 import level8 from './location-levels/devils-isle.js';
 import {WORLD_EXTENSION_LEVELS} from './worldExtension.js';

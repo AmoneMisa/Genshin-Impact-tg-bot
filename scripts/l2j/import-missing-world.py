@@ -21,7 +21,7 @@ for p in sorted((D/'teleporters/town').glob('*.xml')):
 defs=[
  # id, title, source teleporter name, parent, environment, NPC selection, art notes
  ('angel-waterfall','Водопад Ангелов','Anghel Waterfall','aden','woodland',lambda r:20643<=int(r['id'])<=20645,'broad white cascade at the distant perimeter, pale limestone cliffs, dark blue pool, soft green grass and deciduous trees'),
- ('dragon-valley','Долина Драконов','Dragon Valley','giran','desert',lambda r:'Giran/DragonValley.xml' in r['file'],'dry ochre canyon, eroded reddish stone ribs, sparse yellow grass, huge ancient bones at outer edges'),
+ ('dragon-valley','Долина Драконов','Dragon Valley','giran','desert',lambda r:'Giran/DragonValley.xml' in r['file'] or 22818<=int(r['id'])<=22837 or 22858<=int(r['id'])<=22862,'dry ochre canyon, eroded reddish stone ribs, sparse yellow grass, huge ancient bones at outer edges'),
  ('antharas-lair','Логово Антараса',"Antharas's Lair",'giran','cavern',lambda r:22838<=int(r['id'])<=22857,'grey brown underground limestone, tall stalagmites at the edges, vast dark stone arches, subdued emerald reflected light'),
  ('forge-of-the-gods','Кузня Богов','Entrance to the Forge of the Gods','goddard','volcanic',lambda r:22634<=int(r['id'])<=22649,'black and dark red volcanic cavern, basalt shelves, orange lava confined beyond the playable perimeter'),
  ('enchanted-valley','Зачарованная долина','Enchanted Valley, Southern Region','hunters','woodland',lambda r:'Hunters/EnchantedValley.xml' in r['file'],'lush steep green valley, soft pink flowering trees, mossy standing stones, faint fairy light only at outer margins'),

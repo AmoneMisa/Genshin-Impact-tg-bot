@@ -1,3 +1,5 @@
+import {isVortexBoss,nearVortex} from '../functions/game/world/dragonVortex.js';
+import {vortexEncounterFor} from './dragonVortex.js';
 import { l2SkillAt } from '../functions/game/player/skillLevel.js';
 import Chat from '../db/models/Chat.js';
 import getAliveBoss from '../functions/game/boss/getBossStatus/getAliveBoss.js';
@@ -46,14 +48,19 @@ import bossPositions from '../template/worldBossMap.js';
 import {locationBossGate} from '../functions/game/world/zakenShip.js';
 
 export async function enterBossFromLocation(session,chatId,name,now=Date.now()){
- if(!locationBossGate(session,name,now))return {ok:false,reason:'boss_gate_required'};
+ const vortex=isVortexBoss(getEpicTemplate(name)?.world?.npcId);
+ if(vortex&&!nearVortex(session,session.game.world?.vortexEncounter?.vortex))return {ok:false,reason:'boss_gate_required'};
+ if(!vortex&&!locationBossGate(session,name,now))return {ok:false,reason:'boss_gate_required'};
  return enterBossFromAtlas(session,chatId,name,now);
 }
 
 /** Direct map entry uses the same encounter, party/pass/lock rules as the existing boss entry. */
 export async function enterBossFromAtlas(session,chatId,name,now=Date.now()){
  const blocked=quickTravelBlock(session,now);if(blocked)return {ok:false,reason:blocked};
- const template=getEpicTemplate(name),point=template&&bossPositions[template.world?.npcId];
+ const template=getEpicTemplate(name);
+ const vortex=isVortexBoss(template?.world?.npcId),encounter=vortex?await vortexEncounterFor(session,name,chatId,now):null;
+ if(vortex&&!encounter)return {ok:false,reason:'vortex_required'};
+ const point=encounter?.source||(template&&bossPositions[template.world?.npcId]);
  if(!template)return {ok:false,reason:'unknown_epic'};
  if(!point)return {ok:false,reason:'boss_location_unknown'};
  if(template.world?.raid&&point.instance)return {ok:false,reason:'instance_npc_required'};
@@ -63,6 +70,7 @@ export async function enterBossFromAtlas(session,chatId,name,now=Date.now()){
  if(template.epic.maxLevel&&level>template.epic.maxLevel)return {ok:false,reason:'epic_level_too_high'};
  const alive=await getAliveBoss(chatId);
  const joining=alive?.name===name&&!(await expireBossIfNeeded(alive,chatId));
+ if(vortex&&!joining)return {ok:false,reason:'vortex_required'};
  if(joining&&partyNeeded(name)){const group=partyState(await Chat.findOne({chatId:Number(chatId)}),session);if(!group||group.members.length<partyNeeded(name))return {ok:false,reason:'epic_party_required',partyMin:partyNeeded(name)};}
  const result=joining?{ok:true,action:'join',boss:await getBossState(session,chatId)}:await summonBossForMiniApp(session,chatId,name);
  if(!result.ok)return result;
@@ -411,6 +419,7 @@ export async function summonBossForMiniApp(session, chatId, epicName = null, {me
   if (epicName) {
     epicTemplate = getEpicTemplate(epicName);
     if (!epicTemplate) return { ok: false, reason: 'unknown_epic', boss: await getBossState(session, chatId) };
+    if(isVortexBoss(epicTemplate.world?.npcId))return {ok:false,reason:'vortex_required'};
     if(epicTemplate.world?.raid&&bossPositions[epicTemplate.world.npcId]?.instance)return {ok:false,reason:'instance_npc_required'};
     if (number(session?.game?.stats?.lvl, 1) < epicTemplate.epic.minLevel) {
       return { ok: false, reason: 'epic_level_too_low', requiredLevel: epicTemplate.epic.minLevel, boss: await getBossState(session, chatId) };

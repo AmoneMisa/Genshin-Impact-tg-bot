@@ -8,6 +8,7 @@ import {updateDeathPopup} from './death-popup.js';
 import {l2EffectIcon} from './art/l2-effects-art.js';
 
 const REASONS = {
+  vortex_required:'Сначала призовите босса через Dragon Vortex в Долине Драконов.',
   already_summoned: 'Босс уже призван.',
   no_summon_item: 'Нужна Печать клана: её редко дают ежедневные поручения Академии, а ещё она продаётся в магазине клана.',
   petrified: 'Проклятие рейда: ты обращён в камень и не получишь награду. Вернись, когда оно спадёт.',

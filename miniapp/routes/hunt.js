@@ -1,3 +1,5 @@
+import {isVortexBoss} from '../../functions/game/world/dragonVortex.js';
+import {getEpicTemplate} from '../../functions/game/boss/epicBosses.js';
 import { sendJson, httpError, guarded } from '../http/response.js';
 import { readJsonBody, withLock } from '../http/request.js';
 import { authorize, sendResult, assertGoldUnlocked } from '../http/auth.js';
@@ -62,6 +64,10 @@ async function bossScope(context, worldName = null) {
     if (EPIC_RULES[String(worldName)]?.instance) {
       const partyId = context.session?.game?.party?.id;
       scope = partyId ? instanceScopeId(String(worldName), partyId) : worldScopeId(1);
+    }
+    if(isVortexBoss(getEpicTemplate(String(worldName))?.world?.npcId)){
+      const entry=context.session?.game?.world?.vortexEncounter;
+      if(entry?.name===String(worldName))scope=entry.scope;
     }
     return { scope, clan: null, world: String(worldName) };
   }

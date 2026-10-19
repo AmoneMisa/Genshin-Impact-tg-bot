@@ -1,3 +1,4 @@
+import {isVortexBoss} from '../world/dragonVortex.js';
 // Epic raid bosses (Lineage 2): a chat challenges one on purpose, and after a kill it stays away for a
 // respawn window - a fixed wait plus a random tail, like the real epic raids. The window is stored per
 // chat in chat.epicBosses[name] = {killedAt, respawnAt, kills}. A kill also rolls the boss's epic jewellery.
@@ -118,6 +119,7 @@ export function worldBossList(records = {}, fighting = {}, now = Date.now()) {
             title: template.title,
             element: template.element,
             raid: Boolean(world.raid),
+            summonRequired:isVortexBoss(world.npcId),
             instanceEntry:Boolean(world.raid&&position?.instance),
             level: world.level || template.epic.minLevel,
             minLevel: template.epic.minLevel,

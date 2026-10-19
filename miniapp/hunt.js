@@ -1,3 +1,5 @@
+import {getMaterialCount} from '../functions/game/player/materials.js';
+import {vortexMarkers} from '../functions/game/world/dragonVortex.js';
 import {seedDto} from '../functions/game/world/seedInstances.js';
 import {regionLinks} from '../functions/game/world/regionAccess.js';
 import {soulCrystalState} from '../functions/game/equipment/soulCrystals.js';
@@ -9,7 +11,7 @@ import { advanceHunt, ensureHunt, mobDto, enterHuntField, moveHuntField, selectH
 import { huntDropPreview, LOOT_KINDS } from '../functions/game/hunt/huntRewards.js';
 import { getZone, getMobDef } from '../functions/game/hunt/huntMobs.js';
 import { roomLayout, roomById, adjacent, groundHeight } from '../functions/game/hunt/huntRooms.js';
-import {levelTransitions,locationLevel} from '../functions/game/hunt/locationLevels.js';
+import {locationRaids,levelTransitions,locationLevel} from '../functions/game/hunt/locationLevels.js';
 import {shipDto} from '../functions/game/world/zakenShip.js';
 import {fieldPvpStatus,fieldPvpSkillBlock} from '../functions/game/hunt/fieldPvpState.js';
 import {memberName} from './social.js';
@@ -128,7 +130,7 @@ function fieldDto(hunt, now, session) {
     const nextSpawnMs = pending.length ? Math.max(0, Math.min(...pending.map(entry => entry.at)) - now) : 0;
     return {
     x: field.x, y: field.y, runSpeed:getSpeed(session), walls:field.walls||[], path: field.path || [], moveAt: field.moveAt, floor: field.floor || 1, floors:zone?.floors||(zone?.id==='tower-of-insolence'?14:1), target: field.target,
-        autoAttack:Boolean(field.autoAttack),attack:weaponSpatial(session,now),pendingRoom:field.pendingRoom||null,ship:shipDto(session,now),seed:seedDto(session,now),links:regionLinks(hunt.zone,field),
+        autoAttack:Boolean(field.autoAttack),attack:weaponSpatial(session,now),pendingRoom:field.pendingRoom||null,ship:shipDto(session,now),seed:seedDto(session,now),vortices:vortexMarkers(session),vortexBoneCount:getMaterialCount(session,'l2_17248'),raids:locationRaids(hunt.zone,field),links:regionLinks(hunt.zone,field),
         lastStrike:field.lastStrike&&now-field.lastStrike.at<900?field.lastStrike:null,
         action:field.action?{...field.action,name:session.game.gameClass.skills[field.action.index]?.name,
             spatial:skillSpatial(session,session.game.gameClass.skills[field.action.index],now)}:null,
