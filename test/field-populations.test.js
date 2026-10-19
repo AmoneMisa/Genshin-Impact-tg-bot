@@ -48,7 +48,7 @@ for(const [id,data] of Object.entries(FIELD_POPULATIONS))test(`${id}: original s
  const fresh=restored.game.hunt.field.mobs.at(-1);assert.equal(fresh.mobId,current.mobId);assert.equal(fresh.sourceRespawnMs,current.sourceRespawnMs);
  const dto=await getHuntState(restored,NOW+60001);assert.ok(visibleFieldMobs(dto.field).length<=24);
  for(const compact of [false,true])assert.ok(fs.statSync('webapp'+roomSceneUrl(floor.environment,{compact,sceneKey:dto.field.sceneKey})).size<(compact?180000:800000));
- const sourceRoot=fs.readdirSync('.tmp/world-source/h5-data',{withFileTypes:true}).find(d=>d.isDirectory());
+ const sourceRoot=fs.existsSync('.tmp/world-source/h5-data')?fs.readdirSync('.tmp/world-source/h5-data',{withFileTypes:true}).find(d=>d.isDirectory()):null;
  if(sourceRoot){
   const base='.tmp/world-source/h5-data/'+sourceRoot.name+'/L2J_Mobius_CT_2.6_HighFive/dist/game/data/';
   for(const [path,hash] of Object.entries(data.source.files))if(fs.existsSync(base+path))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(base+path)).digest('hex'),hash);
