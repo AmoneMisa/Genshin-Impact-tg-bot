@@ -2,8 +2,9 @@ import {recordDeath} from '../player/deathPenalties.js';
 import {playerName} from '../player/playerName.js';
 import {tickL2Effects,l2HasControl,l2OnDamageReceived,l2OnDamageDealt,l2PreventDeath,l2TransferDamage,l2RawStat} from '../player/l2Effects.js';
 // Live per-skill PvP in hunting locations. All participants must come from one freshly loaded Chat.
-import {advanceHunt} from './huntFight.js';
-import {clearLine} from './huntSpatial.js';
+import {advanceHunt,stopHuntAction} from './huntFight.js';
+import {clearLine,skillSpatial,needsTarget,spatialDistance} from './huntSpatial.js';
+import {peerPosition,neighborhood,battleWalls,battleField} from './huntNeighborhood.js';
 import {HUNT} from './huntConfig.js';
 import {giveGloryCoins, PVP_GLORY_COINS} from '../clans/clanHall.js';
 import {ensureFieldPvp, fieldIsPresent, fieldPvpStatus, fieldPvpEffect, fieldPvpSkillBlock, fieldPvpLog, PVP_FLAG_MS} from './fieldPvpState.js';
@@ -35,9 +36,10 @@ const name = playerName;
 export function fieldPeers(chat, session, now = Date.now()) {
     if (!fieldIsPresent(session,now)) return [];
     return members(chat).filter(s => id(s) !== id(session) && !s.isHided && !s.userChatData?.user?.is_bot && (fieldIsPresent(s,now)||(s.game?.world&&s.game.gameClass?.stats?.hp<=0&&s.game.hunt?.field)) && s.game.hunt.zone === session.game.hunt.zone
-        && (s.game.hunt.field.room || null) === (session.game.hunt.field.room || null)
-        && (s.game.hunt.field.floor || 1) === (session.game.hunt.field.floor || 1)
-        && (s.game.world?.instanceId || null) === (session.game.world?.instanceId || null));
+        && peerPosition(session,s)).sort((a,b)=>{
+            const f=session.game.hunt.field,p=peerPosition(session,a),q=peerPosition(session,b);
+            return Math.hypot(p.x-f.x,p.y-f.y)-Math.hypot(q.x-f.x,q.y-f.y);
+        }).slice(0,48);
 }
 
 function proxyFor(defender, now) {
@@ -87,7 +89,7 @@ export function finishL2PvpDeath(chat,attacker,defender,now){
         const state = ensureFieldPvp(defender);
         state.flagUntil=0;state.effects={};state.deathAt=now;
         defender.game.respawnTime=now+HUNT.respawnMs;recordDeath(defender,{now,kind:"pvp"});
-        if(defender.game.world&&defender.game.hunt.field){const f=defender.game.hunt.field;f.path=[];delete f.pendingRoom;for(const mob of f.mobs||[])mob.aggro=false;}
+        if(defender.game.world&&defender.game.hunt.field){stopHuntAction(defender.game.hunt.field,now);for(const mob of battleField(defender.game.hunt).mobs)mob.aggro=false;}
         else {defender.game.hunt.field=null;defender.game.hunt.mob=null;}
         fieldPvpLog(defender,`${attacker?name(attacker):'Игрок'} убил тебя${pk?' · PK':''}.`,now);
     return pk;
@@ -124,17 +126,23 @@ export function useFieldPvpSkill(chat, attacker, targetId, skillIndex, {now=Date
     advanceFieldPvp(chat,now);
     advanceHunt(attacker,now,random);advanceHunt(defender,now,random);
     const fail=reason=>({ok:false,reason,changed:true});
-    if(!fieldIsPresent(attacker,now) || !fieldIsPresent(defender,now) || attacker.game.hunt.zone !== defender.game.hunt.zone || attacker.game.hunt.field.room !== defender.game.hunt.field.room || (attacker.game.hunt.field.floor||1)!==(defender.game.hunt.field.floor||1) || (attacker.game.world?.instanceId||null)!==(defender.game.world?.instanceId||null)) return fail('pvp_not_here');
+    const position=peerPosition(attacker,defender);
+    if(!fieldIsPresent(attacker,now) || !fieldIsPresent(defender,now) || !position) return fail('pvp_not_here');
     const skill=attacker.game.gameClass.skills?.[skillIndex];
     if(!Number.isInteger(skillIndex) || !skill)return fail('invalid_skill');
     const block=fieldPvpSkillBlock(attacker,skill,now);if(block)return fail(block);
-    const usable=isPlayerCanUseSkill(attacker,skill);
+    const usable=isPlayerCanUseSkill(attacker,skill,now);
     if(usable!==0)return fail({1:'not_enough_resource',2:'cooldown',3:'skill_locked',4:'no_ammo'}[usable]);
     const hostile=Boolean(skill.isDealDamage || skill.debuff || skill.debuffs?.length);
     const magic=skillCombatType(skill,attacker.game.gameClass)==='magic';
-    const distance=Math.hypot(attacker.game.hunt.field.x-defender.game.hunt.field.x,attacker.game.hunt.field.y-defender.game.hunt.field.y);
-    if(hostile && distance > (magic? .65 : .35))return fail('pvp_out_of_range');
-    if(!clearLine(attacker.game.hunt.field,defender.game.hunt.field,attacker.game.hunt.field.walls))return fail('pvp_line_of_sight');
+    const field=attacker.game.hunt.field,surface=neighborhood(attacker.game.hunt);
+    if(surface&&hostile){
+        const geometry=skillSpatial(attacker,skill,now);if(!geometry)return fail('combat_data_missing');
+        if(spatialDistance(field,position)>(needsTarget(geometry)?geometry.range:geometry.radius)+1)return fail('pvp_out_of_range');
+    }else if(hostile&&Math.hypot(field.x-position.x,field.y-position.y)>(magic?.65:.35))return fail('pvp_out_of_range');
+    const offset={x:position.x-defender.game.hunt.field.x,y:position.y-defender.game.hunt.field.y};
+    const walls=surface?[...battleWalls(attacker.game.hunt),...(defender.game.hunt.field.walls||[]).map(w=>({...w,x:w.x+offset.x,y:w.y+offset.y}))]:field.walls;
+    if(!clearLine(field,position,walls))return fail('pvp_line_of_sight');
     const victimStatus=fieldPvpStatus(defender,now).status;
     if(hostile && victimStatus==='neutral' && !force)return fail('pvp_force_required');
 
@@ -151,7 +159,7 @@ export function useFieldPvpSkill(chat, attacker, targetId, skillIndex, {now=Date
     let result;
     try {result=missed?{type:'damage',dmg:0,dealt:0,missed:true,evaded}:castSkill(attacker,proxy,skill,{now});}
     finally {clearShots(attacker);}
-    setSkillCooldown(skill,attacker);
+    setSkillCooldown(skill,attacker,now);
     if(fieldPvpEffect(attacker,'slow',now)>0)skill.cooldownReceive+=skill.cooldown*1000*fieldPvpEffect(attacker,'slow',now);
     let hit={cpLost:0,hpLost:0,killed:false,pk:false};
     if(hostile){

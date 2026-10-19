@@ -64,6 +64,15 @@ export function removeBattleActor(hunt,id){
  return false;
 }
 
+/** A peer may share the current room, or one streamed surface cell in the same authoritative realm. */
+export function peerPosition(viewer,peer){
+ const a=viewer?.game?.hunt,b=peer?.game?.hunt;if(!a?.field||!b?.field||a.zone!==b.zone)return null;
+ if((a.field.floor||1)!==(b.field.floor||1)||(viewer.game.world?.instanceId||null)!==(peer.game.world?.instanceId||null))return null;
+ if(a.field.room===b.field.room)return {x:b.field.x,y:b.field.y};
+ const area=neighborhood(a),room=area?.rooms.find(r=>r.id===b.field.room);if(!room)return null;
+ return {x:b.field.x+room.col-area.current.col,y:b.field.y+room.row-area.current.row};
+}
+
 /** First cardinal boundary on a straight segment, including a diagonal neighbour. */
 export function firstBoundary(from,to){
  const candidates=[];

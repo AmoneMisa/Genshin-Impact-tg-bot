@@ -12,6 +12,7 @@ import {initialPopulationSlots} from '../../functions/game/hunt/sourcePopulation
 import {createShipVoyage} from '../../functions/game/world/zakenShip.js';
 import {ensureWorld,worldAction,bindWorldInstances} from '../../functions/game/world/world.js';
 import {getHuntState} from '../../miniapp/hunt.js';
+import {fieldPeers,useFieldPvpSkill} from '../../functions/game/hunt/fieldPvp.js';
 import changeClass from '../../functions/game/player/changePlayerGameClass.js';
 import updateStats from '../../functions/game/player/updatePlayerStats.js';
 const {chromium}=createRequire(process.env.PLAYWRIGHT_PACKAGE||'C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json')('playwright');
@@ -24,22 +25,23 @@ try{for(const {width,mode} of configurations){
  page.on('pageerror',e=>errors.push(e.message));
  if(mode==='canvas')await page.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return /webgl/i.test(type)?null:original.call(this,type,...args);};});
  let s,chat,now;
+ const state=()=>getHuntState(s,now,fieldPeers(chat,s,now));
  const quiet=()=>{if(!s.game.hunt?.field)return;ensureHunt(s,now,()=>.5);const f=s.game.hunt.field;[...f.mobs,...Object.values(f.rooms||{}).flatMap(r=>r.mobs||[])].forEach(m=>{m.aggroRange=0;m.aggro=false;m.nextAttackAt=now+1e9;});};
  await page.route('**/*',async route=>{
   const u=new URL(route.request().url()).pathname;
   if(u==='/fixture')return route.fulfill({contentType:'text/html',body:`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${styles}<body><script type="module">import {openHuntGame} from '/hunt.js';window.openRoom=()=>openHuntGame({haptic:()=>{},renderState:()=>{},statusElement:document.createElement('span'),api:async(url,options)=>{const r=await fetch(url,options);const p=await r.json();if(!r.ok)throw Object.assign(new Error(p.reason),{payload:p});return p;}});</script></body>`});
   if(u==='/vendor/phaser/phaser.esm.min.js')return route.fulfill(mode==='unavailable'?{status:404}:{contentType:'text/javascript',body:fs.readFileSync('node_modules/phaser/dist/phaser.esm.min.js')});
-  if(u==='/api/hunt')return route.fulfill({json:await getHuntState(s,now)});
+  if(u==='/api/hunt')return route.fulfill({json:await state()});
   if(u==='/api/hunt/target'||u==='/api/hunt/skill'){
-   const body=route.request().postDataJSON(),result=u==='/api/hunt/target'?selectHuntTarget(s,body.targetId,now):useHuntSkill(s,body.skillIndex,{now,random:()=>.5});
+   const body=route.request().postDataJSON(),result=u==='/api/hunt/target'?selectHuntTarget(s,body.targetId,now):body.targetUserId?useFieldPvpSkill(chat,s,body.targetUserId,body.skillIndex,{now,force:body.force,random:()=>.5}):useHuntSkill(s,body.skillIndex,{now,random:()=>.5});
    assert.ok(result.ok);
    if(u==='/api/hunt/skill'){now+=4500;quiet();advanceHunt(s,now,()=>.5);quiet();}
-   return route.fulfill({json:{...result,hunt:await getHuntState(s,now)}});
+   return route.fulfill({json:{...result,hunt:await state()}});
   }
   if(u==='/api/hunt/move'){
    const body=route.request().postDataJSON(),result=moveHuntField(s,body.direction||body.point,now);
    assert.ok(result.ok);now+=30000;quiet();advanceHunt(s,now,()=>.5);quiet();bindWorldInstances(chat,now);
-   return route.fulfill({json:{...result,hunt:await getHuntState(s,now)}});
+   return route.fulfill({json:{...result,hunt:await state()}});
   }
   if(u==='/api/world/action'){
    const body=route.request().postDataJSON();
@@ -139,6 +141,17 @@ try{for(const {width,mode} of configurations){
    assert.ok(!field.rooms[oldRoom].mobs.some(m=>m.instanceId===target.instanceId));
    assert.ok(field.respawns.some(r=>r.room===target.sourceRoom&&r.sourceSlot===target.sourceSlot));
    assert.ok(await page.locator('[data-target]').count()<=(width<500?8:16),'nearby actors share the same DOM limit');
+   const peer=JSON.parse(JSON.stringify(s));peer.userId=2;peer.userChatData.user.id=2;peer.ownerDocument=()=>chat;
+   const pf=peer.game.hunt.field;pf.rooms[pf.room]={mobs:pf.mobs};pf.mobs=pf.rooms[oldRoom].mobs;delete pf.rooms[oldRoom];
+   Object.assign(pf,{room:oldRoom,x:east?.96:.04,y:.6,path:[],seenAt:now,walls:layout.rooms.find(r=>r.id===oldRoom).walls});
+   peer.game.worldPvp={flagUntil:now+120000};chat.members.push(peer);s.game.gameClass.skills[0].cooldownReceive=0;
+   const cp=peer.game.gameClass.stats.cp,peerX=pf.x;
+   await page.waitForTimeout(1500);await page.locator('.hunt-player-marker[data-pvp-target="2"]').click();
+   assert.equal(await page.locator('.hunt-player-marker[data-pvp-target="2"]').getAttribute('aria-pressed'),'true','select neighbouring player');
+   await page.locator('[data-skill="0"]').first().click();await page.waitForTimeout(250);
+   assert.ok(peer.game.gameClass.stats.cp<cp,'real PvP damages neighbouring player CP');assert.equal(pf.x,peerX,'projection preserves canonical coordinates');
+   assert.ok(await page.locator('.hunt-player-marker[data-pvp-target]').count()<=(width<500?8:16),'bounded player markers');
+   if(mode==='auto')await page.screenshot({path:path.join(out,`neighbour-pvp-${width}.png`)});
   }
   if((FIELD_POPULATIONS[id]||id==='ivory-tower'&&f.number===3||f.ship)&&mode==='auto')await page.screenshot({path:path.join(out,`${id}-${stage??f.number}-${width}.png`)});
   await page.locator('.hunt-overlay [data-dismiss]').first().click();await page.waitForSelector('.hunt-overlay',{state:'detached'});

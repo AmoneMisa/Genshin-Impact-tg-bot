@@ -24,7 +24,7 @@ import {flaskHtml} from './inventory.js';
 import {createCombatSocial} from './combat-social.js';
 import {l2NavigationIcon} from './art/l2-navigation-art.js';
 import {ensureFeatureStyles} from './feature-styles.js';
-import {visibleFieldMobs} from './hunt-visible-actors.js';
+import {visibleFieldMobs,visibleFieldPlayers} from './hunt-visible-actors.js';
 
 // Hunting fields (Lineage II style): pick a zone, fight one mob at a time in real time with skills,
 // potions and shots. Blue and red champions are tougher and pay much more.
@@ -442,7 +442,8 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     const field=state.field;if(!field)return '';
     const room=field.room||{};
     const visibleMobs=visibleFieldMobs(field,viewport.width<500?8:16);
-    const actors=[...(state.players||[]).map(p=>({...p,id:String(p.userId),labelHeight:p.clanName?28:14})),{...state.player,x:field.x,y:field.y,id:'self',labelHeight:state.player.clanName?28:14},...visibleMobs.map(m=>({...m,id:m.instanceId,labelHeight:38}))];
+    const visiblePlayers=visibleFieldPlayers(state.players||[],field,viewport.width<500?8:16,playerTarget);
+    const actors=[...visiblePlayers.map(p=>({...p,id:String(p.userId),labelHeight:p.clanName?28:14})),{...state.player,x:field.x,y:field.y,id:'self',labelHeight:state.player.clanName?28:14},...visibleMobs.map(m=>({...m,id:m.instanceId,labelHeight:38}))];
     const selected=playerTarget?String(playerTarget):field.target;
     actors.sort((a,b)=>Number(b.id===selected)-Number(a.id===selected));
     labelOffsets=isoLabelOffsets(actors,viewport);
@@ -454,7 +455,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       <div class="hunt-world" style="transform:translate(${camera.x}px,${camera.y}px) scale(${camera.zoom})">
       ${isoTerrain(field,viewport)}${areaHtml()}${strikeHtml()}
       ${levelMarkers(field)}
-      ${(state.players||[]).map(p=>playerMarker(p)).join('')}
+      ${visiblePlayers.map(p=>playerMarker(p)).join('')}
       ${visibleMobs.map(m=>`<button type="button" class="hunt-actor hunt-iso-actor ui-map-marker ${!playerTarget&&m.instanceId===field.target?'selected ':''}${m.aggro?'aggro':''}" data-target="${escapeHtml(m.instanceId)}" style="${worldStyle(m,m.instanceId)}" aria-label="${escapeHtml(m.name)} · ${Math.round(m.hpPercent)}% HP" aria-pressed="${!playerTarget&&m.instanceId===field.target}"><span class="hunt-actor-label"><span class="hunt-mob-name ui-npc-name" data-disposition="${mobDisposition(m)}">${escapeHtml(m.name)}</span><span class="hunt-mob-percent">${Math.round(m.hpPercent)}%</span></span><span class="hunt-iso-avatar">${huntMobUrl(m)?`<img src="${huntMobUrl(m)}" alt="" decoding="async">`:icon('ghost')}</span></button>`).join('')}
       ${playerMarker({...state.player,x:field.x,y:field.y},true)}
       ${field.action?.phase==='cast'?`<span class="hunt-cast" style="${worldStyle(field)}" role="progressbar" aria-label="${escapeHtml(field.action.name||'Применение умения')}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(100*(1-Math.max(0,field.action.until-state.now)/Math.max(1,field.action.spatial?.windup||1)))}"><span>${escapeHtml(field.action.name||'Применение умения')}</span><i style="--cast-time:${Math.max(0,field.action.until-state.now)}ms"></i></span>`:''}

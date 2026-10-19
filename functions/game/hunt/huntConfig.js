@@ -18,6 +18,10 @@ export const HUNT = Object.freeze({
     attackMs: 4000,
     // Swings applied in one go after a long pause (the hero is not left to die offline).
     maxCatchUp: 4,
+    // A field client silent for longer than pollGapMs is away. Monsters then lose swings older than
+    // catchUpWindowMs, and none of the remaining ones can kill the hero.
+    pollGapMs: 3000,
+    catchUpWindowMs: 2000,
     respawnMs: 60 * 1000,
     // A killed monster of a field or a room comes back after this long.
     mobRespawnMs: 30 * 1000,

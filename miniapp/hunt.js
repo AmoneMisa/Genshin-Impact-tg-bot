@@ -39,7 +39,7 @@ import {huntDropGroups} from '../functions/game/hunt/dropGroups.js';
 import {getCombatParty} from './party.js';
 import {populationCapacity,hellboundStage} from '../functions/game/hunt/sourcePopulation.js';
 import {fieldStream} from '../functions/game/world/continuousField.js';
-import {battleField} from '../functions/game/hunt/huntNeighborhood.js';
+import {battleField,battleActor,peerPosition} from '../functions/game/hunt/huntNeighborhood.js';
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
 const percent = (current, max) => (max > 0 ? Math.max(0, Math.min(100, current / max * 100)) : 0);
@@ -88,7 +88,7 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
         zone: hunt.zone,
         mob: hunt.mob ? {...mobDto(hunt.mob, now), drops: huntDropPreview(level, getMobDef(getZone(hunt.mob.zone), hunt.mob.mobId), hunt.mob.champion,session)} : null,
         field: hunt.field ? fieldDto(hunt, now, session) : null,
-        players: peers.map(peer => fieldPlayerDto(peer,now)),
+        players: peers.map(peer => fieldPlayerDto(peer,now,session)),
         party: getCombatParty(session),
         pvpLog: (game.worldPvp?.log || []).map(row=>({...row,agoMs:Math.max(0,now-row.at)})),
         kills: number(hunt.kills),
@@ -165,14 +165,15 @@ function fieldDto(hunt, now, session) {
     };
 }
 
-export function fieldPlayerDto(session,now=Date.now()) {
+export function fieldPlayerDto(session,now=Date.now(),viewer=null) {
     const cp=getCurrentCp(session),hp=getCurrentHp(session),mp=getCurrentMp(session);
     const maxCp=getMaxCp(session),maxHp=getMaxHp(session),maxMp=getMaxMp(session);
     const fx=session.game.worldPvp?.effects || {};
     const effects=playerEffectsDto(session.game.effects,0,now);
     for(const e of fx.debuffs || []) if(e.until>now) effects.push({id:e.kind,kind:'debuff',label:e.kind,count:Math.ceil((e.until-now)/1000)});
     if(fx.stunUntil>now)effects.push({id:'stun',kind:'debuff',label:'Оглушён',count:Math.ceil((fx.stunUntil-now)/1000)});
-    return {userId:session.userId,name:memberName(session),clanName:session.game.clanName||null,level:session.game.stats.lvl,className:session.game.gameClass.stats.name,gender:session.gender || 'male',cp,hp,mp,maxCp,maxHp,maxMp,effects,pvp:fieldPvpStatus(session,now),x:session.game.hunt?.field?.x,y:session.game.hunt?.field?.y};
+    const point=viewer?peerPosition(viewer,session):session.game.hunt?.field;
+    return {userId:session.userId,name:memberName(session),clanName:session.game.clanName||null,level:session.game.stats.lvl,className:session.game.gameClass.stats.name,gender:session.gender || 'male',cp,hp,mp,maxCp,maxHp,maxMp,effects,pvp:fieldPvpStatus(session,now),x:point?.x,y:point?.y};
 }
 
 export function startHuntForMiniApp(session, zoneId, now = Date.now()) {
@@ -185,7 +186,7 @@ export const targetHuntForMiniApp = (session, targetId) => selectHuntTarget(sess
 export const useHuntSkillForMiniApp = (session, skillIndex, now = Date.now()) => useHuntSkill(session, skillIndex, {now});
 export const setHotbarForMiniApp = (session, slots) => setHotbar(session, slots);
 export function getHuntDropForMiniApp(session,targetId){
-    const mob=ensureHunt(session).field?.mobs?.find(m=>m.instanceId===targetId);
+    const mob=battleActor(ensureHunt(session),targetId);
     if(!mob)return {ok:false,reason:'no_mob'};
     const definition=getMobDef(getZone(mob.zone),mob.mobId);
     if(!definition)return {ok:false,reason:'combat_data_missing'};
