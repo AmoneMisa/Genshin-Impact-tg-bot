@@ -156,6 +156,18 @@ try{for(const {width,mode} of configurations){
    assert.ok(peer.game.gameClass.stats.cp<cp,'real PvP damages neighbouring player CP');assert.equal(pf.x,peerX,'projection preserves canonical coordinates');
    assert.ok(await page.locator('.hunt-player-marker[data-pvp-target]').count()<=(width<500?8:16),'bounded player markers');
    if(mode==='auto')await page.screenshot({path:path.join(out,`neighbour-pvp-${width}.png`)});
+   chat.members.pop();
+   const start=layout.rooms.find(r=>r.id===field.room),dy=start.row<layout.rows-1?1:-1,dx=start.col+dy>=0&&start.col+dy<layout.cols?dy:-dy;
+   Object.assign(field,{x:dx>0?.84:.16,y:dy>0?.84:.16,path:[]});quiet();await page.waitForTimeout(1500);
+   const diagonal=await page.evaluate(async({dx,dy})=>{
+    const {isoPoint}=await import('/hunt-isometric.js'),ground=document.querySelector('.hunt-ground'),world=document.querySelector('.hunt-world'),box=ground.getBoundingClientRect(),m=new DOMMatrix(getComputedStyle(world).transform);
+    const p=isoPoint({x:dx>0?1.08:-.08,y:dy>0?1.08:-.08},{width:box.width,height:box.height});return {x:box.left+p.x+m.e,y:box.top+p.y+m.f};
+   },{dx,dy});
+   await page.mouse.click(diagonal.x,diagonal.y);await page.waitForTimeout(300);
+   assert.equal(field.room,layout.rooms.find(r=>r.col===start.col+dx&&r.row===start.row+dy).id,'one diagonal click crosses two cardinal edges');
+   assert.ok(Math.hypot(field.x-(dx>0?.08:.92),field.y-(dy>0?.08:.92))<.01,'route reaches the selected screen pixel');
+   assert.equal(await page.locator('.hunt-overlay').count(),1);assert.ok(await page.locator('[data-terrain-cell]').count()<=9);
+   if(mode==='auto')await page.screenshot({path:path.join(out,`diagonal-walk-${width}.png`)});
   }
   if((FIELD_POPULATIONS[id]||id==='ivory-tower'&&f.number===3||f.ship)&&mode==='auto')await page.screenshot({path:path.join(out,`${id}-${stage??f.number}-${width}.png`)});
   await page.locator('.hunt-overlay [data-dismiss]').first().click();await page.waitForSelector('.hunt-overlay',{state:'detached'});

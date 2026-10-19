@@ -56,10 +56,10 @@ test('crossing uses one walking budget, survives save/load and keeps existing ac
 });
 test('invalid crossings cannot switch zone/floor, bypass walls or cross dungeon walls; selecting a target cancels walking',()=>{
  const s=hero(),f=s.game.hunt.field;
- for(const point of [{x:100,y:.6,zone:'hellbound',floor:11},{x:-.2,y:.6},{x:1.2,y:1.2}])assert.equal(moveHuntField(s,point,NOW).ok,false);
+ for(const point of [{x:100,y:.6,zone:'hellbound',floor:11},{x:-.2,y:.6},{x:2.2,y:1.2}])assert.equal(moveHuntField(s,point,NOW).ok,false);
  assert.equal(s.game.hunt.zone,'cruma-marshlands');assert.equal(f.floor,1);assert.equal(f.room,'r0c0');
  const layout=roomLayout(getZone('cruma-marshlands')),next=layout.rooms.find(r=>r.id==='r0c1'),walls=next.walls;
- try{next.walls=[{x:0,y:0,w:.1,h:1}];assert.equal(moveHuntField(s,{x:1.25,y:.6},NOW).reason,'path_blocked');}finally{next.walls=walls;}
+ try{next.walls=[{x:0,y:0,w:1,h:1}];assert.equal(moveHuntField(s,{x:1.25,y:.6},NOW).reason,'path_blocked');}finally{next.walls=walls;}
  assert.ok(moveHuntField(s,{x:1.25,y:.6},NOW).ok);assert.ok(f.crossing);
  assert.ok(selectHuntTarget(s,f.mobs[0].instanceId,NOW).ok);assert.equal(f.crossing,undefined);assert.equal(f.path.length,0);
  const underground=hero('catacomb-branded');assert.equal(moveHuntField(underground,{x:1.25,y:.6},NOW).ok,false);

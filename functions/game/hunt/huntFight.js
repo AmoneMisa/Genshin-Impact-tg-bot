@@ -34,7 +34,8 @@ import {fieldPvpSkillBlock,reduceHuntKarma,fieldPvpEffect} from './fieldPvpState
 import {tickL2Effects,l2ActionBlock,l2HasControl,l2RawStat,l2MoveMultiplier} from '../player/l2Effects.js';
 import {roomLayout, roomById, adjacent, slotPositions} from './huntRooms.js';
 import {findPath, advancePath,travelPath,ROOM_SIZE,nearestOpenPoint,insideObstacle} from '../world/navigation.js';
-import {continuousField,planFieldCrossing} from '../world/continuousField.js';
+import {continuousField} from '../world/continuousField.js';
+import {planSurfaceRoute,surfaceRouteStep,surfacePathClear} from '../world/surfaceNavigation.js';
 import {syncResidentRooms,neighborhood,battleField,battleWalls,battleActor,removeBattleActor,firstBoundary} from './huntNeighborhood.js';
 import getSpeed from '../player/getters/getSpeed.js';
 import {BASIC_ATTACK, hostileSkill, skillSpatial, weaponSpatial, needsTarget, inSkillReach, spatialTargets, spatialDistance,clearLine} from './huntSpatial.js';
@@ -166,17 +167,23 @@ export function advanceHunt(session, now = Date.now(), random = Math.random) {
     if (l2ActionBlock(session,{move:true},now)) {field.path=[];delete field.pendingRoom;delete field.crossing;field.moveAt=now;}
     else if(field.crossing){
         const speed=getSpeed(session)*l2MoveMultiplier(session,now);
-        const remaining=travelPath(field,Math.max(0,(now-(field.moveAt??now))/1000)*Math.max(0,speed)/ROOM_SIZE);field.moveAt=now;
-        if(!field.path.length){
+        let remaining=Math.max(0,(now-(field.moveAt??now))/1000)*Math.max(0,speed)/ROOM_SIZE;field.moveAt=now;
+        for(let leg=0;leg<64&&field.crossing;leg++){
             const crossing=field.crossing;
+            if(crossing.route&&!surfacePathClear(field,field.path,field.walls)){stopHuntAction(field,now);break;}
+            remaining=travelPath(field,remaining);if(field.path.length)break;
             const intent=crossing.combat?{action:field.action,autoAttack:field.autoAttack,target:field.target}:null;
             const atEdge=Math.hypot(field.x-crossing.exit.x,field.y-crossing.exit.y)<1e-7;
+            const to=crossing.route&&roomById(getZone(hunt.zone),crossing.room,field.floor||1);
+            if(crossing.route&&(!to||!surfacePathClear(crossing.entry,crossing.route[0].path,to.walls))){stopHuntAction(field,now);break;}
             const entered=atEdge?enterRoom(session,hunt,crossing.room,now,random,{entry:crossing.entry,silent:true}):{ok:false};
             if(entered.ok){
                 if(intent&&battleActor(hunt,intent.target)){field.action=intent.action;field.autoAttack=intent.autoAttack;field.target=intent.target;hunt.mob=battleActor(hunt,intent.target);}
-                field.path=findPath(field,crossing.destination,field.walls,{margin:0})||[];
-                travelPath(field,remaining);field.moveAt=now;
-            }else stopHuntAction(field,now);
+                const next=crossing.route?surfaceRouteStep(crossing.route):null;
+                field.path=next?next.path:findPath(field,crossing.destination,field.walls,{margin:0})||[];
+                if(next?.crossing)field.crossing=next.crossing;
+                else {travelPath(field,remaining);field.moveAt=now;break;}
+            }else {stopHuntAction(field,now);break;}
         }
     }else advancePath(field,now,getSpeed(session)*l2MoveMultiplier(session,now));
     if (field.pendingRoom && !field.path?.length) {
@@ -540,7 +547,7 @@ export function moveHuntField(session, direction, now = Date.now(), random = Mat
     const field=hunt.field,zone=getZone(hunt.zone),room=roomById(zone,field.room,field.floor||1);
     if(zone.instance?.kind==='rift'&&typeof direction==='string')return {ok:false,reason:'rift_jump_only'};
     let target=direction;
-    let crossing=null;
+    let crossing=null,plannedPath=null;
     if (typeof direction === 'string' && direction.startsWith('room:')) {
         const to=roomById(zone,direction.slice(5),field.floor||1);
         if(!adjacent(room,to))return {ok:false,reason:'room_not_adjacent'};
@@ -549,16 +556,15 @@ export function moveHuntField(session, direction, now = Date.now(), random = Mat
     } else if (typeof direction !== 'object' || !direction) return {ok:false,reason:'invalid_move'};
     else {
         const point={x:Number(direction.x),y:Number(direction.y)};
-        if(continuousField(zone,roomLayout(zone,field.floor||1))&&(point.x<0||point.x>1||point.y<0||point.y>1)){
-            crossing=planFieldCrossing(field,point,roomLayout(zone,field.floor||1),room);
-            if(!crossing)return {ok:false,reason:'room_not_adjacent'};
-            const to=roomById(zone,crossing.room,field.floor||1);
-            if(insideObstacle(crossing.entry,to.walls)||!findPath(crossing.entry,crossing.destination,to.walls,{margin:0}))return {ok:false,reason:'path_blocked'};
-            target=crossing.exit;
+        if(continuousField(zone,roomLayout(zone,field.floor||1))){
+            if(![point.x,point.y].every(Number.isFinite)||point.x< -1||point.x>=2||point.y< -1||point.y>=2)return {ok:false,reason:'room_not_adjacent'};
+            const plan=planSurfaceRoute(field,point,roomLayout(zone,field.floor||1),room);
+            if(!plan)return {ok:false,reason:'path_blocked'};
+            crossing=plan.crossing;plannedPath=plan.path;
         }
         delete field.pendingRoom;
     }
-    const path=findPath(field,{x:Number(target.x),y:Number(target.y)},room.walls||[],{margin:crossing?0:.02});
+    const path=plannedPath||findPath(field,{x:Number(target.x),y:Number(target.y)},room.walls||[],{margin:crossing?0:.02});
     if(!path){delete field.pendingRoom;return {ok:false,reason:'path_blocked'};}
     const pendingRoom=field.pendingRoom;
     stopHuntAction(field,now);
