@@ -31,6 +31,16 @@ FIELDS = [
  ('plains-of-glory', 'Равнины Славы', 'Aden/PlainsOfGlory.xml', 'woodland'),
  ('outlaw-forest', 'Лес Изгоев', 'Oren/OutlawForest.xml', 'woodland'),
  ('fields-of-massacre', 'Поля Резни', 'Aden/FieldsOfMassacre.xml', 'woodland'),
+ ('cemetery', 'Кладбище Адена', 'Aden/Cemetery.xml', 'woodland'),
+ ('valley-of-saints', 'Долина Святых', 'Rune/ValleyOfSaints.xml', 'woodland'),
+ ('blazing-swamp', 'Пылающее болото', 'Aden/BlazingSwamp.xml', 'volcanic'),
+ ('swamp-of-screams', 'Болото Криков', 'Rune/SwampOfScreams.xml', 'marsh'),
+ ('hot-springs', 'Горячие источники', 'Goddard/HotSprings.xml', 'springs'),
+ ('wall-of-argos', 'Стена Аргоса', 'Goddard/WallOfArgos.xml', 'desert'),
+ ('ketra-outpost', 'Застава орков Кетра', 'Goddard/KetraOrcOutpost.xml', 'woodland'),
+ ('varka-outpost', 'Лагерь силеносов Варка', 'Goddard/VarkaSlenosOutpost.xml', 'desert'),
+ ('sel-mahums', 'Лагерь Сел Махум', 'Oren/SelMahums.xml', 'woodland'),
+ ('field-of-whispers', 'Поле Шёпота', 'Innadril/FieldOfWhispers.xml', 'marsh'),
 ]
 
 def module(name):
