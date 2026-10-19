@@ -44,17 +44,17 @@ test('painted zones have reachable adapted sections and preserve dungeon network
  assert.equal(explorationSection('unknown','r0c0'),null);
  assert.equal(explorationSection('hot-springs','../../bad'),null);
 });
-test('a fork is explored by walking; revisits preserve monsters and fog, and reject a diagonal shortcut',async()=>{
+test('source field sections are explored by walking; revisits preserve monsters and fog, and reject a diagonal shortcut',async()=>{
  const s=fixture('bee-hive'),field=s.game.hunt.field;quiet(field);
  const original=field.mobs.map(m=>m.instanceId);field.mobs[0].currentHp-=1;
  const hp=field.mobs[0].currentHp;
  let dto=await getHuntState(s,NOW);
  assert.equal(dto.field.exits.length,2);assert.ok(dto.field.map.rooms.filter(r=>!r.visited).every(r=>r.name===''&&r.mobs===null));
  walk(s,'r0c1',NOW+1);dto=await getHuntState(s,NOW+20001);
- assert.match(dto.field.sceneKey,/:area-1$/);assert.equal(dto.field.exits.length,1);
+ assert.match(dto.field.sceneKey,/:floor-1$/);assert.equal(dto.field.exits.length,3);
  assert.equal(moveHuntField(s,'room:r1c0',NOW+20002).reason,'room_not_adjacent');
  walk(s,'r0c0',NOW+20003);assert.deepEqual(field.mobs.map(m=>m.instanceId),original);assert.equal(field.mobs[0].currentHp,hp);
- walk(s,'r1c0',NOW+40004);dto=await getHuntState(s,NOW+60004);assert.match(dto.field.sceneKey,/:area-2$/);
+ walk(s,'r1c0',NOW+40004);dto=await getHuntState(s,NOW+60004);assert.match(dto.field.sceneKey,/:floor-1$/);
  assert.equal(dto.field.map.rooms.filter(r=>r.visited).length,3);
  const saved=JSON.parse(JSON.stringify(s));ensureHunt(saved);assert.equal(saved.game.hunt.field.room,'r1c0');assert.equal(saved.game.hunt.field.visited.length,3);
 });
