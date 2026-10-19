@@ -410,6 +410,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     travelDialog?.close();travelDialog=dialog;
     dialog.innerHTML=dialogHeading(field.level.title)+`<p>Подойди к лестнице или хранителю портала. Их комнаты отмечены на карте.</p>`+(field.ship?`<p>Синих свечей: ${field.ship.blue}/4. Найди четыре синие свечи, чтобы обнаружить Закена.</p>`:'')+field.level.destinations.map((d,i)=>`<button type="button" class="ui-button" data-travel-choice="${i}" ${pending||d.room!==field.room.id?'disabled':''}>${escapeHtml(d.title)}${d.gold?' · '+formatNumber(d.gold)+' аден':''}${d.room!==field.room.id?' · в другом зале':d.near?'':' · подойти'}</button>`).join('')+(field.map?`<details><summary>Карта этажа</summary>${mapHtml(field)}</details>`:'');
     const actions=document.createElement('div');actions.className='ui-action-stack';
+    if(field.phase){const phase=document.createElement('p');phase.textContent=field.phase.locked?'Хеллбаунд ещё закрыт. Освобождение острова не началось.':`Этап освобождения: ${field.phase.stage}`;dialog.append(phase);}
     actions.innerHTML=(field.links||[]).map((l,i)=>`<button type="button" class="ui-button" data-link-choice="${i}" ${l.room!==field.room.id?'disabled':''}>${escapeHtml(l.title)}${l.near?'':' · подойти'}</button>`).join('');
     if(field.seed&&field.floor===1){
       const assemblyModes=field.seed.modes.filter(m=>m.commandChannel);
@@ -459,7 +460,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       ${field.path?.length?`<span class="hunt-destination" style="${worldStyle(field.path.at(-1))}" aria-hidden="true">＋</span>`:''}
       ${exits}
       </div>
-      ${field.mobs.length||field.level?.npcs?.length||field.ship?'':`<div class="hunt-field-cleared">Здесь нет монстров</div>`}
+      ${field.mobs.length||field.level?.npcs?.length||field.ship?'':`<div class="hunt-field-cleared">${field.phase?.locked?'Хеллбаунд ещё закрыт. Освобождение острова не началось.':'Здесь нет монстров'}</div>`}
       </div>
     </section>`;
   }

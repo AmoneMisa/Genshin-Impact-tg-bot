@@ -44,7 +44,7 @@ export const IDLE_MS = 2 * 60 * 1000;
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
 
-export function ensureHunt(session) {
+export function ensureHunt(session, now = Date.now()) {
     const game = session.game;
     if (!game.hunt || typeof game.hunt !== 'object') game.hunt = {zone: null, mob: null, kills: 0, log: []};
     if (!Array.isArray(game.hunt.log)) game.hunt.log = [];
@@ -64,12 +64,31 @@ export function ensureHunt(session) {
     if(field&&locationLevels(game.hunt.zone)&&field.levelVersion!==1){
         const zone=getZone(game.hunt.zone);field.floor=locationLevel(zone.id,field.floor||1)?.number||1;
         const layout=roomLayout(zone,field.floor),room=roomById(zone,field.room,field.floor)||layout.rooms[0],old=[...(field.mobs||[])];
-        const now=Date.now();field.mobs=populateRoom(session,zone,room,{now,random:Math.random}).map(fresh=>{
+        field.mobs=populateRoom(session,zone,room,{now,random:Math.random}).map(fresh=>{
             const index=old.findIndex(m=>m.mobId===fresh.mobId);if(index<0)return fresh;
             const [saved]=old.splice(index,1);return {...fresh,instanceId:saved.instanceId,currentHp:Math.min(fresh.hp,saved.currentHp)};
         });
         Object.assign(field,{room:room.id,rooms:{},floorStates:{},respawns:[],visited:[room.id],walls:room.walls||[],target:field.mobs[0]?.instanceId||null,levelVersion:1,path:[]});
         stopHuntAction(field,now);Object.assign(field,nearestOpenPoint(field,field.walls));
+    }
+    if(field&&game.hunt.zone==='hellbound'){
+        const stage=hellboundStage(session);
+        if(field.populationStage===undefined)field.populationStage=stage;
+        else if(field.populationStage!==stage){
+            field.populationStage=stage;field.populationRevision=(field.populationRevision||0)+1;
+            const zone=getZone(game.hunt.zone);
+            const old=[...(field.mobs||[]),...Object.values(field.rooms||{}).flatMap(r=>r.mobs||[])];
+            // HellboundEngine.doSpawn restores active actors on a stage change. Polling the same stage must not heal them.
+            for(const id of new Set([field.room,...Object.keys(field.rooms||{})])){
+                const room=roomById(zone,id,field.floor||1);if(!room)continue;
+                const mobs=populateRoom(session,zone,room,{now,random:Math.random,prefix:`${now}:hb${field.populationRevision}:${id}`}).map(fresh=>{
+                    const saved=old.find(m=>m.sourceRoom===id&&m.sourceSlot===fresh.sourceSlot);
+                    return saved?{...fresh,instanceId:saved.instanceId}:fresh;
+                });
+                if(id===field.room)field.mobs=mobs;else field.rooms[id]={...field.rooms[id],mobs};
+            }
+            field.respawns=[];field.target=field.mobs[0]?.instanceId||null;stopHuntAction(field,now);
+        }
     }
     if (game.hunt.field) game.hunt.mob = game.hunt.field.mobs.find(m => m.instanceId === game.hunt.field.target) || null;
     return game.hunt;
@@ -128,7 +147,7 @@ function applyHit(session, dmg, now) {
  */
 export function advanceHunt(session, now = Date.now(), random = Math.random) {
     tickL2Effects(session,now,{hp:getMaxHp(session)});
-    const hunt = ensureHunt(session);
+    const hunt = ensureHunt(session,now);
     if(isDead(session,now)){if(hunt.field)stopHuntAction(hunt.field,now);return [];}
     if (!hunt.field) return advanceSingleHunt(session, now, random);
     const field = hunt.field;
@@ -412,6 +431,7 @@ export function enterHuntField(session, zoneId, {now = Date.now(), random = Math
     hunt.zone = zone.id;
     const initialTarget=targetMobId?mobs.find(m=>m.mobId===String(targetMobId))||mobs[0]:mobs[0];
     hunt.field = {floor,mobs, target: mobs[0]?.instanceId || null, x: .5, y: .95, seenAt: now, moveAt:now, path:[], walls:room.walls||[],layoutVersion:4,levelVersion:locationLevel(zone.id,floor)?1:null, room: room.id, rooms: {}, visited: [room.id], respawns: [], seq: mobs.length};
+    if(zone.id==='hellbound')hunt.field.populationStage=hellboundStage(session);
     hunt.field.target=initialTarget?.instanceId||null;
     hunt.mob = initialTarget || null;
     hunt.playerDebuffs = [];

@@ -37,6 +37,7 @@ import {skillSpatial,weaponSpatial} from '../functions/game/hunt/huntSpatial.js'
 import {advanceAutoSupplies,huntSuppliesDto} from './huntSupplies.js';
 import {huntDropGroups} from '../functions/game/hunt/dropGroups.js';
 import {getCombatParty} from './party.js';
+import {populationCapacity,hellboundStage} from '../functions/game/hunt/sourcePopulation.js';
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
 const percent = (current, max) => (max > 0 ? Math.max(0, Math.min(100, current / max * 100)) : 0);
@@ -126,6 +127,7 @@ function fieldDto(hunt, now, session) {
     const layout = roomLayout(zone,field.floor||1);
     const current = roomById(zone, field.room,field.floor||1) || layout.rooms[0];
     const level=locationLevel(zone.id,field.floor||1);
+    const capacity=room=>room.spawns?populationCapacity(room,session,zone.id):room.cap;
     const visited = new Set(field.visited || [current.id]);
     const pending = (field.respawns || []).filter(entry => entry.room === current.id);
     const nextSpawnMs = pending.length ? Math.max(0, Math.min(...pending.map(entry => entry.at)) - now) : 0;
@@ -138,11 +140,12 @@ function fieldDto(hunt, now, session) {
         exits:layout.map?layout.rooms.filter(r=>adjacent(current,r)).map(r=>({id:r.id,name:visited.has(r.id)?r.name:'Не исследовано',
             side:r.col>current.col?'east':r.col<current.col?'west':r.row>current.row?'south':'north'})):[],
         title:level?.title||zone?.title,level:levelTransitions(zone.id,field),sceneKey:`${hunt.zone}:${current.id}${level?':floor-'+(field.floor||1):current.sceneVariant?':area-'+current.sceneVariant:''}`,environment:current.environment,layoutSource:current.layoutSource,
-        room: {id: current.id, name: current.name, landmark:level?(layout.map?'Зал '+(current.row*layout.cols+current.col+1):null):current.landmark||null, big: current.big, cap: current.cap, height: groundHeight(current.cap)},
+        phase:zone.id==='hellbound'?{stage:hellboundStage(session),locked:hellboundStage(session)===0}:null,
+        room: {id: current.id, name: current.name, landmark:level?(layout.map?'Зал '+(current.row*layout.cols+current.col+1):null):current.landmark||null, big: current.big, cap: capacity(current), height: groundHeight(capacity(current))},
         map: layout.map ? {
             cols: layout.cols, rows: layout.rows,exploration:Boolean(layout.exploration),
             rooms: layout.rooms.map(room => ({
-                id: room.id, row: room.row, col: room.col, big: room.big, cap: room.cap,
+                id: room.id, row: room.row, col: room.col, big: room.big, cap: capacity(room),
                 current: room.id === current.id,
                 visited: visited.has(room.id),
                 adjacent: adjacent(current, room),

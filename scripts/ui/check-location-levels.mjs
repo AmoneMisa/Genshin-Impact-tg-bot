@@ -47,15 +47,16 @@ try{for(const {width,mode} of configurations){
  await page.goto('http://levels.local/fixture');
  const floors=Object.entries(LOCATION_LEVELS).flatMap(([id,z])=>z.floors.map(f=>({id,f})));
  const focused=floors.filter(({id,f})=>id==='dragon-valley'||id==='pagan-temple'&&f.number>=3||id==='seed-of-destruction'&&f.number===1||id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4||id==='tower-of-insolence'&&f.number===12||id==='cruma-tower'&&f.number===3);
- const cases=process.env.LOCATION_LEVEL_ZONE?floors.filter(({id})=>process.env.LOCATION_LEVEL_ZONE.split(',').includes(id)):mode==='auto'?(process.env.LOCATION_LEVEL_SMOKE?focused:floors):floors.filter(({id,f})=>id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4);
- for(const {id,f} of cases){
+ const selected=process.env.LOCATION_LEVEL_ZONE?floors.filter(({id})=>process.env.LOCATION_LEVEL_ZONE.split(',').includes(id)):mode==='auto'?(process.env.LOCATION_LEVEL_SMOKE?focused:floors):floors.filter(({id,f})=>id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4);
+ const cases=selected.flatMap(c=>c.id==='hellbound'?[0,1,4,11].map(stage=>({...c,stage})):[c]);
+ for(const {id,f,stage} of cases){
   now=Date.now();s={userId:1,game:{stats:{lvl:80,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
+  chat={game:id==='hellbound'?{hellbound:{level:stage}}:{},members:[s]};s.ownerDocument=()=>chat;
   changeClass(s,'humanFighter');updateStats(s);ensureWorld(s,now);enterHuntField(s,id,{now,floor:f.number,random:()=>.5});Object.assign(s.game.world,{mode:'location',location:id});
-  chat={game:{},members:[s]};s.ownerDocument=()=>chat;
   if(f.ship){const instance=createShipVoyage('fixture',[s],now,()=>0);chat.game.worldInstances={fixture:instance};s.game.world.instanceId='fixture';bindWorldInstances(chat,now);}
   if(id==='dragon-valley'){s.game.inventory.materials.l2_17248=1;const v=DRAGON_VORTICES[0];Object.assign(s.game.hunt.field,{room:v.room,...v.point});}
   if(FIELD_POPULATIONS[id]){
-   const layout=roomLayout(getZone(id)),target=[...layout.rooms].sort((a,b)=>b.cap-a.cap)[0],queue=[[s.game.hunt.field.room]],seen=new Set(queue[0]);let path=[];
+   const layout=roomLayout(getZone(id)),size=r=>initialPopulationSlots(r,s,id,()=>.5).length,target=[...layout.rooms].sort((a,b)=>size(b)-size(a))[0],queue=[[s.game.hunt.field.room]],seen=new Set(queue[0]);let path=[];
    while(queue.length){const next=queue.shift(),last=layout.rooms.find(r=>r.id===next.at(-1));if(last.id===target.id){path=next;break;}for(const r of layout.rooms)if(!seen.has(r.id)&&adjacent(last,r)){seen.add(r.id);queue.push([...next,r.id]);}}
    for(const room of path.slice(1)){quiet();assert.ok(moveHuntField(s,'room:'+room,now).ok);now+=30000;advanceHunt(s,now,()=>.5);quiet();assert.equal(s.game.hunt.field.room,room);}
    assert.equal(s.game.hunt.field.mobs.length,initialPopulationSlots(target,s,id,()=>.5).length,'densest source room');
@@ -67,6 +68,7 @@ try{for(const {width,mode} of configurations){
   for(const [kind,color] of [['aggressive','rgb(255, 116, 116)'],['social','rgb(112, 201, 255)']])for(const node of await page.locator(`.ui-npc-name[data-disposition="${kind}"]`).all())assert.equal(await node.evaluate(n=>getComputedStyle(n).color),color,kind+' name color');
   if(id==='ivory-tower'&&f.number===3){await page.locator('[data-level-travel]').focus();await page.waitForTimeout(850);assert.equal(await page.locator('[data-level-travel]').evaluate(n=>n===document.activeElement),true,'navigation focus survives polling');}
   await page.locator('[data-level-travel]').click();const dialog=page.locator('dialog[open]');await dialog.waitFor();
+  if(id==='hellbound'){assert.ok((await dialog.innerText()).includes(stage===0?'Хеллбаунд ещё закрыт':`Этап освобождения: ${stage}`));assert.equal(await dialog.locator('select,input').count(),0);}
   if(await dialog.evaluate(n=>n.scrollWidth>n.clientWidth+1)){
    await page.screenshot({path:path.join(out,`${id}-${width}-overflow.png`)});
    console.log(await dialog.evaluate(n=>[...n.querySelectorAll('*')].filter(e=>e.getBoundingClientRect().right>n.getBoundingClientRect().right).map(e=>({tag:e.tagName,class:e.className,text:e.textContent.slice(0,80),width:e.getBoundingClientRect().width}))));
@@ -101,7 +103,7 @@ try{for(const {width,mode} of configurations){
    await page.locator('[data-ship-candle]').first().click();await page.waitForTimeout(100);
    assert.equal(Object.keys(chat.game.worldInstances.fixture.candles).length,1);
   }
-  if((FIELD_POPULATIONS[id]||id==='ivory-tower'&&f.number===3||f.ship)&&mode==='auto')await page.screenshot({path:path.join(out,`${id}-${f.number}-${width}.png`)});
+  if((FIELD_POPULATIONS[id]||id==='ivory-tower'&&f.number===3||f.ship)&&mode==='auto')await page.screenshot({path:path.join(out,`${id}-${stage??f.number}-${width}.png`)});
   await page.locator('.hunt-overlay [data-dismiss]').first().click();await page.waitForSelector('.hunt-overlay',{state:'detached'});
   assert.equal(await page.locator('dialog[open],[inert],.hunt-phaser canvas').count(),0);
  }

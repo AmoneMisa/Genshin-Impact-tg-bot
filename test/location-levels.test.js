@@ -6,6 +6,7 @@ import {locationLevel,levelTransitions} from '../functions/game/hunt/locationLev
 import {enterHuntField,changeHuntFloor,ensureHunt,advanceHunt,moveHuntField} from '../functions/game/hunt/huntFight.js';
 import {roomLayout,adjacent} from '../functions/game/hunt/huntRooms.js';
 import {getZone} from '../functions/game/hunt/huntMobs.js';
+import {initialPopulationSlots} from '../functions/game/hunt/sourcePopulation.js';
 import {CITIES,CITY_NPCS,cityPoint,worldAction,ensureWorld,enterZakenShip,bindWorldInstances} from '../functions/game/world/world.js';
 import {candleRoom,shipDto,locationBossGate,tickShip} from '../functions/game/world/zakenShip.js';
 import {grantKillRewards} from '../functions/game/hunt/huntRewards.js';
@@ -56,7 +57,7 @@ test('all configured floors have source-only populations, connected rooms and se
   const reached=new Set([layout.startId]);let count=-1;
   while(count!==reached.size){count=reached.size;for(const r of layout.rooms)if(layout.rooms.some(a=>reached.has(a.id)&&adjacent(a,r)))reached.add(r.id);}
   assert.equal(reached.size,layout.rooms.length,id+':'+floor.number);
-  assert.equal(s.game.hunt.field.mobs.length,floor.rooms[0].cap);
+  assert.equal(s.game.hunt.field.mobs.length,floor.rooms[0].spawns?initialPopulationSlots(floor.rooms[0],s,id,()=>.5).length:floor.rooms[0].cap);
   for(const mob of s.game.hunt.field.mobs){assert.ok(floor.rooms[0].mobIds.includes(mob.mobId));assert.ok(mob.sourcePosition||mob.sourceTerritory);}
   for(const compact of [true,false]){
    const url=roomSceneUrl(floor.environment,{sceneKey:`${id}:${layout.startId}:floor-${floor.number}`,compact});
