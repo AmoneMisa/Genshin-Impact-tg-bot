@@ -11,6 +11,7 @@ test('continuous terrain is clipped into a bounded SVG stream and pointer pickin
  const field={environment:'woodland',sceneKey:'cruma-marshlands:r1c1:floor-1',walls:[],continuous:{tiles}},viewport={width:288,height:520};
  const svg=isoTerrain(field,viewport);
  assert.equal((svg.match(/data-terrain-cell=/g)||[]).length,9);assert.equal((svg.match(/<clipPath /g)||[]).length,9);
+ assert.equal((svg.match(/data-terrain-blend="edge"/g)||[]).length,12);assert.equal((svg.match(/data-terrain-blend="corner"/g)||[]).length,4);
  assert.ok((svg.match(/<polygon /g)||[]).length<100,'missing images still have bounded lightweight geometry');
  const target={x:1.02,y:.7},camera={x:-100,y:45,zoom:1.3};
  const picked=isoPick(isoPoint(target,viewport,camera),viewport,camera);assert.ok(Math.abs(picked.x-target.x)<1e-10&&Math.abs(picked.y-target.y)<1e-10);
@@ -49,7 +50,7 @@ test('full-scene paintings preserve isometric anchors outside the initial viewpo
   }
   assert.ok(b.width>viewport.width);
  }
- assert.match(isoTerrain({environment:'volcanic'},{width:348,height:425}),/image href="\/art\/world\/scenes\/volcanic-mobile-v1.webp"/);
+ assert.match(isoTerrain({environment:'volcanic'},{width:348,height:425}),/image data-room-scene-art href="\/art\/world\/scenes\/volcanic-mobile-v1.webp"/);
 });
 
 test('map clan label follows the synchronized real clan and clears on leaving',()=>{

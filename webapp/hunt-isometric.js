@@ -2,6 +2,7 @@ import {combatTheme,colorHex} from './combat-environment.js';
 import {roomSceneUrl,roomArtField} from './room-scene-art.js';
 import {roomPropSprite,roomPropHeight} from './room-props-art.js';
 import {roomObstacleProps,obstacleStoneOutline} from './room-obstacles.js';
+import {streamedTerrain,TERRAIN_BLEND} from './terrain-stitch.js';
 // One projection for terrain, actors, effects and inverse pointer picking. Game coordinates stay unchanged.
 export function isoMatrix(viewport) {
   const width=Math.max(1,viewport.width),height=Math.max(1,viewport.height);
@@ -67,13 +68,11 @@ export function isoLabelOffsets(actors,viewport){
 
 /** Static SVG terrain: no WebGL, simulation loop or per-tile event listeners. */
 export function isoTerrain(field,viewport) {
-  if(field.continuous){
-    const m=isoMatrix(viewport),outline=points([[0,0],[1,0],[1,1],[0,1]].map(([x,y])=>isoPoint({x,y},viewport)));
-    return `<svg class="hunt-isometric-terrain" style="z-index:-100" viewBox="0 0 ${viewport.width} ${viewport.height}" aria-hidden="true">`+field.continuous.tiles.map(t=>{
-      const id=`terrain-${field.continuous.space||'surface'}-${t.id}`,tile=isoTerrain({...field,...t,continuous:null,streamTile:true},viewport);
-      return `<g data-terrain-cell="${t.id}" transform="translate(${m.a*t.dx+m.c*t.dy},${m.b*t.dx+m.d*t.dy})"><defs><clipPath id="${id}"><polygon points="${outline}"/></clipPath></defs><g clip-path="url(#${id})">${tile}</g></g>`;
-    }).join('')+'</svg>';
-  }
+  if(field.continuous)return streamedTerrain(field,viewport,{matrix:isoMatrix(viewport),project:p=>isoPoint(p,viewport),layers:t=>roomTerrainParts({...field,...t,continuous:null,streamTile:true},viewport)});
+  const parts=roomTerrainParts(field,viewport);
+  return `<svg class="hunt-isometric-terrain" viewBox="0 0 ${viewport.width} ${viewport.height}" aria-hidden="true">${parts.ground}${parts.props}</svg>`;
+}
+function roomTerrainParts(field,viewport){
   field=roomArtField(field);
   const theme=combatTheme(field.environment);
   const project=p=>isoPoint(p,viewport);
@@ -85,11 +84,17 @@ export function isoTerrain(field,viewport) {
     const art=roomPropSprite(w.kind,field.environment);
     const foot=project({x:w.x+w.w/2,y:w.y+w.h/2}),height=roomPropHeight(w.kind,w.index)*(w.heightScale||1),scale=height/art.height;
     const fallback=w.kind==='pillar'?`<path d="M${foot.x-10},${foot.y-height*.9} L${foot.x-10},${foot.y} Q${foot.x},${foot.y+8} ${foot.x+10},${foot.y} L${foot.x+10},${foot.y-height*.9} Z" fill="${colorHex(theme.front)}"/><ellipse cx="${foot.x}" cy="${foot.y-height*.9}" rx="10" ry="5" fill="${colorHex(theme.top)}"/>`
-      :w.kind==='tree'?`<path d="M${foot.x},${foot.y} Q${foot.x-6},${foot.y-height*.4} ${foot.x+2},${foot.y-height*.6}" fill="none" stroke="${colorHex(theme.front)}" stroke-width="7"/><ellipse cx="${foot.x}" cy="${foot.y-height*.65}" rx="${height*.23}" ry="${height*.25}" fill="${colorHex(theme.floor)}"/>`
+      :w.kind==='tree'?`<path d="M${foot.x},${foot.y} Q${foot.x-6},${foot.y-height*.4} ${foot.x+2},${foot.y-height*.6}" fill="none" stroke="${colorHex(theme.front)}" stroke-width="7"/><ellipse cx="${foot.x}" cy="${foot.y-height*.65}" rx="${height*.23}" ry="${height*.25}" fill="${colorHex(theme.top)}"/>`
       :`<path data-stone-fallback d="M${obstacleStoneOutline(foot,art.width*scale*.9,height*.8,w.index).map(p=>`${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' L')} Z" fill="${colorHex(theme.front)}"/>`;
     return `<g class="hunt-iso-prop hunt-iso-${w.kind}"${w.rubble?' data-rubble-prop':''}><ellipse cx="${foot.x}" cy="${foot.y}" rx="${Math.max(10,art.width*scale*.32)}" ry="${Math.max(4,height*.09)}" fill="#101410" opacity=".25"/><g data-prop-fallback>${fallback}</g><svg x="${foot.x-art.anchorX*scale}" y="${foot.y-art.anchorY*scale}" width="${art.width*scale}" height="${height}" viewBox="${art.x} ${art.y} ${art.width} ${art.height}" overflow="hidden"><image data-room-prop-art href="${art.url}" width="1536" height="1024"/></svg></g>`;
   });
   const url=roomSceneUrl(field.environment,{compact:viewport.width<480,sceneKey:field.sceneKey}),bounds=isoSceneBounds(viewport);
-  const painting=url?`<image href="${url}" x="${bounds.x}" y="${bounds.y}" width="${bounds.width}" height="${bounds.height}" preserveAspectRatio="none"/>`:'';
-  return `<svg class="hunt-isometric-terrain" viewBox="0 0 ${viewport.width} ${viewport.height}" aria-hidden="true"><polygon class="iso-base" points="${points(floor.map(p=>({x:p.x,y:p.y+12})))}"/><polygon class="iso-floor" points="${points(floor)}"/>${tiles.join('')}${painting}${walls.join('')}</svg>`;
+  const painting=url?`<image data-room-scene-art href="${url}" x="${bounds.x}" y="${bounds.y}" width="${bounds.width}" height="${bounds.height}" preserveAspectRatio="none"/>`:'';
+  const b=TERRAIN_BLEND,bleed=field.streamTile?`<polygon points="${points([[-b,-b],[1+b,-b],[1+b,1+b],[-b,1+b]].map(([x,y])=>project({x,y})))}" fill="${colorHex(theme.floor)}"/>`:'';
+  if(field.streamTile){
+    const seed=[...(field.sceneKey||'')].reduce((n,c)=>Math.imul(n,31)+c.charCodeAt(0),7)>>>0;
+    const flecks=Array.from({length:8},(_,i)=>{const p=project({x:((seed+i*137)%983)/983,y:((seed+i*293)%971)/971});return `<ellipse cx="${p.x}" cy="${p.y}" rx="${3+i%4}" ry="${1+i%2}" fill="${colorHex(theme.light)}" opacity=".22"/>`;}).join('');
+    return {ground:bleed+flecks+painting,props:walls.join('')};
+  }
+  return {ground:`${bleed}<polygon class="iso-base" points="${points(floor.map(p=>({x:p.x,y:p.y+12})))}"/><polygon class="iso-floor" points="${points(floor)}"/>${tiles.join('')}${painting}`,props:walls.join('')};
 }

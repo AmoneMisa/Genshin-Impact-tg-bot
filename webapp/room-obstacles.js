@@ -25,7 +25,7 @@ export function obstacleStoneOutline(foot,width,height,index=0){
 
 /** SVG images have no HTML img fallback: hide the browser's broken-image rectangle explicitly. */
 export function bindRoomObstacleFallback(root){
- root?.querySelectorAll('[data-room-prop-art]').forEach(image=>{
+ root?.querySelectorAll('[data-room-prop-art],[data-room-scene-art]').forEach(image=>{
   if(image.dataset.fallbackBound)return;image.dataset.fallbackBound='true';
   const fallback=image.closest('.hunt-iso-prop')?.querySelector('[data-prop-fallback]');
   image.addEventListener('load',()=>{if(fallback)fallback.style.display='none';},{once:true});

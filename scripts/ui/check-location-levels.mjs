@@ -141,6 +141,8 @@ try{for(const {width,mode} of configurations){
    assert.deepEqual(field.rooms[oldRoom].mobs.map(m=>m.instanceId),oldIds,'streaming retains the old actors');
    assert.equal(await page.locator('.hunt-overlay').count(),1,'crossing keeps the same game screen');
    assert.ok(await page.locator('[data-terrain-cell]').count()<=9,'bounded terrain stream');
+   assert.ok(await page.locator('[data-terrain-blend="edge"]').count()>0,'shared ground edges are blended');
+   assert.equal(await page.locator('[data-terrain-props]').count(),await page.locator('[data-terrain-cell]').count(),'one decoration layer per resident cell');
    assert.equal(await page.locator('.hunt-phaser canvas').count(),0,'surface needs no canvas or WebGL');
    assert.ok(await page.locator('.hunt-hero-marker').evaluate(n=>{const a=n.getBoundingClientRect(),b=n.closest('.hunt-ground').getBoundingClientRect();return a.right>b.left&&a.left<b.right&&a.bottom>b.top&&a.top<b.bottom;}),'camera retains the hero');
    const target=field.rooms[oldRoom].mobs[0];assert.ok(target);
