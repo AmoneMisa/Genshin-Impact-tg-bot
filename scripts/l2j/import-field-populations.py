@@ -61,6 +61,8 @@ FIELDS = [
  ('marsh-zombies', 'Топи зомби', 'Others/19_19.xml', 'marsh'),
  ('dark-forest', 'Тёмный лес', 'DarkElfTerritory/DarkElfStarting.xml', 'woodland'),
  ('vuku-lands', 'Земли орков Вуку', 'Others/19_20.xml', 'woodland'),
+ ('primeval-isle', 'Первобытный остров', 'Rune/PrimevalIsle.xml', 'woodland'),
+ ('hellbound', 'Хеллбаунд', 'scripts/ai/areas/Hellbound/hellboundSpawns.xml', 'desert'),
 ]
 VUKU_IDS = {'20009', '20011', '20039', '20043', '20049'}
 SOURCE_FILTERS = {'vuku-lands': VUKU_IDS}
@@ -74,17 +76,38 @@ def module(name):
 
 def build(row):
  id, title, file, environment = row
- spawns, selection = [], []
+ spawns, selection, provenance = [], [], []
  sourcefiles = [(file, SOURCE_FILTERS.get(id)), *EXTRA_SOURCES.get(id, [])]
- for sourcefile, allowed in sourcefiles:
-  rows = scope['rows'](sourcefile, lambda n: scope['hostile'](n) and (allowed is None or n.get('id') in allowed))
-  tree = scope['read_source']('spawns/' + sourcefile)
-  assert all(g.get('selection') is None and g.get('maximumNpc') is None for g in tree.findall('spawn')), sourcefile
-  for s in rows: s['sourceFile'] = 'spawns/' + sourcefile
-  spawns.extend(rows)
-  selection.append({'file': 'spawns/' + sourcefile, 'npcIds': sorted(allowed, key=int) if allowed else None})
+ if id == 'hellbound':
+  provenance = [file, 'scripts/ai/areas/Hellbound/HellboundSpawns.java', 'scripts/ai/areas/Hellbound/HellboundEngine.java']
+  for index,n in enumerate(scope['E'].parse(DATA/file).findall('npc')):
+   npc=NPCS[n.get('id')]
+   if npc.get('type') != 'Monster': continue
+   point=n.find('location'); respawn=n.find('respawn'); phase=n.find('hellboundLevel')
+   spawns.append({'id':n.get('id'),**{k:int(point.get(k)) for k in ['x','y','z']},'count':1,'coordinateSource':'point','polygon':[],'minZ':None,'maxZ':None,
+    'respawnMs':int(respawn.get('delay'))*1000,'respawnRandomMs':int(respawn.get('randomInterval','1'))*1000,
+    'sourceGroup':str(index),'sourceFile':file,'hellboundMin':int(phase.get('min','1')) if phase is not None else 1,'hellboundMax':int(phase.get('max','100')) if phase is not None else 100})
+ else:
+  for sourcefile, allowed in sourcefiles:
+   predicate=(lambda n:n.get('type')=='Monster') if id=='primeval-isle' else scope['hostile']
+   rows = scope['rows'](sourcefile, lambda n: predicate(n) and (allowed is None or n.get('id') in allowed))
+   tree = scope['read_source']('spawns/' + sourcefile)
+   if id=='primeval-isle':
+    groups={g.get('zone',g.get('name')):g for g in tree.findall('spawn')}
+    for s in rows:
+     g=groups[s['sourceGroup']]
+     assert g.get('selection') in [None,'random'] and g.get('maximumNpc') is None
+     if g.get('selection')=='random':s['randomGroup']=s['sourceGroup']
+   else:assert all(g.get('selection') is None and g.get('maximumNpc') is None for g in tree.findall('spawn')), sourcefile
+   for s in rows: s['sourceFile'] = 'spawns/' + sourcefile
+   spawns.extend(rows);provenance.append('spawns/'+sourcefile)
+   selection.append({'file': 'spawns/' + sourcefile, 'npcIds': sorted(allowed, key=int) if allowed else None})
  assert spawns, id
  level = scope['make_level'](1, title, spawns, id, environment)
+ for room in level['rooms']:
+  randomgroups={s['randomGroup'] for s in room['spawns'] if s.get('randomGroup')}
+  if randomgroups:room['cap']=sum(s['count'] for s in room['spawns'] if not s.get('randomGroup'))+sum(max(s['count'] for s in room['spawns'] if s.get('randomGroup')==g) for g in randomgroups)
+  if id=='hellbound':room['cap']=max(sum(s['count'] for s in room['spawns'] if s['hellboundMin']<=stage<=s['hellboundMax']) for stage in range(12))
  ids = sorted({s['id'] for s in spawns}, key=int)
  loot, sp = module('l2Loot.js'), module('l2NpcSp.js')
  items, wanted, dropids = module('l2Items.js'), set(), set()
@@ -93,8 +116,8 @@ def build(row):
   loot[nid] = [[int(d.get('id')), int(d.get('min')), int(d.get('max')), float(d.get('chance'))] for d in drops if d.get('id') != '57']
   wanted.update(str(d[0]) for d in loot[nid] if str(d[0]) not in items)
   dropids.update(str(d[0]) for d in loot[nid])
-  assert nid in sp, 'Missing native SP: ' + nid
-  assert float(NPCS[nid].find('acquire').get('sp', '0')) == sp[nid], nid
+  acquire=NPCS[nid].find('acquire');native_sp=float(acquire.get('sp','0')) if acquire is not None else 0
+  assert (nid in sp or native_sp==0) and native_sp==sp.get(nid,0), 'Missing or incorrect native SP: '+nid
  iconfile = ROOT / 'webapp/art/l2-gameplay-icons.js'
  icontext = iconfile.read_text(encoding='utf-8')
  match = re.search(r'export const ITEM_ICONS=(.*?);\n', icontext)
@@ -133,12 +156,13 @@ def build(row):
    db.write_text(re.sub(r"(key: '" + key + r"', source: " + key + r", version: )(\d+)", lambda m: m[1] + str(int(m[2]) + 1), db.read_text(encoding='utf-8')), encoding='utf-8')
   header = p.read_text(encoding='utf-8').split('export default ', 1)[0]
   p.write_text(header + 'export default ' + json.dumps(value, ensure_ascii=False, separators=(',', ':')) + ';\n', encoding='utf-8')
- files = {'spawns/' + f: hashlib.sha256((DATA / 'spawns' / f).read_bytes()).hexdigest() for f, _ in sourcefiles}
+ files = {f: hashlib.sha256((DATA/f).read_bytes()).hexdigest() for f in provenance}
  for p in (DATA / 'stats/npcs').glob('*.xml'):
   if any(n.get('id') in ids for n in scope['E'].parse(p).findall('npc')):
    files['stats/npcs/' + p.name] = hashlib.sha256(p.read_bytes()).hexdigest()
  value = {'version': 1, 'floors': [level], 'mobs': [scope['mob'](nid) for nid in ids],
   'source': {'commit': scope['SOURCE_COMMIT'], 'files': files, 'geodataAvailable': False, 'coordinateSpace': 'underground' if file.startswith('Catacombs/') else 'surface', 'missingItemIcons': missingicons}}
+ if id in ['primeval-isle','hellbound']:value['population']={'kind':'random-groups' if id=='primeval-isle' else 'hellbound'}
  if id in ['marsh-zombies', 'dark-forest', 'vuku-lands']: value['source']['selection'] = selection
  if id in ['marsh-zombies', 'dark-forest']:
   routefile = 'teleporters/town/30134.xml'
@@ -176,8 +200,8 @@ lines = ['# Наполнение охотничьих зон', '',
 for id, title, _, _ in FIELDS:
  if id not in present: continue
  value = module('field-populations/' + id + '.js')
- lines.append(f"| {title} | {len(value['mobs'])} | {sum(r['cap'] for r in value['floors'][0]['rooms'])} |")
-lines.extend(['', 'Окружение переиспользует согласованные рисунки соответствующих локаций. Навигация и цели активных заданий используют Атлас; старое сохранение переносится в исходное население однократно без выдачи наград. Сохранение комнат, здоровья и отложенных возрождений использует общий движок охоты. На телефоне отображается до восьми ближайших целей, на широком экране — до 16; выбранная цель всегда входит в этот набор.', '',
+ lines.append(f"| {title} | {len(value['mobs'])} | {'≤ ' if value.get('population') else ''}{sum(r['cap'] for r in value['floors'][0]['rooms'])} |")
+lines.extend(['', 'Для условного населения указана верхняя граница вместимости комнат; фактическое количество зависит от выбора групп и стадии. Правила и ограничения: [условные спавны](conditional-populations.md).', '', 'Окружение переиспользует согласованные рисунки соответствующих локаций. Навигация и цели активных заданий используют Атлас; старое сохранение переносится в исходное население однократно без выдачи наград. Сохранение комнат, здоровья и отложенных возрождений использует общий движок охоты. На телефоне отображается до восьми ближайших целей, на широком экране — до 16; выбранная цель всегда входит в этот набор.', '',
  'Источник: L2J Mobius High Five, commit `9fb01cb20513e55190cdde8d91e41be2c0914f84`. Исходные файлы и SHA-256 записаны в `source.files` каждой локации. Импортёр читает закреплённый архив напрямую, а не нормализованный кеш NPC. SP проверяется против исходного `acquire.sp`. Награды и боевое поведение используют существующий движок проекта: групповые таблицы дропа представлены вероятностями отдельных предметов; взаимное исключение предметов внутри исходной группы не моделируется. Это не перенос всех специальных сценариев NPC.', '',
  'Новые предметы используют оригинальные клиентские иконки. У трав без поля icon в исходном XML пробел перечислен в `source.missingItemIcons`, и похожая картинка им не подставляется.', '',
  'Новые подземелья имеют source.coordinateSpace = underground, наземные зоны — surface. Это отметка пространства исходных спавнов, а не обещание геоданных для бесшовного перехода. Катакомбы и некрополи переносят статические группы XML; недельный цикл Семи Печатей и сценарная смена населения этим импортом не реализуются.', '',

@@ -8,6 +8,7 @@ import {enterHuntField,moveHuntField,advanceHunt} from '../../functions/game/hun
 import {roomLayout,adjacent} from '../../functions/game/hunt/huntRooms.js';
 import {getZone} from '../../functions/game/hunt/huntMobs.js';
 import {FIELD_POPULATIONS} from '../../template/fieldPopulations.js';
+import {initialPopulationSlots} from '../../functions/game/hunt/sourcePopulation.js';
 import {createShipVoyage} from '../../functions/game/world/zakenShip.js';
 import {ensureWorld,worldAction,bindWorldInstances} from '../../functions/game/world/world.js';
 import {getHuntState} from '../../miniapp/hunt.js';
@@ -57,7 +58,7 @@ try{for(const {width,mode} of configurations){
    const layout=roomLayout(getZone(id)),target=[...layout.rooms].sort((a,b)=>b.cap-a.cap)[0],queue=[[s.game.hunt.field.room]],seen=new Set(queue[0]);let path=[];
    while(queue.length){const next=queue.shift(),last=layout.rooms.find(r=>r.id===next.at(-1));if(last.id===target.id){path=next;break;}for(const r of layout.rooms)if(!seen.has(r.id)&&adjacent(last,r)){seen.add(r.id);queue.push([...next,r.id]);}}
    for(const room of path.slice(1)){quiet();assert.ok(moveHuntField(s,'room:'+room,now).ok);now+=30000;advanceHunt(s,now,()=>.5);quiet();assert.equal(s.game.hunt.field.room,room);}
-   assert.equal(s.game.hunt.field.mobs.length,target.cap,'densest source room');
+   assert.equal(s.game.hunt.field.mobs.length,initialPopulationSlots(target,s,id,()=>.5).length,'densest source room');
   }
   quiet();await page.evaluate(()=>openRoom());await page.waitForSelector('.hunt-ground');
   assert.equal(await page.locator('.hunt-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false,id+' overflow '+width);

@@ -19,7 +19,7 @@ function hero(id,targetMobId=null){
  const s={userId:1,game:{stats:{lvl:80,currentExp:0},inventory:{gold:0,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
  changeClass(s,'humanFighter');updateStats(s);assert.ok(enterHuntField(s,id,{now:NOW,random:()=>.5,targetMobId}).ok);return s;
 }
-for(const [id,data] of Object.entries(FIELD_POPULATIONS))test(`${id}: original slots, bounded room rendering and persistent source respawn`,async()=>{
+for(const [id,data] of Object.entries(FIELD_POPULATIONS).filter(([,data])=>!data.population))test(`${id}: original slots, bounded room rendering and persistent source respawn`,async()=>{
  const zone=getZone(id),floor=data.floors[0],layout=roomLayout(zone),entrance=hero(id);
  assert.equal(entrance.game.hunt.field.mobs.length,floor.rooms.find(r=>r.id===layout.startId).cap);
  const s=hero(id,data.mobs[0].id),f=s.game.hunt.field,room=floor.rooms.find(r=>r.id===f.room);

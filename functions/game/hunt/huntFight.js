@@ -11,6 +11,7 @@ import { CHAMPIONS, HUNT } from './huntConfig.js';
 import {tickSoulDots} from '../equipment/soulCrystalCombat.js';
 import { buildMob, getMobDef, getZone, heroStats } from './huntMobs.js';
 import {locationLevel,locationLevels} from './locationLevels.js';
+import {initialPopulationSlots,populationSlots,populationCapacity,occupiedPopulationSlots,randomPopulationRespawn,hellboundStage} from './sourcePopulation.js';
 import { grantKillRewards } from './huntRewards.js';
 import castSkill from '../player/castSkill.js';
 import isPlayerCanUseSkill from '../player/isPlayerCanUseSkill.js';
@@ -292,15 +293,15 @@ function populateRoom(session, zone, room, {now, random, count = room.cap, prefi
     const stage=zone.instance?.stages?.[(session.game.hunt?.field?.floor||1)-1];
     if(zone.instance?.kind==='labyrinth'&&(session.game.hunt?.field?.floor||1)>=3)count=Math.min(count,1);
     const definitions=zone.mobs.filter(m=>(stage||room.mobIds||zone.mobs.map(m=>m.id)).includes(m.id));
-    const source=room.spawns?.flatMap((s,index)=>Array.from({length:s.count},()=>({...s,source:index})));
+    const source=room.spawns?(sourceSlot===null?initialPopulationSlots(room,session,zone.id,random):populationSlots(room,session,zone.id).filter(s=>s.slot===sourceSlot)):null;
     if(source&&source.length===0)return [];
     const pool=definitions.length?definitions:zone.mobs;
     const offset = Math.min(pool.length - 1, Math.floor(random() * pool.length));
-    return slotPositions(count).map((slot, index) => {
-        const placement=source?.[sourceSlot??index];
+    return slotPositions(source?Math.min(count,source.length):count).map((slot, index) => {
+        const placement=source?.[index];
         const def=placement?getMobDef(zone,placement.id):pool[(offset + index) % pool.length];
         const mob = buildMob(zone, def, {now, random,champion:def.rewardless?null:undefined, className: session.game.gameClass.stats.name});
-        if(placement)Object.assign(mob,{sourceRoom:room.id,sourceSlot:sourceSlot??index,sourcePosition:placement.coordinateSource==='point'?{x:placement.x,y:placement.y,z:placement.z}:null,sourceTerritory:placement.polygon?.length?{polygon:placement.polygon,minZ:placement.minZ,maxZ:placement.maxZ}:null,sourceRespawnMs:placement.respawnMs,sourceRespawnRandomMs:placement.respawnRandomMs});
+        if(placement)Object.assign(mob,{sourceRoom:room.id,sourceSlot:placement.slot,sourceRandomGroup:placement.randomGroup,sourceNativeRespawn:Boolean(locationLevels(zone.id)?.population),sourcePosition:placement.coordinateSource==='point'?{x:placement.x,y:placement.y,z:placement.z}:null,sourceTerritory:placement.polygon?.length?{polygon:placement.polygon,minZ:placement.minZ,maxZ:placement.maxZ}:null,sourceRespawnMs:placement.respawnMs,sourceRespawnRandomMs:placement.respawnRandomMs});
         return {...mob, instanceId: `${prefix}:${index}`, ai: AI_ROLES[index % AI_ROLES.length],
             aggro: false, ...nearestOpenPoint(slot,room.walls), buffs: []};
     });
@@ -318,7 +319,8 @@ function settleRespawns(session, hunt, now, random) {
         const room = roomById(zone, entry.room,field.floor||1);
         if (!room) continue;
         const bucket = entry.room === field.room ? field.mobs : (field.rooms[entry.room] ||= {mobs: []}).mobs;
-        if (bucket.length >= room.cap) continue;
+        if(locationLevels(zone.id)?.population){if(Number.isInteger(entry.sourceSlot)&&occupiedPopulationSlots(field,room.id,{pending:false}).has(entry.sourceSlot))continue;}
+        else if (bucket.length >= room.cap) continue;
         field.seq = number(field.seq) + 1;
         const [fresh] = populateRoom(session, zone, room, {now, random, count: 1,sourceSlot:entry.sourceSlot??null, prefix: `${now}:${room.id}:r${field.seq}`});
         if(!fresh)continue;
@@ -616,7 +618,12 @@ function finishKill(session,hunt,mob,{random,now,deferLoot=false}){
     if (hunt.field) {
         const index=hunt.field.mobs.findIndex(m=>m.instanceId===mob.instanceId);
         if(index>=0)hunt.field.mobs.splice(index,1);
-        if(!session.game.world?.instanceId&&!mob.rewardless&&mob.sourceRespawnMs!==0)(hunt.field.respawns ||= []).push({at:now+(mob.sourceRespawnMs??HUNT.mobRespawnMs)+Math.round((random()*2-1)*(mob.sourceRespawnRandomMs||0)),room:mob.sourceRoom||hunt.field.room,sourceSlot:mob.sourceSlot??null});
+        if(!session.game.world?.instanceId&&(!mob.rewardless||mob.sourceNativeRespawn)&&mob.sourceRespawnMs!==0){
+            const room=roomById(getZone(hunt.zone),mob.sourceRoom||hunt.field.room,hunt.field.floor||1);
+            const replacement=randomPopulationRespawn(hunt.field,mob,room,now,random);
+            if(replacement)(hunt.field.respawns ||= []).push(replacement);
+            else if(replacement===undefined)(hunt.field.respawns ||= []).push({at:now+(mob.sourceRespawnMs??HUNT.mobRespawnMs)+Math.round((random()*2-1)*(mob.sourceRespawnRandomMs||0)),room:mob.sourceRoom||hunt.field.room,sourceSlot:mob.sourceSlot??null});
+        }
         hunt.field.target = hunt.field.mobs[0]?.instanceId || null;
         hunt.mob = hunt.field.mobs[0] || null;
     } else hunt.mob=null;

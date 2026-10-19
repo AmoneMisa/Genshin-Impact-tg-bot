@@ -1,0 +1,5 @@
+# Условное население High Five
+
+Первобытный остров: импортированы 24 вида Monster, включая безнаградные яйца и Sprigant. Для `selection="random"` при первом посещении равновероятно выбирается одна запись группы и появляется всё её количество. После смерти выбирается новая запись; занятая квота, включая ожидающие возрождения, отменяет попытку без повторного выбора. Задержка берётся у нового вида. Уменьшившаяся группа не заполняется повторно при опросе или возвращении в комнату. Выбор, здоровье и резервирование сохраняются между входами.
+
+Правила сверены с закреплёнными [SpawnData.java](https://gitlab.com/MobiusDevelopment/L2J_Mobius/-/blob/9fb01cb20513e55190cdde8d91e41be2c0914f84/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/data/xml/SpawnData.java) и [SpawnGroup.java](https://gitlab.com/MobiusDevelopment/L2J_Mobius/-/blob/9fb01cb20513e55190cdde8d91e41be2c0914f84/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/model/entity/spawns/SpawnGroup.java). Координаты и полигоны сохранены отдельно от адаптированных комнат. Специальные сценарии вылупления и вызова миньонов этим импортом не перенесены.
