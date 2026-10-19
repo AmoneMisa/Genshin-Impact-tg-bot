@@ -43,7 +43,7 @@ try{for(const {width,mode} of configurations){
  await page.goto('http://levels.local/fixture');
  const floors=Object.entries(LOCATION_LEVELS).flatMap(([id,z])=>z.floors.map(f=>({id,f})));
  const focused=floors.filter(({id,f})=>id==='dragon-valley'||id==='pagan-temple'&&f.number>=3||id==='seed-of-destruction'&&f.number===1||id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4||id==='tower-of-insolence'&&f.number===12||id==='cruma-tower'&&f.number===3);
- const cases=process.env.LOCATION_LEVEL_ZONE?floors.filter(({id})=>id===process.env.LOCATION_LEVEL_ZONE):mode==='auto'?(process.env.LOCATION_LEVEL_SMOKE?focused:floors):floors.filter(({id,f})=>id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4);
+ const cases=process.env.LOCATION_LEVEL_ZONE?floors.filter(({id})=>process.env.LOCATION_LEVEL_ZONE.split(',').includes(id)):mode==='auto'?(process.env.LOCATION_LEVEL_SMOKE?focused:floors):floors.filter(({id,f})=>id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4);
  for(const {id,f} of cases){
   now=Date.now();s={userId:1,game:{stats:{lvl:80,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
   changeClass(s,'humanFighter');updateStats(s);ensureWorld(s,now);enterHuntField(s,id,{now,floor:f.number,random:()=>.5});Object.assign(s.game.world,{mode:'location',location:id});

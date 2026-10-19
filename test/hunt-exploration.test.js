@@ -45,7 +45,7 @@ test('painted zones have reachable adapted sections and preserve dungeon network
  assert.equal(explorationSection('hot-springs','../../bad'),null);
 });
 test('a fork is explored by walking; revisits preserve monsters and fog, and reject a diagonal shortcut',async()=>{
- const s=fixture('plains-of-dion'),field=s.game.hunt.field;quiet(field);
+ const s=fixture('bee-hive'),field=s.game.hunt.field;quiet(field);
  const original=field.mobs.map(m=>m.instanceId);field.mobs[0].currentHp-=1;
  const hp=field.mobs[0].currentHp;
  let dto=await getHuntState(s,NOW);
@@ -68,7 +68,7 @@ test('adjacent scenery URLs are distinct, bounded and cannot alter epic arenas',
  assert.equal(roomSceneUrl('woodland',{sceneKey:'constructor:r0c1:area-1'}),'/art/world/scenes/woodland-v1.webp');
 });
 test('aggressive monsters follow through a new section without restoring health or duplicating',()=>{
- const s=fixture('plains-of-dion'),field=s.game.hunt.field;quiet(field);
+ const s=fixture('bee-hive'),field=s.game.hunt.field;quiet(field);
  const pursuer=field.mobs[0];pursuer.currentHp-=1;pursuer.aggro=true;pursuer.aggressive=true;
  Object.assign(field,{x:.95,y:.5});Object.assign(pursuer,{x:.94,y:.5});
  assert.ok(moveHuntField(s,'room:r0c1',NOW+1).ok);advanceHunt(s,NOW+1000,()=>.5);
