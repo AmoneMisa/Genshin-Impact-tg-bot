@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import {FIELD_POPULATIONS} from '../template/fieldPopulations.js';
+import {LOCATIONS} from '../template/worldMap.js';
 import {getZone} from '../functions/game/hunt/huntMobs.js';
 import {roomLayout,adjacent} from '../functions/game/hunt/huntRooms.js';
 import {enterHuntField,ensureHunt,advanceHunt} from '../functions/game/hunt/huntFight.js';
@@ -22,6 +23,9 @@ for(const [id,data] of Object.entries(FIELD_POPULATIONS))test(`${id}: original s
  assert.equal(entrance.game.hunt.field.mobs.length,floor.rooms.find(r=>r.id===layout.startId).cap);
  const s=hero(id,data.mobs[0].id),f=s.game.hunt.field,room=floor.rooms.find(r=>r.id===f.room);
  assert.equal(data.source.geodataAvailable,false);
+ assert.equal(zone.min,Math.min(...data.mobs.map(m=>m.level)));
+ assert.equal(zone.max,Math.max(...data.mobs.map(m=>m.level)));
+ assert.equal(LOCATIONS.find(l=>l.id===id).levelMax,zone.max);
  assert.equal(layout.rooms.length,12);
  const reached=new Set([layout.startId]);let before=-1;
  while(before!==reached.size){before=reached.size;for(const r of layout.rooms)if(layout.rooms.some(a=>reached.has(a.id)&&adjacent(a,r)))reached.add(r.id);}

@@ -13,7 +13,11 @@ const BASE_CITY_NPCS=[{"id":"aden:npc:0","name":"Elisa","role":"Хранител
 export const CITIES=[...BASE_CITIES.map(c=>GATEKEEPER_CORRECTIONS[c.id]?{...c,gk:GATEKEEPER_CORRECTIONS[c.id].name}:c),...SETTLEMENTS,...GRACIA_CITIES];
 export const CITY_NPCS=[...BASE_CITY_NPCS.map(n=>n.gateway&&GATEKEEPER_CORRECTIONS[n.city]?{...n,...GATEKEEPER_CORRECTIONS[n.city],adapted:false}:n),...SETTLEMENT_NPCS,PAGAN_CHURCH,...GRACIA_NPCS];
 
-export const LOCATIONS=[...BASE_LOCATIONS.filter(l=>!HUNTING_EXPANSION_LOCATIONS.some(extra=>extra.id===l.id)),...HUNTING_EXPANSION_LOCATIONS,...WORLD_EXTENSION_LOCATIONS].map(l=>LOCATION_LEVELS[l.id]?{...l,floors:LOCATION_LEVELS[l.id].floors.length}:l);
+export const LOCATIONS=[...BASE_LOCATIONS.filter(l=>!HUNTING_EXPANSION_LOCATIONS.some(extra=>extra.id===l.id)),...HUNTING_EXPANSION_LOCATIONS,...WORLD_EXTENSION_LOCATIONS].map(l=>{
+ const source=LOCATION_LEVELS[l.id];if(!source)return l;
+ const levels=source.mobs.map(m=>m.level);
+ return {...l,floors:source.floors.length,...(source.source?{levelMin:Math.min(...levels),levelMax:Math.max(...levels)}:{})};
+});
 
 // Atlas selection extent, not original client geodata.
 REGIONS.push({id:"gracia",name:"Грация",polygon:[[-294912,131072],[-163840,131072],[-163840,294912],[-294912,294912]],selectionGeometry:"authored-extent"});

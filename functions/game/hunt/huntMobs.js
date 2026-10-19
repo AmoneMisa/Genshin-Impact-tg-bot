@@ -5,6 +5,7 @@ import necropolises from '../../../template/necropolisesTemplate.js';
 import worldZones from '../../../template/worldZones.js';
 import {HUNTING_EXPANSION} from '../../../template/huntingExpansion.js';
 import {LOCATION_LEVELS,ZAKEN_SHIP} from '../../../template/locationLevels.js';
+import {FIELD_POPULATIONS} from '../../../template/fieldPopulations.js';
 import {WORLD_EXTENSION_ZONES} from '../../../template/worldExtension.js';
 import npcAi from '../../../template/l2NpcAi.js';
 export function npcBehaviour(id){
@@ -15,7 +16,11 @@ import {NPC_ATTRIBUTES,NPC_ATTRIBUTE_ATTACKS} from '../../../template/l2Attribut
 const catIds=new Set(catacombs.map(z=>z.id));
 const expansionIds=new Set(HUNTING_EXPANSION.map(z=>z.id));
 const referenceZones=[...fields.filter(z=>!catIds.has(z.id)&&!expansionIds.has(z.id)),...catacombs,...necropolises,...worldZones,...HUNTING_EXPANSION];
-const zones=[...referenceZones,...WORLD_EXTENSION_ZONES].map(z=>LOCATION_LEVELS[z.id]?{...z,mobs:[...LOCATION_LEVELS[z.id].mobs,...(z.id==='devils-isle'?ZAKEN_SHIP.mobs:[])],floors:LOCATION_LEVELS[z.id].floors.length}:z).sort((a,b)=>a.level-b.level);
+const zones=[...referenceZones,...WORLD_EXTENSION_ZONES].map(z=>{
+ const source=LOCATION_LEVELS[z.id];if(!source)return z;
+ const levels=source.mobs.map(m=>m.level).sort((a,b)=>a-b);
+ return {...z,...(FIELD_POPULATIONS[z.id]?{min:levels[0],max:levels.at(-1),level:levels[levels.length>>1]}:{}),mobs:[...source.mobs,...(z.id==='devils-isle'?ZAKEN_SHIP.mobs:[])],floors:source.floors.length};
+}).sort((a,b)=>a.level-b.level);
 for(const z of zones)for(const m of z.mobs)m.resist ||= NPC_ATTRIBUTES[m.id] || {};
 import getClassStats from '../player/getters/getGameClassStatsFromTemplate.js';
 import { CHAMPIONS, CHAMPION_MIN_LEVEL, HUNT } from './huntConfig.js';
