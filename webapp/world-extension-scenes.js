@@ -1,2 +1,2 @@
-export const WORLD_EXTENSION_SCENES=[{"id":"angel-waterfall","title":"Водопад Ангелов","category":"hunting","environment":"woodland","asset":"angel-waterfall","sections":1}];
-export const WORLD_EXTENSION_FLOOR_SCENES={"angel-waterfall":["angel-waterfall"]};
+export const WORLD_EXTENSION_SCENES=[{"id":"angel-waterfall","title":"Водопад Ангелов","category":"hunting","environment":"woodland","asset":"angel-waterfall","sections":1},{"id":"dragon-valley","title":"Долина Драконов","category":"hunting","environment":"desert","asset":"dragon-valley","sections":1}];
+export const WORLD_EXTENSION_FLOOR_SCENES={"angel-waterfall":["angel-waterfall"],"dragon-valley":["dragon-valley"]};
