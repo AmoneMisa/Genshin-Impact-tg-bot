@@ -12,15 +12,17 @@ import {roomSceneUrl} from '../webapp/room-scene-art.js';
 import {clampRoomCamera,isoSceneBounds} from '../webapp/hunt-isometric.js';
 import changeClass from '../functions/game/player/changePlayerGameClass.js';
 import updateStats from '../functions/game/player/updatePlayerStats.js';
+import {battleActor} from '../functions/game/hunt/huntNeighborhood.js';
+import {pursuePlayer} from '../functions/game/hunt/huntAi.js';
 
 const NOW=Date.now();
 function fixture(id){
  const s={userId:1,game:{stats:{lvl:80,currentExp:0},inventory:{gold:0,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
- changeClass(s,'humanFighter');updateStats(s);assert.ok(enterHuntField(s,id,{now:NOW,random:()=>.5}).ok);return s;
+ changeClass(s,'humanFighter');updateStats(s);assert.ok(enterHuntField(s,id,{now:NOW,random:()=>.5}).ok);ensureHunt(s,NOW,()=>.5);return s;
 }
-function quiet(field){field.mobs.forEach(m=>{m.aggressive=false;m.aggro=false;m.nextAttackAt=NOW+1e6;});}
+function quiet(field){[...field.mobs,...Object.values(field.rooms||{}).flatMap(r=>r.mobs||[])].forEach(m=>{m.aggressive=false;m.aggro=false;m.nextAttackAt=NOW+1e6;});}
 function walk(s,id,now){
- quiet(s.game.hunt.field);assert.ok(moveHuntField(s,'room:'+id,now).ok);
+ ensureHunt(s,now);quiet(s.game.hunt.field);assert.ok(moveHuntField(s,'room:'+id,now).ok);
  assert.notEqual(s.game.hunt.field.room,id,'room transitions require walking to the exit');
  advanceHunt(s,now+20000,()=>.5);assert.equal(s.game.hunt.field.room,id);
 }
@@ -72,6 +74,9 @@ test('aggressive monsters follow through a new section without restoring health 
  const pursuer=field.mobs[0];pursuer.currentHp-=1;pursuer.aggro=true;pursuer.aggressive=true;
  Object.assign(field,{x:.95,y:.5});Object.assign(pursuer,{x:.94,y:.5});
  assert.ok(moveHuntField(s,'room:r0c1',NOW+1).ok);advanceHunt(s,NOW+1000,()=>.5);
+ assert.equal(field.rooms.r0c0.mobs.includes(pursuer),true,'a pursuer already in attack range stays at its actual position across the edge');
+ assert.ok(battleActor(s.game.hunt,pursuer.instanceId).x<0);
+ Object.assign(field,{x:.4,y:.5,path:[]});pursuePlayer(s.game.hunt,NOW+5000);
  assert.equal(field.room,'r0c1');const moved=field.mobs.filter(m=>m.instanceId===pursuer.instanceId);
  assert.equal(moved.length,1);assert.equal(moved[0].currentHp,pursuer.currentHp);assert.ok(moved[0].aggro);
  assert.equal(field.rooms.r0c0.mobs.some(m=>m.instanceId===pursuer.instanceId),false);

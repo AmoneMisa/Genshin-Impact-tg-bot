@@ -18,7 +18,7 @@ function hero(zone='cruma-marshlands'){
 }
 function quiet(s){s.game.hunt.field.mobs.forEach(m=>{m.aggressive=false;m.aggroRange=0;m.aggro=false;m.nextAttackAt=NOW+1e12;});}
 const distance=(from,path)=>{let n=0,p=from;for(const q of path){n+=Math.hypot(p.x-q.x,p.y-q.y);p=q;}return n;};
-test('surface terrain streams at most nine cells without generating populations or joining underground and instance spaces',async()=>{
+test('surface terrain streams at most nine cells with persistent nearby actors and separate underground and instance spaces',async()=>{
  let count=0;
  for(const [id,model] of Object.entries(FIELD_POPULATIONS)){
   const zone=getZone(id),layout=roomLayout(zone),surface=model.source.coordinateSpace==='surface';
@@ -29,8 +29,9 @@ test('surface terrain streams at most nine cells without generating populations 
  assert.ok(count>20);
  for(const id of ['tower-of-insolence','ivory-tower','pagan-temple','catacomb-branded','dimensional-rift']){const z=getZone(id);if(z)assert.equal(continuousField(z,roomLayout(z)),false);}
  const s=hero(),f=s.game.hunt.field,before=JSON.stringify(f),dto=(await getHuntState(s,NOW)).field;
- assert.equal(dto.continuous.geometry,'adapted');assert.equal(Object.keys(f.rooms).length,0);assert.equal(f.visited.length,1);
+ assert.equal(dto.continuous.geometry,'adapted');assert.ok(Object.keys(f.rooms).length<=8);assert.equal(f.visited.length,1);
  assert.equal(JSON.parse(before).mobs.length,f.mobs.length);
+ const residents=JSON.stringify(f.rooms);await getHuntState(s,NOW);assert.equal(JSON.stringify(f.rooms),residents,'polling keeps the same resident population');
 });
 test('border intersection preserves its transverse coordinate and rejects corners, distant cells and the outer perimeter',()=>{
  const layout=roomLayout(getZone('cruma-marshlands')),room=layout.rooms[0],from={x:.9,y:.6};

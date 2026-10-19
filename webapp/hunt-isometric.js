@@ -68,8 +68,8 @@ export function isoLabelOffsets(actors,viewport){
 export function isoTerrain(field,viewport) {
   if(field.continuous){
     const m=isoMatrix(viewport),outline=points([[0,0],[1,0],[1,1],[0,1]].map(([x,y])=>isoPoint({x,y},viewport)));
-    return `<svg class="hunt-isometric-terrain" viewBox="0 0 ${viewport.width} ${viewport.height}" aria-hidden="true">`+field.continuous.tiles.map(t=>{
-      const id=`terrain-${t.id}`,tile=isoTerrain({...field,...t,continuous:null,streamTile:true},viewport);
+    return `<svg class="hunt-isometric-terrain" style="z-index:-100" viewBox="0 0 ${viewport.width} ${viewport.height}" aria-hidden="true">`+field.continuous.tiles.map(t=>{
+      const id=`terrain-${field.continuous.space||'surface'}-${t.id}`,tile=isoTerrain({...field,...t,continuous:null,streamTile:true},viewport);
       return `<g data-terrain-cell="${t.id}" transform="translate(${m.a*t.dx+m.c*t.dy},${m.b*t.dx+m.d*t.dy})"><defs><clipPath id="${id}"><polygon points="${outline}"/></clipPath></defs><g clip-path="url(#${id})">${tile}</g></g>`;
     }).join('')+'</svg>';
   }

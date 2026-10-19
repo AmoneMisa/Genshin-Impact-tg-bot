@@ -82,14 +82,15 @@ export function spatialTargets(field,mob,geometry,random=Math.random) {
     if(!center)return [];
     const facing=mob?Math.atan2(mob.y-field.y,mob.x-field.x):(field.facing||0);
     const directional=geometry.weapon||/FRONT|BEHIND/.test(geometry.target);
+    const primary=m=>m===mob||Boolean(mob?.instanceId)&&m.instanceId===mob.instanceId;
     const heading=facing+(geometry.target.startsWith('BEHIND')?Math.PI:0);
     const hit=field.mobs.filter(m=>{
         if(m.currentHp<=0||!clearLine(field,m,field.walls))return false;
-        if(m===mob&&needsTarget(geometry))return true;
+        if(primary(m)&&needsTarget(geometry))return true;
         if(spatialDistance(center,m)>geometry.radius)return false;
         const angle=Math.atan2(m.y-field.y,m.x-field.x)-heading;
         return !directional||Math.abs(Math.atan2(Math.sin(angle),Math.cos(angle)))<=geometry.angle*Math.PI/360;
-    }).sort((a,b)=>(a===mob?-1:b===mob?1:spatialDistance(center,a)-spatialDistance(center,b)));
+    }).sort((a,b)=>(primary(a)?-1:primary(b)?1:spatialDistance(center,a)-spatialDistance(center,b)));
     const limit=geometry.limitMin ? geometry.limitMin+Math.floor(random()*(geometry.limit-geometry.limitMin+1)) : geometry.limit;
     return limit>0?hit.slice(0,limit):hit;
 }

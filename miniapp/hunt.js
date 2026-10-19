@@ -39,6 +39,7 @@ import {huntDropGroups} from '../functions/game/hunt/dropGroups.js';
 import {getCombatParty} from './party.js';
 import {populationCapacity,hellboundStage} from '../functions/game/hunt/sourcePopulation.js';
 import {fieldStream} from '../functions/game/world/continuousField.js';
+import {battleField} from '../functions/game/hunt/huntNeighborhood.js';
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
 const percent = (current, max) => (max > 0 ? Math.max(0, Math.min(100, current / max * 100)) : 0);
@@ -160,7 +161,7 @@ function fieldDto(hunt, now, session) {
         } : null,
         respawning: pending.length,
         nextSpawnMs,
-        mobs: field.mobs.map(m => mobDto(m, now)),
+        mobs: (stream?battleField(hunt).mobs.sort((a,b)=>Number(b.instanceId===field.target)-Number(a.instanceId===field.target)||Math.hypot(a.x-field.x,a.y-field.y)-Math.hypot(b.x-field.x,b.y-field.y)).slice(0,48):field.mobs).map(m => mobDto(m, now)),
     };
 }
 

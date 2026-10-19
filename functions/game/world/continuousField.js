@@ -9,7 +9,7 @@ export function continuousField(zone,layout){
 export function fieldStream(zone,layout,current){
  if(!continuousField(zone,layout))return null;
  return {space:zone.id,geometry:'adapted',col:current.col,row:current.row,
-  // Terrain only: looking into a cell must not roll random groups or resurrect its actors.
+  // Rendering metadata does not own actors; resident populations remain in persistent banks.
   tiles:layout.rooms.filter(r=>Math.abs(r.col-current.col)<=1&&Math.abs(r.row-current.row)<=1).map(r=>({
    id:r.id,dx:r.col-current.col,dy:r.row-current.row,environment:r.environment,walls:r.walls,
    sceneKey:`${zone.id}:${r.id}:floor-1`

@@ -4,7 +4,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {LOCATION_LEVELS} from '../../template/locationLevels.js';
-import {enterHuntField,moveHuntField,advanceHunt} from '../../functions/game/hunt/huntFight.js';
+import {enterHuntField,moveHuntField,advanceHunt,ensureHunt,selectHuntTarget,useHuntSkill} from '../../functions/game/hunt/huntFight.js';
 import {roomLayout,adjacent} from '../../functions/game/hunt/huntRooms.js';
 import {getZone} from '../../functions/game/hunt/huntMobs.js';
 import {FIELD_POPULATIONS} from '../../template/fieldPopulations.js';
@@ -24,12 +24,18 @@ try{for(const {width,mode} of configurations){
  page.on('pageerror',e=>errors.push(e.message));
  if(mode==='canvas')await page.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return /webgl/i.test(type)?null:original.call(this,type,...args);};});
  let s,chat,now;
- const quiet=()=>s.game.hunt?.field?.mobs.forEach(m=>{m.aggroRange=0;m.aggro=false;m.nextAttackAt=now+1e9;});
+ const quiet=()=>{if(!s.game.hunt?.field)return;ensureHunt(s,now,()=>.5);const f=s.game.hunt.field;[...f.mobs,...Object.values(f.rooms||{}).flatMap(r=>r.mobs||[])].forEach(m=>{m.aggroRange=0;m.aggro=false;m.nextAttackAt=now+1e9;});};
  await page.route('**/*',async route=>{
   const u=new URL(route.request().url()).pathname;
   if(u==='/fixture')return route.fulfill({contentType:'text/html',body:`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${styles}<body><script type="module">import {openHuntGame} from '/hunt.js';window.openRoom=()=>openHuntGame({haptic:()=>{},renderState:()=>{},statusElement:document.createElement('span'),api:async(url,options)=>{const r=await fetch(url,options);const p=await r.json();if(!r.ok)throw Object.assign(new Error(p.reason),{payload:p});return p;}});</script></body>`});
   if(u==='/vendor/phaser/phaser.esm.min.js')return route.fulfill(mode==='unavailable'?{status:404}:{contentType:'text/javascript',body:fs.readFileSync('node_modules/phaser/dist/phaser.esm.min.js')});
   if(u==='/api/hunt')return route.fulfill({json:await getHuntState(s,now)});
+  if(u==='/api/hunt/target'||u==='/api/hunt/skill'){
+   const body=route.request().postDataJSON(),result=u==='/api/hunt/target'?selectHuntTarget(s,body.targetId,now):useHuntSkill(s,body.skillIndex,{now,random:()=>.5});
+   assert.ok(result.ok);
+   if(u==='/api/hunt/skill'){now+=4500;quiet();advanceHunt(s,now,()=>.5);quiet();}
+   return route.fulfill({json:{...result,hunt:await getHuntState(s,now)}});
+  }
   if(u==='/api/hunt/move'){
    const body=route.request().postDataJSON(),result=moveHuntField(s,body.direction||body.point,now);
    assert.ok(result.ok);now+=30000;quiet();advanceHunt(s,now,()=>.5);quiet();bindWorldInstances(chat,now);
@@ -50,7 +56,7 @@ try{for(const {width,mode} of configurations){
  const selected=process.env.LOCATION_LEVEL_ZONE?floors.filter(({id})=>process.env.LOCATION_LEVEL_ZONE.split(',').includes(id)):mode==='auto'?(process.env.LOCATION_LEVEL_SMOKE?focused:floors):floors.filter(({id,f})=>id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4);
  const cases=selected.flatMap(c=>c.id==='hellbound'?[0,1,4,11].map(stage=>({...c,stage})):[c]);
  for(const {id,f,stage} of cases){
-  now=Date.now();s={userId:1,game:{stats:{lvl:80,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
+  now=Date.now();s={userId:1,userChatData:{user:{id:1}},game:{stats:{lvl:80,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
   chat={game:id==='hellbound'?{hellbound:{level:stage}}:{},members:[s]};s.ownerDocument=()=>chat;
   changeClass(s,'humanFighter');updateStats(s);ensureWorld(s,now);enterHuntField(s,id,{now,floor:f.number,random:()=>.5});Object.assign(s.game.world,{mode:'location',location:id});
   if(f.ship){const instance=createShipVoyage('fixture',[s],now,()=>0);chat.game.worldInstances={fixture:instance};s.game.world.instanceId='fixture';bindWorldInstances(chat,now);}
@@ -122,6 +128,17 @@ try{for(const {width,mode} of configurations){
    assert.ok(await page.locator('[data-terrain-cell]').count()<=9,'bounded terrain stream');
    assert.equal(await page.locator('.hunt-phaser canvas').count(),0,'surface needs no canvas or WebGL');
    assert.ok(await page.locator('.hunt-hero-marker').evaluate(n=>{const a=n.getBoundingClientRect(),b=n.closest('.hunt-ground').getBoundingClientRect();return a.right>b.left&&a.left<b.right&&a.bottom>b.top&&a.top<b.bottom;}),'camera retains the hero');
+   const target=field.rooms[oldRoom].mobs[0];assert.ok(target);
+   changeClass(s,'mage');updateStats(s);Object.assign(field,{x:east?.04:.96,y:.6,path:[]});Object.assign(target,{x:east?.96:.04,y:.6,currentHp:1});quiet();
+   await page.waitForTimeout(1500);
+   await page.locator(`[data-target="${target.instanceId}"]`).click();
+   assert.equal(field.target,target.instanceId,'neighbour target selection');
+   if(mode==='auto')await page.screenshot({path:path.join(out,`neighbour-combat-${width}.png`)});
+   const kills=s.game.hunt.kills||0;await page.locator('[data-skill="0"]').first().click();await page.waitForTimeout(250);
+   assert.equal(s.game.hunt.kills,kills+1,'real cast kills a target across the boundary');
+   assert.ok(!field.rooms[oldRoom].mobs.some(m=>m.instanceId===target.instanceId));
+   assert.ok(field.respawns.some(r=>r.room===target.sourceRoom&&r.sourceSlot===target.sourceSlot));
+   assert.ok(await page.locator('[data-target]').count()<=(width<500?8:16),'nearby actors share the same DOM limit');
   }
   if((FIELD_POPULATIONS[id]||id==='ivory-tower'&&f.number===3||f.ship)&&mode==='auto')await page.screenshot({path:path.join(out,`${id}-${stage??f.number}-${width}.png`)});
   await page.locator('.hunt-overlay [data-dismiss]').first().click();await page.waitForSelector('.hunt-overlay',{state:'detached'});
