@@ -8,6 +8,9 @@ import {huntSuppliesDto,setHuntSupplies,advanceAutoSupplies} from '../miniapp/hu
 import {hotbar} from '../webapp/boss-hud.js';
 import {aggroNearby,provokeMob} from '../functions/game/hunt/huntAi.js';
 import npcAi from '../template/l2NpcAi.js';
+import {npcBehaviour,NPC_AI_VERSION} from '../functions/game/hunt/huntMobs.js';
+import {mobDto} from '../functions/game/hunt/huntFight.js';
+import {mobDisposition} from '../webapp/combat-target.js';
 
 const NOW=1800000000000;
 function hero(){
@@ -51,7 +54,7 @@ test('automatic HP does not keep consuming bottles while a healing effect is act
 });
 test('aggression uses NPC radius and social help requires a matching clan, range and visibility',()=>{
  assert.equal(npcAi['20576'].aggressive,false);assert.deepEqual(npcAi['20576'].clans,['OEL_MAHUM']);
- const actor=extra=>({aiSourceVersion:1,currentHp:100,attackMs:1000,aggro:false,x:.5,y:.5,socialClans:['A'],socialIgnoredIds:[],clanHelpRange:300,...extra});
+ const actor=extra=>({aiSourceVersion:NPC_AI_VERSION,currentHp:100,attackMs:1000,aggro:false,x:.5,y:.5,socialClans:['A'],socialIgnoredIds:[],clanHelpRange:300,...extra});
  const target=actor({mobId:'1'}),friend=actor({x:.55}),stranger=actor({x:.52,socialClans:['B']}),far=actor({x:.9}),ignored=actor({x:.51,socialIgnoredIds:['1']});
  const hunt={field:{x:.5,y:.8,walls:[],mobs:[target,friend,stranger,far,ignored]}};
  provokeMob(hunt,target,NOW);assert.deepEqual(hunt.field.mobs.map(m=>m.aggro),[true,true,false,false,false]);
@@ -59,4 +62,15 @@ test('aggression uses NPC radius and social help requires a matching clan, range
  aggroNearby(hunt,NOW);assert.equal(target.aggro,false);
  hunt.field.y=.7;aggroNearby(hunt,NOW);assert.equal(target.aggro,true);
  target.aggro=false;hunt.field.walls=[{x:.4,y:.59,w:.2,h:.03}];aggroNearby(hunt,NOW);assert.equal(target.aggro,false);
+});
+test('source default aggression and explicit peaceful clans survive legacy AI migration and DTO colors',()=>{
+ assert.equal(npcAi['21324'].aggressive,true,'Ketra Footman inherits the source true default');
+ assert.equal(npcAi['20576'].aggressive,false,'Ol Mahum Transcender explicitly disables aggression');
+ const old=JSON.parse(JSON.stringify({mobId:'21324',aiSourceVersion:1,aggressive:false,hp:100,currentHp:100,attackMs:1000,aggro:false,x:.5,y:.5}));
+ aggroNearby({field:{x:.5,y:.5,walls:[],mobs:[old]}},NOW);
+ assert.equal(old.aiSourceVersion,NPC_AI_VERSION);assert.equal(old.aggro,true);
+ assert.equal(mobDisposition(mobDto(old,NOW)),'aggressive');
+ const peaceful={...old,...npcBehaviour('20576'),aggro:true};
+ assert.equal(mobDisposition(mobDto(peaceful,NOW)),'social','retaliation does not turn a peaceful clan red');
+ assert.equal(mobDisposition(mobDto({...peaceful,socialClans:[]},NOW)),'neutral');
 });

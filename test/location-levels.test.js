@@ -186,7 +186,7 @@ test('Rune church drop is one-way and Triol mirrors retain their H5 destinations
  Object.assign(s.game.world,cityPoint(CITIES.find(c=>c.id==='rune'),npc));
  assert.equal(worldAction(s,{action:'pagan_church'},NOW).ok,true);
  assert.equal(s.game.hunt.field.floor,3);
- const take=(floor)=>{const f=s.game.hunt.field,d=levelTransitions('pagan-temple',f).destinations.find(d=>d.floor===floor);assert.ok(d);Object.assign(f,{room:d.room,...d.point});assert.equal(worldAction(s,{action:'floor',floor},NOW).ok,true);};
+ const take=(floor)=>{quiet(s);const f=s.game.hunt.field,d=levelTransitions('pagan-temple',f).destinations.find(d=>d.floor===floor);assert.ok(d);Object.assign(f,{room:d.room,...d.point});assert.equal(worldAction(s,{action:'floor',floor},NOW).ok,true);};
  take(4);assert.equal(levelTransitions('pagan-temple',s.game.hunt.field).destinations.some(d=>d.floor===3),false);
  take(1);assert.equal(locationLevel('pagan-temple',4).transports[0].source.z,-10856);
  take(3);assert.equal(locationLevel('pagan-temple',1).transports.find(d=>d.floor===3).source.z,718);

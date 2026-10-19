@@ -18,7 +18,8 @@ for path in sorted((root / '.tmp/hf-npcs').glob('*.xml')):
         if ai is None:
             continue
         rows[npc.get('id')] = {
-            'aggressive': ai.get('isAggressive') == 'true',
+            # NpcTemplate.set(): getBoolean("isAggressive", true).
+            'aggressive': ai.get('isAggressive', 'true') == 'true',
             'aggroRange': int(ai.get('aggroRange', '0')),
             'clanHelpRange': int(ai.get('clanHelpRange', '0')),
             'clans': [e.text for e in ai.findall('./clanList/clan') if e.text],

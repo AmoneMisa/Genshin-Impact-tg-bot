@@ -8,9 +8,10 @@ import {LOCATION_LEVELS,ZAKEN_SHIP} from '../../../template/locationLevels.js';
 import {FIELD_POPULATIONS} from '../../../template/fieldPopulations.js';
 import {WORLD_EXTENSION_ZONES} from '../../../template/worldExtension.js';
 import npcAi from '../../../template/l2NpcAi.js';
+export const NPC_AI_VERSION=2;
 export function npcBehaviour(id){
     const ai=npcAi[id];
-    return {aiSourceVersion:1,aiDataMissing:!ai,aggressive:Boolean(ai?.aggressive),aggroRange:ai?.aggroRange??null,clanHelpRange:ai?.clanHelpRange??null,socialClans:ai?.clans||[],socialIgnoredIds:ai?.ignoredIds||[]};
+    return {aiSourceVersion:NPC_AI_VERSION,aiDataMissing:!ai,aggressive:Boolean(ai?.aggressive),aggroRange:ai?.aggroRange??null,clanHelpRange:ai?.clanHelpRange??null,socialClans:ai?.clans||[],socialIgnoredIds:ai?.ignoredIds||[]};
 }
 import {NPC_ATTRIBUTES,NPC_ATTRIBUTE_ATTACKS} from '../../../template/l2AttributeRules.js';
 const catIds=new Set(catacombs.map(z=>z.id));

@@ -5,7 +5,7 @@ import {isBossStunned} from '../boss/bossDebuffs.js';
 import {l2HasControl,l2MoveMultiplier} from '../player/l2Effects.js';
 import {findPath,advancePath} from '../world/navigation.js';
 import {clearLine} from './huntSpatial.js';
-import {npcBehaviour} from './huntMobs.js';
+import {npcBehaviour,NPC_AI_VERSION} from './huntMobs.js';
 
 export function huntDebuff(session, kind, now) {
     return (session.game.hunt?.playerDebuffs || []).find(e => e.kind === kind && e.until > now)?.amount || 0;
@@ -18,7 +18,7 @@ export function mobBuff(mob, kind, now) {
 export function aggroNearby(hunt, now,session=null) {
     if(session&&['SilentMove','Hide','FakeDeath'].some(kind=>l2HasControl(session,kind,now)))return;
     for (const mob of hunt.field?.mobs || []) {
-        if(mob.aiSourceVersion!==1)Object.assign(mob,npcBehaviour(mob.mobId));
+        if(mob.aiSourceVersion!==NPC_AI_VERSION)Object.assign(mob,npcBehaviour(mob.mobId));
         if (mob.currentHp <= 0 || mob.aggro || !mob.aggressive) continue;
         const distance = Math.hypot(mob.x - hunt.field.x, mob.y - hunt.field.y);
         if (mob.aggroRange>0 && distance <= mob.aggroRange/2000 && clearLine(mob,hunt.field,hunt.field.walls)) {
@@ -32,8 +32,8 @@ export function aggroNearby(hunt, now,session=null) {
 export function provokeMob(hunt, target, now) {
     for (const mob of hunt.field?.mobs || []) {
         if (mob.currentHp <= 0 || mob.aggro) continue;
-        if(mob.aiSourceVersion!==1)Object.assign(mob,npcBehaviour(mob.mobId));
-        if(target.aiSourceVersion!==1)Object.assign(target,npcBehaviour(target.mobId));
+        if(mob.aiSourceVersion!==NPC_AI_VERSION)Object.assign(mob,npcBehaviour(mob.mobId));
+        if(target.aiSourceVersion!==NPC_AI_VERSION)Object.assign(target,npcBehaviour(target.mobId));
         const social=mob.clanHelpRange>0&&mob.socialClans?.some(clan=>target.socialClans?.includes(clan))&&!mob.socialIgnoredIds?.includes(String(target.mobId));
         if (mob === target || social && Math.hypot(mob.x - target.x, mob.y - target.y) <= mob.clanHelpRange/2000 && clearLine(mob,target,hunt.field.walls)) {
             mob.aggro = true;
