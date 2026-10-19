@@ -23,4 +23,5 @@ import z20 from './field-populations/talking-island.js';
 import z21 from './field-populations/elven-fields.js';
 import z22 from './field-populations/bee-hive.js';
 import z23 from './field-populations/catacomb-heretic.js';
-export const FIELD_POPULATIONS = {"plains-of-dion":z0,"cruma-marshlands":z1,"turek-orcs":z2,"brekas-stronghold":z3,"alligator-beach":z4,"sea-of-spores":z5,"timak-outpost":z6,"plains-of-glory":z7,"outlaw-forest":z8,"fields-of-massacre":z9,"cemetery":z10,"valley-of-saints":z11,"blazing-swamp":z12,"swamp-of-screams":z13,"hot-springs":z14,"wall-of-argos":z15,"ketra-outpost":z16,"varka-outpost":z17,"sel-mahums":z18,"field-of-whispers":z19,"talking-island":z20,"elven-fields":z21,"bee-hive":z22,"catacomb-heretic":z23};
+import z24 from './field-populations/catacomb-branded.js';
+export const FIELD_POPULATIONS = {"plains-of-dion":z0,"cruma-marshlands":z1,"turek-orcs":z2,"brekas-stronghold":z3,"alligator-beach":z4,"sea-of-spores":z5,"timak-outpost":z6,"plains-of-glory":z7,"outlaw-forest":z8,"fields-of-massacre":z9,"cemetery":z10,"valley-of-saints":z11,"blazing-swamp":z12,"swamp-of-screams":z13,"hot-springs":z14,"wall-of-argos":z15,"ketra-outpost":z16,"varka-outpost":z17,"sel-mahums":z18,"field-of-whispers":z19,"talking-island":z20,"elven-fields":z21,"bee-hive":z22,"catacomb-heretic":z23,"catacomb-branded":z24};
