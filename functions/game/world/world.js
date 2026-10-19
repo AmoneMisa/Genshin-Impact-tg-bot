@@ -215,6 +215,14 @@ export function worldAction(session,body,now=Date.now()){
         // Exit route ends at the associated settlement; duration uses original world distance.
         const l=LOCATIONS.find(l=>l.id===w.location),c=cityOf(w);w.walkHome={until:now+Math.hypot(l.x-c.x,l.y-c.y)/Math.max(1,getSpeed(session))*1000};w.mode='road';session.game.hunt.field=null;session.game.hunt.mob=null;return {ok:true};
     }
+    if(body.action==='pagan_church'){
+        const npc=CITY_NPCS.find(n=>n.service==='pagan-church');
+        if(w.mode!=='city'||w.city!==npc.city||!nearNpc(w,npc))return {ok:false,reason:'npc_too_far'};
+        const denied=quickTravelBlock(session,now);if(denied)return {ok:false,reason:denied};
+        const result=enterHuntField(session,'pagan-temple',{now,floor:3});
+        if(result.ok)Object.assign(w,{mode:'location',location:'pagan-temple',instanceId:null,path:[],pending:null,channel:null});
+        return result;
+    }
     if(body.action==='buy_scroll'){
         const npc=CITY_NPCS.find(n=>n.id===body.npc);if(w.mode!=='city'||!npc||npc.gateway||npc.instanceGateway||npc.city!==w.city||!nearNpc(w,npc))return {ok:false,reason:'npc_too_far'};
         if(!(session.game.inventory.gold>=1000))return {ok:false,reason:'not_enough_gold'};session.game.inventory.gold-=1000;addMaterial(session,'scroll_escape',1);return {ok:true};

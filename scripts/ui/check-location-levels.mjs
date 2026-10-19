@@ -40,7 +40,7 @@ try{for(const {width,mode} of configurations){
  });
  await page.goto('http://levels.local/fixture');
  const floors=Object.entries(LOCATION_LEVELS).flatMap(([id,z])=>z.floors.map(f=>({id,f})));
- const focused=floors.filter(({id,f})=>id==='seed-of-destruction'&&f.number===1||id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4||id==='tower-of-insolence'&&f.number===12||id==='cruma-tower'&&f.number===3);
+ const focused=floors.filter(({id,f})=>id==='pagan-temple'&&f.number>=3||id==='seed-of-destruction'&&f.number===1||id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4||id==='tower-of-insolence'&&f.number===12||id==='cruma-tower'&&f.number===3);
  const cases=mode==='auto'?(process.env.LOCATION_LEVEL_SMOKE?focused:floors):floors.filter(({id,f})=>id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4);
  for(const {id,f} of cases){
   now=Date.now();s={userId:1,game:{stats:{lvl:80,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};

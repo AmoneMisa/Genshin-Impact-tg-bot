@@ -6,7 +6,7 @@ import {locationLevel,levelTransitions} from '../functions/game/hunt/locationLev
 import {enterHuntField,changeHuntFloor,ensureHunt,advanceHunt,moveHuntField} from '../functions/game/hunt/huntFight.js';
 import {roomLayout,adjacent} from '../functions/game/hunt/huntRooms.js';
 import {getZone} from '../functions/game/hunt/huntMobs.js';
-import {worldAction,ensureWorld,enterZakenShip,bindWorldInstances} from '../functions/game/world/world.js';
+import {CITIES,CITY_NPCS,cityPoint,worldAction,ensureWorld,enterZakenShip,bindWorldInstances} from '../functions/game/world/world.js';
 import {candleRoom,shipDto,locationBossGate,tickShip} from '../functions/game/world/zakenShip.js';
 import {grantKillRewards} from '../functions/game/hunt/huntRewards.js';
 import {getHuntState} from '../miniapp/hunt.js';
@@ -50,7 +50,7 @@ function approachCandle(s,id,now){
 
 test('all configured floors have source-only populations, connected rooms and separate bounded paintings',()=>{
  assert.equal(LEVEL_SOURCE.geodataAvailable,false);
- assert.deepEqual(Object.fromEntries(Object.entries(LOCATION_LEVELS).filter(([id])=>['tower-of-insolence','cruma-tower','ivory-tower','garden-of-eva','giants-cave','monastery-of-silence','imperial-tomb','pagan-temple','devils-isle'].includes(id)).map(([id,z])=>[id,z.floors.length])),{'tower-of-insolence':14,'cruma-tower':3,'ivory-tower':6,'garden-of-eva':5,'giants-cave':2,'monastery-of-silence':2,'imperial-tomb':2,'pagan-temple':2,'devils-isle':6});
+ assert.deepEqual(Object.fromEntries(Object.entries(LOCATION_LEVELS).filter(([id])=>['tower-of-insolence','cruma-tower','ivory-tower','garden-of-eva','giants-cave','monastery-of-silence','imperial-tomb','pagan-temple','devils-isle'].includes(id)).map(([id,z])=>[id,z.floors.length])),{'tower-of-insolence':14,'cruma-tower':3,'ivory-tower':6,'garden-of-eva':5,'giants-cave':2,'monastery-of-silence':2,'imperial-tomb':2,'pagan-temple':4,'devils-isle':6});
  for(const [id,z] of Object.entries(LOCATION_LEVELS))for(const floor of z.floors){
   const s=hero(1,id,floor.number),layout=roomLayout(getZone(id),floor.number);
   const reached=new Set([layout.startId]);let count=-1;
@@ -176,4 +176,19 @@ test('dense populations bound DOM actors while keeping the selected target reach
  const mobs=Array.from({length:90},(_,i)=>({instanceId:String(i),x:i/100,y:0}));
  const visible=visibleFieldMobs({mobs,x:0,y:0,target:'89'});
  assert.equal(visible.length,24);assert.equal(visible[0].instanceId,'89');assert.equal(mobs.length,90);
+});
+
+
+test('Rune church drop is one-way and Triol mirrors retain their H5 destinations',()=>{
+ const s=hero(1,'pagan-temple',1),npc=CITY_NPCS.find(n=>n.service==='pagan-church');
+ s.game.hunt=null;Object.assign(s.game.world,{mode:'city',city:'rune',location:null,x:0,y:0});
+ assert.equal(worldAction(s,{action:'pagan_church'},NOW).reason,'npc_too_far');
+ Object.assign(s.game.world,cityPoint(CITIES.find(c=>c.id==='rune'),npc));
+ assert.equal(worldAction(s,{action:'pagan_church'},NOW).ok,true);
+ assert.equal(s.game.hunt.field.floor,3);
+ const take=(floor)=>{const f=s.game.hunt.field,d=levelTransitions('pagan-temple',f).destinations.find(d=>d.floor===floor);assert.ok(d);Object.assign(f,{room:d.room,...d.point});assert.equal(worldAction(s,{action:'floor',floor},NOW).ok,true);};
+ take(4);assert.equal(levelTransitions('pagan-temple',s.game.hunt.field).destinations.some(d=>d.floor===3),false);
+ take(1);assert.equal(locationLevel('pagan-temple',4).transports[0].source.z,-10856);
+ take(3);assert.equal(locationLevel('pagan-temple',1).transports.find(d=>d.floor===3).source.z,718);
+ assert.equal(locationLevel('pagan-temple',3).transports[0].sourcePosition,null);
 });
