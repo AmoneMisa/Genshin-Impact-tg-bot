@@ -2,6 +2,7 @@ import {paintRoom} from './room-paint.js';
 import {combatTheme,colorHex} from './combat-environment.js';
 import {loadRoomPropArt} from './room-props-art.js';
 import {loadRoomScene,roomSceneUrl} from './room-scene-art.js';
+import {bindRoomObstacleFallback} from './room-obstacles.js';
 
 let runtime;
 const loadRuntime=()=>runtime??=import('/vendor/phaser/phaser.esm.min.js');
@@ -130,6 +131,7 @@ export function createHuntRenderer(){
   }
   return {
     mount(nextWorld,nextField,nextViewport){
+      bindRoomObstacleFallback(nextWorld);
       // Streamed surface terrain uses the shared lightweight SVG and HTML actors.
       // Do not allocate a canvas covering multiple cells or a second rendering loop.
       if(nextField?.continuous){release();world=nextWorld;field=nextField;viewport=nextViewport;return;}

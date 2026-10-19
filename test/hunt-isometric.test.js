@@ -29,10 +29,12 @@ test('isometric movement picking preserves game coordinates after pan, zoom and 
  const outside=isoPick({x:0,y:0},v);assert.ok(outside.x<0||outside.y<0);
 });
 
-test('terrain is static SVG and collision obstacles retain their server geometry',()=>{
- const svg=isoTerrain({walls:[{x:.35,y:.6,w:.12,h:.12},{x:.27,y:.23,w:.065,h:.065,kind:'pillar'}]},{width:348,height:425});
- assert.match(svg,/hunt-iso-wall/);assert.match(svg,/hunt-iso-pillar/);assert.match(svg,/iso-front/);
- assert.match(svg,/<image href="\/art\/world\/room-props-v1.webp"/);
+test('terrain uses natural rubble rather than box walls without modifying collision geometry',()=>{
+ const field={walls:[{x:.35,y:.6,w:.12,h:.12},{x:.27,y:.23,w:.065,h:.065,kind:'pillar'}]},before=JSON.stringify(field);
+ const svg=isoTerrain(field,{width:348,height:425});
+ assert.doesNotMatch(svg,/hunt-iso-wall|iso-front|iso-side|iso-top/);assert.match(svg,/hunt-iso-pillar/);assert.match(svg,/data-rubble-prop/);assert.match(svg,/data-stone-fallback/);
+ assert.equal(JSON.stringify(field),before);
+ assert.match(svg,/<image data-room-prop-art href="\/art\/world\/room-props-v1.webp"/);
  assert.match(svg,/viewBox="170 0 230 512"/,'pillar uses its source atlas region');
  assert.doesNotMatch(svg,/<canvas|<animate|<script/);
 });

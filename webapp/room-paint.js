@@ -3,6 +3,7 @@ import {paintedRoomScene,roomArtField} from './room-scene-art.js';
 import {combatTheme,colorHex} from './combat-environment.js';
 import {paintLocationDetails} from './room-details.js';
 import {paintedProp,paintedStoneFloor,roomPropHeight} from './room-props-art.js';
+import {roomObstacleProps,obstacleStoneOutline} from './room-obstacles.js';
 
 const canvas=(w,h)=>{const c=document.createElement('canvas');c.width=Math.ceil(w);c.height=Math.ceil(h);return c;};
 const path=(ctx,points)=>{ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();};
@@ -31,7 +32,7 @@ export function paintRoom(field,viewport){
  if(sceneArt){
   const artBounds=isoSceneBounds(viewport);
   ctx.drawImage(sceneArt,artBounds.x,artBounds.y,artBounds.width,artBounds.height);
-  const props=(field.walls||[]).map((w,i)=>paintProp(w,viewport,theme,i,field.environment));
+  const props=roomObstacleProps(field.walls).map(w=>paintProp(w,viewport,theme,w.index,field.environment));
   return {floor,bounds,props};
  }
  // A soft contact shadow replaces the bright edge of a floating board.
@@ -70,19 +71,19 @@ export function paintRoom(field,viewport){
   const a=p(w.x+w.w/2,w.y+w.h/2),glow=ctx.createRadialGradient(a.x,a.y,2,a.x,a.y,90);glow.addColorStop(0,field.environment==='necropolis'?'rgba(114,185,171,.16)':'rgba(220,156,64,.2)');glow.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=glow;ctx.fillRect(a.x-90,a.y-90,180,180);
  }
  const vignette=ctx.createRadialGradient(center.x,center.y,70,center.x,center.y,m.a);vignette.addColorStop(0,'rgba(0,0,0,0)');vignette.addColorStop(1,'rgba(2,4,9,.48)');ctx.fillStyle=vignette;ctx.fillRect(-padX,-padY,bounds.width,bounds.height);ctx.restore();
- const props=(field.walls||[]).map((w,i)=>paintProp(w,viewport,theme,i,field.environment));
+ const props=roomObstacleProps(field.walls).map(w=>paintProp(w,viewport,theme,w.index,field.environment));
  return {floor,bounds,props};
 }
 
 function paintProp(w,viewport,theme,index,environment){
  const p=(x,y)=>isoPoint({x,y},viewport),base=[p(w.x,w.y),p(w.x+w.w,w.y),p(w.x+w.w,w.y+w.h),p(w.x,w.y+w.h)];
- const height=w.kind==='pillar'?125:w.kind==='wall'?84:w.kind==='tree'?150:w.kind==='sarcophagus'?45:55;
+ const height=(w.kind==='pillar'?125:w.kind==='tree'?150:w.kind==='sarcophagus'?45:55)*(w.heightScale||1);
  const minX=Math.min(...base.map(p=>p.x))-72,minY=Math.min(...base.map(p=>p.y))-height-24,maxX=Math.max(...base.map(p=>p.x))+72,maxY=Math.max(...base.map(p=>p.y))+24;
  const image=canvas(maxX-minX,maxY-minY),ctx=image.getContext('2d');ctx.translate(-minX,-minY);
  const depth=10+(w.x+w.y+w.w+w.h)*10;
  const art=paintedProp(w.kind,environment);
  if(art){
-  const foot=p(w.x+w.w/2,w.y+w.h/2),artHeight=roomPropHeight(w.kind,index),scale=artHeight/art.height;
+  const foot=p(w.x+w.w/2,w.y+w.h/2),artHeight=roomPropHeight(w.kind,index)*(w.heightScale||1),scale=artHeight/art.height;
   const artWidth=art.width*scale;
   // Atlas cells share a root anchor. Shadows are painted beneath the same server footprint.
   ctx.save();ctx.translate(foot.x,foot.y);ctx.scale(1,.45);const contact=ctx.createRadialGradient(0,0,1,0,0,35);contact.addColorStop(0,'rgba(0,0,0,.5)');contact.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=contact;ctx.fillRect(-35,-35,70,70);ctx.restore();
@@ -103,7 +104,7 @@ function paintProp(w,viewport,theme,index,environment){
   ctx.beginPath();ctx.moveTo(t[3].x,t[3].y);ctx.lineTo(t[2].x,t[2].y);ctx.lineTo(t[1].x,t[1].y);ctx.strokeStyle=tone(theme.trim,-7);ctx.globalAlpha=.5;ctx.stroke();ctx.globalAlpha=1;
   return {b,t};
  }
- path(ctx,base.map(a=>({x:a.x+7,y:a.y+7})));ctx.fillStyle='rgba(0,0,0,.4)';ctx.fill();
+ const foot=p(w.x+w.w/2,w.y+w.h/2);ctx.beginPath();ctx.ellipse(foot.x,foot.y+3,Math.max(10,(Math.max(...base.map(a=>a.x))-Math.min(...base.map(a=>a.x)))*.45),8,0,0,Math.PI*2);ctx.fillStyle='rgba(0,0,0,.25)';ctx.fill();
  if(w.kind==='pillar'){
   slab(w.x-.006,w.y-.006,w.w+.012,w.h+.012,0,8);slab(w.x,w.y,w.w,w.h,8,8);
   const shaft=slab(w.x+.008,w.y+.008,w.w-.016,w.h-.016,16,72);
@@ -119,14 +120,12 @@ function paintProp(w,viewport,theme,index,environment){
    ctx.strokeStyle=tone(theme.trim,-12);ctx.globalAlpha=.18;ctx.lineWidth=.8;for(let k=0;k<8;k++){const dx=(noise(i,k+13)*2-1)*r*.7,dy=(noise(i,k+22)*2-1)*r*.6;ctx.beginPath();ctx.moveTo(x+dx,y+dy);ctx.lineTo(x+dx+3,y+dy-2);ctx.stroke();}ctx.globalAlpha=1;
   }
  }else if(w.kind==='rock'){
-  const top=base.map((a,i)=>({x:a.x*.5+base[2].x*.5+(i%2?5:-5),y:a.y-height+(i%2?10:0)}));face([base[1],base[2],top[2],top[1]],tone(theme.side,-8),tone(theme.front,-9));face([base[2],base[3],top[3],top[2]],tone(theme.front,-8),tone(theme.front,9));face([top[0],top[1],top[2]],tone(theme.top,2),tone(theme.top,-16));face([top[0],top[2],top[3]],tone(theme.top,-3),tone(theme.top,-24));
+  const width=Math.max(28,Math.max(...base.map(a=>a.x))-Math.min(...base.map(a=>a.x))),outline=obstacleStoneOutline(foot,width,height,index);
+  const fill=ctx.createLinearGradient(foot.x-width*.3,foot.y-height,foot.x+width*.3,foot.y);fill.addColorStop(0,tone(theme.top,-5));fill.addColorStop(1,tone(theme.side,3));path(ctx,outline);ctx.fillStyle=fill;ctx.fill();
+  ctx.beginPath();ctx.moveTo(outline[6].x,outline[6].y);ctx.quadraticCurveTo(foot.x-7,foot.y-height*.6,outline[9].x,outline[9].y);ctx.strokeStyle=tone(theme.trim,-25);ctx.globalAlpha=.25;ctx.lineWidth=1;ctx.stroke();ctx.globalAlpha=1;
  }else{
   const box=slab(w.x,w.y,w.w,w.h,0,height);
-  if(w.kind==='wall'){
-   const g=ctx;g.strokeStyle='rgba(0,0,0,.35)';g.lineWidth=1;
-   for(let z=14;z<height;z+=14){g.beginPath();g.moveTo(base[1].x,base[1].y-z);g.lineTo(base[2].x,base[2].y-z);g.lineTo(base[3].x,base[3].y-z);g.stroke();}
-   slab(w.x-.002,w.y-.002,w.w+.004,w.h+.004,height-6,6);
-  }else if(w.kind==='sarcophagus'){
+  if(w.kind==='sarcophagus'){
    slab(w.x-.003,w.y-.003,w.w+.006,w.h+.006,height-3,5);const a=p(w.x+w.w/2,w.y+w.h/2);ctx.strokeStyle=tone(theme.trim,-6);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(a.x-8,a.y-height);ctx.lineTo(a.x+8,a.y-height);ctx.moveTo(a.x,a.y-height-6);ctx.lineTo(a.x,a.y-height+6);ctx.stroke();
   }
  }

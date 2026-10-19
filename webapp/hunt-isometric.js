@@ -1,6 +1,7 @@
 import {combatTheme,colorHex} from './combat-environment.js';
 import {roomSceneUrl,roomArtField} from './room-scene-art.js';
 import {roomPropSprite,roomPropHeight} from './room-props-art.js';
+import {roomObstacleProps,obstacleStoneOutline} from './room-obstacles.js';
 // One projection for terrain, actors, effects and inverse pointer picking. Game coordinates stay unchanged.
 export function isoMatrix(viewport) {
   const width=Math.max(1,viewport.width),height=Math.max(1,viewport.height);
@@ -76,22 +77,17 @@ export function isoTerrain(field,viewport) {
   field=roomArtField(field);
   const theme=combatTheme(field.environment);
   const project=p=>isoPoint(p,viewport);
-  const prism=(x,y,w,h,height,kind='wall')=>{
-    const floor=[project({x,y}),project({x:x+w,y}),project({x:x+w,y:y+h}),project({x,y:y+h})];
-    const top=floor.map(p=>({x:p.x,y:p.y-height}));
-    return `<g class="hunt-iso-${kind}"><polygon class="iso-shadow" points="${points(floor.map(p=>({x:p.x+6,y:p.y+5})))}"/><polygon class="iso-side" style="fill:${colorHex(theme.side)}" points="${points([floor[1],floor[2],top[2],top[1]])}"/><polygon class="iso-front" style="fill:${colorHex(theme.front)}" points="${points([floor[2],floor[3],top[3],top[2]])}"/><polygon class="iso-top" style="fill:${colorHex(theme.top)}" points="${points(top)}"/></g>`;
-  };
   const floor=[{x:0,y:0},{x:1,y:0},{x:1,y:1},{x:0,y:1}].map(project);
   const tiles=[];
   const divisions=field.streamTile?2:8;
   for(let x=0;x<divisions;x++)for(let y=0;y<divisions;y++)tiles.push(`<polygon class="iso-tile" style="fill:${colorHex((x*3+y*7)%5===0?theme.light:theme.floor)}" points="${points([{x:x/divisions,y:y/divisions},{x:(x+1)/divisions,y:y/divisions},{x:(x+1)/divisions,y:(y+1)/divisions},{x:x/divisions,y:(y+1)/divisions}].map(project))}"/>`);
-  // Low perimeter walls leave the actual doors open; raised obstacles use the server's collision rectangles.
-  const walls=(field.walls||[]).map((w,i)=>{
+  const walls=roomObstacleProps(field.walls).map(w=>{
     const art=roomPropSprite(w.kind,field.environment);
-    if(!art)return prism(w.x,w.y,w.w,w.h,58,'wall');
-    const foot=project({x:w.x+w.w/2,y:w.y+w.h/2}),height=roomPropHeight(w.kind,i),scale=height/art.height;
-    const base=[{x:w.x,y:w.y},{x:w.x+w.w,y:w.y},{x:w.x+w.w,y:w.y+w.h},{x:w.x,y:w.y+w.h}].map(project);
-    return `<g class="hunt-iso-prop hunt-iso-${w.kind}"><polygon points="${points(base)}" fill="${colorHex(theme.front)}" opacity=".5"/><svg x="${foot.x-art.anchorX*scale}" y="${foot.y-art.anchorY*scale}" width="${art.width*scale}" height="${height}" viewBox="${art.x} ${art.y} ${art.width} ${art.height}" overflow="hidden"><image href="${art.url}" width="1536" height="1024"/></svg></g>`;
+    const foot=project({x:w.x+w.w/2,y:w.y+w.h/2}),height=roomPropHeight(w.kind,w.index)*(w.heightScale||1),scale=height/art.height;
+    const fallback=w.kind==='pillar'?`<path d="M${foot.x-10},${foot.y-height*.9} L${foot.x-10},${foot.y} Q${foot.x},${foot.y+8} ${foot.x+10},${foot.y} L${foot.x+10},${foot.y-height*.9} Z" fill="${colorHex(theme.front)}"/><ellipse cx="${foot.x}" cy="${foot.y-height*.9}" rx="10" ry="5" fill="${colorHex(theme.top)}"/>`
+      :w.kind==='tree'?`<path d="M${foot.x},${foot.y} Q${foot.x-6},${foot.y-height*.4} ${foot.x+2},${foot.y-height*.6}" fill="none" stroke="${colorHex(theme.front)}" stroke-width="7"/><ellipse cx="${foot.x}" cy="${foot.y-height*.65}" rx="${height*.23}" ry="${height*.25}" fill="${colorHex(theme.floor)}"/>`
+      :`<path data-stone-fallback d="M${obstacleStoneOutline(foot,art.width*scale*.9,height*.8,w.index).map(p=>`${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' L')} Z" fill="${colorHex(theme.front)}"/>`;
+    return `<g class="hunt-iso-prop hunt-iso-${w.kind}"${w.rubble?' data-rubble-prop':''}><ellipse cx="${foot.x}" cy="${foot.y}" rx="${Math.max(10,art.width*scale*.32)}" ry="${Math.max(4,height*.09)}" fill="#101410" opacity=".25"/><g data-prop-fallback>${fallback}</g><svg x="${foot.x-art.anchorX*scale}" y="${foot.y-art.anchorY*scale}" width="${art.width*scale}" height="${height}" viewBox="${art.x} ${art.y} ${art.width} ${art.height}" overflow="hidden"><image data-room-prop-art href="${art.url}" width="1536" height="1024"/></svg></g>`;
   });
   const url=roomSceneUrl(field.environment,{compact:viewport.width<480,sceneKey:field.sceneKey}),bounds=isoSceneBounds(viewport);
   const painting=url?`<image href="${url}" x="${bounds.x}" y="${bounds.y}" width="${bounds.width}" height="${bounds.height}" preserveAspectRatio="none"/>`:'';

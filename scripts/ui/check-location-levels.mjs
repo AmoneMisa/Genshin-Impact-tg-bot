@@ -56,7 +56,7 @@ try{for(const {width,mode} of configurations){
    const result=body.action==='vortex_list'?{ok:true,encounters:[]}:worldAction(s,body,now);bindWorldInstances(chat,now);quiet();
    return route.fulfill({status:result.ok?200:409,json:{...result,world:{}}});
   }
-  if(mode==='missing-art'&&u.startsWith('/art/world/scenes/'))return route.fulfill({status:404});
+  if(mode==='missing-art'&&(u.startsWith('/art/world/scenes/')||u==='/art/world/room-props-v1.webp'))return route.fulfill({status:404});
   const file=path.resolve(root,'.'+u);if(!file.startsWith(root+path.sep)||!fs.existsSync(file))return route.fulfill({status:404});
   return route.fulfill({contentType:({'.js':'text/javascript','.css':'text/css','.webp':'image/webp'})[path.extname(file)]||'application/octet-stream',body:fs.readFileSync(file)});
  });
@@ -81,6 +81,7 @@ try{for(const {width,mode} of configurations){
   assert.equal(await page.locator('.hunt-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false,id+' overflow '+width);
   const heading=await page.locator('#hunt-heading').textContent();assert.ok(f.title.split(' · ').every(part=>heading.includes(part)));
   assert.ok(await page.locator('[data-target]').count()<=(width<500?8:16));
+  assert.equal(await page.locator('.hunt-iso-wall,.iso-front,.iso-side,.iso-top').count(),0,'collision rectangles never become box walls');
   for(const image of await page.locator('.hunt-actor img').all()){
    assert.match(await image.getAttribute('src'),/^\/art\/npcs\/l2\/\d+-128\.webp$/,'exact NPC photograph');
    await image.evaluate(img=>img.decode());
