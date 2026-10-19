@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import {FIELD_POPULATIONS} from '../template/fieldPopulations.js';
-import {LOCATIONS} from '../template/worldMap.js';
+import {LOCATIONS,CITY_NPCS} from '../template/worldMap.js';
+import {locationTravelQuote} from '../functions/game/world/locationTravel.js';
 import {getZone} from '../functions/game/hunt/huntMobs.js';
 import {roomLayout,adjacent} from '../functions/game/hunt/huntRooms.js';
 import {enterHuntField,ensureHunt,advanceHunt} from '../functions/game/hunt/huntFight.js';
@@ -54,4 +55,18 @@ for(const [id,data] of Object.entries(FIELD_POPULATIONS))test(`${id}: original s
   const base='.tmp/world-source/h5-data/'+sourceRoot.name+'/L2J_Mobius_CT_2.6_HighFive/dist/game/data/';
   for(const [path,hash] of Object.entries(data.source.files))if(fs.existsSync(base+path))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(base+path)).digest('hex'),hash);
  }
+});
+for(const [id,point,fee] of [['marsh-zombies',[-21966,40544,-3192],1100],['dark-forest',[-22224,14168,-3232],890]])if(FIELD_POPULATIONS[id])test(`${id}: the Atlas retains Jasmine's exact source route and rejects another town's gatekeeper`,()=>{
+ const location=LOCATIONS.find(l=>l.id===id),s=hero(id);
+ assert.deepEqual([location.x,location.y,location.z],point);
+ assert.equal(location.region,'dark-elven-village');
+ const jasmine=CITY_NPCS.find(n=>n.city===location.region&&n.gateway),other=CITY_NPCS.find(n=>n.city==='gludio'&&n.gateway);
+ assert.equal(locationTravelQuote(s,location,jasmine,NOW).gold,fee);
+ assert.equal(locationTravelQuote(s,location,other,NOW),null);
+});
+if(FIELD_POPULATIONS['vuku-lands'])test('Vuku territory retains former quest targets and uses an actual Vuku spawn as its Atlas anchor',()=>{
+ const data=FIELD_POPULATIONS['vuku-lands'],location=LOCATIONS.find(l=>l.id==='vuku-lands');
+ for(const id of ['20009','20011','20039','20043','20049'])assert.ok(data.mobs.some(m=>m.id===id),id);
+ assert.ok(data.floors[0].rooms.flatMap(r=>r.spawns).some(s=>['20009','20011'].includes(s.id)&&s.x===location.x&&s.y===location.y&&s.z===location.z));
+ assert.deepEqual(location.entryRoutes,[],'no source gatekeeper route is invented');
 });

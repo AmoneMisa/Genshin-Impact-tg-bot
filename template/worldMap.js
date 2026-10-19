@@ -16,7 +16,7 @@ export const CITY_NPCS=[...BASE_CITY_NPCS.map(n=>n.gateway&&GATEKEEPER_CORRECTIO
 export const LOCATIONS=[...BASE_LOCATIONS.filter(l=>!HUNTING_EXPANSION_LOCATIONS.some(extra=>extra.id===l.id)),...HUNTING_EXPANSION_LOCATIONS,...WORLD_EXTENSION_LOCATIONS].map(l=>{
  const source=LOCATION_LEVELS[l.id];if(!source)return l;
  const levels=source.mobs.map(m=>m.level);
- return {...l,floors:source.floors.length,...(source.source?{levelMin:Math.min(...levels),levelMax:Math.max(...levels)}:{})};
+ return {...l,...source.atlas,floors:source.floors.length,...(source.source?{levelMin:Math.min(...levels),levelMax:Math.max(...levels)}:{})};
 });
 
 // Atlas selection extent, not original client geodata.

@@ -58,19 +58,32 @@ FIELDS = [
  ('necropolis-saints', 'Некрополь Святых', 'Catacombs/NecropolisOfTheSaints.xml', 'necropolis'),
  ('necropolis-disciples', 'Некрополь Учеников', 'Catacombs/NecropolisOfTheDisciples.xml', 'necropolis'),
  ('catacomb-forbidden-path', 'Катакомбы Запретного Пути', 'Catacombs/CatacombOfTheForbiddenPath.xml', 'catacomb'),
+ ('marsh-zombies', 'Топи зомби', 'Others/19_19.xml', 'marsh'),
+ ('dark-forest', 'Тёмный лес', 'DarkElfTerritory/DarkElfStarting.xml', 'woodland'),
+ ('vuku-lands', 'Земли орков Вуку', 'Others/19_20.xml', 'woodland'),
 ]
+VUKU_IDS = {'20009', '20011', '20039', '20043', '20049'}
+SOURCE_FILTERS = {'vuku-lands': VUKU_IDS}
+EXTRA_SOURCES = {
+ 'dark-forest': [('Others/18_20.xml', {'20021', '20380', '20034', '20038', '20418', '20043'})],
+ 'vuku-lands': [('Others/19_21.xml', VUKU_IDS)],
+}
 
 def module(name):
  return json.loads((ROOT / 'template' / name).read_text(encoding='utf-8-sig').split('export default ', 1)[1].strip().rstrip(';'))
 
 def build(row):
  id, title, file, environment = row
- spawns = scope['rows'](file, scope['hostile'])
+ spawns, selection = [], []
+ sourcefiles = [(file, SOURCE_FILTERS.get(id)), *EXTRA_SOURCES.get(id, [])]
+ for sourcefile, allowed in sourcefiles:
+  rows = scope['rows'](sourcefile, lambda n: scope['hostile'](n) and (allowed is None or n.get('id') in allowed))
+  tree = scope['read_source']('spawns/' + sourcefile)
+  assert all(g.get('selection') is None and g.get('maximumNpc') is None for g in tree.findall('spawn')), sourcefile
+  for s in rows: s['sourceFile'] = 'spawns/' + sourcefile
+  spawns.extend(rows)
+  selection.append({'file': 'spawns/' + sourcefile, 'npcIds': sorted(allowed, key=int) if allowed else None})
  assert spawns, id
- # Named field files must contain ordinary fixed populations, not a random-fill lottery.
- tree = scope['read_source']('spawns/' + file)
- assert all(g.get('selection') is None and g.get('maximumNpc') is None for g in tree.findall('spawn')), file
- for s in spawns: s['sourceFile'] = 'spawns/' + file
  level = scope['make_level'](1, title, spawns, id, environment)
  ids = sorted({s['id'] for s in spawns}, key=int)
  loot, sp = module('l2Loot.js'), module('l2NpcSp.js')
@@ -120,12 +133,33 @@ def build(row):
    db.write_text(re.sub(r"(key: '" + key + r"', source: " + key + r", version: )(\d+)", lambda m: m[1] + str(int(m[2]) + 1), db.read_text(encoding='utf-8')), encoding='utf-8')
   header = p.read_text(encoding='utf-8').split('export default ', 1)[0]
   p.write_text(header + 'export default ' + json.dumps(value, ensure_ascii=False, separators=(',', ':')) + ';\n', encoding='utf-8')
- files = {'spawns/' + file: hashlib.sha256((DATA / 'spawns' / file).read_bytes()).hexdigest()}
+ files = {'spawns/' + f: hashlib.sha256((DATA / 'spawns' / f).read_bytes()).hexdigest() for f, _ in sourcefiles}
  for p in (DATA / 'stats/npcs').glob('*.xml'):
   if any(n.get('id') in ids for n in scope['E'].parse(p).findall('npc')):
    files['stats/npcs/' + p.name] = hashlib.sha256(p.read_bytes()).hexdigest()
- return {'version': 1, 'floors': [level], 'mobs': [scope['mob'](nid) for nid in ids],
+ value = {'version': 1, 'floors': [level], 'mobs': [scope['mob'](nid) for nid in ids],
   'source': {'commit': scope['SOURCE_COMMIT'], 'files': files, 'geodataAvailable': False, 'coordinateSpace': 'underground' if file.startswith('Catacombs/') else 'surface', 'missingItemIcons': missingicons}}
+ if id in ['marsh-zombies', 'dark-forest', 'vuku-lands']: value['source']['selection'] = selection
+ if id in ['marsh-zombies', 'dark-forest']:
+  routefile = 'teleporters/town/30134.xml'
+  target = 'Swampland' if id == 'marsh-zombies' else 'Dark Forest'
+  tree = scope['E'].parse(DATA / routefile)
+  group, destination = next((g, n) for g in tree.findall('.//teleport') if g.get('type') == 'NORMAL' for n in g.findall('location') if n.get('name') == target)
+  point = {k: int(destination.get(k)) for k in ['x','y','z']}
+  fee = int(destination.get('feeCount','0'))
+  value['atlas'] = {**point, 'region': 'dark-elven-village', 'entrySource': {**point, 'file': routefile, 'name': target, 'type': group.get('type')},
+   'entryRoutes': [{'npcId': 30134, 'npcName': NPCS['30134'].get('name'), 'item': 57, 'fee': fee, 'type': 'NORMAL', 'source': routefile}], 'entryFare': {'item': 57, 'count': fee}, 'teleportGold': fee}
+  files[routefile] = hashlib.sha256((DATA / routefile).read_bytes()).hexdigest()
+ if id == 'vuku-lands':
+  native = [s for s in spawns if s['id'] in ['20009','20011'] and s['coordinateSource'] == 'point']
+  cx,cy = sum(s['x'] for s in native)/len(native),sum(s['y'] for s in native)/len(native)
+  anchor = min(native,key=lambda s: (s['x']-cx)**2+(s['y']-cy)**2)
+  point = {k: anchor[k] for k in ['x','y','z']}
+  value['atlas'] = {**point, 'entrySource': {**point, 'file': anchor['sourceFile'], 'npcId': int(anchor['id']), 'coordinateSource': 'point'}, 'entryRoutes': []}
+ if 'atlas' in value:
+  x,y = value['atlas']['x'],value['atlas']['y']
+  value['atlas'].update(polygon=[[x-5000,y-5000],[x+5000,y-5000],[x+5000,y+5000],[x-5000,y+5000]],selectionGeometry='authored-extent')
+ return value
 
 folder = ROOT / 'template/field-populations'
 folder.mkdir(exist_ok=True)
