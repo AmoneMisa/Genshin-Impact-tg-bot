@@ -24,7 +24,7 @@ try{for(const {width,mode} of configurations){
  const page=await browser.newPage({viewport:{width,height:900},reducedMotion:'reduce',hasTouch:width<500}),errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  if(mode==='canvas')await page.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return /webgl/i.test(type)?null:original.call(this,type,...args);};});
- let s,chat,now;
+ let s,chat,now,combatWalk=false;
  const state=()=>getHuntState(s,now,fieldPeers(chat,s,now));
  const quiet=()=>{if(!s.game.hunt?.field)return;ensureHunt(s,now,()=>.5);const f=s.game.hunt.field;[...f.mobs,...Object.values(f.rooms||{}).flatMap(r=>r.mobs||[])].forEach(m=>{m.aggroRange=0;m.aggro=false;m.nextAttackAt=now+1e9;});};
  await page.route('**/*',async route=>{
@@ -35,7 +35,13 @@ try{for(const {width,mode} of configurations){
   if(u==='/api/hunt/target'||u==='/api/hunt/skill'){
    const body=route.request().postDataJSON(),result=u==='/api/hunt/target'?selectHuntTarget(s,body.targetId,now):body.targetUserId?useFieldPvpSkill(chat,s,body.targetUserId,body.skillIndex,{now,force:body.force,random:()=>.5}):useHuntSkill(s,body.skillIndex,{now,random:()=>.5});
    assert.ok(result.ok);
-   if(u==='/api/hunt/skill'){now+=4500;quiet();advanceHunt(s,now,()=>.5);quiet();}
+   if(u==='/api/hunt/skill'){
+    if(combatWalk){
+     const kills=s.game.hunt.kills||0;assert.ok(s.game.hunt.field.action?.approach,'skill queues a real surface approach');
+     for(let step=0;step<200&&(s.game.hunt.kills||0)===kills;step++){now+=500;quiet();s.game.hunt.field.seenAt=now;advanceHunt(s,now,()=>.5);}
+     assert.equal(s.game.hunt.kills,kills+1,'queued skill completes a real detour and cast');quiet();
+    }else {now+=4500;quiet();advanceHunt(s,now,()=>.5);quiet();}
+   }
    return route.fulfill({json:{...result,hunt:await state()}});
   }
   if(u==='/api/hunt/move'){
@@ -168,6 +174,16 @@ try{for(const {width,mode} of configurations){
    assert.ok(Math.hypot(field.x-(dx>0?.08:.92),field.y-(dy>0?.08:.92))<.01,'route reaches the selected screen pixel');
    assert.equal(await page.locator('.hunt-overlay').count(),1);assert.ok(await page.locator('[data-terrain-cell]').count()<=9);
    if(mode==='auto')await page.screenshot({path:path.join(out,`diagonal-walk-${width}.png`)});
+   const combatRoom=layout.rooms.find(r=>r.id===field.room),originalWalls=combatRoom.walls,enemy=field.mobs[0];assert.ok(enemy);
+   try{
+    combatRoom.walls=[{x:.45,y:0,w:.1,h:1}];Object.assign(field,{walls:combatRoom.walls,x:.37,y:.37,path:[],target:enemy.instanceId,visited:[combatRoom.id]});
+    Object.assign(enemy,{x:.63,y:.63,currentHp:1});s.game.gameClass.skills[0].cooldownReceive=0;quiet();await page.waitForTimeout(1500);
+    await page.locator(`[data-target="${enemy.instanceId}"]`).click();
+    const kills=s.game.hunt.kills||0;combatWalk=true;await page.locator('[data-skill="0"]').first().click();await page.waitForTimeout(300);
+    assert.equal(s.game.hunt.kills,kills+1);assert.equal(field.room,combatRoom.id);assert.ok(field.visited.some(id=>id!==combatRoom.id),'combat detours through a neighbour');
+    assert.equal(field.action,undefined);assert.equal(field.crossing,undefined);assert.equal(await page.locator('.hunt-overlay').count(),1);
+    if(mode==='auto')await page.screenshot({path:path.join(out,`combat-detour-${width}.png`)});
+   }finally{combatWalk=false;combatRoom.walls=originalWalls;field.walls=originalWalls;}
   }
   if((FIELD_POPULATIONS[id]||id==='ivory-tower'&&f.number===3||f.ship)&&mode==='auto')await page.screenshot({path:path.join(out,`${id}-${stage??f.number}-${width}.png`)});
   await page.locator('.hunt-overlay [data-dismiss]').first().click();await page.waitForSelector('.hunt-overlay',{state:'detached'});

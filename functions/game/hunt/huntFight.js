@@ -35,8 +35,8 @@ import {tickL2Effects,l2ActionBlock,l2HasControl,l2RawStat,l2MoveMultiplier} fro
 import {roomLayout, roomById, adjacent, slotPositions} from './huntRooms.js';
 import {findPath, advancePath,travelPath,ROOM_SIZE,nearestOpenPoint,insideObstacle} from '../world/navigation.js';
 import {continuousField} from '../world/continuousField.js';
-import {planSurfaceRoute,surfaceRouteStep,surfacePathClear} from '../world/surfaceNavigation.js';
-import {syncResidentRooms,neighborhood,battleField,battleWalls,battleActor,removeBattleActor,firstBoundary} from './huntNeighborhood.js';
+import {planSurfaceRoute,planSurfaceApproach,surfaceRouteStep,surfacePathClear} from '../world/surfaceNavigation.js';
+import {syncResidentRooms,neighborhood,battleField,battleWalls,battleActor,removeBattleActor} from './huntNeighborhood.js';
 import getSpeed from '../player/getters/getSpeed.js';
 import {BASIC_ATTACK, hostileSkill, skillSpatial, weaponSpatial, needsTarget, inSkillReach, spatialTargets, spatialDistance,clearLine} from './huntSpatial.js';
 import {skillCombatType} from '../player/combatType.js';
@@ -164,6 +164,18 @@ export function advanceHunt(session, now = Date.now(), random = Math.random) {
     const away = now - number(field.polledAt, now) > HUNT.pollGapMs;
     field.polledAt = now;
     if((field.action||field.autoAttack)&&now-number(field.seenAt)>5000)stopHuntAction(field,now);
+    const order=field.action||field.autoAttack;
+    if(order?.approach&&(field.path.length||field.crossing)){
+        const mob=battleActor(hunt,order.targetId),skill=field.action?session.game.gameClass.skills[order.index]:BASIC_ATTACK;
+        const geometry=skill&&skillSpatial(session,skill,now);
+        if(!mob||!geometry)stopHuntAction(field,now);
+        else if(inSkillReach(battleField(hunt),mob,geometry)){field.path=[];delete field.crossing;delete order.approach;}
+        else {
+            const moveAt=field.moveAt;
+            if(!approachTarget(session,mob,geometry,now).ok)stopHuntAction(field,now);
+            else field.moveAt=moveAt; // Replanning must neither discard nor multiply elapsed walking time.
+        }
+    }
     if (l2ActionBlock(session,{move:true},now)) {field.path=[];delete field.pendingRoom;delete field.crossing;field.moveAt=now;}
     else if(field.crossing){
         const speed=getSpeed(session)*l2MoveMultiplier(session,now);
@@ -178,10 +190,13 @@ export function advanceHunt(session, now = Date.now(), random = Math.random) {
             if(crossing.route&&(!to||!surfacePathClear(crossing.entry,crossing.route[0].path,to.walls))){stopHuntAction(field,now);break;}
             const entered=atEdge?enterRoom(session,hunt,crossing.room,now,random,{entry:crossing.entry,silent:true}):{ok:false};
             if(entered.ok){
-                if(intent&&battleActor(hunt,intent.target)){field.action=intent.action;field.autoAttack=intent.autoAttack;field.target=intent.target;hunt.mob=battleActor(hunt,intent.target);}
+                if(intent){
+                    const target=battleActor(hunt,intent.target);if(!target){stopHuntAction(field,now);break;}
+                    field.action=intent.action;field.autoAttack=intent.autoAttack;field.target=intent.target;hunt.mob=target;
+                }
                 const next=crossing.route?surfaceRouteStep(crossing.route):null;
                 field.path=next?next.path:findPath(field,crossing.destination,field.walls,{margin:0})||[];
-                if(next?.crossing)field.crossing=next.crossing;
+                if(next?.crossing)field.crossing={...next.crossing,...(intent?{combat:true}:{})};
                 else {travelPath(field,remaining);field.moveAt=now;break;}
             }else {stopHuntAction(field,now);break;}
         }
@@ -238,18 +253,18 @@ export function stopHuntAction(field,now=Date.now()) {
 function approachTarget(session,mob,geometry,now) {
     const field=session.game.hunt.field;
     if(l2ActionBlock(session,{move:true},now))return {ok:false,reason:'effect_blocked'};
-    if(field.crossing?.combat)return {ok:true};
+    const area=neighborhood(session.game.hunt),order=field.action||field.autoAttack;
+    if(area){
+        const anchor={id:mob.instanceId,x:mob.x+area.current.col,y:mob.y+area.current.row,range:geometry.range};
+        if(order?.approach&&['id','x','y','range'].every(key=>order.approach[key]===anchor[key])&&(field.path.length||field.crossing)&&surfacePathClear(field,field.path,battleWalls(session.game.hunt)))return {ok:true};
+        const plan=planSurfaceApproach(field,mob,geometry.range*.85/ROOM_SIZE,area.layout,area.current);
+        if(!plan)return {ok:false,reason:'path_blocked'};
+        delete field.crossing;if(plan.crossing)field.crossing={...plan.crossing,combat:true};
+        field.path=plan.path;field.moveAt=now;if(order)order.approach=anchor;
+        return {ok:true};
+    }
     const distance=spatialDistance(field,mob),share=Math.min(1,geometry.range*.85/Math.max(1,distance));
     let destination={x:mob.x+(field.x-mob.x)*share,y:mob.y+(field.y-mob.y)*share};
-    const area=neighborhood(session.game.hunt),edge=area&&firstBoundary(field,destination);
-    if(edge){
-        const to=area.layout.rooms.find(r=>r.col===area.current.col+edge.dx&&r.row===area.current.row+edge.dy);
-        if(!to||insideObstacle(edge.entry,to.walls))return {ok:false,reason:'path_blocked'};
-        const path=findPath(field,edge.exit,field.walls,{margin:0});if(!path)return {ok:false,reason:'path_blocked'};
-        const rest={x:destination.x-edge.dx,y:destination.y-edge.dy};
-        const landing=rest.x>=0&&rest.x<=1&&rest.y>=0&&rest.y<=1&&findPath(edge.entry,rest,to.walls,{margin:0})?rest:edge.entry;
-        field.crossing={room:to.id,exit:edge.exit,entry:edge.entry,destination:landing,combat:true};field.path=path;field.moveAt=now;return {ok:true};
-    }
     destination={x:Math.max(.02,Math.min(.98,destination.x)),y:Math.max(.02,Math.min(.98,destination.y))};
     const path=findPath(field,destination,field.walls||[]);
     if(!path)return {ok:false,reason:'path_blocked'};
@@ -293,6 +308,7 @@ function advanceHuntAction(session,now,random=Math.random) {
     }
     field.path=[];
     delete field.crossing;
+    delete (field.action||field.autoAttack).approach;
     if(l2ActionBlock(session,{attack:hostileSkill(skill),magic:skillCombatType(skill,session.game.gameClass)==='magic'},now)){
         if(field.action)delete field.action;
         return [];

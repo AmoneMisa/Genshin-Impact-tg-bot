@@ -36,7 +36,13 @@ export function surfaceRouteStep(legs){
  return {path:leg.path,crossing:next?{room:next.room,exit:leg.path.at(-1),entry:next.start,destination:next.path.at(-1),route:legs.slice(1)}:null};
 }
 
-export function planSurfaceRoute(field,point,layout,current){
+/** range is cell-local and comes only from the server's combat metadata. */
+export function planSurfaceApproach(field,target,range,layout,current){
+ if(!Number.isFinite(range)||range<=0)return null;
+ return planSurfaceRoute(field,target,layout,current,{range});
+}
+
+export function planSurfaceRoute(field,point,layout,current,{range=null}={}){
  if(![field.x,field.y,point?.x,point?.y].every(Number.isFinite))return null;
  if(field.x<0||field.x>1||field.y<0||field.y>1)return null;
  const rooms=layout.rooms.filter(r=>Math.abs(r.col-current.col)<=1&&Math.abs(r.row-current.row)<=1);
@@ -45,10 +51,16 @@ export function planSurfaceRoute(field,point,layout,current){
  const destination=byCell.get(`${dx}:${dy}`);if(!destination)return null;
  const walls=rooms.flatMap(r=>(r.id===current.id?field.walls||[]:r.walls||[]).map(w=>({...w,x:w.x+r.col-current.col,y:w.y+r.row-current.row})));
  if(insideObstacle(field,walls)||insideObstacle(point,walls))return null;
+ const approach=range!==null;
+ if(approach){
+  const distance=Math.hypot(field.x-point.x,field.y-point.y),share=Math.min(1,range/Math.max(1e-10,distance));
+  const stand={x:point.x+(field.x-point.x)*share,y:point.y+(field.y-point.y)*share};
+  if(clear(stand,point,walls)){const direct=planSurfaceRoute(field,stand,layout,current);if(direct)return direct;}
+ }
  // Preserve a clear direct walk, including the exact transverse border coordinate.
- if(dx===0&&dy===0&&clear(field,point,walls))return {path:[{x:point.x,y:point.y}],crossing:null};
+ if(!approach&&dx===0&&dy===0&&clear(field,point,walls))return {path:[{x:point.x,y:point.y}],crossing:null};
  const direct=planFieldCrossing(field,point,layout,current);
- if(direct&&clear(field,point,walls))return {path:[direct.exit],crossing:{...direct,route:[{room:direct.room,start:direct.entry,path:[direct.destination]}]}};
+ if(!approach&&direct&&clear(field,point,walls))return {path:[direct.exit],crossing:{...direct,route:[{room:direct.room,start:direct.entry,path:[direct.destination]}]}};
  const key=(x,y)=>(y+N)*WIDTH+x+N;
  const xy=k=>({x:k%WIDTH-N,y:Math.floor(k/WIDTH)-N});
  const center=k=>{const p=xy(k);return {x:(p.x+.5)/N,y:(p.y+.5)/N};};
@@ -59,14 +71,22 @@ export function planSurfaceRoute(field,point,layout,current){
   const p=xy(k),ok=p.x>=-N&&p.x<2*N&&p.y>=-N&&p.y<2*N&&byCell.has(`${Math.floor(p.x/N)}:${Math.floor(p.y/N)}`)&&!insideObstacle(center(k),walls);
   cache.set(k,ok);return ok;
  };
- if(!openCell(start)||!openCell(goal)||!clear(field,center(start),walls)||!clear(center(goal),point,walls))return null;
- const heuristic=k=>{const p=xy(k);return Math.abs(p.x-end.x)+Math.abs(p.y-end.y);};
+ if(!openCell(start)||!clear(field,center(start),walls)||(!approach&&(!openCell(goal)||!clear(center(goal),point,walls))))return null;
+ const heuristic=k=>{if(approach){const p=center(k);return Math.max(0,Math.hypot(p.x-point.x,p.y-point.y)-range)*N;}const p=xy(k);return Math.abs(p.x-end.x)+Math.abs(p.y-end.y);};
+ const firingPoint=k=>{
+  const p=center(k),d=Math.hypot(p.x-point.x,p.y-point.y);if(d>range+Math.SQRT2/N)return null;
+  const share=Math.min(1,range/Math.max(1e-10,d)),stand=d<=range?p:{x:point.x+(p.x-point.x)*share,y:point.y+(p.y-point.y)*share};
+  const grid=xy(k),x=Math.floor(grid.x/N),y=Math.floor(grid.y/N);
+  return stand.x>=x&&stand.x<=x+1&&stand.y>=y&&stand.y<=y+1&&clear(p,stand,walls)&&clear(stand,point,walls)?stand:null;
+ };
  const frontier=[],cost=new Map([[start,0]]),came=new Map(),closed=new Set();push(frontier,{key:start,score:heuristic(start)});
  while(frontier.length){
   const k=pop(frontier).key;if(closed.has(k))continue;
-  if(k===goal){
-   const nodes=[goal];while(nodes.at(-1)!==start)nodes.push(came.get(nodes.at(-1)));nodes.reverse();
-   const points=[{x:field.x,y:field.y,cell:current},...nodes.map(k=>{const p=center(k),grid=xy(k);return {...p,cell:byCell.get(`${Math.floor(grid.x/N)}:${Math.floor(grid.y/N)}`)};}),{...point,cell:destination}];
+  const stand=approach?firingPoint(k):null;
+  if(approach?Boolean(stand):k===goal){
+   const nodes=[k];while(nodes.at(-1)!==start)nodes.push(came.get(nodes.at(-1)));nodes.reverse();
+   const endGrid=xy(k),landing=approach?stand:point,landingRoom=approach?byCell.get(`${Math.floor(endGrid.x/N)}:${Math.floor(endGrid.y/N)}`):destination;
+   const points=[{x:field.x,y:field.y,cell:current},...nodes.map(k=>{const p=center(k),grid=xy(k);return {...p,cell:byCell.get(`${Math.floor(grid.x/N)}:${Math.floor(grid.y/N)}`)};}),{...landing,cell:landingRoom}];
    const legs=[{room:current.id,start:{x:field.x,y:field.y},path:[]}];
    for(let i=1;i<points.length;i++){
     const a=points[i-1],b=points[i],ax=a.cell.col-current.col,ay=a.cell.row-current.row,bx=b.cell.col-current.col,by=b.cell.row-current.row;
@@ -85,8 +105,8 @@ export function planSurfaceRoute(field,point,layout,current){
    // Bound saved intent even for deliberately winding authored collision layouts.
    return legs.length<=64?surfaceRouteStep(legs):null;
   }
-  closed.add(k);const p=xy(k);
-  for(const [x,y] of [[p.x+1,p.y],[p.x-1,p.y],[p.x,p.y+1],[p.x,p.y-1]]){
+  closed.add(k);const grid=xy(k);
+  for(const [x,y] of [[grid.x+1,grid.y],[grid.x-1,grid.y],[grid.x,grid.y+1],[grid.x,grid.y-1]]){
    if(x< -N||x>=2*N||y< -N||y>=2*N)continue;
    const next=key(x,y),value=cost.get(k)+1;
    if(closed.has(next)||!openCell(next)||value>=(cost.get(next)??Infinity)||!clear(center(k),center(next),walls))continue;
