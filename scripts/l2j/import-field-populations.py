@@ -41,6 +41,16 @@ FIELDS = [
  ('varka-outpost', 'Лагерь силеносов Варка', 'Goddard/VarkaSlenosOutpost.xml', 'desert'),
  ('sel-mahums', 'Лагерь Сел Махум', 'Oren/SelMahums.xml', 'woodland'),
  ('field-of-whispers', 'Поле Шёпота', 'Innadril/FieldOfWhispers.xml', 'marsh'),
+ ('talking-island', 'Окрестности Острова Говорящих', 'TalkingIsland/TalkingIslandMonsters.xml', 'woodland'),
+ ('elven-fields', 'Эльфийские луга', 'ElvenTerritory/ElvenStarting.xml', 'woodland'),
+ ('bee-hive', 'Улей', 'Dion/BeeHive.xml', 'woodland'),
+ ('catacomb-heretic', 'Катакомбы Еретиков', 'Catacombs/CatacombOfTheHeretic.xml', 'catacomb'),
+ ('catacomb-branded', 'Катакомбы Отлучённых', 'Catacombs/CatacombOfTheBranded.xml', 'catacomb'),
+ ('catacomb-apostate', 'Катакомбы Отступников', 'Catacombs/CatacombOfTheApostate.xml', 'catacomb'),
+ ('catacomb-witch', 'Катакомбы Ведьм', 'Catacombs/CatacombOfTheWitch.xml', 'catacomb'),
+ ('catacomb-dark-omens', 'Катакомбы Тёмных Знамений', 'Catacombs/CatacombOfDarkOmens.xml', 'catacomb'),
+ ('necropolis-sacrifice', 'Некрополь Жертвоприношений', 'Catacombs/NecropolisOfSacrifice.xml', 'necropolis'),
+ ('necropolis-pilgrims', 'Некрополь Пилигримов', 'Catacombs/NecropolisOfThePilgrims.xml', 'necropolis'),
 ]
 
 def module(name):
