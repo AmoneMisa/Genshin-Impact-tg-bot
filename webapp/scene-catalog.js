@@ -1,4 +1,5 @@
 // Art only. Coordinates, travel restrictions and combat rules belong to the server.
+import {WORLD_EXTENSION_SCENES} from './world-extension-scenes.js';
 export const SCENE_STUDIES = Object.freeze([
   {
     "id": "plains-of-dion",
@@ -395,8 +396,9 @@ export const SCENE_STUDIES = Object.freeze([
   {"id":"rift-4","title":"Разлом Измерений · 4","category":"hunting","environment":"catacomb","asset":"rift-4","sections":1},
   {"id":"rift-5","title":"Разлом Измерений · 5","category":"hunting","environment":"catacomb","asset":"rift-5","sections":1},
   {"id":"rift-6","title":"Разлом Измерений · 6","category":"hunting","environment":"catacomb","asset":"rift-6","sections":1},
+  ...WORLD_EXTENSION_SCENES,
 ]);
-const byId=new Map(SCENE_STUDIES.map(scene=>[scene.id,scene]));
+const byId=new Map([...SCENE_STUDIES].map(scene=>[scene.id,scene]));
 export const sceneStudy=id=>byId.get(id==='freyaExtreme'?'freya':id)||null;
 export function sceneStudyUrl(id,{compact=false}={}){
  const scene=sceneStudy(id);

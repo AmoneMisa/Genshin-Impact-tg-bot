@@ -118,6 +118,7 @@ export function worldBossList(records = {}, fighting = {}, now = Date.now()) {
             title: template.title,
             element: template.element,
             raid: Boolean(world.raid),
+            instanceEntry:Boolean(world.raid&&position?.instance),
             level: world.level || template.epic.minLevel,
             minLevel: template.epic.minLevel,
             maxLevel: template.epic.maxLevel || null,

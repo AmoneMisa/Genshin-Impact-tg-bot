@@ -1527,3 +1527,7 @@ details[open]>.ui-disclosure-summary>svg{rotate:180deg}
 .stock-quantity input{width:100%;min-width:0;box-sizing:border-box}
 .stock-quantity [type=range]{min-height:44px;accent-color:var(--gold)}
 .stock-quantity .storage-actions{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:var(--space-2)}
+
+.ui-action-stack { display:grid; gap:var(--space-3); min-width:0; margin-block:var(--space-3); }
+.ui-action-stack label { display:grid; gap:var(--space-2); min-width:0; }
+.ui-action-stack input { box-sizing:border-box; width:100%; min-width:0; }

@@ -8,6 +8,21 @@ import customSets from '../../../template/customSets.js';
 import { classFamily } from '../classes/classFamily.js';
 import {describeEpicJewelry} from './epicJewelry.js';
 import {CLOAK_ATTRIBUTES} from '../../../template/l2AttributeRules.js';
+import {ISHUMA_PRODUCTS} from '../../../template/graciaTravel.js';
+
+/** Original multisell products absent from the progression catalog. Never added to shop stock. */
+export function sourceUnsealDefinition(id) {
+    const source=ISHUMA_PRODUCTS[id];if(!source)return null;
+    const p=source.properties,grade=gradeInfo(p.crystal_type);if(!grade)return null;
+    const parts={chest:['body','up'],legs:['greaves','down'],head:['helmet','head'],gloves:['gloves','gloves'],feet:['boots','boots'],lhand:['shield','rightHand']};
+    const part=parts[p.bodypart];if(!part)return null;
+    const shield=p.bodypart==='lhand',sigil=source.name.includes('Sigil');
+    const kind={type:shield?(sigil?'sigill':'bigShield'):(p.armor_type?.toLowerCase()||'none'),category:part[0],slots:[part[1]],classOwner:[],characteristics:{},translatedName:source.name};
+    const item=entry(equipmentTemplate,grade,shield?'shield':'armor',kind,source.name,{lineage:{itemId:source.id,...source.stats},l2Id:source.id,sourceOnly:true,sourceIcon:p.icon?.toLowerCase().replaceAll('.','-'),sourceSkills:source.skills});
+    item.id='l2:'+source.id;item.cost=Number(p.price)||0;
+    item.characteristics.defence=defenceFromReal(equipmentTemplate,gradeIndex(grade.name),source.stats.pDef||source.stats.sDef||0);
+    return item;
+}
 
 export const ARMOR_TYPES = Object.freeze(['heavy', 'light', 'robe']);
 

@@ -1,0 +1,211 @@
+export const MISSING_WORLD_ART=[
+  {
+    "id": "angel-waterfall",
+    "theme": "broad white cascade at the distant perimeter, pale limestone cliffs, dark blue pool, soft green grass and deciduous trees",
+    "asset": "angel-waterfall",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: angel-waterfall. Preserve these recognizable environmental features: broad white cascade at the distant perimeter, pale limestone cliffs, dark blue pool, soft green grass and deciduous trees.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-8d4ebc6b-2fca-4022-8546-7f2b5329bf50.png"
+  },
+  {
+    "id": "antharas-lair",
+    "theme": "grey brown underground limestone, tall stalagmites at the edges, vast dark stone arches, subdued emerald reflected light",
+    "asset": "antharas-lair",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: antharas-lair. Preserve these recognizable environmental features: grey brown underground limestone, tall stalagmites at the edges, vast dark stone arches, subdued emerald reflected light.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-22f57ecd-a4e9-4a3b-a9ed-72727e6956e0.png"
+  },
+  {
+    "id": "beast-farm",
+    "theme": "rolling olive green pasture, rough wooden feeding pens at the edge, simple timber shelters, rustic countryside",
+    "asset": "beast-farm",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: beast-farm. Preserve these recognizable environmental features: rolling olive green pasture, rough wooden feeding pens at the edge, simple timber shelters, rustic countryside.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-7965312c-7354-4fe6-ac6f-9796cfaf5129.png"
+  },
+  {
+    "id": "gludio-airship-field",
+    "asset": "city-gludio-airship-field",
+    "theme": "Gludio Airship Field from Lineage II High Five: broad grey stone landing platform, restrained timber and iron dock fittings, curving bronze railings and pale stone supports at the extreme perimeter; muted teal atmosphere and warm small lamps; no actual ship obstructing floor.",
+    "prompt": "Use case: stylized-concept. Original production room environment for a Lineage II High Five inspired browser MMORPG. Landscape 1536x1024. Fixed orthographic 30 degree isometric view looking DOWN at ground, no sky, no horizon. Continuous walkable grey paving fills the entire image. Invisible clear playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). ALL diamond and four tips flat, clear and unobstructed. Place all railings, docks and tall structures outside diamond at extreme far corners. Subdued painterly realism matching old Lineage II materials, quiet centre, detailed perimeter. No actors, creatures, text, UI, digits, symbols, logos, watermarks or black void. Artistic room adaptation, not original geodata. Gludio Airship Field from Lineage II High Five: broad grey stone landing platform, restrained timber and iron dock fittings, curving bronze railings and pale stone supports at the extreme perimeter; muted teal atmosphere and warm small lamps; no actual ship obstructing floor.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-fe27e46a-aa23-4a7d-87ce-8242bec63137.png"
+  },
+  {
+    "id": "crypts-of-disgrace",
+    "theme": "grey gravel and dry pale grass, low ancient orc burial stones and weathered standing slabs along the perimeter",
+    "asset": "crypts-of-disgrace",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: crypts-of-disgrace. Preserve these recognizable environmental features: grey gravel and dry pale grass, low ancient orc burial stones and weathered standing slabs along the perimeter.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-22192de9-5f8f-44eb-8e4f-655af0fb5cb4.png"
+  },
+  {
+    "id": "den-of-evil",
+    "theme": "cold grey brown ravine, ragna orc wooden scaffolds and rough palisades, sparse grass, smoky grey atmosphere",
+    "asset": "den-of-evil",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: den-of-evil. Preserve these recognizable environmental features: cold grey brown ravine, ragna orc wooden scaffolds and rough palisades, sparse grass, smoky grey atmosphere.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-6301a8e6-049f-4390-8774-c4987e2b0248.png"
+  },
+  {
+    "id": "dragon-valley",
+    "theme": "dry ochre canyon, eroded reddish stone ribs, sparse yellow grass, huge ancient bones at outer edges",
+    "asset": "dragon-valley",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: dragon-valley. Preserve these recognizable environmental features: dry ochre canyon, eroded reddish stone ribs, sparse yellow grass, huge ancient bones at outer edges.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-d47b6c51-39e1-432e-95ae-753728c517e4.png"
+  },
+  {
+    "id": "enchanted-valley",
+    "theme": "lush steep green valley, soft pink flowering trees, mossy standing stones, faint fairy light only at outer margins",
+    "asset": "enchanted-valley",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: enchanted-valley. Preserve these recognizable environmental features: lush steep green valley, soft pink flowering trees, mossy standing stones, faint fairy light only at outer margins.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-7c800cd4-019f-49d1-b319-668acd3192f8.png"
+  },
+  {
+    "id": "field-of-silence",
+    "theme": "quiet flat wetland, soft green reeds, thin pale trees, still shallow water beyond walkable bank",
+    "asset": "field-of-silence",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: field-of-silence. Preserve these recognizable environmental features: quiet flat wetland, soft green reeds, thin pale trees, still shallow water beyond walkable bank.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-f9667eec-14c6-45cf-91e0-34664375214e.png"
+  },
+  {
+    "id": "forge-of-the-gods",
+    "theme": "black and dark red volcanic cavern, basalt shelves, orange lava confined beyond the playable perimeter",
+    "asset": "forge-of-the-gods",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: forge-of-the-gods. Preserve these recognizable environmental features: black and dark red volcanic cavern, basalt shelves, orange lava confined beyond the playable perimeter.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-fa78b6ca-ceba-413c-aa4f-18573bf4da96.png"
+  },
+  {
+    "id": "forsaken-plains",
+    "theme": "broad faded golden plain, dry grass, pale weathered stones, distant barren trees and scattered dark rock",
+    "asset": "forsaken-plains",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: forsaken-plains. Preserve these recognizable environmental features: broad faded golden plain, dry grass, pale weathered stones, distant barren trees and scattered dark rock.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-0ab7c67f-d3f0-4c06-9cf0-ffc4251530fb.png"
+  },
+  {
+    "id": "frozen-labyrinth",
+    "theme": "snowbound rock corridors, pale blue ice walls at perimeter, frozen white ground, restrained cold daylight",
+    "asset": "frozen-labyrinth",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: frozen-labyrinth. Preserve these recognizable environmental features: snowbound rock corridors, pale blue ice walls at perimeter, frozen white ground, restrained cold daylight.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-b28663f3-8873-43b3-82f7-88e3ed29c4ef.png"
+  },
+  {
+    "id": "plains-of-the-lizardmen",
+    "theme": "yellow green poisoned lowland, giant fleshy mushrooms at the perimeter, shallow pools and coarse pale reeds",
+    "asset": "plains-of-the-lizardmen",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: plains-of-the-lizardmen. Preserve these recognizable environmental features: yellow green poisoned lowland, giant fleshy mushrooms at the perimeter, shallow pools and coarse pale reeds.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-660ec250-4320-488a-8a8b-f1dfce429b97.png"
+  },
+  {
+    "id": "silent-valley",
+    "theme": "deep ochre limestone basin with enormous eroded column-shaped rock walls, dry muted yellow ground and sparse hardy grass",
+    "asset": "silent-valley",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: silent-valley. Preserve these recognizable environmental features: deep ochre limestone basin with enormous eroded column-shaped rock walls, dry muted yellow ground and sparse hardy grass.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-de2a403f-f808-4f9e-9578-2f13ced62a9c.png"
+  },
+  {
+    "id": "stakato-nest",
+    "theme": "earthy black insect nest cavern, ochre chitin ridges, hanging cocoons confined to edges, dim pale green ambient light",
+    "asset": "stakato-nest",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: stakato-nest. Preserve these recognizable environmental features: earthy black insect nest cavern, ochre chitin ridges, hanging cocoons confined to edges, dim pale green ambient light.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-dea04c1d-f1ed-4a11-bf16-59ee496c77a2.png"
+  },
+  {
+    "id": "steel-citadel",
+    "theme": "dark grey angular demonic stone fortress corridors, black metal ribs and dim red light, worn broad paved floor",
+    "asset": "steel-citadel",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: steel-citadel. Preserve these recognizable environmental features: dark grey angular demonic stone fortress corridors, black metal ribs and dim red light, worn broad paved floor.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-6bcf08ca-741b-4bd3-b87d-edeb185c58f0.png"
+  },
+  {
+    "id": "tower-of-infinitum",
+    "theme": "high dark demonic tower halls, violet grey stone, tall narrow iron framed arches confined to perimeter, muted purple ambient light",
+    "asset": "tower-of-infinitum",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: tower-of-infinitum. Preserve these recognizable environmental features: high dark demonic tower halls, violet grey stone, tall narrow iron framed arches confined to perimeter, muted purple ambient light.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-486c975d-36ce-469b-967b-c11ea5a662c5.png"
+  },
+  {
+    "id": "tower-of-naia",
+    "theme": "ancient demonic laboratory, dark sandstone, cold blue green crystalline apparatus and heavy square gates at perimeter, quiet broad stone floor",
+    "asset": "tower-of-naia",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: tower-of-naia. Preserve these recognizable environmental features: ancient demonic laboratory, dark sandstone, cold blue green crystalline apparatus and heavy square gates at perimeter, quiet broad stone floor.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-3641f4c5-627c-4200-b675-0a8c69f87092.png"
+  },
+  {
+    "id": "tully-workshop",
+    "theme": "dark brass and black iron foundry interior, riveted workshop walls, large silent mechanical frames at outer edges, warm dull furnace light",
+    "asset": "tully-workshop",
+    "prompt": "Use case: stylized-concept. Create one original production environment painting for a Lineage II High Five inspired browser MMORPG, for the named location. Artistic adaptation for a readable room, not original game geodata. Landscape 1536x1024. Fixed orthographic 30-degree isometric view looking DOWN at the ground, no sky, no horizon, no roof. Continuous surface fills entire image, no floating island, no black void. Invisible playable diamond N(768,150), E(1408,520), S(768,890), W(128,520). Entire diamond must be flat, uninterrupted, quiet, clearly walkable. All four tips lead into clear open floor. ALL large cliffs, water, walls, pillars, furniture, trees, bones and landmarks stay OUTSIDE this diamond at extreme perimeter corners; never block exits. Restrained painterly realism matching old Lineage II, muted detailed materials, subdued center, detailed edge architecture. No characters, enemies, creatures, interface, icons, letters, text, digits, branding, logos, watermarks, heavy fog, bloom, weapons or items. Location: tully-workshop. Preserve these recognizable environmental features: dark brass and black iron foundry interior, riveted workshop walls, large silent mechanical frames at outer edges, warm dull furnace light.",
+    "generator": "OpenAI imagegen built-in",
+    "created": "2026-10-19",
+    "notOriginalL2ClientArt": true,
+    "notOriginalGeodata": true,
+    "source": "exec-a4d31c5b-6b12-4d2d-88cd-e34d9d00624a.png"
+  }
+];

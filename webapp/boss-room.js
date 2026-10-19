@@ -5,13 +5,13 @@ import {escapeHtml} from './escape-html.js';
 const environments={antharas:'cavern',valakas:'volcanic',baium:'catacomb',frintezza:'necropolis',orfen:'marsh',queenAnt:'cavern',beleth:'desert',zaken:'ship',freya:'ice',freyaExtreme:'ice',core:'catacomb'};
 
 /** Shares the room renderer with hunting. Raid rules and entry checks stay in the boss server. */
-export function createBossRoomStage(host,{name,label=name,bossUrl,playerUrl,player,hpPercent=100}){
+export function createBossRoomStage(host,{name,sceneKey=name,environment:sourceEnvironment,label=name,bossUrl,playerUrl,player,hpPercent=100}){
   const renderer=createHuntRenderer();
   let disposed=false,hp=hpPercent,viewport={width:320,height:360},animation=null;
-  const environment=environments[name]||'catacomb',indoor=['catacomb','necropolis','ship','ice'].includes(environment);
+  const environment=sourceEnvironment||environments[name]||'woodland',indoor=['catacomb','necropolis','ship','ice'].includes(environment);
   const walls=indoor?[[.17,.25],[.74,.42],[.25,.79]].map(([x,y])=>({x,y,w:.06,h:.06,kind:'pillar'})):
     [[.12,.34],[.77,.67],[.64,.12]].map(([x,y])=>({x,y,w:.09,h:.09,kind:'rock'}));
-  const field={environment,sceneKey:name,walls,layoutSource:'adapted',exits:[]};
+  const field={environment,sceneKey,walls,layoutSource:'adapted',exits:[]};
   host.classList.add('boss-room-stage');
   function marker(id,point,url,label,self=false){
     const p=isoPoint(point,viewport);

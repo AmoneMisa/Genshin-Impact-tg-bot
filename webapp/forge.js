@@ -17,9 +17,10 @@ export function attributeItemAvailability(item,materialKey){
 }
 const ATTRIBUTE_REASONS={not_attributable:'Этот предмет не поддерживает атрибут.',timed_item:'Временный предмет.',wrong_element:'У оружия другой атрибут.',opposite_element:'У брони уже противоположный атрибут.',attribute_slots_full:'Все три атрибута брони заняты.',attribute_tier_max:'Достигнут предел для этого камня.'};
 
-export async function openForgeGame({api,renderState=()=>{},haptic=()=>{},statusElement,onClose,materialKey=null}){
+export async function openForgeGame({api:baseApi,renderState=()=>{},haptic=()=>{},statusElement,onClose,materialKey=null,serviceNpc=null}){
+ const api=(path,options)=>baseApi(serviceNpc&&path==='/api/equipment'?path+'?serviceNpc='+encodeURIComponent(serviceNpc):path,serviceNpc&&options?.body?{...options,body:JSON.stringify({...JSON.parse(options.body),serviceNpc})}:options);
  materialKey=materialKey?.replace(/^bound_/,'')||null;
- let equipment=await api('/api/equipment'),mode=materialKey?'attribute':'ls',pending=false,closed=false,dialog=null,selected=null,result='';
+ let equipment=await api('/api/equipment'),mode=serviceNpc?'unseal':materialKey?'attribute':'ls',pending=false,closed=false,dialog=null,selected=null,result='';
  if(materialKey)return openAttributeEnchant({api,renderState,haptic,onClose,materialKey,equipment,availability:attributeItemAvailability});
  const overlay=document.createElement('section');overlay.className='game-overlay equipment-overlay';
  overlay.innerHTML=`<div class="overlay-backdrop"></div><div class="overlay-panel game-dialog-panel l2-window craft-book-panel">${dialogHeading('Кузница').replace('data-dismiss','class="overlay-close" data-dismiss')}<div data-forge-body></div></div>`;
@@ -30,10 +31,11 @@ export async function openForgeGame({api,renderState=()=>{},haptic=()=>{},status
  if(materialKey)overlay.querySelector('h2').textContent='Атрибут';
  const rows=()=>mode==='unseal'?(equipment.unseal||[]):(equipment.items||[]).filter(i=>mode==='ls'?i.augment:mode==='attribute'?true:i.sa);
  function render(){
-  body.innerHTML=`<nav class="ui-folder-tabs" aria-label="Услуги кузницы">${[['ls','Камень жизни'],['sa','SA'],['unseal','Распечатка'],['craft','Крафт']].map(([id,label])=>`<button type="button" data-forge-mode="${id}" class="${mode===id?'active':''}">${label}</button>`).join('')}</nav><p>Выбери предмет.</p>${itemGridHtml(rows().map(i=>`<button class="item-grid-cell" data-forge-select="${esc(i.key||i.id)}" ${mode==='attribute'&&!attributeItemAvailability(i,materialKey).ok?'disabled':''} title="${esc(mode==='attribute'?ATTRIBUTE_REASONS[attributeItemAvailability(i,materialKey).reason]||i.name:i.name||i.sourceName)}" aria-label="${esc(i.name||i.sourceName)}">${mode==='unseal'?materialIcon('l2_'+i.source):inventoryItemArt(i)}</button>`),{className:'craft-recipe-grid',min:30})}<p aria-live="polite">${esc(result)}</p><button class="ui-button" data-open-book>Книга рецептов</button>`;
+  body.innerHTML=`<nav class="ui-folder-tabs" aria-label="Услуги кузницы">${[['ls','Камень жизни'],['sa','SA'],['unseal','Распечатка'],['craft','Крафт']].filter(([id])=>!serviceNpc||id==='unseal').map(([id,label])=>`<button type="button" data-forge-mode="${id}" class="${mode===id?'active':''}">${label}</button>`).join('')}</nav><p>Выбери предмет.</p>${itemGridHtml(rows().map(i=>`<button class="item-grid-cell" data-forge-select="${esc(i.key||i.id)}" ${mode==='attribute'&&!attributeItemAvailability(i,materialKey).ok?'disabled':''} title="${esc(mode==='attribute'?ATTRIBUTE_REASONS[attributeItemAvailability(i,materialKey).reason]||i.name:i.name||i.sourceName)}" aria-label="${esc(i.name||i.sourceName)}">${mode==='unseal'?materialIcon('l2_'+i.source):inventoryItemArt(i)}</button>`),{className:'craft-recipe-grid',min:30})}<p aria-live="polite">${esc(result)}</p><button class="ui-button" data-open-book ${serviceNpc?'hidden':''}>Книга рецептов</button>`;
   body.querySelectorAll('[data-forge-mode]').forEach(b=>b.onclick=async()=>{if(pending)return;if(b.dataset.forgeMode==='craft'){await (await import('./craft.js')).openCraftGame({api,renderState,haptic,statusElement,npc:true,onClose:async()=>{if(closed)return;equipment=await api('/api/equipment');render();}});return;}mode=b.dataset.forgeMode;result='';render();});
   body.querySelectorAll('[data-forge-select]').forEach(b=>b.onclick=()=>{if(pending||b.disabled)return;selected=b.dataset.forgeSelect;openItem();});
   body.querySelector('[data-open-book]').onclick=async()=>{if(pending)return;await(await import('./craft.js')).openCraftGame({api,renderState,haptic,statusElement,onClose:async()=>{if(closed)return;equipment=await api('/api/equipment');render();}});};
+  if(serviceNpc)body.querySelector('[data-open-book]').remove();
   if(materialKey){body.querySelector('nav').remove();body.querySelector('[data-open-book]').remove();}
  }
  function openItem(){

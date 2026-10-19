@@ -361,7 +361,7 @@ export const gachaResolve = guarded('gacha resolve', async (req, res) => {
 
 export const equipmentState = guarded('equipment state', async (req, res) => {
   const context = await authorize(req);
-  return sendJson(res, 200, getEquipmentState(context.session));
+  return sendJson(res, 200, getEquipmentState(context.session,{serviceNpc:new URL(req.url,'http://local').searchParams.get('serviceNpc')}));
 });
 
 export const equipmentAction = guarded('equipment action', async (req, res) => {
@@ -376,7 +376,7 @@ export const equipmentAction = guarded('equipment action', async (req, res) => {
   }
   const result = await withLock(`${context.chatId}:${context.userId}:equipment`, async () => {
     context.session = await getSession(context.chatId, context.userId);
-    const updated = performEquipmentAction(context.session, body.key, body.action, { scrollKey: typeof body.scrollKey === 'string' ? body.scrollKey : null, saId: typeof body.saId==='string'?body.saId:null, blessed: body.blessed === true, scroll: typeof body.scroll === 'string' ? body.scroll : null, tier: typeof body.tier === 'string' ? body.tier : null, element: typeof body.element === 'string' ? body.element : null });
+    const updated = performEquipmentAction(context.session, body.key, body.action, { serviceNpc: typeof body.serviceNpc==='string'?body.serviceNpc:null, scrollKey: typeof body.scrollKey === 'string' ? body.scrollKey : null, saId: typeof body.saId==='string'?body.saId:null, blessed: body.blessed === true, scroll: typeof body.scroll === 'string' ? body.scroll : null, tier: typeof body.tier === 'string' ? body.tier : null, element: typeof body.element === 'string' ? body.element : null });
     if (updated.ok) await saveSession(context.session);
     return updated;
   });

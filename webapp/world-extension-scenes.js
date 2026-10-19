@@ -1,0 +1,2 @@
+export const WORLD_EXTENSION_SCENES=[];
+export const WORLD_EXTENSION_FLOOR_SCENES={};

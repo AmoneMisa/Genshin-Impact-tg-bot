@@ -1,3 +1,4 @@
+import {recordSeedKill} from '../world/seedInstances.js';
 import {recordDeath} from '../player/deathPenalties.js';
 import {playerName} from '../player/playerName.js';
 import {armAttackRune, clearAttackRune, defenseRuneFactor} from '../runes/labRunes.js';
@@ -607,12 +608,13 @@ function finishKill(session,hunt,mob,{random,now,deferLoot=false}){
     const rewards=grantKillRewards(session,mob,getMobDef(getZone(mob.zone),mob.mobId),{random,now});
     rewards.karmaReduced=reduceHuntKarma(session,rewards);
     mob.rewarded = rewards;
+    recordSeedKill(session,mob,now);
     hunt.kills=number(hunt.kills)+1;hunt.last={name:mob.name,level:mob.level,champion:mob.champion,...rewards};
     if(!deferLoot)notifyLoot(hunt,[rewards],now);
     if (hunt.field) {
         const index=hunt.field.mobs.findIndex(m=>m.instanceId===mob.instanceId);
         if(index>=0)hunt.field.mobs.splice(index,1);
-        if(!session.game.world?.instanceId&&!mob.rewardless)(hunt.field.respawns ||= []).push({at:now+(mob.sourceRespawnMs??HUNT.mobRespawnMs)+Math.round((random()*2-1)*(mob.sourceRespawnRandomMs||0)),room:mob.sourceRoom||hunt.field.room,sourceSlot:mob.sourceSlot??null});
+        if(!session.game.world?.instanceId&&!mob.rewardless&&mob.sourceRespawnMs!==0)(hunt.field.respawns ||= []).push({at:now+(mob.sourceRespawnMs??HUNT.mobRespawnMs)+Math.round((random()*2-1)*(mob.sourceRespawnRandomMs||0)),room:mob.sourceRoom||hunt.field.room,sourceSlot:mob.sourceSlot??null});
         hunt.field.target = hunt.field.mobs[0]?.instanceId || null;
         hunt.mob = hunt.field.mobs[0] || null;
     } else hunt.mob=null;

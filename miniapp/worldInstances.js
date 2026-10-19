@@ -1,12 +1,12 @@
 import WorldInstance from '../db/models/WorldInstance.js';
 import {attachPartyPeers} from './party.js';
 // The party's instance outlives its originating chat; members can reopen it from any chat.
-export async function loadWorldInstances(session,{store=WorldInstance,attach=attachPartyPeers}={}){
-    const chat=session.ownerDocument(),id=session.game.world?.instanceId||session.game.world?.zakenVoyage;
+export async function loadWorldInstances(session,{store=WorldInstance,attach=attachPartyPeers,joinAssembly=null}={}){
+    const chat=session.ownerDocument(),w=session.game.world,id=w?.instanceId||joinAssembly||w?.seedAssembly||(w?.location?.startsWith('seed-')?w.seedVoyage:null)||(w?.location==='devils-isle'?w.zakenVoyage:null);
     if(!id)return;
     const record=await store.findById(id);
     if(!record)return;
-    if(!record.data.members.includes(String(session.userId)))return;
+    if(!record.data.members.includes(String(session.userId))&&!(joinAssembly===id&&record.data.kind==='seed-assembly'&&record.data.location===session.game.world?.location&&record.data.until>Date.now()))return;
     await attach(session,record.data.members);
     chat.game.worldInstances||={};chat.game.worldInstances[id]=record.data;
 }

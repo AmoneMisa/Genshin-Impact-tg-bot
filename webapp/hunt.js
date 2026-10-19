@@ -47,7 +47,7 @@ const REASONS = {room_in_combat:'Нельзя уйти из комнаты, по
   combat_data_missing:'Для этого действия ещё нет проверенных данных дальности.',
 };
 REASONS.pvp_line_of_sight='Цель скрыта за препятствием.';
-Object.assign(REASONS,{stairs_required:'Подойди к лестнице на карте комнаты.',invalid_floor:'Этот переход недоступен.',ship_required:'Сначала пройди к кораблю через Остров Дьявола.',party_not_ready:'Вся группа должна подойти ко входу на корабль и выйти из боя.',instance_party_required:'Вход на корабль открывает лидер группы.',candle_too_far:'Подойди к свече.',candle_already_lit:'Эта свеча уже зажжена.',quick_travel_combat:'Сначала выйди из боя.',npc_too_far:'Подойди к хранителю портала.'});
+Object.assign(REASONS,{objectives_remaining:'Сначала уничтожьте цели этого участка.',seed_quest_required:'Сначала возьми задание Тепиоса.',seed_mark_required:'Нужен знак Кецеруса первой или второй ступени.',seed_assembly_required:'Соберите объединение групп у входа.',seed_assembly_missing:'Объединение уже недоступно. Проверь код лидера.',seed_raid_size:'Количество игроков не соответствует выбранному маршруту.',seed_entry_required:'Внутрь входит собранная экспедиция.',location_path_required:'Пройдите по маршруту через предыдущую локацию.',hellbound_stage_required:'Башня откроется на 11-м этапе освобождения Хеллбаунда.',hellbound_pass_required:'Каждому участнику требуется благословение для прохода.',stairs_required:'Подойди к лестнице на карте комнаты.',invalid_floor:'Этот переход недоступен.',ship_required:'Сначала пройди к кораблю через Остров Дьявола.',party_not_ready:'Вся группа должна подойти ко входу и выйти из боя.',instance_party_required:'Вход открывает лидер готовой группы.',candle_too_far:'Подойди к свече.',candle_already_lit:'Эта свеча уже зажжена.',quick_travel_combat:'Сначала выйди из боя.',npc_too_far:'Подойди к хранителю портала.'});
 Object.assign(REASONS,{no_party:'Ты не состоишь в группе.',not_leader:'Это действие доступно лидеру группы.',target_in_party:'Игрок уже состоит в группе.',already_member:'Игрок уже в вашей группе.',party_full:'Группа заполнена.',unknown_player:'Игрок недоступен.',not_member:'Игрок не в вашей группе.',invalid_supplies:'Проверь настройки ACP: порог должен быть от 1 до 99%.',empty_hotbar:'Оставь хотя бы одно действие или умение.'});
 const POTION_REASONS = {
   potion_empty: 'Это зелье закончилось.',
@@ -356,7 +356,9 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     }
     for(const npc of field.level?.npcs||[])if(!seen.has(npc.x+':'+npc.y))markers.push(marker(npc,npc.name,'◇',`data-level-npc="${escapeHtml(npc.name)}"`));
     for(const candle of field.ship?.candles||[])markers.push(marker(candle,`Свеча ${candle.id} · ${{unlit:'не зажжена',burning:'разгорается',red:'красная',blue:'синяя'}[candle.state]}`,{unlit:'♧',burning:'♨',red:'🔴',blue:'🔵'}[candle.state],`data-ship-candle="${candle.id}"`));
+    for(const [i,link] of (field.links||[]).entries())if(link.room===field.room.id)markers.push(marker(link.point,link.title,'↗',`data-region-link="${i}"`));
     const boss=field.ship?.boss||field.level?.boss&&{id:field.level.boss,point:{x:.5,y:.5}};
+    for(const raid of field.level?.raids||[])markers.push(marker(raid.point,raid.name,'⚔',`data-location-boss="${escapeHtml(raid.name)}"`));
     if(boss)markers.push(marker(boss.point,boss.id==='zaken'?'Закен найден':'Вход к боссу','⚔',`data-location-boss="${boss.id}"`));
     return markers.join('');
   }
@@ -365,9 +367,25 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     const dialog=document.createElement('dialog');dialog.className='game-dialog-panel l2-window';dialog.setAttribute('aria-label','Переходы между этажами');
     travelDialog?.close();travelDialog=dialog;
     dialog.innerHTML=dialogHeading(field.level.title)+`<p>Подойди к лестнице или хранителю портала. Их комнаты отмечены на карте.</p>`+(field.ship?`<p>Синих свечей: ${field.ship.blue}/4. Найди четыре синие свечи, чтобы обнаружить Закена.</p>`:'')+field.level.destinations.map((d,i)=>`<button type="button" class="ui-button" data-travel-choice="${i}" ${pending||d.room!==field.room.id?'disabled':''}>${escapeHtml(d.title)}${d.gold?' · '+formatNumber(d.gold)+' аден':''}${d.room!==field.room.id?' · в другом зале':d.near?'':' · подойти'}</button>`).join('')+(field.map?`<details><summary>Карта этажа</summary>${mapHtml(field)}</details>`:'');
+    const actions=document.createElement('div');actions.className='ui-action-stack';
+    actions.innerHTML=(field.links||[]).map((l,i)=>`<button type="button" class="ui-button" data-link-choice="${i}" ${l.room!==field.room.id?'disabled':''}>${escapeHtml(l.title)}${l.near?'':' · подойти'}</button>`).join('');
+    if(field.seed&&field.floor===1){
+      actions.innerHTML+=`<details><summary>Экспедиция в Семя</summary><div class="ui-action-stack"><label>Маршрут<select data-seed-mode>${field.seed.modes.map(m=>`<option value="${m.key}">${escapeHtml(m.title)} · ${m.partyMin}–${m.partyMax} игроков · ${m.minLevel}–${m.maxLevel} ур.</option>`).join('')}</select></label>${field.seed.assembly?`<p>Собрано ${field.seed.assembly.count} игроков.</p><label>Код объединения<input readonly value="${escapeHtml(field.seed.assembly.id)}"></label>`:''}<button class="ui-button" type="button" data-seed-create>Создать объединение групп</button><label>Код лидера<input data-seed-code maxlength="160" autocomplete="off"></label><button class="ui-button" type="button" data-seed-join>Присоединить свою группу</button></div></details>`;
+      if(state.zone==='seed-of-infinity')actions.innerHTML+=`<details><summary>Задания Тепиоса</summary><div class="ui-action-stack"><button class="ui-button" type="button" data-seed-quest="694">Пройти Зал Страданий · 75–82</button><button class="ui-button" type="button" data-seed-quest="696">Завоевать Зал Гибели · знак Кецеруса</button></div></details>`;
+    }
+    dialog.append(actions);enhanceSelects(dialog);
     document.body.append(dialog);dialog.showModal();
     dialog.addEventListener('close',()=>dialog.remove(),{once:true});dialog.querySelector('[data-dismiss]').onclick=()=>dialog.close();
     dialog.addEventListener('click',async event=>{
+      const seedButton=event.target.closest('[data-seed-create],[data-seed-join],[data-seed-quest]'),linkButton=event.target.closest('[data-link-choice]');
+      if(seedButton){
+        const seedMode=dialog.querySelector('[data-seed-mode]').value,assembly=dialog.querySelector('[data-seed-code]').value;
+        dialog.close();
+        if(Math.hypot(field.x-.9,field.y-.1)>.1)await run('/api/hunt/move',{point:{x:.9,y:.1}});
+        else await run('/api/world/action',seedButton.hasAttribute('data-seed-quest')?{action:'seed_quest',quest:Number(seedButton.dataset.seedQuest)}:{action:seedButton.hasAttribute('data-seed-create')?'seed_assembly':'seed_join',seedMode,assembly});
+        render();return;
+      }
+      if(linkButton){const l=field.links[Number(linkButton.dataset.linkChoice)];dialog.close();await run(l.near?'/api/world/action':'/api/hunt/move',l.near?{action:'location_link',location:l.location}:{point:l.point});render();return;}
       const choice=event.target.closest('[data-travel-choice]'),room=event.target.closest('[data-room]');
       if(choice){const d=field.level.destinations[Number(choice.dataset.travelChoice)];dialog.close();await run(d.near?'/api/world/action':'/api/hunt/move',d.near?{action:'floor',floor:d.floor}:{point:d.point});render();}
       else if(room){dialog.close();await run('/api/hunt/move',{direction:'room:'+room.dataset.room});render();}
@@ -505,7 +523,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     if(!peer)playerTarget=null;
     const body = [];
     const focused=document.activeElement;
-    const focusKey=focused&&content.contains(focused)?['data-skill','data-attack','data-next-target','data-hunt-halt','data-target','data-room','data-bar-tab','data-supply','data-target-drop','data-level-travel','data-level-marker','data-ship-candle','data-location-boss','data-level-npc','data-shots-collapse','data-shots','data-acp','data-acp-threshold','data-combat-action','data-pin-action','data-hunt-open','data-system-chat'].find(key=>focused.hasAttribute(key)):null;
+    const focusKey=focused&&content.contains(focused)?['data-skill','data-attack','data-next-target','data-hunt-halt','data-target','data-room','data-bar-tab','data-supply','data-target-drop','data-level-travel','data-level-marker','data-ship-candle','data-location-boss','data-level-npc','data-region-link','data-shots-collapse','data-shots','data-acp','data-acp-threshold','data-combat-action','data-pin-action','data-hunt-open','data-system-chat'].find(key=>focused.hasAttribute(key)):null;
     const focusValue=focusKey?focused.getAttribute(focusKey):null;
     const titleParts=state.field?.title?.split(' · ')||[];
     const displayTitle=state.field?.level&&titleParts.length>1?[...titleParts.slice(1),titleParts[0]].join(' · '):state.field?.title;
@@ -644,6 +662,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     content.querySelector('[data-world-exit]')?.addEventListener('click',async()=>{await run('/api/world/action',{action:'walk_exit'});render();});
     content.querySelector('[data-level-travel]')?.addEventListener('click',showLevelTravel);
     content.querySelectorAll('[data-level-marker]').forEach(b=>b.addEventListener('click',async()=>{const d=state.field.level.destinations[Number(b.dataset.levelMarker)];if(d.near)showLevelTravel();else {await run('/api/hunt/move',{point:d.point});render();}}));
+    content.querySelectorAll('[data-region-link]').forEach(b=>b.addEventListener('click',showLevelTravel));
     content.querySelectorAll('[data-level-npc]').forEach(b=>b.addEventListener('click',()=>say(b.dataset.levelNpc)));
     content.querySelectorAll('[data-ship-candle]').forEach(b=>b.addEventListener('click',async()=>{const c=state.field.ship.candles.find(c=>c.id===Number(b.dataset.shipCandle));if(c.state!=='unlit')return;if(c.near)await run('/api/world/action',{action:'ship_candle',candle:c.id});else await run('/api/hunt/move',{point:{x:c.x,y:c.y}});render();}));
     content.querySelectorAll('[data-location-boss]').forEach(b=>b.addEventListener('click',async()=>{

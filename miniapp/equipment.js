@@ -126,6 +126,7 @@ function sanitizeItem(session, item, index) {
     key: itemKey(item, index),
     index,
     uid: item?.uid || null,
+    l2Id:item?.l2Id||null,sourceIcon:item?.sourceIcon||null,
     name: masterworkName(englishNamed(item)) || 'Unknown item',
     translatedName: item?.translatedName || item?.kind || 'Снаряжение',
     description: item?.description || '',
@@ -229,7 +230,7 @@ export function getScrollShopState(session) {
     }));
 }
 
-export function getEquipmentState(session) {
+export function getEquipmentState(session,{serviceNpc=null}={}) {
   expireTimedItems(session);
   reconcileCostumeSlot(session);
   const items = getItems(session);
@@ -269,7 +270,7 @@ export function getEquipmentState(session) {
     craft: getCraftState(session),
     npcCraft:npcCraftRecipes(session),
     scrollShop: getScrollShopState(session),
-    unseal: unsealOptions(session).map(({definition,...row})=>({...row,product:definition})),
+    unseal: unsealOptions(session,serviceNpc).map(({definition,...row})=>({...row,product:definition})),
   };
 }
 
@@ -281,7 +282,7 @@ export function performEquipmentAction(session, key, action, options = {}) {
     return { ok: false, reason: 'invalid_action', equipment: getEquipmentState(session) };
   }
 
-  if(action==='unseal'){const result=unsealArmor(session,key);return {...result,equipment:getEquipmentState(session)};}
+  if(action==='unseal'){const result=unsealArmor(session,key,options.serviceNpc);return {...result,equipment:getEquipmentState(session,{serviceNpc:options.serviceNpc})};}
   const resolved = resolveItem(session, key);
   if (!resolved) {
     return { ok: false, reason: 'stale_item', equipment: getEquipmentState(session) };

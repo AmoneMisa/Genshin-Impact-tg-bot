@@ -41,6 +41,7 @@ export function inventoryEquipped(state,slot) {
 }
 export function inventoryItemArt(item) {
   if(item.costumeId)return costumeIconHtml(item.costumeId);
+  if(item.sourceIcon){const src=l2IconUrl(item.sourceIcon);return src?`<img src="${esc(src)}" width="44" height="44" alt="" decoding="async">`:'<span class="item-art-unavailable" aria-label="Иконка недоступна"></span>';}
   const art=itemArtSources(itemArtKey(normalizeLootKind(item),item));
   return `<img class="${item.shadow?'is-shadow-item':''}" src="${art.src}" srcset="${art.srcset}" sizes="44px" alt="" decoding="async">`;
 }

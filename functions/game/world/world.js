@@ -12,8 +12,13 @@ import {partyMembers} from '../party/party.js';
 import {markWorldDeath} from './death.js';
 import {questTargets} from './questTargets.js';
 import {outdoorPoint,arriveHoldingEntrance,leaveHolding,ENTRANCE_SIZE} from './holdingEntry.js';
+import {locationTravelQuote} from './locationTravel.js';
 import {townTravelQuote} from './townTravel.js';
 import {createShipVoyage,shipInstance,lightShipCandle,tickShip} from './zakenShip.js';
+import {SEED_MODES} from '../../../template/seedInstances.js';
+import {seedModeAt,seedAdmission,seedFloorBlock,seedAssemblyAction} from './seedInstances.js';
+import {getMaterialCount} from '../player/materials.js';
+import {regionAccessBlock,spendRegionFare,regionLinks} from './regionAccess.js';
 
 export {CITIES,REGIONS,LOCATIONS,CITY_NPCS};
 export const CITY_SIZE=14000;
@@ -34,7 +39,10 @@ export function advanceWorld(session,now=Date.now()) {
     if(w.mode==='road'&&w.walkHome?.until<=now){
         const trip=w.walkHome;
         if(trip.holding){const h=holdings.find(h=>h.id===trip.holding);if(h)arriveHoldingEntrance(session,h,now);}
-        else {if(trip.city)w.city=trip.city;arriveCity(session,w);}
+        else if(trip.location){
+            const l=LOCATIONS.find(l=>l.id===trip.location);
+            if(l&&!regionAccessBlock(session,l,{walking:true,now})&&enterHuntField(session,l.id,{now}).ok)Object.assign(w,{city:l.region,mode:'location',location:l.id,path:[],pending:null,channel:null});else arriveCity(session,w);
+        }else {if(trip.city)w.city=trip.city;arriveCity(session,w);if(trip.arrivalPoint){Object.assign(w,cityPoint(cityOf(w),trip.arrivalPoint));w.z=trip.arrivalPoint.z;}}
         delete w.walkHome;
     }
     if(w.died){delete w.died;delete w.death;}
@@ -50,14 +58,19 @@ export function advanceWorld(session,now=Date.now()) {
         if(!w.path.length&&w.pending){const pending=w.pending;w.pending=null;const location=LOCATIONS.find(l=>l.id===pending.location),npc=CITY_NPCS.find(n=>n.id===pending.npc);
             if(pending.holding){const h=holdings.find(h=>h.id===pending.holding),point=outdoorPoint(session);if(h?.entry&&point&&Math.hypot(point.x-h.entry.x,point.y-h.entry.y)<=180)w.readyHolding=h.id;}
             else if(pending.city&&npc&&npc.city===w.city&&nearNpc(w,npc)&&session.game.inventory.gold>=pending.gold){
+                const current=townTravelQuote(session,pending.city,now);
+                if(!current||current.gold!==pending.gold)return w;
+                if(current.mode==='airship'){if(quickTravelBlock(session,now))return w;w.mode='road';w.walkHome={until:current.until,city:pending.city,kind:'airship',departureAt:current.departureAt,arrivalPoint:current.arrivalPoint};w.path=[];return w;}
                 session.game.inventory.gold-=pending.gold;w.city=pending.city;arriveCity(session,w);
                 if(pending.arrival){Object.assign(w,cityPoint(cityOf(w),pending.arrival));w.z=pending.arrival.z;}
                 const target=CITY_NPCS.find(n=>n.id===pending.approachNpc&&n.city===w.city);
                 if(target){w.path=findPath(w,cityPoint(cityOf(w),target))||[];w.moveAt=now;}
             }
-            else if(location&&npc&&npc.city===w.city&&npc.gateway&&nearNpc(w,npc)&&Number(session.game.inventory.gold)>=teleportPrice(session,location.teleportGold,now)){
+            else if(location&&npc&&npc.city===w.city&&npc.gateway&&nearNpc(w,npc)&&locationTravelQuote(session,location,npc,now)&&Number(session.game.inventory.gold)>=locationTravelQuote(session,location,npc,now).gold){
+                const quote=locationTravelQuote(session,location,npc,now);
+                if(regionAccessBlock(session,location)||quote.item!==57&&getMaterialCount(session,'l2_'+quote.item)<quote.count)return w;
                 const entered=enterHuntField(session,location.id,{now});
-                if(entered.ok){const fare=teleportPrice(session,location.teleportGold,now);session.game.inventory.gold-=fare;w.city=location.region;w.mode='location';w.location=location.id;w.x=.5;w.y=.95;w.lastTeleport={to:location.id,gold:fare,at:now};}
+                if(entered.ok){const fare=locationTravelQuote(session,location,npc,now).gold;if(quote.item!==57)spendMaterials(session,{['l2_'+quote.item]:quote.count});session.game.inventory.gold-=fare;w.city=location.region;w.mode='location';w.location=location.id;w.x=.5;w.y=.95;w.lastTeleport={to:location.id,gold:fare,at:now};}
             }
         }
     }
@@ -95,6 +108,7 @@ export function quickTravel(session,body,now=Date.now()){
     const target=city||location;
     if(siegePoint(target))return {ok:false,reason:'quick_travel_siege'};
     if(location?.instance)return {ok:false,reason:'instance_npc_required'};
+    if(location){const denied=regionAccessBlock(session,location);if(denied)return {ok:false,reason:denied};}
     const w=ensureWorld(session,now);
     if(city&&w.mode==='city'&&w.city===city.id)return {ok:false,reason:'already_in_city'};
     const gold=city?quickCityGold(session,city,now):teleportPrice(session,quickTravelPrice(target),now);
@@ -105,7 +119,7 @@ export function quickTravel(session,body,now=Date.now()){
         session.game.hunt=null;
         const entered=enterHuntField(session,location.id,{now,targetMobId:quest?.mobId});
         if(!entered.ok){session.game.hunt=previous;return entered;}
-        Object.assign(w,{city:location.region,mode:'location',location:location.id,x:.5,y:.95});
+        spendRegionFare(session,location);Object.assign(w,{city:location.region,mode:'location',location:location.id,x:.5,y:.95});
     }else {w.city=city.id;arriveCity(session,w);}
     Object.assign(w,{path:[],pending:null,channel:null,holding:null,instanceId:null,readyHolding:null,moveAt:now});delete w.walkHome;
     session.game.inventory.gold-=gold;w.lastTeleport={to:target.id,gold,at:now,quick:true};session.needsSave=true;
@@ -140,19 +154,31 @@ export function worldAction(session,body,now=Date.now()){
         const path=findPath(w,{x:Number(body.point?.x),y:Number(body.point?.y)});
         if(!path)return {ok:false,reason:'path_blocked'};w.path=path;w.moveAt=now;return {ok:true};
     }
+    if(body.action==='walk_location'){
+        const location=LOCATIONS.find(l=>l.id===body.location),city=cityOf(w);
+        if(!location?.entrySource||location.continent==='gracia'||location.access?.kind==='linked'||location.instance||w.mode!=='city'||![city.id,city.parentRegion].includes(location.region))return {ok:false,reason:'location_path_required'};
+        const denied=quickTravelBlock(session,now)||regionAccessBlock(session,location,{walking:true,now});if(denied)return {ok:false,reason:denied};
+        const start=outdoorPoint(session),duration=Math.max(1000,Math.hypot(start.x-location.x,start.y-location.y)/Math.max(1,getSpeed(session))*1000);
+        w.mode='road';w.path=[];w.pending=null;w.channel=null;w.walkHome={until:now+duration,location:location.id,kind:'walk',routeGeometry:'adapted-direct-distance'};return {ok:true};
+    }
     if(body.action==='travel'){
         if(w.mode!=='city')return {ok:false,reason:'gatekeeper_required'};
         const location=LOCATIONS.find(l=>l.id===body.location),npc=CITY_NPCS.find(n=>n.city===w.city&&n.gateway);
         if(!location||!npc)return {ok:false,reason:'unknown_zone'};
         if(location.instance)return {ok:false,reason:'instance_npc_required'};
-        if(Number(session.game.inventory.gold)<teleportPrice(session,location.teleportGold,now))return {ok:false,reason:'not_enough_gold'};
+        const denied=regionAccessBlock(session,location);if(denied)return {ok:false,reason:denied};
+        const quote=locationTravelQuote(session,location,npc,now);if(!quote)return {ok:false,reason:'city_route_unavailable'};
+        if(quote.item!==57&&getMaterialCount(session,'l2_'+quote.item)<quote.count)return {ok:false,reason:'entry_material_required'};
+        if(Number(session.game.inventory.gold)<quote.gold)return {ok:false,reason:'not_enough_gold'};
         const path=findPath(w,cityPoint(cityOf(w),npc));if(!path)return {ok:false,reason:'path_blocked'};
         w.path=path;w.moveAt=now;w.pending={npc:npc.id,location:location.id};w.channel=null;return {ok:true};
     }
     if(body.action==='travel_city'){
-        const city=CITIES.find(c=>c.id===body.city),npc=CITY_NPCS.find(n=>n.city===w.city&&n.gateway);
+        const city=CITIES.find(c=>c.id===body.city);let npc=CITY_NPCS.find(n=>n.city===w.city&&n.gateway);
         if(w.mode!=='city'||!city||city.id===w.city)return {ok:false,reason:'gatekeeper_required'};
         const quote=townTravelQuote(session,city.id,now);if(!quote)return {ok:false,reason:'city_route_unavailable'};
+        if(quote.mode==='airship'){const blocked=quickTravelBlock(session,now);if(blocked)return {ok:false,reason:blocked};}
+        if(quote.npc)npc=CITY_NPCS.find(n=>n.id===quote.npc&&n.city===w.city);
         if(quote.mode==='walk'){
             const from=outdoorPoint(session);w.walkHome={until:now+Math.max(1000,Math.hypot(city.x-from.x,city.y-from.y)/Math.max(1,getSpeed(session))*1000),city:city.id};w.mode='road';w.path=[];w.pending=null;w.channel=null;return {ok:true};
         }
@@ -193,10 +219,26 @@ export function worldAction(session,body,now=Date.now()){
         const npc=CITY_NPCS.find(n=>n.id===body.npc);if(w.mode!=='city'||!npc||npc.gateway||npc.instanceGateway||npc.city!==w.city||!nearNpc(w,npc))return {ok:false,reason:'npc_too_far'};
         if(!(session.game.inventory.gold>=1000))return {ok:false,reason:'not_enough_gold'};session.game.inventory.gold-=1000;addMaterial(session,'scroll_escape',1);return {ok:true};
     }
+    if(['seed_assembly','seed_join'].includes(body.action))return seedAssemblyAction(session,body,now);
+    if(body.action==='seed_quest'){
+        const f=session.game.hunt?.field,id=Number(body.quest),lvl=Number(session.game.stats?.lvl);
+        if(w.mode!=='location'||w.location!=='seed-of-infinity'||f?.floor!==1||f.room!=='r0c0'||Math.hypot(f.x-.9,f.y-.1)>.1)return {ok:false,reason:'npc_too_far'};
+        if(![694,696].includes(id)||lvl<75||id===694&&lvl>82)return {ok:false,reason:'instance_level'};
+        if(id===696&&!getMaterialCount(session,'l2_13691')&&!getMaterialCount(session,'l2_13692'))return {ok:false,reason:'seed_mark_required'};
+        (w.seedQuests||={})[id]=1;return {ok:true};
+    }
     if(body.action==='floor'){
         const f=session.game.hunt?.field,l=LOCATIONS.find(l=>l.id===w.location),floor=Number(body.floor);
         if(w.mode!=='location'||!f||!l||session.game.hunt.zone!==l.id||!Number.isInteger(floor)||floor<1||floor>l.floors||floor===(f.floor||1))return {ok:false,reason:'invalid_floor'};
         const blocked=l2ActionBlock(session,{move:true},now);if(blocked)return {ok:false,reason:blocked};
+        if(l.access?.kind==='seed-instance'){
+            if(f.floor===1&&floor>1){
+                const d=levelTransitions(l.id,f)?.destinations.find(d=>d.floor===floor);
+                if(!d?.near)return {ok:false,reason:'stairs_required'};
+                return enterSeedExpedition(session,seedModeAt(l.id,floor),now);
+            }
+            const denied=seedFloorBlock(session,l.id,floor,now);if(denied)return {ok:false,reason:denied};
+        }
         if(l.instance?.kind==='labyrinth'&&floor>(f.floor||1)&&f.mobs.some(m=>m.currentHp>0))return {ok:false,reason:'objectives_remaining'};
         const transitions=levelTransitions(l.id,f),destination=transitions?.destinations.find(d=>d.floor===floor);
         if(transitions&&!destination||!transitions&&Math.abs(floor-(f.floor||1))!==1)return {ok:false,reason:'invalid_floor'};
@@ -208,8 +250,22 @@ export function worldAction(session,body,now=Date.now()){
             return enterZakenShip(session,now);
         }
         const result=changeHuntFloor(session,floor,{now,arrival:destination?.arrival});
-        if(result.ok){session.game.inventory.gold-=gold;if(l.id==='devils-isle'&&floor===3)w.instanceId=null;}
+        if(result.ok){if(l.access?.kind==='seed-instance'&&floor===1)w.instanceId=null;session.game.inventory.gold-=gold;if(l.id==='devils-isle'&&floor===3)w.instanceId=null;}
         return result;
+    }
+    if(body.action==='location_link'){
+        const f=session.game.hunt?.field,l=LOCATIONS.find(l=>l.id===body.location),link=f&&regionLinks(w.location,f).find(p=>p.location===body.location);
+        if(w.mode!=='location'||!link?.near||!l)return {ok:false,reason:'location_path_required'};
+        const blocked=quickTravelBlock(session,now)||regionAccessBlock(session,l,{linked:true,now});if(blocked)return {ok:false,reason:blocked};
+        const members=l.access?.partyMin?partyMembers(session.ownerDocument?.(),session):[session];
+        if(l.access?.partyMin&&(String(session.game.party?.leaderId)!==String(session.userId)||members.length<l.access.partyMin))return {ok:false,reason:'instance_party_required'};
+        for(const member of members){
+            const field=member.game.hunt?.field,peer=field&&regionLinks(member.game.world?.location,field).find(p=>p.location===l.id);
+            if(!peer?.near||member.game.world?.location!==w.location||!alive(member))return {ok:false,reason:'party_not_ready'};
+            const denied=quickTravelBlock(member,now)||regionAccessBlock(member,l,{linked:true,now});if(denied)return {ok:false,reason:denied};
+        }
+        for(const member of members){member.game.hunt=null;enterHuntField(member,l.id,{now});Object.assign(member.game.world,{location:l.id,city:l.region,instanceId:null,path:[],pending:null,channel:null});member.needsSave=true;}
+        return {ok:true};
     }
     if(body.action==='ship_candle'){
         const denied=l2ActionBlock(session,{move:true},now);if(denied)return {ok:false,reason:denied};
@@ -217,6 +273,28 @@ export function worldAction(session,body,now=Date.now()){
         return lightShipCandle(session,Number(body.candle),now);
     }
     return {ok:false,reason:'invalid_action'};
+}
+export function enterSeedExpedition(session,key,now=Date.now()){
+ const world=session.game.world,existing=session.ownerDocument?.()?.game?.worldInstances?.[world.seedVoyage];
+ if(SEED_MODES[key]&&existing?.kind==='seed'&&existing.seedMode===key&&existing.location===world.location&&existing.until>now&&existing.members.includes(String(session.userId))){
+  const blocked=quickTravelBlock(session,now);if(blocked)return {ok:false,reason:blocked};
+  const start=SEED_MODES[key].startFloor;
+  changeHuntFloor(session,start,{now});world.instanceId=existing.id;session.needsSave=true;bindWorldInstances(session.ownerDocument(),now);return {ok:true,instanceId:existing.id};
+ }
+ const entry=seedAdmission(session,key,now);if(!entry.ok)return entry;
+ const {members,mode,assembly}=entry,chat=session.ownerDocument(),store=chat.game.worldInstances||={};
+ if(Object.values(store).filter(i=>i.until>now).length>=64)return {ok:false,reason:'instance_busy'};
+ const id=assembly?.id||`seed:${key}:${session.game.party.id}:${now}`;
+ const instance={id,kind:'seed',seedMode:key,location:mode.location,until:now+mode.durationMs,members:members.map(m=>String(m.userId)),rooms:{},defeated:{},createdAt:now};
+ store[id]=instance;
+ for(const member of members){
+  member.game.hunt.field.floorStates={};
+  changeHuntFloor(member,mode.startFloor,{now});
+  const w=member.game.world;w.instanceId=id;w.seedVoyage=id;w.seedAssembly=null;
+  if(key!=='tiat')(w.locks||={})['seed:'+mode.instanceId]=now+86400000;
+  member.needsSave=true;
+ }
+ bindWorldInstances(chat,now);return {ok:true,instanceId:id};
 }
 export function enterZakenShip(session,now=Date.now(),random=Math.random){
  const chat=session.ownerDocument?.();if(!chat)return {ok:false,reason:'ship_required'};
@@ -266,7 +344,22 @@ export function enterWorldInstance(chat,session,locationId,now=Date.now()){
 export function bindWorldInstances(chat,now=Date.now()) {
     const store=chat.game?.worldInstances||{};
     const all=[...(chat.members||[]),...(chat.$locals?.guests||[])];
-    for(const instance of Object.values(store))tickShip(instance,now);
+    for(const instance of Object.values(store)){
+        tickShip(instance,now);
+        if(instance.kind==='seed'&&['tiat','erosion'].includes(instance.seedMode)&&instance.completedAt&&!instance.lockApplied){
+            const finish=new Date(instance.completedAt);finish.setUTCHours(3,30,0,0);if(finish.getTime()<=instance.completedAt)finish.setUTCDate(finish.getUTCDate()+1);let reset=finish.getTime();
+            if(instance.seedMode==='tiat'){
+                const date=new Date(instance.completedAt);date.setUTCHours(3,30,0,0);
+                while(date.getTime()<=instance.completedAt||![3,6].includes(date.getUTCDay()))date.setUTCDate(date.getUTCDate()+1);
+                reset=date.getTime();
+            }
+            for(const member of all)if(instance.members.includes(String(member.userId))){
+                const world=member.game.world;(world.locks||={})['seed:'+(instance.seedMode==='tiat'?110:instance.seedMode==='suffering'?115:instance.seedMode==='erosion'?119:121)]=reset;
+                member.needsSave=true;
+            }
+            instance.lockApplied=true;
+        }
+    }
     for(const instance of Object.values(store))if(instance.nextJumpAt&&instance.nextJumpAt<=now&&instance.until>now){
         instance.stage++;instance.nextJumpAt=now+300000;const zone=getZone(instance.location),rooms=zone?.riftRooms||[];const room=rooms[instance.stage%rooms.length];
         if(room){instance.rooms={};for(const member of all)if(member.game.world?.instanceId===instance.id&&member.game.hunt?.field){resetInstanceRoom(member,room.id,now);member.needsSave=true;}}
@@ -274,7 +367,11 @@ export function bindWorldInstances(chat,now=Date.now()) {
     for(const m of all){
         const w=m.game?.world,instance=w?.instanceId&&store[w.instanceId];
         if(!w?.instanceId)continue;
-        if(!instance||instance.until<=now||!instance.members.includes(String(m.userId))){arriveCity(m,w);m.needsSave=true;continue;}
+        if(!instance||instance.until<=now||!instance.members.includes(String(m.userId))){
+            if(instance?.kind==='seed'&&instance.members.includes(String(m.userId))&&m.game.hunt?.field){changeHuntFloor(m,1,{now});w.instanceId=null;}
+            else arriveCity(m,w);
+            m.needsSave=true;continue;
+        }
         const f=m.game.hunt?.field;if(!f)continue;
         const key=`${f.floor||1}:${f.room}`;
         const room=instance.rooms[key]||={mobs:f.mobs,respawns:[]};f.mobs=room.mobs;f.respawns=room.respawns;
@@ -284,5 +381,5 @@ export function bindWorldInstances(chat,now=Date.now()) {
 export function worldState(session,now=Date.now()){
     const w=advanceWorld(session,now);
     const {mode,city,location,x,y,path,moveAt,pending,channel,walkHome,holding,instanceId,readyHolding,boss,bossPosition,bossRoom}=w;
-    return {now,cityTravel:Object.fromEntries(CITIES.map(c=>[c.id,townTravelQuote(session,c.id,now)])),questTargets:questTargets(session,LOCATIONS),quickTravel:{multiplier:QUICK_TRAVEL_MULTIPLIER,blocked:quickTravelBlock(session,now),cities:CITIES.flatMap(c=>{const gold=quickCityGold(session,c,now);return gold===null?[]:[{id:c.id,gold}];}),locations:LOCATIONS.filter(l=>!l.instance&&!siegePoint(l)).map(l=>({id:l.id,gold:teleportPrice(session,quickTravelPrice(l),now)}))},death:w.death?{...w.death}:null,player:{hallRoom:w.hallRoom,areaSize:mode==='city'?citySize(cityOf(w)):ENTRANCE_SIZE,entryOrigin:mode==='entrance'?w.entryOrigin:null,userId:String(session.userId),mode,city,location,x,y,path,moveAt,pending,channel,walkHome,holding,instanceId,readyHolding,runSpeed:getSpeed(session)*l2MoveMultiplier(session,now),boss,bossPosition,bossRoom,hp:session.game.gameClass?.stats?.hp,level:session.game.stats?.lvl},cities:CITIES,regions:REGIONS,locations:LOCATIONS,npcs:CITY_NPCS,gold:session.game.inventory.gold,scrolls:session.game.inventory.materials?.scroll_escape||0};
+    return {now,locationTravel:Object.fromEntries(LOCATIONS.map(l=>[l.id,locationTravelQuote(session,l,CITY_NPCS.find(n=>n.city===w.city&&n.gateway),now)])),cityTravel:Object.fromEntries(CITIES.map(c=>[c.id,townTravelQuote(session,c.id,now)])),questTargets:questTargets(session,LOCATIONS),quickTravel:{multiplier:QUICK_TRAVEL_MULTIPLIER,blocked:quickTravelBlock(session,now),cities:CITIES.flatMap(c=>{const gold=quickCityGold(session,c,now);return gold===null?[]:[{id:c.id,gold}];}),locations:LOCATIONS.filter(l=>!l.instance&&!siegePoint(l)&&!regionAccessBlock(session,l,{now})).map(l=>({id:l.id,gold:teleportPrice(session,quickTravelPrice(l),now)}))},death:w.death?{...w.death}:null,player:{hallRoom:w.hallRoom,areaSize:mode==='city'?citySize(cityOf(w)):ENTRANCE_SIZE,entryOrigin:mode==='entrance'?w.entryOrigin:null,userId:String(session.userId),mode,city,location,x,y,path,moveAt,pending,channel,walkHome,holding,instanceId,readyHolding,runSpeed:getSpeed(session)*l2MoveMultiplier(session,now),boss,bossPosition,bossRoom,hp:session.game.gameClass?.stats?.hp,level:session.game.stats?.lvl},cities:CITIES,regions:REGIONS,locations:LOCATIONS,npcs:CITY_NPCS,gold:session.game.inventory.gold,scrolls:session.game.inventory.materials?.scroll_escape||0};
 }

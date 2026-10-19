@@ -1,3 +1,5 @@
+import {seedDto} from '../functions/game/world/seedInstances.js';
+import {regionLinks} from '../functions/game/world/regionAccess.js';
 import {soulCrystalState} from '../functions/game/equipment/soulCrystals.js';
 // Hunting fields: zones by level, a real-time fight with one mob at a time (skills, potions, shots) and
 // the Blue / Red champions. The fight itself is functions/game/hunt/; this module is the Mini App face.
@@ -126,7 +128,7 @@ function fieldDto(hunt, now, session) {
     const nextSpawnMs = pending.length ? Math.max(0, Math.min(...pending.map(entry => entry.at)) - now) : 0;
     return {
     x: field.x, y: field.y, runSpeed:getSpeed(session), walls:field.walls||[], path: field.path || [], moveAt: field.moveAt, floor: field.floor || 1, floors:zone?.floors||(zone?.id==='tower-of-insolence'?14:1), target: field.target,
-        autoAttack:Boolean(field.autoAttack),attack:weaponSpatial(session,now),pendingRoom:field.pendingRoom||null,ship:shipDto(session,now),
+        autoAttack:Boolean(field.autoAttack),attack:weaponSpatial(session,now),pendingRoom:field.pendingRoom||null,ship:shipDto(session,now),seed:seedDto(session,now),links:regionLinks(hunt.zone,field),
         lastStrike:field.lastStrike&&now-field.lastStrike.at<900?field.lastStrike:null,
         action:field.action?{...field.action,name:session.game.gameClass.skills[field.action.index]?.name,
             spatial:skillSpatial(session,session.game.gameClass.skills[field.action.index],now)}:null,

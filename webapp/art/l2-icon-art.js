@@ -14,6 +14,7 @@ published.add('icon-accessary_queen_of_ice_necklace_i00');
 // High Five quest 7267: Vacualite Floating Stone (Valakas entry).
 published.add('icon-etc_vacualite_glowing_white_i00');
 for(const key of ['icon-etc_resonance_amulet_i00','icon-etc_badge_gold_i00','icon-etc_coins_gold_i00']) published.add(key);
+for(const key of ["icon-weapon_pricklelotus_i01", "icon-belleface_i00", "icon-weapon_tysandy_sigil_i01", "icon-verper_sigil_i01"])published.add(key);
 export function l2IconUrl(key,size=128){return published.has(key)?`/art/l2/${key}-${[128,256,512].includes(size)?size:128}.webp`:null;}
 export function l2MaterialIcon(key){const art=L2_MATERIAL_ART[key];return art?l2IconHtml(art):'';}
 export function l2IconHtml(key){const src=l2IconUrl(key);return src?`<img class="mat-icon l2-client-icon" src="${src}" srcset="${src} 1x, ${l2IconUrl(key,256)} 2x" width="22" height="22" alt="" loading="lazy" decoding="async" draggable="false">`:'';}

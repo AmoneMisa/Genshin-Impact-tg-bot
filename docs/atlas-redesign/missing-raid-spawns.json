@@ -1,19 +1,131 @@
 [
   {
-    "id": 25487,
-    "name": "Water Spirit Lian",
-    "level": 40,
+    "id": 29056,
+    "name": "Ice Fairy Sirra",
+    "level": 60,
     "raid": true,
     "reason": "removed-in-high-five",
-    "source": "-- (25487,0,0,0,0,0,0,0,0), -- Water Spirit Lian (40) (Not spawned anymore in H5)"
+    "source": "-- (29056,0,0,0,0,0,0,0,0), -- Ice Fairy Sirra (60) (Not spawned anymore in H5)"
   },
   {
-    "id": 25490,
-    "name": "Gwindorr",
-    "level": 40,
+    "id": 25713,
+    "name": "Darnels",
+    "level": 84,
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25713,0,0,0,0,0,0,0,0), -- Darnels (84) (stats to be done)"
+  },
+  {
+    "id": 25703,
+    "name": "Gigantic Golem",
+    "level": 76,
+    "raid": true,
+    "reason": "no-confirmed-spawn",
+    "source": "-- (25703,0,0,0,0,0,0,0,0), -- Gigantic Golem (79) (Spawned by Dr Chaos AI)"
+  },
+  {
+    "id": 25652,
+    "name": "Awakened Ancient Prophet",
+    "level": 81,
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25652,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Prophet (81) (stats to be done)"
+  },
+  {
+    "id": 25650,
+    "name": "Awakened Ancient Executor",
+    "level": 81,
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25650,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Executor (81) (stats to be done)"
+  },
+  {
+    "id": 25648,
+    "name": "Awakened Ancient Fighter",
+    "level": 81,
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25648,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Fighter (81) (stats to be done)"
+  },
+  {
+    "id": 25646,
+    "name": "Awakened Ancient Soul Devourer",
+    "level": 81,
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25646,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Soul Devourer (81) (stats to be done)"
+  },
+  {
+    "id": 25645,
+    "name": "Awakened Ancient Soul Extractor",
+    "level": 81,
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25645,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Soul Extractor (81) (stats to be done)"
+  },
+  {
+    "id": 25644,
+    "name": "Awakened Ancient Severer",
+    "level": 81,
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25644,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Severer (81) (stats to be done)"
+  },
+  {
+    "id": 25643,
+    "name": "Awakened Ancient Sentry",
+    "level": 81,
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25643,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Sentry (81) (stats to be done)"
+  },
+  {
+    "id": 25626,
+    "name": "Dius",
+    "level": 80,
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25626,-252898,235845,53,0,86400,43200,99999,99999), -- Dius (80) (stats to be done)"
+  },
+  {
+    "id": 25625,
+    "name": "Enira",
+    "level": 80,
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25625,-181989,208968,44,0,86400,43200,99999,99999), -- Enira (80) (stats to be done)"
+  },
+  {
+    "id": 25624,
+    "name": "Rok",
+    "level": 80,
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25624,-174600,219711,44,0,86400,43200,99999,99999), -- Rok (80) (stats to be done)"
+  },
+  {
+    "id": 25623,
+    "name": "Valdstone",
+    "level": 80,
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25623,-192361,254528,15,0,86400,43200,99999,99999), -- Valdstone (80) (stats to be done)"
+  },
+  {
+    "id": 25536,
+    "name": "Hannibal",
+    "level": 81,
+    "raid": true,
+    "reason": "unfinished-source-data",
+    "source": "-- (25536,0,0,0,0,86400,43200,1027906,9999), -- Hannibal (83) (stats to be done)"
+  },
+  {
+    "id": 25509,
+    "name": "Dark Shaman Varangka",
+    "level": 53,
     "raid": true,
     "reason": "removed-in-high-five",
-    "source": "-- (25490,0,0,0,0,0,0,0,0), -- Gwindorr (40) (Not spawned anymore in H5)"
+    "source": "-- (25509,0,0,0,0,0,0,0,0), -- Dark Shaman Varangka (53) (Not spawned anymore in H5)"
   },
   {
     "id": 25412,
@@ -32,84 +144,12 @@
     "source": "-- (25217,89904,105712,-3292,0,86400,43200,369009,1660), -- Cursed Clara (50) (Not spawned anymore in H5)"
   },
   {
-    "id": 25509,
-    "name": "Dark Shaman Varangka",
-    "level": 53,
-    "raid": true,
-    "reason": "removed-in-high-five",
-    "source": "-- (25509,0,0,0,0,0,0,0,0), -- Dark Shaman Varangka (53) (Not spawned anymore in H5)"
-  },
-  {
     "id": 25176,
     "name": "Black Lily",
     "level": 55,
     "raid": true,
     "reason": "removed-in-high-five",
     "source": "-- (25176,92544,115232,-3200,0,86400,43200,451391,1975), -- Black Lily (55) (Not spawned anymore in H5)"
-  },
-  {
-    "id": 25162,
-    "name": "Giant Marpanak",
-    "level": 60,
-    "raid": true,
-    "reason": "removed-in-high-five",
-    "source": "-- (25162,0,0,0,0,0,0,0,0), -- Giant Marpanak (60) (Not spawned anymore in H5)"
-  },
-  {
-    "id": 25234,
-    "name": "Ancient Drake",
-    "level": 60,
-    "raid": true,
-    "reason": "removed-in-high-five",
-    "source": "-- (25234,120080,111248,-3047,0,86400,43200,1052436,2301), -- Ancient Weird Drake (60) (Not spawned anymore in H5)"
-  },
-  {
-    "id": 25407,
-    "name": "Lord Ishka",
-    "level": 60,
-    "raid": true,
-    "reason": "removed-in-high-five",
-    "source": "-- (25407,115072,112272,-3018,0,86400,43200,526218,2301), -- Lord Ishka (60) (Not spawned anymore in H5)"
-  },
-  {
-    "id": 29056,
-    "name": "Ice Fairy Sirra",
-    "level": 60,
-    "raid": true,
-    "reason": "removed-in-high-five",
-    "source": "-- (29056,0,0,0,0,0,0,0,0), -- Ice Fairy Sirra (60) (Not spawned anymore in H5)"
-  },
-  {
-    "id": 25467,
-    "name": "Gorgolos",
-    "level": 64,
-    "raid": true,
-    "reason": "removed-in-high-five",
-    "source": "-- (25467,0,0,0,0,0,0,0,0), -- Gorgolos (64) (Not spawned anymore in H5)"
-  },
-  {
-    "id": 25140,
-    "name": "Hekaton Prime",
-    "level": 65,
-    "raid": true,
-    "reason": "removed-in-high-five",
-    "source": "-- (25140,0,0,0,0,0,0,0,0), -- Hekaton Prime (65) (Not spawned anymore in H5)"
-  },
-  {
-    "id": 25470,
-    "name": "Last Titan Utenus",
-    "level": 66,
-    "raid": true,
-    "reason": "removed-in-high-five",
-    "source": "-- (25470,0,0,0,0,0,0,0,0), -- Last Titan Utenus (66) (Not spawned anymore in H5)"
-  },
-  {
-    "id": 25073,
-    "name": "Bloody Priest Rudelto",
-    "level": 69,
-    "raid": true,
-    "reason": "removed-in-high-five",
-    "source": "-- (25073,143265,110044,-3944,0,86400,43200,875948,2917), -- Bloody Priest Rudelto (69) (Not spawned anymore in H5)"
   },
   {
     "id": 25109,
@@ -120,131 +160,11 @@
     "source": "-- (25109,152660,110387,-5520,0,86400,43200,935092,3274), -- Antharas Priest Cloe (74) (Not spawned anymore in H5)"
   },
   {
-    "id": 25703,
-    "name": "Gigantic Golem",
-    "level": 76,
-    "raid": true,
-    "reason": "no-confirmed-spawn",
-    "source": "-- (25703,0,0,0,0,0,0,0,0), -- Gigantic Golem (79) (Spawned by Dr Chaos AI)"
-  },
-  {
-    "id": 25514,
-    "name": "Queen Shyeed",
-    "level": 80,
+    "id": 25073,
+    "name": "Bloody Priest Rudelto",
+    "level": 69,
     "raid": true,
     "reason": "removed-in-high-five",
-    "source": "-- (25514,0,0,0,0,0,0,0,0), -- Queen Shyeed (80) (Not spawned anymore in H5)"
-  },
-  {
-    "id": 25623,
-    "name": "Valdstone",
-    "level": 80,
-    "raid": true,
-    "reason": "unfinished-source-data",
-    "source": "-- (25623,-192361,254528,15,0,86400,43200,99999,99999), -- Valdstone (80) (stats to be done)"
-  },
-  {
-    "id": 25624,
-    "name": "Rok",
-    "level": 80,
-    "raid": true,
-    "reason": "unfinished-source-data",
-    "source": "-- (25624,-174600,219711,44,0,86400,43200,99999,99999), -- Rok (80) (stats to be done)"
-  },
-  {
-    "id": 25625,
-    "name": "Enira",
-    "level": 80,
-    "raid": true,
-    "reason": "unfinished-source-data",
-    "source": "-- (25625,-181989,208968,44,0,86400,43200,99999,99999), -- Enira (80) (stats to be done)"
-  },
-  {
-    "id": 25626,
-    "name": "Dius",
-    "level": 80,
-    "raid": true,
-    "reason": "unfinished-source-data",
-    "source": "-- (25626,-252898,235845,53,0,86400,43200,99999,99999), -- Dius (80) (stats to be done)"
-  },
-  {
-    "id": 29096,
-    "name": "Anais",
-    "level": 80,
-    "raid": true,
-    "reason": "removed-in-high-five",
-    "source": "-- (29096,0,0,0,0,0,0,0,0), -- Anais (80) (Not spawned anymore in H5)"
-  },
-  {
-    "id": 25536,
-    "name": "Hannibal",
-    "level": 81,
-    "raid": true,
-    "reason": "unfinished-source-data",
-    "source": "-- (25536,0,0,0,0,86400,43200,1027906,9999), -- Hannibal (83) (stats to be done)"
-  },
-  {
-    "id": 25643,
-    "name": "Awakened Ancient Sentry",
-    "level": 81,
-    "raid": true,
-    "reason": "unfinished-source-data",
-    "source": "-- (25643,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Sentry (81) (stats to be done)"
-  },
-  {
-    "id": 25644,
-    "name": "Awakened Ancient Severer",
-    "level": 81,
-    "raid": true,
-    "reason": "unfinished-source-data",
-    "source": "-- (25644,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Severer (81) (stats to be done)"
-  },
-  {
-    "id": 25645,
-    "name": "Awakened Ancient Soul Extractor",
-    "level": 81,
-    "raid": true,
-    "reason": "unfinished-source-data",
-    "source": "-- (25645,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Soul Extractor (81) (stats to be done)"
-  },
-  {
-    "id": 25646,
-    "name": "Awakened Ancient Soul Devourer",
-    "level": 81,
-    "raid": true,
-    "reason": "unfinished-source-data",
-    "source": "-- (25646,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Soul Devourer (81) (stats to be done)"
-  },
-  {
-    "id": 25647,
-    "name": "Awakened Ancient Fighter",
-    "level": 81,
-    "raid": true,
-    "reason": "unfinished-source-data",
-    "source": "-- (25647,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Fighter (81) (stats to be done)"
-  },
-  {
-    "id": 25649,
-    "name": "Awakened Ancient Executor",
-    "level": 81,
-    "raid": true,
-    "reason": "unfinished-source-data",
-    "source": "-- (25649,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Executor (81) (stats to be done)"
-  },
-  {
-    "id": 25651,
-    "name": "Awakened Ancient Prophet",
-    "level": 81,
-    "raid": true,
-    "reason": "unfinished-source-data",
-    "source": "-- (25651,0,0,0,0,86400,43200,9999,9999), -- Awakened Ancient Prophet  (81) (stats to be done)"
-  },
-  {
-    "id": 25713,
-    "name": "Darnels",
-    "level": 84,
-    "raid": true,
-    "reason": "unfinished-source-data",
-    "source": "-- (25713,0,0,0,0,0,0,0,0), -- Darnels (84) (stats to be done)"
+    "source": "-- (25073,143265,110044,-3944,0,86400,43200,875948,2917), -- Bloody Priest Rudelto (69) (Not spawned anymore in H5)"
   }
 ]

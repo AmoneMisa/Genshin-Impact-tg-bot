@@ -24,7 +24,7 @@ export async function worldRequestState(session,body,now=Date.now()){
     return withLock('world:holdings',()=>lockedWorldRequestState(session,body,now));
 }
 async function lockedWorldRequestState(session,body,now){
-    ensureWorld(session,now);await loadWorldInstances(session);await attachPartyPeers(session);
+    ensureWorld(session,now);await loadWorldInstances(session,{joinAssembly:body?.action==='seed_join'?String(body.assembly||''):null});await attachPartyPeers(session);
     const chat=session.ownerDocument(),clan=await getClan(Number(session.userId));bindWorldInstances(chat,now);
     let result={ok:true};const records=await WorldHolding.find().exec();reconcileMilitaryOwnership(records);
     for(const h of holdings.filter(hallScenario)){

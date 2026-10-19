@@ -1,3 +1,4 @@
+import {RAID_LOCATIONS} from '../../../template/raidLocations.js';
 import {ZAKEN_SHIP,locationLevel} from '../hunt/locationLevels.js';
 import {buildMob,getZone,getMobDef} from '../hunt/huntMobs.js';
 import {nearestOpenPoint} from './navigation.js';
@@ -66,6 +67,8 @@ export function locationBossGate(session,name,now=Date.now()){
  const w=session.game.world,field=session.game.hunt?.field;
  if(w?.mode!=='location'||!field||session.game.hunt.zone!==w.location)return false;
  const level=locationLevel(w.location,field.floor);
+ const raid=Object.values(RAID_LOCATIONS).find(r=>r.name===name&&r.zone===w.location&&r.gate?.floor===field.floor&&r.gate.room===field.room);
+ if(raid)return Math.hypot(field.x-raid.gate.point.x,field.y-raid.gate.point.y)<=.1;
  if(name==='zaken')return Boolean(shipDto(session,now)?.boss)&&Math.hypot(field.x-.5,field.y-.5)<=.1;
  return level?.boss===name&&field.room===(level.bossRoom||level.startId)&&Math.hypot(field.x-.5,field.y-.5)<=.1;
 }

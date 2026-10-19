@@ -70,7 +70,7 @@ export default async function(chatId, template = null, {memberCount = null, hero
 
     if (world) {
         // a monster of the real level: its defence follows the hunting formulas, so the damage of a hero is what it is on the fields
-        boss.world = {npcId: world.npcId, level, baseLevel: world.level, location: world.location, adaptive: Boolean(world.adaptive), instance: Boolean(world.instance)};
+        boss.world = {npcId: world.npcId, level, baseLevel: world.level, location: world.location, sceneKey:world.sceneKey, environment:world.environment, adaptive: Boolean(world.adaptive), instance: Boolean(world.instance)};
         boss.hunt = {
             defence: heroStats(level).attack * HUNT.defencePerAttack / HUNT.damageScale * world.defenceRel,
             pDef: heroStats(level).attack * HUNT.defencePerAttack / HUNT.damageScale * world.defenceRel,

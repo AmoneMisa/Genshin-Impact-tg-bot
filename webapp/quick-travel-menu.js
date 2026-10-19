@@ -9,7 +9,7 @@ export const QUICK_TRAVEL_LEVELS = [
 ];
 /** Use server quotes only; list all regions independently of the atlas viewport. */
 export function quickTravelDestinations(state, section='cities', level='all') {
-  if(section==='raids'||section==='epics')return (state.bosses||[]).filter(b=>Boolean(b.raid)===(section==='raids')).map(b=>({...b,id:b.name,name:b.nameCall||b.name,kind:'boss',gold:0,region:b.map?.region,levelMin:b.level,levelMax:b.level,missingSpawn:!b.map,unavailable:!b.map||(!b.available&&!b.fighting)})).sort((a,b)=>a.levelMin-b.levelMin);
+  if(section==='raids'||section==='epics')return (state.bosses||[]).filter(b=>Boolean(b.raid)===(section==='raids')).map(b=>({...b,id:b.name,name:b.nameCall||b.name,kind:'boss',gold:0,region:b.map?.region,levelMin:b.level,levelMax:b.level,missingSpawn:!b.map,unavailable:b.instanceEntry||!b.map||(!b.available&&!b.fighting)})).sort((a,b)=>a.levelMin-b.levelMin);
   if(section==='quests')return (state.questTargets||[]).flatMap(q=>{const quote=state.quickTravel?.locations?.find(l=>l.id===q.location);return quote?[{...q,gold:quote.gold,kind:'quest'}]:[];});
   if(section==='cities')return (state.quickTravel?.cities||[]).flatMap(quote=>{
     const city=state.cities.find(c=>c.id===quote.id);

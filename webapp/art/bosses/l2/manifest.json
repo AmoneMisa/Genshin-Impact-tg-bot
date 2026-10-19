@@ -11,11 +11,6 @@
       "image": "/art/bosses/l2/25238.webp",
       "source": "https://l2elo.com/images/npc-photos/25238.webp"
     },
-    "Anais": {
-      "npcId": 29096,
-      "image": "/art/bosses/l2/29096.webp",
-      "source": "https://l2elo.com/images/npc-photos/29096.webp"
-    },
     "Anakazel": {
       "npcId": 25333,
       "image": "/art/bosses/l2/25333.webp",
@@ -30,11 +25,6 @@
       "npcId": 25281,
       "image": "/art/bosses/l2/25281.webp",
       "source": "https://l2elo.com/images/npc-photos/25281.webp"
-    },
-    "Ancient Drake": {
-      "npcId": 25234,
-      "image": "/art/bosses/l2/25234.webp",
-      "source": "https://l2elo.com/images/npc-photos/25234.webp"
     },
     "Andreas Van Halter": {
       "npcId": 29062,
@@ -496,11 +486,6 @@
       "image": "/art/bosses/l2/25106.webp",
       "source": "https://l2elo.com/images/npc-photos/25106.webp"
     },
-    "Giant Marpanak": {
-      "npcId": 25162,
-      "image": "/art/bosses/l2/25162.webp",
-      "source": "https://l2elo.com/images/npc-photos/25162.webp"
-    },
     "Giant Wasteland Basilisk": {
       "npcId": 25352,
       "image": "/art/bosses/l2/25352.webp",
@@ -510,11 +495,6 @@
       "npcId": 29095,
       "image": "/art/bosses/l2/29095.webp",
       "source": "https://l2elo.com/images/npc-photos/29095.webp"
-    },
-    "Gorgolos": {
-      "npcId": 25467,
-      "image": "/art/bosses/l2/25467.webp",
-      "source": "https://l2elo.com/images/npc-photos/25467.webp"
     },
     "Grave Robber Kim": {
       "npcId": 25473,
@@ -536,11 +516,6 @@
       "image": "/art/bosses/l2/25118.webp",
       "source": "https://l2elo.com/images/npc-photos/25118.webp"
     },
-    "Gwindorr": {
-      "npcId": 25490,
-      "image": "/art/bosses/l2/25490.webp",
-      "source": "https://l2elo.com/images/npc-photos/25490.webp"
-    },
     "Harit Guardian Garangky": {
       "npcId": 25463,
       "image": "/art/bosses/l2/25463.webp",
@@ -550,11 +525,6 @@
       "npcId": 25241,
       "image": "/art/bosses/l2/25241.webp",
       "source": "https://l2elo.com/images/npc-photos/25241.webp"
-    },
-    "Hekaton Prime": {
-      "npcId": 25140,
-      "image": "/art/bosses/l2/25140.webp",
-      "source": "https://l2elo.com/images/npc-photos/25140.webp"
     },
     "Hesti Guardian Deity of the Hot Springs": {
       "npcId": 25293,
@@ -671,11 +641,6 @@
       "image": "/art/bosses/l2/25244.webp",
       "source": "https://l2elo.com/images/npc-photos/25244.webp"
     },
-    "Last Titan Utenus": {
-      "npcId": 25470,
-      "image": "/art/bosses/l2/25470.webp",
-      "source": "https://l2elo.com/images/npc-photos/25470.webp"
-    },
     "Leader of Cat Gang": {
       "npcId": 25082,
       "image": "/art/bosses/l2/25082.webp",
@@ -705,11 +670,6 @@
       "npcId": 25126,
       "image": "/art/bosses/l2/25126.webp",
       "source": "https://l2elo.com/images/npc-photos/25126.webp"
-    },
-    "Lord Ishka": {
-      "npcId": 25407,
-      "image": "/art/bosses/l2/25407.webp",
-      "source": "https://l2elo.com/images/npc-photos/25407.webp"
     },
     "Madness Beast": {
       "npcId": 25378,
@@ -835,11 +795,6 @@
       "npcId": 25076,
       "image": "/art/bosses/l2/25076.webp",
       "source": "https://l2elo.com/images/npc-photos/25076.webp"
-    },
-    "Queen Shyeed": {
-      "npcId": 25514,
-      "image": "/art/bosses/l2/25514.webp",
-      "source": "https://l2elo.com/images/npc-photos/25514.webp"
     },
     "queenAnt": {
       "npcId": 29001,
@@ -1136,11 +1091,6 @@
       "image": "/art/bosses/l2/25199.webp",
       "source": "https://l2elo.com/images/npc-photos/25199.webp"
     },
-    "Water Spirit Lian": {
-      "npcId": 25487,
-      "image": "/art/bosses/l2/25487.webp",
-      "source": "https://l2elo.com/images/npc-photos/25487.webp"
-    },
     "Wings of Flame, Ixion": {
       "npcId": 29040,
       "image": "/art/bosses/l2/29040.webp",
@@ -1184,171 +1134,6 @@
   },
   "missing": [
     {
-      "id": 25616,
-      "name": "Lost Warden",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25754,
-      "name": "Fire Lord Shadar",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25753,
-      "name": "Guillotine Warden",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25738,
-      "name": "Lead Tracker Sharuk",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25572,
-      "name": "Hager the Outlaw",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 29129,
-      "name": "Lost Captain",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25575,
-      "name": "All-Seeing Rango",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25578,
-      "name": "Jakard",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25579,
-      "name": "Helsing",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25546,
-      "name": "Rhianna the Traitor",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25549,
-      "name": "Tesla the Deceiver",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25582,
-      "name": "Gillien",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25552,
-      "name": "Soul Hunter Chakundel",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25585,
-      "name": "Medici",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25703,
-      "name": "Gigantic Golem",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25553,
-      "name": "Durango the Crusher",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25588,
-      "name": "Immortal Muus",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25659,
-      "name": "Kanadis Guide",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25554,
-      "name": "Brutus the Obstinate",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25589,
-      "name": "Brand the Exile",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25557,
-      "name": "Ranger Karankawa",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25560,
-      "name": "Sargon the Mad",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25593,
-      "name": "Gerg the Hunter",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25624,
-      "name": "Rok",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25626,
-      "name": "Dius",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25531,
-      "name": "Darnel",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25536,
-      "name": "Hannibal",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25539,
-      "name": "Typhoon",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25563,
-      "name": "Beautiful Atrielle",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25643,
-      "name": "Awakened Ancient Sentry",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25644,
-      "name": "Awakened Ancient Severer",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25646,
-      "name": "Awakened Ancient Soul Devourer",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25645,
-      "name": "Awakened Ancient Soul Extractor",
-      "error": "Original screenshot not found"
-    },
-    {
       "id": 25649,
       "name": "Awakened Ancient Executor",
       "error": "Original screenshot not found"
@@ -1364,74 +1149,304 @@
       "error": "Original screenshot not found"
     },
     {
-      "id": 25653,
-      "name": "Kanadis Herald",
-      "error": "Original screenshot not found"
+      "id": 25754,
+      "name": "Fire Lord Shadar",
+      "error": "HTTP 404"
     },
     {
-      "id": 25665,
-      "name": "Yehan Klodekus",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25690,
-      "name": "Aenkinel",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25566,
-      "name": "Nagen the Tomboy",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25532,
-      "name": "Kechi",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25667,
-      "name": "Cannibalistic Stakato Chief",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25534,
-      "name": "Tears",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25544,
-      "name": "Tully",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25696,
-      "name": "Taklacan",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25713,
-      "name": "Darnels",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25697,
-      "name": "Torumba",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25723,
-      "name": "Spike Slasher",
-      "error": "Original screenshot not found"
-    },
-    {
-      "id": 25698,
-      "name": "Dopagen",
-      "error": "Original screenshot not found"
+      "id": 29129,
+      "name": "Lost Captain",
+      "error": "HTTP 404"
     },
     {
       "id": 25699,
       "name": "Glakias",
-      "error": "Original screenshot not found"
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25671,
+      "name": "Queen Shyeed",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25687,
+      "name": "Hekaton Prime",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25563,
+      "name": "Beautiful Atrielle",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25766,
+      "name": "Ancient Drake",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25575,
+      "name": "All-Seeing Rango",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25557,
+      "name": "Ranger Karankawa",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25572,
+      "name": "Hager the Outlaw",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25681,
+      "name": "Gorgolos",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25552,
+      "name": "Soul Hunter Chakundel",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25624,
+      "name": "Rok",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25531,
+      "name": "Darnel",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25690,
+      "name": "Aenkinel",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25549,
+      "name": "Tesla the Deceiver",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25546,
+      "name": "Rhianna the Traitor",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25650,
+      "name": "Awakened Ancient Executor",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25665,
+      "name": "Yehan Klodekus",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25738,
+      "name": "Lead Tracker Sharuk",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25760,
+      "name": "Lord Ishka",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25753,
+      "name": "Guillotine Warden",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25680,
+      "name": "Giant Marpanak",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25723,
+      "name": "Spike Slasher",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25582,
+      "name": "Gillien",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25579,
+      "name": "Helsing",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25701,
+      "name": "Anais",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25674,
+      "name": "Gwindorr",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25697,
+      "name": "Torumba",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25566,
+      "name": "Nagen the Tomboy",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25589,
+      "name": "Brand the Exile",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25588,
+      "name": "Immortal Muus",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25698,
+      "name": "Dopagen",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25648,
+      "name": "Awakened Ancient Fighter",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25578,
+      "name": "Jakard",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25677,
+      "name": "Water Spirit Lian",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25554,
+      "name": "Brutus the Obstinate",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25560,
+      "name": "Sargon the Mad",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25532,
+      "name": "Kechi",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25703,
+      "name": "Gigantic Golem",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25626,
+      "name": "Dius",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25585,
+      "name": "Medici",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25653,
+      "name": "Kanadis Herald",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25553,
+      "name": "Durango the Crusher",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25593,
+      "name": "Gerg the Hunter",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25544,
+      "name": "Tully",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25539,
+      "name": "Typhoon",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25536,
+      "name": "Hannibal",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25616,
+      "name": "Lost Warden",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25684,
+      "name": "Last Titan Utenus",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25534,
+      "name": "Tears",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25696,
+      "name": "Taklacan",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25652,
+      "name": "Awakened Ancient Prophet",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25646,
+      "name": "Awakened Ancient Soul Devourer",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25645,
+      "name": "Awakened Ancient Soul Extractor",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25643,
+      "name": "Awakened Ancient Sentry",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25644,
+      "name": "Awakened Ancient Severer",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25667,
+      "name": "Cannibalistic Stakato Chief",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25659,
+      "name": "Kanadis Guide",
+      "error": "HTTP 404"
+    },
+    {
+      "id": 25713,
+      "name": "Darnels",
+      "error": "HTTP 404"
     }
   ]
 }

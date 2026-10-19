@@ -6,6 +6,8 @@
 //   - the fight of each boss runs in its own hidden "chat" (worldScopeId), shared by the players of all chats
 //   - the drop table is the real one; the Life Stones (farm) and the eggs of the clans are added by level
 import WORLD from '../../../template/worldBosses.js';
+import positions from '../../../template/worldBossMap.js';
+import {RAID_LOCATIONS} from '../../../template/raidLocations.js';
 import LOOT from '../../../template/l2Loot.js';
 import EPIC_REFERENCE from '../../../template/l2EpicReference.js';
 import hunting from '../../../template/huntingTemplate.js';
@@ -167,7 +169,7 @@ const respawnOf = level => {
 
 /** A boss template of the engine (template/bossTemplate.js) for a raid boss of the data. */
 export function worldTemplate(row) {
-    const zone = nearestZone(row.level);
+    const area=RAID_LOCATIONS[row.id],zone={id:area?.zone||null,title:area?.location||'Координаты логова не подтверждены'};
     const [respawnHours, windowHours] = respawnOf(row.level);
     const tier = row.level >= 65 ? 3 : row.level >= 45 ? 2 : 1;
     const combat = combatOf(row);
@@ -179,7 +181,7 @@ export function worldTemplate(row) {
         tier,
         weight: 0,
         epic: {respawnHours, windowHours, minLevel: Math.max(1, row.level - LEVEL_GAP), maxLevel: row.level + LEVEL_GAP, jewelChance: 0},
-        world: {raid: true, npcId: row.id, level: row.level, location: `Логово ${row.name} · ${zone.title}`, zone: zone.id, race: row.race, hp: row.hp, defenceRel: combat.defenceRel, magicDefenceRel: combat.magicDefenceRel, magic: combat.magic, egg: eggOf(row.level)},
+        world: {raid: true, npcId: row.id, level: row.level, location: `Логово ${row.name} · ${zone.title}`, zone: zone.id, sceneKey:area?.sceneKey||null, environment:area?.environment||null, race: row.race, hp: row.hp, defenceRel: combat.defenceRel, magicDefenceRel: combat.magicDefenceRel, magic: combat.magic, egg: eggOf(row.level)},
         art: ART[row.id % ART.length],
         description: `${row.name}: рейд-босс ${row.level} уровня. Логово — ${zone.title}.`,
         listOfDamage: [],
@@ -224,7 +226,7 @@ export function epicWorld(name) {
 }
 
 /** The raid bosses that become world bosses: real raid bosses of an unused name, not the instance and quest copies. */
-const rows = WORLD.filter(row => !row.grand && row.level >= 20 && row.level <= 85 && !epicIds.has(row.id));
+const rows = WORLD.filter(row => !row.grand && row.level >= 20 && row.level <= 85 && !epicIds.has(row.id)).sort((a,b)=>Number(Boolean(positions[b.id]))-Number(Boolean(positions[a.id]))||b.id-a.id);
 const names = new Set();
 export const worldRows = rows.filter(row => (names.has(row.name) ? false : names.add(row.name)));
 

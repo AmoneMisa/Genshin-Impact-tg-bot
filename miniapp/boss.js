@@ -56,6 +56,7 @@ export async function enterBossFromAtlas(session,chatId,name,now=Date.now()){
  const template=getEpicTemplate(name),point=template&&bossPositions[template.world?.npcId];
  if(!template)return {ok:false,reason:'unknown_epic'};
  if(!point)return {ok:false,reason:'boss_location_unknown'};
+ if(template.world?.raid&&point.instance)return {ok:false,reason:'instance_npc_required'};
  if(siegePoint(point))return {ok:false,reason:'quick_travel_siege'};
  const level=number(session.game.stats?.lvl,1);
  if(level<template.epic.minLevel)return {ok:false,reason:'epic_level_too_low'};
@@ -331,6 +332,7 @@ export async function getBossState(session, chatId, now = Date.now()) {
     boss: {
       id: String(boss._id),
       name: boss.name,
+      sceneKey:boss.world?.sceneKey,environment:boss.world?.environment,
       nameCall: boss.nameCall || boss.name,
       description: boss.description || '',
       level: number(boss.stats?.lvl, 1),
@@ -409,6 +411,7 @@ export async function summonBossForMiniApp(session, chatId, epicName = null, {me
   if (epicName) {
     epicTemplate = getEpicTemplate(epicName);
     if (!epicTemplate) return { ok: false, reason: 'unknown_epic', boss: await getBossState(session, chatId) };
+    if(epicTemplate.world?.raid&&bossPositions[epicTemplate.world.npcId]?.instance)return {ok:false,reason:'instance_npc_required'};
     if (number(session?.game?.stats?.lvl, 1) < epicTemplate.epic.minLevel) {
       return { ok: false, reason: 'epic_level_too_low', requiredLevel: epicTemplate.epic.minLevel, boss: await getBossState(session, chatId) };
     }
