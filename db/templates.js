@@ -74,7 +74,7 @@ export const TEMPLATES = Object.freeze([
     {key: 'hennaData', source: hennaData, version: 1},
     {key: 'hunting', source: hunting, version: 1},
     {key: 'l2Items', source: l2Items, version: 9},
-    {key: 'l2Loot', source: l2Loot, version: 18},
+    {key: 'l2Loot', source: l2Loot, version: 19},
     {key: 'l2Recipes', source: l2Recipes, version: 1},
     {key: 'merchantData', source: merchantData, version: 1},
     {key: 'saPrices', source: saPrices, version: 1},
