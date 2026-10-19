@@ -87,6 +87,10 @@ def build(row):
  assert wanted <= items.keys(), 'Missing item metadata'
  for name, value in [('l2Loot.js', loot), ('l2Items.js', items)]:
   p = ROOT / 'template' / name
+  if value != module(name):
+   db = ROOT / 'db/templates.js'
+   key = name[:-3]
+   db.write_text(re.sub(r"(key: '" + key + r"', source: " + key + r", version: )(\d+)", lambda m: m[1] + str(int(m[2]) + 1), db.read_text(encoding='utf-8')), encoding='utf-8')
   header = p.read_text(encoding='utf-8').split('export default ', 1)[0]
   p.write_text(header + 'export default ' + json.dumps(value, ensure_ascii=False, separators=(',', ':')) + ';\n', encoding='utf-8')
  files = {'spawns/' + file: hashlib.sha256((DATA / 'spawns' / file).read_bytes()).hexdigest()}
