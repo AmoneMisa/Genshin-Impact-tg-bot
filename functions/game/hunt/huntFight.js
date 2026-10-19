@@ -114,6 +114,7 @@ function applyHit(session, dmg, now) {
     if (shield) shield.value -= absorbed;
     const lost = Math.min(stats.hp, dmg - absorbed);
     stats.hp = Math.max(0, stats.hp - lost);
+    if(lost>0&&session.game.hunt?.field){session.game.hunt.field.treasureHitAt=now;delete session.game.hunt.field.treasureCast;}
     l2OnDamageReceived(session,null,lost,now);
     const killed = stats.hp === 0 && !l2PreventDeath(session,now);
     if (killed) {session.game.respawnTime = now + HUNT.respawnMs;recordDeath(session,{now});}
@@ -169,6 +170,7 @@ export function advanceHunt(session, now = Date.now(), random = Math.random) {
 /** A movement command, target change, room transition or Stop cancels the current combat intention. */
 export function stopHuntAction(field,now=Date.now()) {
     if(!field)return;
+    delete field.treasureCast;
     delete field.action;delete field.autoAttack;
     delete field.pendingRoom;
     field.path=[];field.moveAt=now;

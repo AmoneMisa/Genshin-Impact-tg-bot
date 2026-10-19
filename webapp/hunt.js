@@ -30,6 +30,13 @@ import {visibleFieldMobs} from './hunt-visible-actors.js';
 // potions and shots. Blue and red champions are tougher and pay much more.
 
 const REASONS = {
+  chest_too_far:'Подойди к сундуку. Возможно, его уже открыли.',
+  chest_level:'Уровень персонажа не подходит для этого сундука.',
+  chest_casting:'Сундук уже открывается.',
+  chest_unlock_unavailable:'Сначала изучи доступный твоему классу навык Unlock.',
+  chest_key_required:'Недостаточно ключей для открытия сундука.',
+  not_enough_sp:'Недостаточно SP.',
+
   vortex_required:'Сначала призовите босса через Dragon Vortex в Долине Драконов.',
   vortex_bone_required:'Нужна Large Dragon Bone для призыва.',
   vortex_cooldown:'Dragon Vortex восстанавливается одну минуту после призыва.',room_in_combat:'Нельзя уйти из комнаты, пока монстры в бою: сначала победи их или отступи.',room_not_adjacent:'В эту комнату нельзя пройти напрямую.',no_active_crystal:'Выбери кристалл души.',no_soul_crystal:'Этот кристалл уже израсходован.',soul_level:'Прокачка кристаллов доступна с 40 уровня.',soul_max_stage:'Кристалл достиг 17 уровня.',soul_wrong_mob:'Душа этого монстра не подходит для текущей ступени.',soul_hp:'Используй кристалл, когда HP монстра будет не выше 50%.',soul_already_charged:'Кристалл уже использован на этом монстре.',invalid_seals:'Недостаточно камней печати.',
@@ -361,10 +368,24 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     for(const candle of field.ship?.candles||[])markers.push(marker(candle,`Свеча ${candle.id} · ${{unlit:'не зажжена',burning:'разгорается',red:'красная',blue:'синяя'}[candle.state]}`,{unlit:'♧',burning:'♨',red:'🔴',blue:'🔵'}[candle.state],`data-ship-candle="${candle.id}"`));
     for(const [i,link] of (field.links||[]).entries())if(link.room===field.room.id)markers.push(marker(link.point,link.title,'↗',`data-region-link="${i}"`));
     const boss=field.ship?.boss||field.level?.boss&&{id:field.level.boss,point:{x:.5,y:.5}};
+    for(const c of field.treasure?.chests||[])markers.push(marker(c.point,`${c.name} · ${c.level} ур.`,'◇',`data-treasure-chest="${escapeHtml(c.id)}"`));
     for(const v of field.vortices||[])if(v.here)markers.push(marker(v.point,v.name,'⚔',`data-dragon-vortex="${v.id}"`));
     for(const raid of field.raids||field.level?.raids||[])markers.push(marker(raid.point,raid.name,'⚔',`data-location-boss="${escapeHtml(raid.name)}"`));
     if(boss)markers.push(marker(boss.point,boss.id==='zaken'?'Закен найден':'Вход к боссу','⚔',`data-location-boss="${boss.id}"`));
     return markers.join('');
+  }
+  async function showTreasureChest(id){
+    const t=state.field?.treasure,c=t?.chests.find(c=>c.id===id);if(!c)return;
+    if(!c.near){await run('/api/hunt/move',{point:c.point});render();return;}
+    const dialog=document.createElement('dialog');dialog.className='game-dialog-panel l2-window';travelDialog?.close();travelDialog=dialog;
+    const u=t.unlock,busy=Boolean(t.casting),allowed=c.levelAllowed;
+    dialog.innerHTML=dialogHeading(c.name+' · '+c.level+' ур.')+`<p>Разница уровней для открытия: не больше ${state.player.level<=77?6:5}.</p><p>Внутри могут быть заточки и другие припасы. Награда не гарантирована.</p><div class="ui-action-stack"><button class="ui-button primary" data-chest-method="key" ${!allowed||busy||!t.keyReady||t.keyCount<1?'disabled':''}>${materialIcon('l2_21746')}Maestro’s Key ×1 · ${t.keyCount}</button>${u.eligible?`<button class="ui-button" data-chest-method="unlock" ${!allowed||busy||!u.level||!u.ready||t.thiefKeys<u.keyCost||state.player.mp<u.mpCost?'disabled':''}>${l2SkillIcon(27)}Unlock · Thief Key ×${u.keyCost} · ${u.mpCost} MP</button>${u.next?`<button class="ui-button" data-chest-method="learn" ${!allowed||busy||!u.canLearn?'disabled':''}>Изучить Unlock · ${u.next.level} ур. · ${formatNumber(u.next.sp)} SP</button>`:''}`:''}</div><p>Ключи продаются в Лавке мастеров.</p>`;
+    document.body.append(dialog);dialog.showModal();dialog.addEventListener('close',()=>dialog.remove(),{once:true});dialog.querySelector('[data-dismiss]').onclick=()=>dialog.close();
+    dialog.addEventListener('click',async event=>{
+      const button=event.target.closest('[data-chest-method]');if(!button||button.disabled)return;const method=button.dataset.chestMethod;dialog.close();
+      const result=await run('/api/world/action',{action:'treasure_open',chest:id,method});render();
+      if(result?.ok&&method==='learn')showTreasureChest(id);else if(result?.casting)say('Открываем сундук…');
+    });
   }
   async function showDragonVortex(id){
     const v=state.field?.vortices?.find(v=>v.id===id);if(!v?.here)return;
@@ -685,6 +706,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     content.querySelector('[data-world-exit]')?.addEventListener('click',async()=>{await run('/api/world/action',{action:'walk_exit'});render();});
     content.querySelector('[data-level-travel]')?.addEventListener('click',showLevelTravel);
     content.querySelectorAll('[data-level-marker]').forEach(b=>b.addEventListener('click',async()=>{const d=state.field.level.destinations[Number(b.dataset.levelMarker)];if(d.near)showLevelTravel();else {await run('/api/hunt/move',{point:d.point});render();}}));
+    content.querySelectorAll('[data-treasure-chest]').forEach(b=>b.addEventListener('click',()=>showTreasureChest(b.dataset.treasureChest)));
     content.querySelectorAll('[data-dragon-vortex]').forEach(b=>b.addEventListener('click',()=>showDragonVortex(b.dataset.dragonVortex)));
     content.querySelectorAll('[data-region-link]').forEach(b=>b.addEventListener('click',showLevelTravel));
     content.querySelectorAll('[data-level-npc]').forEach(b=>b.addEventListener('click',()=>say(b.dataset.levelNpc)));

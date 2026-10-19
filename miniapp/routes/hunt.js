@@ -1,3 +1,4 @@
+import {hydrateTreasures} from '../treasures.js';
 import {isVortexBoss} from '../../functions/game/world/dragonVortex.js';
 import {getEpicTemplate} from '../../functions/game/boss/epicBosses.js';
 import { sendJson, httpError, guarded } from '../http/response.js';
@@ -144,7 +145,9 @@ async function huntAnswer(context, run, {readOnly=false} = {}) {
     bindWorldInstances(chat);
     advanceWorld(context.session);
     const pvpChanged=advanceFieldPvp(chat);
+    await hydrateTreasures(context.session);
     const result = await run(context.session);
+    await hydrateTreasures(context.session);
     const hunt = await getHuntState(context.session,Date.now(),fieldPeers(chat,context.session));
     if ((!readOnly && result.ok !== false) || hunt.changed || result.changed || pvpChanged || context.session.game.hunt?.field) {
       // PvP changes other members of the chat (damage, effects, deaths); saveSession only marks the caller dirty.
@@ -186,6 +189,7 @@ export const worldRequest = guarded('world map', async (req,res) => {
   const result=await withLock('clan:world',()=>withLock(huntLock(context),async()=>{
     context.session=await getSession(context.chatId,context.userId);
     const outcome=await worldRequestState(context.session,body);
+    await hydrateTreasures(context.session);
     await saveWorldInstances(context.session);
     const hunt=body?await getHuntState(context.session,Date.now(),fieldPeers(context.session.ownerDocument(),context.session)):undefined;
     await saveSession(context.session);

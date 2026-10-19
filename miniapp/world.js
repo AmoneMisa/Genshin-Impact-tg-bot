@@ -1,3 +1,4 @@
+import {treasureAction} from './treasures.js';
 import {dragonVortexAction,activeVortexEncounters} from './dragonVortex.js';
 import {nearVortex} from '../functions/game/world/dragonVortex.js';
 import WorldHolding from '../db/models/WorldHolding.js';
@@ -64,6 +65,7 @@ async function lockedWorldRequestState(session,body,now){
         result=accessible?worldShopAction(session,body,now):{ok:false,reason:'npc_too_far'};
     }
     else if(body?.action==='instance_enter')result=enterWorldInstance(chat,session,body.location,now);
+    else if(body?.action==='treasure_open'){advanceWorld(session,now);result=await treasureAction(session,body,now);}
     else if(body?.action==='dragon_vortex')result=await dragonVortexAction(session,body,now);
     else if(body?.action==='vortex_list')result=nearVortex(session,body.vortex)?{ok:true,encounters:(await activeVortexEncounters(now)).filter(e=>e.vortex===String(body.vortex))}:{ok:false,reason:'npc_too_far'};
     else if(body)result=worldAction(session,body,now);

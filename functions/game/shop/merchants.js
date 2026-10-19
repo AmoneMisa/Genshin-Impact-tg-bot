@@ -1,3 +1,4 @@
+import TREASURES from '../../../template/treasureChests.js';
 import {RECOVERY_SCROLLS,recoveryInfo} from '../../../template/l2RecoveryScrolls.js';
 // The merchants of the game, stocked from the real High Five shops (template/merchantData.js):
 //   weapons / armor / jewelry - the town equipment merchants: the catalog items of no grade, D and C for adena;
@@ -108,6 +109,8 @@ function build() {
         const info = infoOf(id);
         stock.alchemist.push({id: `bk:${id}`, kind: 'material', group: info.kind, key: info.key, amount: 1, name: realName(id), realId: id, cost: {gold: gold(price)}});
     }
+    // These native H5 key prices are not rescaled. Both items are in original grocer buy lists.
+    for(const key of TREASURES.keys)stock.alchemist.push({id:'treasure-key:'+key.id,kind:'material',group:'consumable',key:'l2_'+key.id,amount:1,name:key.name,realId:key.id,cost:{gold:key.price}});
     for (const row of DATA.mammon) {
         const entry = productEntry(row.merchant === 'priest' ? 'pr' : 'mm', row);
         // only what the game can use: gemstones, enchant scrolls, SP and Mammon's varnish
