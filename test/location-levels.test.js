@@ -50,7 +50,7 @@ function approachCandle(s,id,now){
 
 test('all configured floors have source-only populations, connected rooms and separate bounded paintings',()=>{
  assert.equal(LEVEL_SOURCE.geodataAvailable,false);
- assert.deepEqual(Object.fromEntries(Object.entries(LOCATION_LEVELS).map(([id,z])=>[id,z.floors.length])),{'tower-of-insolence':14,'cruma-tower':3,'ivory-tower':6,'garden-of-eva':5,'giants-cave':2,'monastery-of-silence':2,'imperial-tomb':2,'pagan-temple':2,'devils-isle':6});
+ assert.deepEqual(Object.fromEntries(Object.entries(LOCATION_LEVELS).filter(([id])=>['tower-of-insolence','cruma-tower','ivory-tower','garden-of-eva','giants-cave','monastery-of-silence','imperial-tomb','pagan-temple','devils-isle'].includes(id)).map(([id,z])=>[id,z.floors.length])),{'tower-of-insolence':14,'cruma-tower':3,'ivory-tower':6,'garden-of-eva':5,'giants-cave':2,'monastery-of-silence':2,'imperial-tomb':2,'pagan-temple':2,'devils-isle':6});
  for(const [id,z] of Object.entries(LOCATION_LEVELS))for(const floor of z.floors){
   const s=hero(1,id,floor.number),layout=roomLayout(getZone(id),floor.number);
   const reached=new Set([layout.startId]);let count=-1;

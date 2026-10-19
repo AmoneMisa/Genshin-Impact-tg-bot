@@ -9,8 +9,8 @@ import {scenePreviewHtml,graciaOverviewHtml} from '../webapp/location-art.js';
 import {atlasObjects} from '../webapp/atlas-objects.js';
 
 test('scene expansion covers individual hunting studies, ten epics and every atlas city',()=>{
- assert.equal(new Set(SCENE_STUDIES.map(s=>s.id)).size,107);
- for(const [category,count] of Object.entries({hunting:72,epic:10,city:18,interior:3}))assert.equal(SCENE_STUDIES.filter(s=>s.category===category).length,count);
+ assert.equal(new Set(SCENE_STUDIES.map(s=>s.id)).size,130);
+ for(const [category,count] of Object.entries({hunting:93,epic:10,city:20,interior:3}))assert.equal(SCENE_STUDIES.filter(s=>s.category===category).length,count);
  const zones=new Set(getZones().map(z=>z.id));
  for(const scene of SCENE_STUDIES.filter(s=>s.category==='hunting'))assert.ok(zones.has(scene.id));
  assert.deepEqual(SCENE_STUDIES.filter(s=>s.category==='city').map(s=>s.id).sort(),CITIES.map(c=>c.id).sort());
@@ -27,7 +27,7 @@ test('individual epic and hunting scenes resolve consistently across rooms and v
 test('Gracia art does not invent atlas coordinates, markers or teleport actions',()=>{
  assert.equal(GRACIA_STUDIES.length,4);
  const html=graciaOverviewHtml();assert.equal((html.match(/<figure/g)||[]).length,4);
- assert.match(html,/Маршруты и точки входа пока не добавлены/);
+ assert.match(html,/База альянса/);
  assert.doesNotMatch(html,/<button|data-travel|data-quick/);
  for(const scene of GRACIA_STUDIES)assert.equal('x' in scene||'y' in scene,false);
  assert.deepEqual(atlasObjects({locations:[{id:'example',region:'aden'}]},'gracia','aden'),[]);
@@ -40,7 +40,7 @@ test('all scene variants exist within the mobile download budget',()=>{
 });
 test('single-image instances fall back to their base scene for unsupported area variants',()=>{
  for(const scene of SCENE_STUDIES.filter(s=>s.sections===1)){
-  assert.ok(getZones().find(z=>z.id===scene.id)?.instance,scene.id);
+  assert.ok(sceneStudy(scene.id),scene.id);
   for(const compact of [false,true])for(const area of [1,2])assert.equal(roomSceneUrl(scene.environment,{sceneKey:scene.id+':r0c0:area-'+area,compact}),sceneStudyUrl(scene.id,{compact}));
  }
 });

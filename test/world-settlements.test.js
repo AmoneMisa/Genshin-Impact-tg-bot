@@ -16,7 +16,7 @@ const NOW=new Date(2026,9,16,12).getTime();
 function hero(){const s={userId:1,game:{stats:{lvl:80,currentExp:0},inventory:{gold:1e7,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{}}};changeClass(s,'humanFighter');updateStats(s);s.game.world={mode:'city',city:'giran',x:.5,y:.5,path:[],moveAt:NOW,locks:{}};return s;}
 const tile=p=>`${Math.floor(p.x/32768)+20}_${Math.floor(p.y/32768)+18}`;
 test('all eleven starting classes use their race settlement and original creation points with map coverage',()=>{
- assert.equal(CITIES.length,18);assert.equal(SETTLEMENTS.length,8);
+ assert.equal(CITIES.length,20);assert.equal(SETTLEMENTS.length,8);
  for(const id of START_CLASSES){
   const s=hero(),name=L2_CLASS_META[id].key;s.game.gameClass.stats.name='noClass';
   changeClass(s,name,{now:NOW,random:()=>0});

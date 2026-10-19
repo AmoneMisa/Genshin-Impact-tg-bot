@@ -50,7 +50,7 @@ try{for(const width of [320,390,820]){
  assert.equal(await page.locator('.atlas-popup').isVisible(),false);
  await page.locator('[data-mode="region"]').click();assert.equal(await page.locator('[data-city-view]').isVisible(),false);
  await page.getByRole('combobox',{name:'Показать на карте'}).click();await page.getByRole('option',{name:'Грация · обзор',exact:true}).click();
- assert.equal(await page.locator('.atlas-popup figure').count(),4);assert.match(await page.locator('.atlas-popup').innerText(),/Маршруты и точки входа пока не добавлены/);
+ assert.equal(await page.locator('.atlas-popup figure').count(),4);assert.match(await page.locator('.atlas-popup').innerText(),/База альянса/);
  assert.equal(await page.locator('.atlas-popup [data-quick-go],.atlas-popup [data-location-quick]').count(),0);
  for(const img of await page.locator('.atlas-popup img').all()){await img.scrollIntoViewIfNeeded();await img.evaluate(img=>img.decode());}
  assert.equal(await page.locator('.atlas-popup').evaluate(p=>p.scrollWidth<=p.clientWidth+1),true);

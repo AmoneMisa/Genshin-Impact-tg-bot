@@ -49,7 +49,7 @@ test('scripted raids retain original room and summon coordinates without enablin
  assert.ok(bossPositions[25667].spots.length>1);
  assert.equal(bossPositions[25217],undefined); // Original SQL explicitly removed Cursed Clara in H5.
  const bosses=worldBossList(),rows=quickTravelDestinations({bosses},'raids');
- assert.equal(bosses.filter(b=>b.map).length,254);
+ assert.equal(bosses.filter(b=>b.map).length,264);
  for(const id of [25333,25531,25609,25718]){const b=bosses.find(b=>b.map?.source===bossPositions[id].source);assert.ok(b);assert.equal(rows.find(q=>q.id===b.name).missingSpawn,false);}
  const report=JSON.parse(fs.readFileSync(new URL('../docs/atlas-redesign/missing-raid-spawns.json',import.meta.url)));
  assert.equal(report.length,bosses.filter(b=>!b.map).length);
