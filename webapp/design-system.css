@@ -1399,6 +1399,9 @@ body .game-overlay .ui-folder-tabs.ui-icon-tabs button{display:flex;align-items:
 /* Classic con bands; shades retain contrast on the shared dark HUD. */
 .ui-con-blue{--con-color:#6a8dff}.ui-con-light-blue{--con-color:#79d7ff}.ui-con-green{--con-color:#8de080}.ui-con-white{--con-color:#f3efdf}.ui-con-yellow{--con-color:#ffe77a}.ui-con-pink{--con-color:#ff9bad}.ui-con-red{--con-color:#ff6767}
 .ui-target-name{color:var(--con-color,var(--text))}
+.ui-npc-name[data-disposition]{color:var(--text)}
+.ui-npc-name[data-disposition="aggressive"]{color:#ff7474}
+.ui-npc-name[data-disposition="social"]{color:#70c9ff}
 .ui-drop-group>summary{padding:var(--space-2);border:1px solid var(--border-soft);border-radius:var(--radius-sm);background:var(--surface-input);cursor:pointer}
 .ui-drop-group>summary:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
 .ui-drop-chances{font-size:10px;color:var(--muted)}

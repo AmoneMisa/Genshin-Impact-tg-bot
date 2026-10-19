@@ -634,6 +634,7 @@ export function mobDto(mob, now = Date.now()) {
         role: AI_LABELS[mob.ai] || null,
         aggro: Boolean(mob.aggro),
         aggressive: Boolean(mob.aggressive),
+        social: Boolean(mob.clanHelpRange>0&&mob.socialClans?.length),
         x: mob.x, y: mob.y,
         buffs: (mob.buffs || []).filter(e => e.until > now).map(e => ({...e, remainMs: e.until - now})),
         name: mob.name,

@@ -8,3 +8,5 @@ export function shortMobName(name,max=18){
  const chars=Array.from(String(name||''));
  return chars.length<=max?chars.join(''):chars.slice(0,max-1).join('')+'…';
 }
+// Native aggression takes priority over social assistance, regardless of current combat.
+export function mobDisposition(mob){return mob.aggressive?'aggressive':mob.social?'social':'neutral';}

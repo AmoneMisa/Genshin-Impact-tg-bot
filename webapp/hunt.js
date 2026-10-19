@@ -18,7 +18,7 @@ import {installGameRules} from './game-rules.js';
 import {isoMatrix,isoPoint,isoPick,isoTerrain,isoLabelOffsets,clampRoomCamera} from './hunt-isometric.js';
 import {createHuntRenderer} from './hunt-phaser.js';
 import {showLootDetails,showDropPreview} from './loot-notice.js';
-import {shortMobName,targetCon} from './combat-target.js';
+import {shortMobName,targetCon,mobDisposition} from './combat-target.js';
 import {COMBAT_ACTIONS,combatActionButton} from './combat-actions.js';
 import {flaskHtml} from './inventory.js';
 import {createCombatSocial} from './combat-social.js';
@@ -453,7 +453,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       ${isoTerrain(field,viewport)}${areaHtml()}${strikeHtml()}
       ${levelMarkers(field)}
       ${(state.players||[]).map(p=>playerMarker(p)).join('')}
-      ${visibleMobs.map(m=>`<button type="button" class="hunt-actor hunt-iso-actor ui-map-marker ${!playerTarget&&m.instanceId===field.target?'selected ':''}${m.aggro?'aggro':''}" data-target="${escapeHtml(m.instanceId)}" style="${worldStyle(m,m.instanceId)}" aria-label="${escapeHtml(m.name)} · ${Math.round(m.hpPercent)}% HP" aria-pressed="${!playerTarget&&m.instanceId===field.target}"><span class="hunt-actor-label"><span class="hunt-mob-name">${escapeHtml(m.name)}</span><span class="hunt-mob-percent">${Math.round(m.hpPercent)}%</span></span><span class="hunt-iso-avatar">${huntMobUrl(m)?`<img src="${huntMobUrl(m)}" alt="" decoding="async">`:icon('ghost')}</span></button>`).join('')}
+      ${visibleMobs.map(m=>`<button type="button" class="hunt-actor hunt-iso-actor ui-map-marker ${!playerTarget&&m.instanceId===field.target?'selected ':''}${m.aggro?'aggro':''}" data-target="${escapeHtml(m.instanceId)}" style="${worldStyle(m,m.instanceId)}" aria-label="${escapeHtml(m.name)} · ${Math.round(m.hpPercent)}% HP" aria-pressed="${!playerTarget&&m.instanceId===field.target}"><span class="hunt-actor-label"><span class="hunt-mob-name ui-npc-name" data-disposition="${mobDisposition(m)}">${escapeHtml(m.name)}</span><span class="hunt-mob-percent">${Math.round(m.hpPercent)}%</span></span><span class="hunt-iso-avatar">${huntMobUrl(m)?`<img src="${huntMobUrl(m)}" alt="" decoding="async">`:icon('ghost')}</span></button>`).join('')}
       ${playerMarker({...state.player,x:field.x,y:field.y},true)}
       ${field.action?.phase==='cast'?`<span class="hunt-cast" style="${worldStyle(field)}" role="progressbar" aria-label="${escapeHtml(field.action.name||'Применение умения')}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(100*(1-Math.max(0,field.action.until-state.now)/Math.max(1,field.action.spatial?.windup||1)))}"><span>${escapeHtml(field.action.name||'Применение умения')}</span><i style="--cast-time:${Math.max(0,field.action.until-state.now)}ms"></i></span>`:''}
       ${field.path?.length?`<span class="hunt-destination" style="${worldStyle(field.path.at(-1))}" aria-hidden="true">＋</span>`:''}
@@ -488,7 +488,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     if(!target)return '';
     const effects=peer?target.effects||[]:[...(target.buffs||[]).map(e=>({id:e.kind,label:e.kind,count:Math.ceil(e.remainMs/1000)})),...(target.debuffs||[]).map(e=>({id:e.kind,label:e.kind,count:Math.ceil(e.remainMs/1000)}))];
     const current=peer?target.hp:target.currentHp,max=peer?target.maxHp:target.hp;
-    return `<section class="hunt-target-hud ui-hud ui-combat-readout ${peer?'':'ui-con-'+targetCon(target.level,state.player.level)}" aria-label="Выбранная цель"><div class="hunt-target-title"><strong class="${peer?'':'ui-target-name'}" title="${escapeHtml(target.name)}">${escapeHtml(peer?target.name:shortMobName(target.name))}</strong>${peer?'':`<button type="button" class="ui-button ui-icon-button ui-hud-icon ui-hud-mini" data-target-drop="${escapeHtml(target.instanceId)}" aria-label="Посмотреть дроп" title="Посмотреть дроп" ${pending?'disabled':''}><span aria-hidden="true">?</span></button>`}</div><div class="${peer?'':'hunt-mob-target-hp'}">${bar('hp',current,max,{text:Math.round(max>0?current/max*100:0)+'%',variant:'l2',labelInside:true})}</div>${statusIcons(effects,{strip:true,compact:true,interactive:true})}</section>`;
+    return `<section class="hunt-target-hud ui-hud ui-combat-readout ${peer?'':'ui-con-'+targetCon(target.level,state.player.level)}" aria-label="Выбранная цель"><div class="hunt-target-title"><strong class="${peer?'':'ui-target-name ui-npc-name'}" ${peer?'':'data-disposition="'+mobDisposition(target)+'"'} title="${escapeHtml(target.name)}">${escapeHtml(peer?target.name:shortMobName(target.name))}</strong>${peer?'':`<button type="button" class="ui-button ui-icon-button ui-hud-icon ui-hud-mini" data-target-drop="${escapeHtml(target.instanceId)}" aria-label="Посмотреть дроп" title="Посмотреть дроп" ${pending?'disabled':''}><span aria-hidden="true">?</span></button>`}</div><div class="${peer?'':'hunt-mob-target-hp'}">${bar('hp',current,max,{text:Math.round(max>0?current/max*100:0)+'%',variant:'l2',labelInside:true})}</div>${statusIcons(effects,{strip:true,compact:true,interactive:true})}</section>`;
   }
   function effectsHud(){
     const toggles=(state.player.special||[]).filter(s=>s.type==='toggle'&&s.running);
