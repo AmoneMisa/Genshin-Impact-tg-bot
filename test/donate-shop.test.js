@@ -76,7 +76,8 @@ function epicJewelryId(s) {
   return getLuckShopState(s, NOW).items.find(item => item.group === 'epic' && item.artItem?.mainType === 'jewelry').id;
 }
 
-test('a rented epic item works for seven days, extends when bought again, then disappears', () => {
+test('a rented epic item works for seven days, extends when bought again, then disappears', t => {
+  t.mock.timers.enable({apis:['Date'],now:NOW});
   const s = player();
   const id = epicJewelryId(s);
   const bought = buyLuckItem(s, id, NOW);
