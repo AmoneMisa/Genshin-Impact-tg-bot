@@ -51,6 +51,13 @@ FIELDS = [
  ('catacomb-dark-omens', 'Катакомбы Тёмных Знамений', 'Catacombs/CatacombOfDarkOmens.xml', 'catacomb'),
  ('necropolis-sacrifice', 'Некрополь Жертвоприношений', 'Catacombs/NecropolisOfSacrifice.xml', 'necropolis'),
  ('necropolis-pilgrims', 'Некрополь Пилигримов', 'Catacombs/NecropolisOfThePilgrims.xml', 'necropolis'),
+ ('necropolis-worship', 'Некрополь Поклонения', 'Catacombs/NecropolisOfWorship.xml', 'necropolis'),
+ ('necropolis-patriots', 'Некрополь Патриотов', 'Catacombs/NecropolisOfThePatriots.xml', 'necropolis'),
+ ('necropolis-devotion', 'Некрополь Посвящения', 'Catacombs/NecropolisOfDevotion.xml', 'necropolis'),
+ ('necropolis-martyrdom', 'Некрополь Мучеников', 'Catacombs/NecropolisOfMartyrdom.xml', 'necropolis'),
+ ('necropolis-saints', 'Некрополь Святых', 'Catacombs/NecropolisOfTheSaints.xml', 'necropolis'),
+ ('necropolis-disciples', 'Некрополь Учеников', 'Catacombs/NecropolisOfTheDisciples.xml', 'necropolis'),
+ ('catacomb-forbidden-path', 'Катакомбы Запретного Пути', 'Catacombs/CatacombOfTheForbiddenPath.xml', 'catacomb'),
 ]
 
 def module(name):
