@@ -12,4 +12,5 @@ import z9 from './field-populations/fields-of-massacre.js';
 import z10 from './field-populations/cemetery.js';
 import z11 from './field-populations/valley-of-saints.js';
 import z12 from './field-populations/blazing-swamp.js';
-export const FIELD_POPULATIONS = {"plains-of-dion":z0,"cruma-marshlands":z1,"turek-orcs":z2,"brekas-stronghold":z3,"alligator-beach":z4,"sea-of-spores":z5,"timak-outpost":z6,"plains-of-glory":z7,"outlaw-forest":z8,"fields-of-massacre":z9,"cemetery":z10,"valley-of-saints":z11,"blazing-swamp":z12};
+import z13 from './field-populations/swamp-of-screams.js';
+export const FIELD_POPULATIONS = {"plains-of-dion":z0,"cruma-marshlands":z1,"turek-orcs":z2,"brekas-stronghold":z3,"alligator-beach":z4,"sea-of-spores":z5,"timak-outpost":z6,"plains-of-glory":z7,"outlaw-forest":z8,"fields-of-massacre":z9,"cemetery":z10,"valley-of-saints":z11,"blazing-swamp":z12,"swamp-of-screams":z13};
