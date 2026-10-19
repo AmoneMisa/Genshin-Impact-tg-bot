@@ -6,6 +6,16 @@ import {fieldPlayerDto} from '../miniapp/hunt.js';
 import changeClass from '../functions/game/player/changePlayerGameClass.js';
 import updateStats from '../functions/game/player/updatePlayerStats.js';
 
+test('continuous terrain is clipped into a bounded SVG stream and pointer picking reaches neighbouring cells',()=>{
+ const tiles=Array.from({length:9},(_,i)=>({id:`r${Math.floor(i/3)}c${i%3}`,dx:i%3-1,dy:Math.floor(i/3)-1,environment:'woodland',walls:[]}));
+ const field={environment:'woodland',sceneKey:'cruma-marshlands:r1c1:floor-1',walls:[],continuous:{tiles}},viewport={width:288,height:520};
+ const svg=isoTerrain(field,viewport);
+ assert.equal((svg.match(/data-terrain-cell=/g)||[]).length,9);assert.equal((svg.match(/<clipPath /g)||[]).length,9);
+ assert.ok((svg.match(/<polygon /g)||[]).length<100,'missing images still have bounded lightweight geometry');
+ const target={x:1.02,y:.7},camera={x:-100,y:45,zoom:1.3};
+ const picked=isoPick(isoPoint(target,viewport,camera),viewport,camera);assert.ok(Math.abs(picked.x-target.x)<1e-10&&Math.abs(picked.y-target.y)<1e-10);
+});
+
 test('isometric movement picking preserves game coordinates after pan, zoom and viewport changes',()=>{
  for(const viewport of [{width:278,height:440},{width:348,height:425},{width:534,height:360}])
  for(const camera of [{},{x:80,y:-40,zoom:1.5},{x:-25,y:35,zoom:.75}])

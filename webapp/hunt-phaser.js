@@ -31,6 +31,7 @@ export function createHuntRenderer(){
     host.remove();
     if(game){game.destroy(true);if(game.isBooted)game.step(performance.now(),0);game=null;}
     actors.clear();textures.clear();terrain.length=0;terrainTextures=[];scenery=[];scene=null;
+    terrainKey='';sceneArtKey='';
   }
   function fail(){failed=true;release();}
   function frame(){
@@ -108,9 +109,9 @@ export function createHuntRenderer(){
     if(starting||disposed||failed)return;starting=true;
     try{
       const theme=combatTheme(field.environment);
-      const [Phaser]=await Promise.all([loadRuntime(),loadRoomPropArt({floor:theme.indoor&&field.environment!=='ship'}),prepareSceneArt()]);if(disposed)return;
+      const [Phaser]=await Promise.all([loadRuntime(),loadRoomPropArt({floor:theme.indoor&&field.environment!=='ship'}),prepareSceneArt()]);if(disposed||field?.continuous)return;
       // ResizeObserver can switch the image size while the runtime is loading.
-      await prepareSceneArt();if(disposed)return;
+      await prepareSceneArt();if(disposed||field?.continuous)return;
       // This embedded scene shares hunt's clock and visibility lifecycle. The default
       // Game.start installs page-wide visibility/focus handlers and a second RAF loop.
       class HuntGame extends Phaser.Game {
@@ -125,10 +126,13 @@ export function createHuntRenderer(){
           this.game.canvas.addEventListener('webglcontextlost',fail,{once:true});
           prepareSceneArt().then(()=>{if(!disposed&&!failed){sync();frame();}});
         }}});
-    }catch{fail();}
+    }catch{fail();}finally{starting=false;}
   }
   return {
     mount(nextWorld,nextField,nextViewport){
+      // Streamed surface terrain uses the shared lightweight SVG and HTML actors.
+      // Do not allocate a canvas covering multiple cells or a second rendering loop.
+      if(nextField?.continuous){release();world=nextWorld;field=nextField;viewport=nextViewport;return;}
       world=nextWorld;field=nextField;viewport=nextViewport;
       if(disposed||failed||!world)return;
       const theme=combatTheme(field.environment);world.parentElement?.style.setProperty('--room-ambient',colorHex(theme.accent)+'12');

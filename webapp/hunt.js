@@ -87,8 +87,9 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   let previewSkill=null,closed=false,lastFrame=0;
   let viewport={width:320,height:400},camera={zoom:1,x:0,y:0},labelOffsets=new Map(),drag=null,ignoreMapClick=false;
   let displayedRoom=null;
+  let followedPoint=null,followedSpace=null;
   const fieldRenderer=createHuntRenderer();
-  const mapObserver=new ResizeObserver(entries=>{const box=entries[0]?.contentRect;if(box&&Math.abs(box.width-viewport.width)+Math.abs(box.height-viewport.height)>2){viewport={width:box.width,height:box.height};render();}});
+  const mapObserver=new ResizeObserver(entries=>{const box=entries[0]?.contentRect;if(box&&Math.abs(box.width-viewport.width)+Math.abs(box.height-viewport.height)>2){viewport={width:box.width,height:box.height};followedPoint=null;render();}});
   const detailsOpen=new Set();
   installOverlayA11y();installGameRules();
 
@@ -408,7 +409,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     const field=state.field;if(!field?.level)return;
     const dialog=document.createElement('dialog');dialog.className='game-dialog-panel l2-window';dialog.setAttribute('aria-label','Переходы между этажами');
     travelDialog?.close();travelDialog=dialog;
-    dialog.innerHTML=dialogHeading(field.level.title)+`<p>Подойди к лестнице или хранителю портала. Их комнаты отмечены на карте.</p>`+(field.ship?`<p>Синих свечей: ${field.ship.blue}/4. Найди четыре синие свечи, чтобы обнаружить Закена.</p>`:'')+field.level.destinations.map((d,i)=>`<button type="button" class="ui-button" data-travel-choice="${i}" ${pending||d.room!==field.room.id?'disabled':''}>${escapeHtml(d.title)}${d.gold?' · '+formatNumber(d.gold)+' аден':''}${d.room!==field.room.id?' · в другом зале':d.near?'':' · подойти'}</button>`).join('')+(field.map?`<details><summary>Карта этажа</summary>${mapHtml(field)}</details>`:'');
+    dialog.innerHTML=dialogHeading(field.level.title)+(field.continuous?'<p>По соседним участкам можно идти прямо по земле.</p>':`<p>Подойди к лестнице или хранителю портала. Их комнаты отмечены на карте.</p>`)+(field.ship?`<p>Синих свечей: ${field.ship.blue}/4. Найди четыре синие свечи, чтобы обнаружить Закена.</p>`:'')+field.level.destinations.map((d,i)=>`<button type="button" class="ui-button" data-travel-choice="${i}" ${pending||d.room!==field.room.id?'disabled':''}>${escapeHtml(d.title)}${d.gold?' · '+formatNumber(d.gold)+' аден':''}${d.room!==field.room.id?' · в другом зале':d.near?'':' · подойти'}</button>`).join('')+(field.map?`<details><summary>${field.continuous?'Карта окрестностей':'Карта этажа'}</summary>${mapHtml(field)}</details>`:'');
     const actions=document.createElement('div');actions.className='ui-action-stack';
     if(field.phase){const phase=document.createElement('p');phase.textContent=field.phase.locked?'Хеллбаунд ещё закрыт. Освобождение острова не началось.':`Этап освобождения: ${field.phase.stage}`;dialog.append(phase);}
     actions.innerHTML=(field.links||[]).map((l,i)=>`<button type="button" class="ui-button" data-link-choice="${i}" ${l.room!==field.room.id?'disabled':''}>${escapeHtml(l.title)}${l.near?'':' · подойти'}</button>`).join('');
@@ -573,19 +574,23 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     const titleParts=state.field?.title?.split(' · ')||[];
     const displayTitle=state.field?.level&&titleParts.length>1?[...titleParts.slice(1),titleParts[0]].join(' · '):state.field?.title;
     const locationTitle=[displayTitle,state.field?.room?.landmark].filter(Boolean).join(' · ')||'Бой';
-    if(state.field&&displayedRoom!==state.field.sceneKey){
+    if(state.field?.continuous){
+      if(followedSpace!==state.field.continuous.space){followedPoint=null;followedSpace=state.field.continuous.space;displayedRoom=null;}
+      followContinuous(state.field);
+    }else {followedPoint=null;followedSpace=null;}
+    if(state.field&&displayedRoom!==state.field.sceneKey&&!state.field.continuous){
       const entry=isoPoint(state.field,viewport);
       camera={zoom:camera.zoom,x:(viewport.width/2-entry.x)*camera.zoom,y:(viewport.height/2-entry.y)*camera.zoom};
       displayedRoom=state.field.sceneKey;drag=null;
     }
-    camera=clampRoomCamera(camera,viewport);
+    camera=clampRoomCamera(camera,viewport,state.field?.continuous);
     overlay.querySelector('#hunt-heading').textContent=locationTitle;
     overlay.querySelector('#hunt-heading').title=locationTitle;
     if (state.mob || state.field) {
       body.push('<section class="hunt-scene" aria-label="Бой в локации">',fieldHtml(),'<div class="hunt-top-hud">',playerVitals(player),targetHud(),'<div class="hunt-status-side">',effectsHud(),'</div></div><div class="hunt-scene-dock ui-combat-dock">');
       if (dead&&!state.world?.mode) body.push(`<div class="boss-dead">Воскрешение · ${formatDuration(player.respawnRemainMs)}</div>`);
       body.push('<section class="hunt-controls ui-hud-content" aria-label="Боевые действия">');
-      if(state.field?.level)body.push('<button type="button" class="ui-button ui-compact" data-level-travel>Переходы и карта этажа</button>');
+      if(state.field?.level)body.push(`<button type="button" class="ui-button ui-compact" data-level-travel>${state.field.continuous?'Карта окрестностей':'Переходы и карта этажа'}</button>`);
       const action=state.field?.action;
       const actionText=action?escapeHtml(action.name||'Умение')+' · '+(action.phase==='cast'?'Применение…':'Подходим к цели'):state.field?.pendingRoom?'Идём к выходу':state.field?.autoAttack?'Автоатака оружием':state.field?.path?.length?'Перемещение':'';
       if(actionText)body.push(`<div class="hunt-action-state" role="status">${actionText}</div>`);
@@ -696,7 +701,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       ground.addEventListener('click',async e=>{
         if(e.target.closest('button'))return;
         const rect=ground.getBoundingClientRect(),point=isoPick({x:e.clientX-rect.left,y:e.clientY-rect.top},viewport,camera);
-        if(point.x<.02||point.x>.98||point.y<.02||point.y>.98)return;
+        if(!state.field?.continuous&&(point.x<.02||point.x>.98||point.y<.02||point.y>.98))return;
         await run('/api/hunt/move',{point});render();
       });
       ground.addEventListener('click',e=>{if(ignoreMapClick){ignoreMapClick=false;e.preventDefault();e.stopImmediatePropagation();}},true);
@@ -831,7 +836,13 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     }
   }
 
-  function applyCamera(){camera=clampRoomCamera(camera,viewport);const world=content.querySelector('.hunt-world');if(world)world.style.transform=`translate(${camera.x}px,${camera.y}px) scale(${camera.zoom})`;}
+  function followContinuous(point){
+    const current=isoPoint(point,viewport);
+    if(followedPoint){const previous=isoPoint(followedPoint,viewport);camera.x+=(previous.x-current.x)*camera.zoom;camera.y+=(previous.y-current.y)*camera.zoom;}
+    else {camera.x=(viewport.width/2-current.x)*camera.zoom;camera.y=(viewport.height/2-current.y)*camera.zoom;}
+    followedPoint={x:point.x,y:point.y};
+  }
+  function applyCamera(){camera=clampRoomCamera(camera,viewport,state.field?.continuous);const world=content.querySelector('.hunt-world');if(world)world.style.transform=`translate(${camera.x}px,${camera.y}px) scale(${camera.zoom})`;}
   function drawRange(){const world=content.querySelector('.hunt-world');if(!world)return;world.querySelector('.hunt-range')?.remove();world.insertAdjacentHTML('beforeend',areaHtml());}
   async function stop(){await run('/api/hunt/attack',{enabled:false});render();}
   async function choosePeer(id){
@@ -856,7 +867,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   function animate(at){
     if(closed||document.hidden)return;
     if(!overlay.isConnected){close();return;}
-    if(at-lastFrame>=50&&state.field){lastFrame=at;const actor=displayedPosition(state.field,Date.now()-receivedAt),point=isoPoint(actor,viewport);const node=content.querySelector('.hunt-hero-marker');if(node){node.style.left=point.x+'px';node.style.top=point.y+'px';node.style.zIndex=10+Math.round((actor.x+actor.y)*10);fieldRenderer.moveSelf();}}
+    if(at-lastFrame>=50&&state.field){lastFrame=at;const actor=displayedPosition(state.field,Date.now()-receivedAt),point=isoPoint(actor,viewport);if(state.field.continuous){followContinuous(actor);applyCamera();}const node=content.querySelector('.hunt-hero-marker');if(node){node.style.left=point.x+'px';node.style.top=point.y+'px';node.style.zIndex=10+Math.round((actor.x+actor.y)*10);fieldRenderer.moveSelf();}}
     animation=requestAnimationFrame(animate);
   }
   function visibility(){

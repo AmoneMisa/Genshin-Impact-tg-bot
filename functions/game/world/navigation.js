@@ -12,8 +12,8 @@ export function nearestOpenPoint(point,walls=[]){
     }
     return best||{x:.5,y:.95};
 }
-export function findPath(from, to, walls = []) {
-    if (![from.x,from.y,to.x,to.y].every(Number.isFinite) || to.x < .02 || to.x > .98 || to.y < .02 || to.y > .98) return null;
+export function findPath(from, to, walls = [],{margin=.02}={}) {
+    if (![from.x,from.y,to.x,to.y].every(Number.isFinite) || to.x < margin || to.x > 1-margin || to.y < margin || to.y > 1-margin) return null;
     const cell = p => ({x: Math.min(N-1,Math.floor(p.x*N)), y: Math.min(N-1,Math.floor(p.y*N))});
     const blocked = (x,y) => x<0||y<0||x>=N||y>=N||walls.some(w => (x+.5)/N >= w.x && (x+.5)/N <= w.x+w.w && (y+.5)/N >= w.y && (y+.5)/N <= w.y+w.h);
     if (walls.some(w => to.x >= w.x && to.x <= w.x+w.w && to.y >= w.y && to.y <= w.y+w.h)) return null;
@@ -32,9 +32,14 @@ export function findPath(from, to, walls = []) {
 
 export function advancePath(actor, now, speed, size=ROOM_SIZE) {
     const elapsed=Math.max(0,(now-(actor.moveAt??now))/1000);actor.moveAt=now;
-    let budget=elapsed*Math.max(0,speed)/size;
-    while(actor.path?.length && budget>0){const p=actor.path[0],dx=p.x-actor.x,dy=p.y-actor.y,d=Math.hypot(dx,dy);if(d<=budget){actor.x=p.x;actor.y=p.y;budget-=d;actor.path.shift();}else{actor.x+=dx/d*budget;actor.y+=dy/d*budget;budget=0;}}
+    travelPath(actor,elapsed*Math.max(0,speed)/size);
     return !actor.path?.length;
+}
+
+/** Return unused walking distance so crossing a cell cannot grant a free extra step. */
+export function travelPath(actor,budget){
+    while(actor.path?.length && budget>0){const p=actor.path[0],dx=p.x-actor.x,dy=p.y-actor.y,d=Math.hypot(dx,dy);if(d<=budget){actor.x=p.x;actor.y=p.y;budget-=d;actor.path.shift();}else{actor.x+=dx/d*budget;actor.y+=dy/d*budget;budget=0;}}
+    return budget;
 }
 
 export function pointInPolygon(point, polygon) {

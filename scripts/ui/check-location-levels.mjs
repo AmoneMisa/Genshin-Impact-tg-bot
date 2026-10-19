@@ -103,6 +103,26 @@ try{for(const {width,mode} of configurations){
    await page.locator('[data-ship-candle]').first().click();await page.waitForTimeout(100);
    assert.equal(Object.keys(chat.game.worldInstances.fixture.candles).length,1);
   }
+  if(id==='cruma-marshlands'){
+   const field=s.game.hunt.field,layout=roomLayout(getZone(id)),current=layout.rooms.find(r=>r.id===field.room),east=current.col<layout.cols-1;
+   Object.assign(field,{x:east?.96:.04,y:.7,path:[]});quiet();
+   await page.waitForTimeout(1500);
+   const oldRoom=field.room,oldIds=field.mobs.map(m=>m.instanceId);
+   const point=await page.evaluate(async east=>{
+    const {isoPoint}=await import('/hunt-isometric.js'),ground=document.querySelector('.hunt-ground'),world=document.querySelector('.hunt-world'),box=ground.getBoundingClientRect(),m=new DOMMatrix(getComputedStyle(world).transform);
+    const p=isoPoint({x:east?1.01:-.01,y:.7},{width:box.width,height:box.height});
+    return {x:box.left+p.x+m.e,y:box.top+p.y+m.f};
+   },east);
+   await page.mouse.click(point.x,point.y);
+   await page.waitForTimeout(250);
+   if(field.room===oldRoom){await page.screenshot({path:path.join(out,'continuous-click-failure.png')});console.log('crossing click',point,await page.evaluate(p=>({hit:document.elementFromPoint(p.x,p.y)?.outerHTML.slice(0,300),hero:document.querySelector('.hunt-hero-marker')?.style.cssText,world:document.querySelector('.hunt-world')?.style.cssText}),point));}
+   assert.notEqual(field.room,oldRoom,'click on neighbouring terrain crosses the boundary');
+   assert.deepEqual(field.rooms[oldRoom].mobs.map(m=>m.instanceId),oldIds,'streaming retains the old actors');
+   assert.equal(await page.locator('.hunt-overlay').count(),1,'crossing keeps the same game screen');
+   assert.ok(await page.locator('[data-terrain-cell]').count()<=9,'bounded terrain stream');
+   assert.equal(await page.locator('.hunt-phaser canvas').count(),0,'surface needs no canvas or WebGL');
+   assert.ok(await page.locator('.hunt-hero-marker').evaluate(n=>{const a=n.getBoundingClientRect(),b=n.closest('.hunt-ground').getBoundingClientRect();return a.right>b.left&&a.left<b.right&&a.bottom>b.top&&a.top<b.bottom;}),'camera retains the hero');
+  }
   if((FIELD_POPULATIONS[id]||id==='ivory-tower'&&f.number===3||f.ship)&&mode==='auto')await page.screenshot({path:path.join(out,`${id}-${stage??f.number}-${width}.png`)});
   await page.locator('.hunt-overlay [data-dismiss]').first().click();await page.waitForSelector('.hunt-overlay',{state:'detached'});
   assert.equal(await page.locator('dialog[open],[inert],.hunt-phaser canvas').count(),0);

@@ -21,8 +21,14 @@ export function isoSceneBounds(viewport){
  return {x:m.e-768*scale,y:viewport.height/2-520*scale,width:1536*scale,height:1024*scale};
 }
 /** Keep panning inside the painted extent; an explicitly zoomed-out room stays centred. */
-export function clampRoomCamera(camera,viewport){
- const bounds=isoSceneBounds(viewport),zoom=camera.zoom||1,cx=viewport.width/2,cy=viewport.height/2;
+export function clampRoomCamera(camera,viewport,stream=null){
+ let bounds=isoSceneBounds(viewport);
+ if(stream?.tiles?.length){
+  const corners=stream.tiles.flatMap(t=>[[0,0],[1,0],[1,1],[0,1]].map(([x,y])=>isoPoint({x:x+t.dx,y:y+t.dy},viewport)));
+  const left=Math.min(...corners.map(p=>p.x))-40,top=Math.min(...corners.map(p=>p.y))-40;
+  bounds={x:left,y:top,width:Math.max(...corners.map(p=>p.x))+40-left,height:Math.max(...corners.map(p=>p.y))+40-top};
+ }
+ const zoom=camera.zoom||1,cx=viewport.width/2,cy=viewport.height/2;
  const axis=(value,start,size,center,extent)=>{
   const lower=extent-(center+(start+size-center)*zoom),upper=-(center+(start-center)*zoom);
   return lower>upper?(lower+upper)/2:Math.max(lower,Math.min(upper,value||0));
@@ -60,6 +66,13 @@ export function isoLabelOffsets(actors,viewport){
 
 /** Static SVG terrain: no WebGL, simulation loop or per-tile event listeners. */
 export function isoTerrain(field,viewport) {
+  if(field.continuous){
+    const m=isoMatrix(viewport),outline=points([[0,0],[1,0],[1,1],[0,1]].map(([x,y])=>isoPoint({x,y},viewport)));
+    return `<svg class="hunt-isometric-terrain" viewBox="0 0 ${viewport.width} ${viewport.height}" aria-hidden="true">`+field.continuous.tiles.map(t=>{
+      const id=`terrain-${t.id}`,tile=isoTerrain({...field,...t,continuous:null,streamTile:true},viewport);
+      return `<g data-terrain-cell="${t.id}" transform="translate(${m.a*t.dx+m.c*t.dy},${m.b*t.dx+m.d*t.dy})"><defs><clipPath id="${id}"><polygon points="${outline}"/></clipPath></defs><g clip-path="url(#${id})">${tile}</g></g>`;
+    }).join('')+'</svg>';
+  }
   field=roomArtField(field);
   const theme=combatTheme(field.environment);
   const project=p=>isoPoint(p,viewport);
@@ -70,7 +83,8 @@ export function isoTerrain(field,viewport) {
   };
   const floor=[{x:0,y:0},{x:1,y:0},{x:1,y:1},{x:0,y:1}].map(project);
   const tiles=[];
-  for(let x=0;x<8;x++)for(let y=0;y<8;y++)tiles.push(`<polygon class="iso-tile" style="fill:${colorHex((x*3+y*7)%5===0?theme.light:theme.floor)}" points="${points([{x:x/8,y:y/8},{x:(x+1)/8,y:y/8},{x:(x+1)/8,y:(y+1)/8},{x:x/8,y:(y+1)/8}].map(project))}"/>`);
+  const divisions=field.streamTile?2:8;
+  for(let x=0;x<divisions;x++)for(let y=0;y<divisions;y++)tiles.push(`<polygon class="iso-tile" style="fill:${colorHex((x*3+y*7)%5===0?theme.light:theme.floor)}" points="${points([{x:x/divisions,y:y/divisions},{x:(x+1)/divisions,y:y/divisions},{x:(x+1)/divisions,y:(y+1)/divisions},{x:x/divisions,y:(y+1)/divisions}].map(project))}"/>`);
   // Low perimeter walls leave the actual doors open; raised obstacles use the server's collision rectangles.
   const walls=(field.walls||[]).map((w,i)=>{
     const art=roomPropSprite(w.kind,field.environment);
