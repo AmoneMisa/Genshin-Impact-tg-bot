@@ -23,6 +23,7 @@ for(const [id,data] of Object.entries(FIELD_POPULATIONS))test(`${id}: original s
  assert.equal(entrance.game.hunt.field.mobs.length,floor.rooms.find(r=>r.id===layout.startId).cap);
  const s=hero(id,data.mobs[0].id),f=s.game.hunt.field,room=floor.rooms.find(r=>r.id===f.room);
  assert.equal(data.source.geodataAvailable,false);
+ if(/^(catacomb-|necropolis-)/.test(id))assert.equal(data.source.coordinateSpace,'underground');
  assert.equal(zone.min,Math.min(...data.mobs.map(m=>m.level)));
  assert.equal(zone.max,Math.max(...data.mobs.map(m=>m.level)));
  assert.equal(LOCATIONS.find(l=>l.id===id).levelMax,zone.max);

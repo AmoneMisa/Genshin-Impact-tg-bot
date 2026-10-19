@@ -118,7 +118,7 @@ def build(row):
   if any(n.get('id') in ids for n in scope['E'].parse(p).findall('npc')):
    files['stats/npcs/' + p.name] = hashlib.sha256(p.read_bytes()).hexdigest()
  return {'version': 1, 'floors': [level], 'mobs': [scope['mob'](nid) for nid in ids],
-  'source': {'commit': scope['SOURCE_COMMIT'], 'files': files, 'geodataAvailable': False, 'missingItemIcons': missingicons}}
+  'source': {'commit': scope['SOURCE_COMMIT'], 'files': files, 'geodataAvailable': False, 'coordinateSpace': 'underground' if file.startswith('Catacombs/') else 'surface', 'missingItemIcons': missingicons}}
 
 folder = ROOT / 'template/field-populations'
 folder.mkdir(exist_ok=True)
@@ -129,7 +129,7 @@ for row in FIELDS:
  print(row[0], len(value['mobs']), 'NPC types;', sum(r['cap'] for r in value['floors'][0]['rooms']), 'slots')
 present = [r[0] for r in FIELDS if (folder / (r[0] + '.js')).exists()]
 (ROOT / 'template/fieldPopulations.js').write_text('// Existing Atlas fields with source-backed populations.\n' + ''.join(f"import z{i} from './field-populations/{id}.js';\n" for i, id in enumerate(present)) + 'export const FIELD_POPULATIONS = {' + ','.join(json.dumps(id) + f':z{i}' for i, id in enumerate(present)) + '};\n', encoding='utf-8')
-lines = ['# Наполнение открытых охотничьих зон', '',
+lines = ['# Наполнение охотничьих зон', '',
  'Существующие точки Атласа дополнены исходными статическими спавнами High Five. Состав, количество, координаты или полигоны, высоты и таймеры сохраняются; локальная сетка 4×3 — адаптация, не клиентская геодата. Пустые исходные участки не заполняются случайными монстрами.', '',
  '| Локация | Виды NPC | Места появления |', '| --- | ---: | ---: |']
 for id, title, _, _ in FIELDS:
@@ -139,5 +139,6 @@ for id, title, _, _ in FIELDS:
 lines.extend(['', 'Окружение переиспользует согласованные рисунки соответствующих локаций. Навигация и цели активных заданий используют Атлас; старое сохранение переносится в исходное население однократно без выдачи наград. Сохранение комнат, здоровья и отложенных возрождений использует общий движок охоты. На телефоне отображается до восьми ближайших целей, на широком экране — до 16; выбранная цель всегда входит в этот набор.', '',
  'Источник: L2J Mobius High Five, commit `9fb01cb20513e55190cdde8d91e41be2c0914f84`. Исходные файлы и SHA-256 записаны в `source.files` каждой локации. Импортёр читает закреплённый архив напрямую, а не нормализованный кеш NPC. SP проверяется против исходного `acquire.sp`. Награды и боевое поведение используют существующий движок проекта: групповые таблицы дропа представлены вероятностями отдельных предметов; взаимное исключение предметов внутри исходной группы не моделируется. Это не перенос всех специальных сценариев NPC.', '',
  'Новые предметы используют оригинальные клиентские иконки. У трав без поля icon в исходном XML пробел перечислен в `source.missingItemIcons`, и похожая картинка им не подставляется.', '',
+ 'Новые подземелья имеют source.coordinateSpace = underground, наземные зоны — surface. Это отметка пространства исходных спавнов, а не обещание геоданных для бесшовного перехода. Катакомбы и некрополи переносят статические группы XML; недельный цикл Семи Печатей и сценарная смена населения этим импортом не реализуются.', '',
  'Воспроизведение: `python scripts/l2j/import-field-populations.py <zone-id>`; затем обновить AI через `python scripts/l2j/import-npc-ai.py` и хеши seed-таблиц через `node scripts/templates/hash.mjs`. Проверки: `node --test test/field-populations.test.js test/location-levels.test.js test/hunt-exploration.test.js`; мобильный интерфейс — `scripts/ui/check-location-levels.mjs` с перечнем ID в `LOCATION_LEVEL_ZONE`.', ''])
 (ROOT / 'docs/field-populations.md').write_text('\n'.join(lines), encoding='utf-8')
