@@ -7,4 +7,5 @@ import z4 from './field-populations/alligator-beach.js';
 import z5 from './field-populations/sea-of-spores.js';
 import z6 from './field-populations/timak-outpost.js';
 import z7 from './field-populations/plains-of-glory.js';
-export const FIELD_POPULATIONS = {"plains-of-dion":z0,"cruma-marshlands":z1,"turek-orcs":z2,"brekas-stronghold":z3,"alligator-beach":z4,"sea-of-spores":z5,"timak-outpost":z6,"plains-of-glory":z7};
+import z8 from './field-populations/outlaw-forest.js';
+export const FIELD_POPULATIONS = {"plains-of-dion":z0,"cruma-marshlands":z1,"turek-orcs":z2,"brekas-stronghold":z3,"alligator-beach":z4,"sea-of-spores":z5,"timak-outpost":z6,"plains-of-glory":z7,"outlaw-forest":z8};
