@@ -13,10 +13,15 @@ import updatePlayerStats from '../functions/game/player/updatePlayerStats.js';
 import calcDamage from '../functions/game/boss/calcDamage.js';
 
 const NOW=1_800_000_000_000;
-function fixture(){
+function fixture({source=false}={}){
  const s={userId:0,userChatData:{user:{id:0}},game:{stats:{lvl:80,currentExp:0},inventory:{gold:0,sp:0,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
  changePlayerGameClass(s,'mage');updatePlayerStats(s);
  assert.equal(enterHuntField(s,'catacomb-forbidden-path',{now:NOW,random:()=>.5}).ok,true);
+ // Combat cases control three actors; source population/respawn integration is tested separately.
+ if(!source){
+  const f=s.game.hunt.field;f.mobs=f.mobs.slice(0,3);f.walls=[];
+  f.mobs.forEach((m,i)=>Object.assign(m,{x:[.2,.5,.8][i],y:[.3,.5,.3][i],aggressive:false,aggro:false}));
+ }
  return s;
 }
 
@@ -117,28 +122,29 @@ test('aggressive actors pursue the player, stop at range, and cannot move during
  assert.ok(distance()<=.201);assert.ok(distance()>=.199);
 });
 
-test('a killed monster comes back, a catacomb is a grid of rooms with big and small ones', async()=>{
+test('a killed source monster comes back to its slot; catacomb rooms retain original capacities', async()=>{
  const {roomLayout,roomById}=await import('../functions/game/hunt/huntRooms.js');
  const zone=getZone('catacomb-forbidden-path'),layout=roomLayout(zone);
  assert.equal(layout.rooms.length,12);
- const caps=layout.rooms.map(r=>r.cap),big=layout.rooms.filter(r=>r.big);
- assert.ok(big.length>=2&&big.every(r=>r.cap>=11&&r.cap<=12));
- assert.ok(layout.rooms.filter(r=>!r.big).every(r=>r.cap>=3&&r.cap<=5));
- assert.equal(roomById(zone,layout.startId).cap,3);
- const s=fixture(),h=s.game.hunt;
+ assert.ok(layout.rooms.some(r=>r.big));assert.ok(layout.rooms.some(r=>!r.big));
+ for(const room of layout.rooms)assert.equal(room.cap,room.spawns.reduce((n,s)=>n+s.count,0));
+ const capacity=roomById(zone,layout.startId).cap;
+ const s=fixture({source:true}),h=s.game.hunt;
  const field=h.field;
+ field.mobs.forEach(m=>{m.aggressive=false;m.aggro=false;});
  const gone=field.mobs[0];gone.currentHp=0;gone.aggro=false;
- field.respawns.push({at:NOW+HUNT.mobRespawnMs,room:field.room});field.mobs=field.mobs.slice(1);
- advanceHunt(s,NOW+1000,()=>.5);assert.equal(field.mobs.length,2);
- advanceHunt(s,NOW+HUNT.mobRespawnMs+1,()=>.5);assert.equal(field.mobs.length,3);
+ field.respawns.push({at:NOW+HUNT.mobRespawnMs,room:field.room,sourceSlot:gone.sourceSlot});field.mobs=field.mobs.slice(1);
+ advanceHunt(s,NOW+1000,()=>.5);assert.equal(field.mobs.length,capacity-1);
+ advanceHunt(s,NOW+HUNT.mobRespawnMs+1,()=>.5);assert.equal(field.mobs.length,capacity);
+ assert.equal(field.mobs.at(-1).mobId,gone.mobId);
  // walk to a neighbouring room: it fills to its capacity, the monsters left behind stay
  const next=layout.rooms.find(r=>r.row===0&&r.col===1);
- field.mobs.forEach(m=>{m.aggro=false;});
+ field.mobs.forEach(m=>{m.aggressive=false;m.aggro=false;});
  assert.equal(moveHuntField(s,'room:'+next.id,NOW+HUNT.mobRespawnMs+2).ok,true);
  assert.equal(h.field.room,layout.startId,'walking is not instant');
  advanceHunt(s,NOW+HUNT.mobRespawnMs+20000,()=>.5);
  assert.equal(h.field.room,next.id);assert.equal(h.field.mobs.length,next.cap);
- assert.equal(h.field.rooms[layout.startId].mobs.length,3);
+ assert.equal(h.field.rooms[layout.startId].mobs.length,capacity);
  const far=layout.rooms.find(r=>r.row===2&&r.col===3);
  assert.equal(moveHuntField(s,'room:'+far.id,NOW+HUNT.mobRespawnMs+3).reason,'room_not_adjacent');
  h.field.mobs[0].aggro=true;
