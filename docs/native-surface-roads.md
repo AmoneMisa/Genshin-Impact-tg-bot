@@ -33,6 +33,8 @@
 
 Ограничение: запись Орен → Ivory Tower содержит `castleId=4`. По исходному `entity/teleporter/TeleportHolder.java` это запрещает телепорт во время осады замка Орена. Проверка состояния этой осады ещё не подключена к расчёту маршрута; импортёр явно отклоняет такие записи. Новый подход к Ivory Tower этим этапом не опубликован.
 
+Неподтверждённый проход: Монастырь Безмолвия, исходная точка 106414, -87799, -2920, файл teleporters/town/31275.xml. Причина: geodata_search_limit; предел одной попытки 120000 узлов. Пешее действие не публикуется, прежние координаты Атласа этим не заменяются.
+
 Проверки: `node --test test/native-surface-entries.test.js test/native-travel.test.js test/native-town-travel.test.js`; `NATIVE_FIRST_ZONE=ID NATIVE_SECOND_ZONE=ДРУГАЯ_СВЯЗАННАЯ_ЗОНА node scripts/ui/check-native-world.mjs` — мобильные и широкая ширины, отсутствие Canvas, остановка, восстановление, физический вход/выход из охоты, очистка попапов и таймеров.
 
 Обновление отчёта: `node scripts/ui/report-native-surface-entries.mjs`. [Геодата и ограничения](native-geodata.md).

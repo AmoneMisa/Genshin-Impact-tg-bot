@@ -7941,6 +7941,74 @@ export default {
           "reason": null
         }
       ]
+    },
+    "monastery-of-silence": {
+      "city": "goddard",
+      "available": false,
+      "reason": "geodata_search_limit",
+      "attempts": [
+        {
+          "stride": 8,
+          "maxNodes": 30000,
+          "heuristicWeight": 1,
+          "margin": 256,
+          "visited": 30000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "stride": 4,
+          "maxNodes": 30000,
+          "heuristicWeight": 1,
+          "margin": 256,
+          "visited": 30000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "stride": 2,
+          "maxNodes": 50000,
+          "heuristicWeight": 1,
+          "margin": 256,
+          "visited": 50000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "stride": 1,
+          "maxNodes": 60000,
+          "heuristicWeight": 1,
+          "margin": 256,
+          "visited": 60000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "stride": 8,
+          "maxNodes": 120000,
+          "heuristicWeight": 2,
+          "margin": 1024,
+          "visited": 120000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "stride": 4,
+          "maxNodes": 120000,
+          "heuristicWeight": 2,
+          "margin": 1024,
+          "visited": 120000,
+          "reason": "geodata_search_limit"
+        }
+      ],
+      "to": {
+        "x": 106414,
+        "y": -87799,
+        "z": -2920
+      },
+      "sourceEntry": {
+        "file": "teleporters/town/31275.xml",
+        "npcId": 31275,
+        "name": "Monastery of Silence",
+        "type": "NORMAL",
+        "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+        "sha256": "812a374e2a26cd653f9139c2e5835d84f486d585d40b80045e4a6980f413a8d2"
+      }
     }
   }
 };

@@ -33,6 +33,14 @@ function hero(){
 }
 function quiet(field){for(const m of [field,...Object.values(field.rooms||{})].flatMap(r=>r.mobs||[]))Object.assign(m,{aggressive:false,aggro:false,aggroRange:0,nextAttackAt:NOW+1e12});}
 function finish(s,now){const trip=s.game.world.walkHome;assert.ok(trip.native);advanceWorld(s,now);assert.equal(s.game.world.walkHome,undefined);}
+test('unconfirmed source approaches never advertise or start a native walk',()=>{
+ for(const [id,route] of Object.entries(routes.routes).filter(([,r])=>!r.available)){
+  const s=hero();s.game.world.city=route.city;const gold=s.game.inventory.gold;
+  assert.equal(nativeRoute(id),null);assert.equal(worldState(s,NOW).nativeWalk[id],undefined);
+  assert.equal(worldAction(s,{action:'walk_location',location:id},NOW).ok,false);
+  assert.equal(s.game.world.mode,'city');assert.equal(s.game.world.walkHome,undefined);assert.equal(s.game.inventory.gold,gold);
+ }
+});
 test('all published native city and return links verify every original cell in both directions',()=>{
  const available=Object.values(routes.routes).filter(r=>r.available);assert.equal(available.length,11+Object.keys(SURFACE_ENTRIES).length);
  for(const route of available){

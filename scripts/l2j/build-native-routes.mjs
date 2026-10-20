@@ -20,7 +20,7 @@ for(const target of candidates){
   console.log(target.id,stride,result.ok,result.reason||'',result.visited,Math.round(performance.now()-start)+'ms');
   if(result.ok)break;
  }
- if(!result.ok){routes[target.id]={city:target.region,available:false,reason:result.reason,attempts};continue;}
+ if(!result.ok){routes[target.id]={city:target.region,available:false,to,sourceEntry:target.entrySource,reason:result.reason,attempts};continue;}
  let previous=result.start,distance=0;
  for(const point of result.path){
   if(!nativeSegment(previous,point,{allowed:nativeGroundAllowed}))throw new Error('Invalid native route segment: '+target.id);
