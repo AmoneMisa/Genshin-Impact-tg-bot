@@ -1535,3 +1535,15 @@ details[open]>.ui-disclosure-summary>svg{rotate:180deg}
 .ui-action-stack { display:grid; gap:var(--space-3); min-width:0; margin-block:var(--space-3); }
 .ui-action-stack label { display:grid; gap:var(--space-2); min-width:0; }
 .ui-action-stack input { box-sizing:border-box; width:100%; min-width:0; }
+
+/* Raster bone dice: shared prop skin, exact pips remain legible without artwork. */
+body .ui-card-table-window .ui-button.ui-dice{position:relative;display:inline-grid;place-items:center;padding:var(--space-1);border:1px solid #b49a70;border-radius:var(--radius-control);background:#e3d0a7 url('/art/dice/bone-face.webp') center/100% 100% no-repeat;color:#302214;box-shadow:inset 0 0 0 1px #fff0c34d,0 2px 3px #0006;text-shadow:none;opacity:1}
+.ui-dice-pips{position:absolute;inset:20%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);place-items:center;pointer-events:none}
+.ui-dice-pips>span{width:62%;aspect-ratio:1;border-radius:50%}
+.ui-dice-pips>.is-pip{background:#302214;box-shadow:inset 0 1px 1px #130d09,0 1px 0 #fff0c3}
+body .ui-card-table-window .ui-button.ui-dice.is-hidden{background:var(--surface-inset,#171713);border-color:var(--border-strong);color:var(--muted);box-shadow:none}
+body .ui-card-table-window .ui-button.ui-dice.kept{outline:2px solid var(--gold);outline-offset:2px;box-shadow:0 0 0 4px #d6b25e26}
+body .ui-card-table-window button.ui-dice:hover{border-color:var(--gold-bright);filter:brightness(1.06)}
+body .ui-card-table-window button.ui-dice:focus-visible{outline:2px solid var(--gold-bright);outline-offset:3px}
+body .ui-card-table-window button.ui-dice:disabled{opacity:var(--disabled-opacity,.55);filter:none}
+body .ui-card-table-window[aria-busy=true] button.ui-dice:disabled{opacity:1}

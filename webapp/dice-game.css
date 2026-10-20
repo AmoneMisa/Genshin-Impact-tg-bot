@@ -16,9 +16,8 @@ body .game-overlay>.dice-panel{width:min(100%,460px);max-width:460px}
 .dice-die{box-sizing:border-box;display:inline-grid;place-items:center;flex:none;width:52px;height:52px;min-height:0;padding:var(--space-1);font-size:20px;font-weight:700;line-height:1}
 .dice-panel .dice-die{font-size:20px}
 .dice-die.is-static{pointer-events:none}
-.dice-die.kept{outline:2px solid var(--gold,#d6b25e);outline-offset:2px;transform:translateY(-6px)}
-.dice-die.rolling{animation:dice-roll .45s ease-out}
-@keyframes dice-roll{0%{transform:rotate(-24deg) translateY(-10px);opacity:.4}60%{transform:rotate(14deg)}100%{transform:none;opacity:1}}
+.dice-die.rolling{animation:dice-tumble var(--dice-duration,632ms) linear both;animation-delay:var(--dice-elapsed,0ms);will-change:transform}
+@keyframes dice-tumble{0%{transform:translate(calc(-4px * var(--dice-direction)), -5px) rotate(calc(-110deg * var(--dice-direction))) scale(.82)}24%{transform:translate(calc(3px * var(--dice-direction)), -8px) rotate(calc(-45deg * var(--dice-direction))) scale(.94)}48%{transform:translate(calc(-2px * var(--dice-direction)), 0) rotate(calc(18deg * var(--dice-direction))) scale(1.04,.94)}65%{transform:translate(0,-4px) rotate(calc(-10deg * var(--dice-direction))) scale(.98,1.02)}82%{transform:translate(0,0) rotate(calc(4deg * var(--dice-direction))) scale(1.02,.98)}100%{transform:none}}
 .dice-verdict{text-align:center;font-weight:700;font-size:16px}
 .dice-combination-list{display:grid;gap:var(--space-2);margin:var(--space-2) 0 0;padding:0;list-style:none}
 .dice-combination-list .ui-inset-row{flex-direction:column;align-items:flex-start;gap:var(--space-1);padding:var(--space-2)}

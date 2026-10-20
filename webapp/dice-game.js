@@ -3,7 +3,8 @@ import { installOverlayA11y } from './overlay-a11y.js';
 import { enhanceSelects } from './design/select.js';
 import { escapeHtml as esc } from './escape-html.js';
 import { STAKE_CHOICES, stakeBodyOf, stakeText } from './stakes.js';
-import { FACES, FACE_NAMES, COMBINATIONS, LEVELS, REROLLS, ROUNDS_TO_WIN, evaluate, newMatch, playerThrow, aiSteps, settleRound, nextRound } from './dice-poker.js';
+import { createDiceMotion, PIPS } from './dice-motion.js';
+import { FACE_NAMES, COMBINATIONS, LEVELS, REROLLS, ROUNDS_TO_WIN, evaluate, newMatch, playerThrow, aiSteps, settleRound, nextRound } from './dice-poker.js';
 
 const RULES = `Кости из «Ведьмака»: у каждого пять костей. Бросьте их, затем один раз перебросьте любые, оставив нужные, или оставьте всё как есть. Побеждает сильнейшая комбинация; если они одинаковые, решает сумма костей комбинации, при равенстве — ничья. Матч идёт до ${ROUNDS_TO_WIN} побед. Ничья не считается, раунд играется заново.`;
 const button = (label, attrs = '', primary = false) => `<button type="button" class="ui-button${primary ? ' primary' : ''}" ${attrs}>${label}</button>`;
@@ -21,13 +22,13 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
   let screen = api && initialInvite ? 'lobby' : 'start', focusedInvite = api ? initialInvite : null, level = 'hard', match = null, keep = new Set(), fresh = new Set(), busy = false, note = '', closed = false, surrenderArmed = false;
   let net = { friends: [], incoming: [], outgoing: [], invitation: null, match: null }, wallet = null, stakeChoice = '', pollTimer = null, requestId = 0;
   const timers = new Set();
-  const reduced = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   const later = (fn, ms) => { const id = setTimeout(() => { timers.delete(id); if (!closed) fn(); }, ms); timers.add(id); };
 
   const overlay = document.createElement('section');
   overlay.className = 'game-overlay dice-overlay';
   overlay.innerHTML = '<div class="overlay-backdrop"></div><div class="overlay-panel game-dialog-panel ui-card-table-window dice-panel" data-dice-panel></div>';
   const panel = overlay.querySelector('[data-dice-panel]');
+  const motion = createDiceMotion(panel);
   document.body.append(overlay);
   requestAnimationFrame(() => overlay.classList.add('visible'));
 
@@ -36,10 +37,12 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
     return `<div class="dice-row" role="group" aria-label="${esc(label)}">${dice.map((value, i) => {
       const hidden = value === null;
       const name = hidden ? 'скрыта' : `${FACE_NAMES[value]}${canKeep ? (keep.has(i) ? ', оставлена' : ', будет переброшена') : ''}`;
-      const classes = `dice-die${mine && canKeep && keep.has(i) ? ' kept' : ''}${fresh.has(`${tag}${i}`) && !reduced() ? ' rolling' : ''}`;
+      const classes = `ui-dice dice-die${hidden ? ' is-hidden' : ''}${mine && canKeep && keep.has(i) ? ' kept' : ''}`;
+      const motionAttrs = `data-dice-key="${tag}${i}" data-face="${hidden ? '' : value}"`;
+      const face = hidden ? '<span aria-hidden="true">?</span>' : `<span class="ui-dice-pips" aria-hidden="true">${Array.from({ length: 9 }, (_, position) => `<span${PIPS[value].includes(position) ? ' class="is-pip"' : ''}></span>`).join('')}</span>`;
       return canKeep
-        ? `<button type="button" class="ui-button ${classes}" data-die="${i}" aria-pressed="${keep.has(i)}" aria-label="${esc(name)}">${FACES[value]}</button>`
-        : `<span class="ui-button ${classes} is-static" role="img" aria-label="${esc(name)}">${hidden ? '?' : FACES[value]}</span>`;
+        ? `<button type="button" class="ui-button ${classes}" ${motionAttrs} data-die="${i}" aria-pressed="${keep.has(i)}" aria-label="${esc(name)}">${face}</button>`
+        : `<span class="ui-button ${classes} is-static" ${motionAttrs} role="img" aria-label="${esc(name)}">${face}</span>`;
     }).join('')}</div>`;
   }
   function combinations() {
@@ -140,6 +143,7 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
     panel.innerHTML = `${dialogHeading('Кости', { rules: RULES, back: screen !== 'start' && !(screen === 'ai' && busy) })}<div class="dice-content">${body}</div>`;
     if (open) panel.querySelector('.dice-combinations')?.setAttribute('open', '');
     enhanceSelects(panel);
+    motion.sync(fresh);
     fresh.clear();
   }
 
@@ -150,8 +154,8 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
     if (result.error) { note = result.error; return render(); }
     fresh = new Set(match.dice.player.map((_, i) => (keep.has(i) ? null : `p${i}`)).filter(Boolean));
     match = result.match; keep = new Set(); haptic('light');
+    if (match.rolls.player >= REROLLS) { busy = true; later(stand, 700); }
     render();
-    if (match.rolls.player >= REROLLS) { busy = true; later(stand, 700); render(); }
   }
   /** The player is done: the opponent throws step by step and the round is settled. */
   function stand() {
@@ -172,7 +176,9 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
     net = { friends: data.friends || [], incoming: data.incoming || [], outgoing: data.outgoing || [], invitation: data.invitation || null, match: data.match || null };
     if (net.match) {
       if (!before || before.id !== net.match.id || before.round !== net.match.round) keep = new Set();
-      fresh = new Set(net.match.dice.map((value, i) => (before?.id === net.match.id && before.round === net.match.round && before.dice[i] !== value ? `p${i}` : null)).filter(Boolean));
+      const sameRound = before?.id === net.match.id && before.round === net.match.round;
+      fresh = new Set(net.match.dice.map((value, i) => (!sameRound || before.dice[i] !== value || (before.rolls !== net.match.rolls && !keep.has(i)) ? `p${i}` : null)).filter(Boolean));
+      (net.match.opponentDice || []).forEach((value, i) => { if (value !== null && (!sameRound || before.opponentDice?.[i] !== value)) fresh.add(`a${i}`); });
       if (!before || before.id !== net.match.id) surrenderArmed = false;
       if (screen === 'lobby' || screen === 'online') screen = 'online';
     } else if (screen === 'online') { screen = 'lobby'; surrenderArmed = false; }
@@ -248,7 +254,7 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
   function close() {
     if (closed) return;
-    closed = true; timers.forEach(clearTimeout); timers.clear(); clearTimeout(pollTimer); document.removeEventListener('visibilitychange', onVisibility); overlay.remove();
+    closed = true; motion.destroy(); timers.forEach(clearTimeout); timers.clear(); clearTimeout(pollTimer); document.removeEventListener('visibilitychange', onVisibility); overlay.remove();
   }
   render();
   if (screen === 'lobby') refresh().then(schedulePoll);
