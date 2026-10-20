@@ -2,10 +2,11 @@ import {deflateSync,inflateSync} from 'node:zlib';
 import {roomById} from '../hunt/huntRooms.js';
 import {getZone} from '../hunt/huntMobs.js';
 import routes from '../../../template/nativeRoutes.js';
+import islands from '../../../template/nativeIslandRoutes.js';
 
 /** Server-only snapshots keep native trail departure/return from rerolling the hunting room. */
 export function saveNativeField(session,now,hunt=session.game.hunt){
- if(!hunt?.field||!routes.routes[hunt.zone]?.available)return;
+ if(!hunt?.field||!(routes.routes[hunt.zone]?.available||islands.routes[hunt.zone]?.available))return;
  const banks=session.game.world.nativeFields||={};
  banks[hunt.zone]={at:now,data:deflateSync(Buffer.from(JSON.stringify(hunt.field))).toString('base64')};
 }

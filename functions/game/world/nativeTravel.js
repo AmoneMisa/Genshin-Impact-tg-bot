@@ -7,8 +7,11 @@ import {outdoorPoint} from './holdingEntry.js';
 import {worldGeodata,geoRegionId} from './l2jGeodata.js';
 import {nativeTownPath,nativeTownCities,nativeTownHub,nativeTownEdges,nativeTownSource} from './nativeTownGraph.js';
 import ports from '../../../template/nativePortRoutes.js';
+import islands from '../../../template/nativeIslandRoutes.js';
 
-export const nativeRoute=id=>routes.routes[id]?.available?routes.routes[id]:null;
+export const nativeRoute=id=>islands.routes[id]?.available?islands.routes[id]:routes.routes[id]?.available?routes.routes[id]:null;
+export const nativeIsland=session=>session.game.world.mode==='location'?nativeRoute(session.game.world.location)?.island||null:session.game.world.nativeIsland||null;
+export const nativeIslandPort=session=>Object.values(islands.routes).find(r=>r.island===nativeIsland(session))?.isolatedPort||null;
 export function nativePortRoute(id,stop='vendor'){
  const route=ports.routes[id];if(!route||!['vendor','boarding'].includes(stop))return null;
  return {...route,path:stop==='vendor'?route.path.slice(0,route.vendorIndex):route.path,to:stop==='vendor'?route.vendor:route.to};
@@ -28,7 +31,7 @@ function reconnectNativeTrail(from,to,city){
    candidates.push({point,suffix,score:distance+remaining});
   }
  }
- for(const route of [...nativeTownEdges(),...Object.values(ports.routes).map(r=>({...r,fromCity:r.city,toCity:r.city}))]){
+ for(const route of [...nativeTownEdges(),...Object.values(ports.routes).filter(r=>!r.island).map(r=>({...r,fromCity:r.city,toCity:r.city}))]){
   const vertices=[route.from,...route.path];
   for(const [hub,forward] of route.fromCity===route.toCity?[[route.fromCity,false]]:[[route.fromCity,false],[route.toCity,true]]){
    const link=nativeTownPath(hub,destination);if(!link)continue;
@@ -56,7 +59,7 @@ function reconnectNativeTrail(from,to,city){
 export function nativeExit(session){
  const w=session.game.world,f=session.game.hunt?.field,route=nativeRoute(w?.location);
  if(w?.mode!=='location'||session.game.hunt?.zone!==w.location||!route?.returnPath||!f)return null;
- return {room:'r0c0',floor:1,point:{x:.5,y:.95},near:f.room==='r0c0'&&(f.floor||1)===1&&Math.hypot(f.x-.5,f.y-.95)<=.08,city:route.city};
+ return {room:'r0c0',floor:1,point:{x:.5,y:.95},near:f.room==='r0c0'&&(f.floor||1)===1&&Math.hypot(f.x-.5,f.y-.95)<=.08,city:route.city,island:route.island||null,port:route.isolatedPort||null};
 }
 
 /** Original entry/gatekeeper anchors bind local artwork to the native coordinate space. */
@@ -64,7 +67,17 @@ export function nativeTravel(session,target,now,speed){
  const w=session.game.world,to=target?.port?nativePortRoute(target.port,target.stop):target?.location&&nativeRoute(target.location),from=w.mode==='location'&&nativeRoute(w.location);
  let start,path,arrivalCity=target?.city||null;
  if(target?.location&&target.location===w.location&&w.mode==='location')return {ok:false,reason:'location_path_required'};
- if(w.mode==='city'){
+ const island=to?.island||from?.island||nativeIsland(session);
+ if(island){
+  if(to?.island!==island||arrivalCity)return {ok:false,reason:'location_path_required'};
+  if(w.mode==='location'&&from?.island===island){
+   if(!nativeExit(session)?.near)return {ok:false,reason:'entrance_required'};
+   start=from.to;path=[...from.returnPath,...to.path];
+  }else if(w.mode==='native'&&w.nativePosition&&Math.hypot(w.nativePosition.x-to.to.x,w.nativePosition.y-to.to.y)<=8192){
+   const plan=findNativePath(w.nativePosition,to.to,{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true});
+   if(!plan.ok)return plan;start=plan.start;path=plan.path;
+  }else return {ok:false,reason:'location_path_required'};
+ }else if(w.mode==='city'){
   if(arrivalCity===w.city)return {ok:false,reason:'already_in_city'};
   const link=nativeTownPath(w.city,to?.city||arrivalCity);if(!link)return {ok:false,reason:'location_path_required'};
   const point=outdoorPoint(session),town=nativeTownHub(w.city);
@@ -85,6 +98,7 @@ export function nativeTravel(session,target,now,speed){
  }else return {ok:false,reason:'location_path_required'};
  const trip=createNativeJourney(start,path,{now,speed,location:to?target.location:null,city:arrivalCity});
  if(trip&&target?.port){trip.port=target.port;trip.portCity=to.city;}
+ if(trip&&island)trip.island=island;
  return trip?{ok:true,trip}:{ok:false,reason:'path_blocked'};
 }
 
@@ -103,7 +117,9 @@ export function nativeFreeWalk(session,point,now,speed){
 
 export function nativeWalkOptions(session){
  const w=session.game.world,exit=nativeExit(session);
- return Object.fromEntries(Object.entries(routes.routes).filter(([,r])=>r.available).map(([id,r])=>{
+ const island=nativeIsland(session);
+ return Object.fromEntries(Object.entries({...routes.routes,...islands.routes}).filter(([,r])=>r.available).map(([id,r])=>{
+  if(island||r.island)return [id,{enabled:Boolean(w.mode==='native'&&island===r.island),viaCity:null,exitRequired:w.mode==='location'&&!exit?.near}];
   const origin=w.mode==='location'?exit?.city:w.city,link=origin&&nativeTownPath(origin,r.city);
   const via=(w.mode==='location'||w.mode==='city'&&origin!==r.city)&&link?link.cities.map(id=>CITIES.find(c=>c.id===id)?.name||id).join(' → '):null;
   return [id,{enabled:w.mode==='city'?Boolean(link):w.mode==='location'?Boolean(exit&&link&&id!==w.location):w.mode==='native',viaCity:via,exitRequired:w.mode==='location'&&!exit?.near}];
@@ -111,6 +127,7 @@ export function nativeWalkOptions(session){
 }
 export function nativeWalkCities(session){
  const w=session.game.world;
+ if(nativeIsland(session))return [];
  if(w.mode==='location'){const exit=nativeExit(session);return exit?.near?nativeTownCities(exit.city):[];}
  if(w.mode==='city')return nativeTownCities(w.city).filter(id=>id!==w.city);
  if(w.mode!=='native')return [];

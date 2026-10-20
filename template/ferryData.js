@@ -10,6 +10,7 @@ export default {
     "files": {
       "scripts/vehicles/BoatGludinRune.java": "b113bf32c65f4dc6e7c090514c7f822ae507462b6a3ca7b903b4ab561b4c24c3",
       "scripts/vehicles/BoatTalkingGludin.java": "ff88a9b425128854bb86166d3a8e582a2a92526ac780682dfa992ed2f067b5b8",
+      "scripts/vehicles/BoatRunePrimeval.java": "172587a6e72d2777074903a64693c9d6fdaeaa97ed93ee167eca892a74a00973",
       "MerchantPriceConfig.xml": "3be8ea0e4f05208b61d7bd5da91970d8c580d44ebedf92a636f82c99289203aa",
       "zones/custom_town.xml": "076adfa7ab63a774b9a8d9c62469a9bae79cfd4af20c1e4827bfd9ad99323223",
       "stats/items/07900-07999.xml": "23ab5b5f1ac3fe5c950122d73ce22e231df951de9cf02d8c9811ea09542f4a43",
@@ -17,9 +18,13 @@ export default {
       "spawns/Others/17_22.xml": "eb2046a66fee9aa1f10fa566536432e1e60178a457e63391953ef2bdb011ab3b",
       "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
       "spawns/Others/17_25.xml": "5c55658cc7b5a1f9e15adf1130be2334c0ecfa1082fc9bbbdc5e5a64007f237c",
+      "spawns/Others/20_17.xml": "b053d681cadc95df717066ec42acd47e4e30174dda21d9832778eb5469f299c8",
       "buylists/3038700.xml": "5c050def8c86936a82872499f761f711aa81312f7a7e3e602fb869b9257b32d0",
       "buylists/3135100.xml": "604d435b8e3e98c0dfa4b001eaaa88528788ec1d146dd62d849535630960dc69",
-      "buylists/3004700.xml": "a60cd4cbd98ceefeb97e5d48bd83c1d13fc76f794d7c6437b5d6837d39509e14"
+      "buylists/3004700.xml": "a60cd4cbd98ceefeb97e5d48bd83c1d13fc76f794d7c6437b5d6837d39509e14",
+      "buylists/3210600.xml": "e3536fd287a38368fb2f30adc5fe1e968ed9e04900c3cabce3822685453b1de3",
+      "stats/items/08900-08999.xml": "3f92a05da521ca9f45422527d46e7ce7105710fce9e8eb782b62b2da90f54770",
+      "teleporters/town/31320.xml": "188bc55efcd72b8e655f4fa22ecc6b91a704f5cb4915f89856af1eb880f53c98"
     }
   },
   "dockMs": 600000,
@@ -43,6 +48,16 @@ export default {
       ],
       "dockMs": 600000,
       "initialDockMs": 480000
+    },
+    {
+      "id": "rune-primeval",
+      "file": "BoatRunePrimeval.java",
+      "ports": [
+        "rune-primeval",
+        "primeval-rune"
+      ],
+      "dockMs": 180000,
+      "initialDockMs": 180000
     }
   ],
   "ports": {
@@ -197,6 +212,82 @@ export default {
         "name": "Neutral Territory",
         "baseTax": "50"
       }
+    },
+    "rune-primeval": {
+      "id": "rune-primeval",
+      "vessel": "rune-primeval",
+      "destination": "primeval-rune",
+      "pathNames": [
+        "RUNE_TO_PRIMEVAL"
+      ],
+      "harbor": "RUNE_DOCK",
+      "name": "Руна → Первобытный остров",
+      "city": "rune",
+      "vendor": {
+        "x": 37762,
+        "y": -37946,
+        "z": -3668,
+        "source": "spawns/Others/21_16.xml",
+        "npcId": 31351,
+        "name": "Volker"
+      },
+      "dock": {
+        "x": 34381,
+        "y": -37680,
+        "z": -3610
+      },
+      "oust": {
+        "x": 34513,
+        "y": -38009,
+        "z": -3640
+      },
+      "ticket": 8925,
+      "buylist": "buylists/3135100.xml",
+      "ticketPrice": 37500,
+      "priceConfig": {
+        "id": "18",
+        "name": "Neutral Territory",
+        "baseTax": "50"
+      }
+    },
+    "primeval-rune": {
+      "id": "primeval-rune",
+      "vessel": "rune-primeval",
+      "destination": "rune-primeval",
+      "pathNames": [
+        "PRIMEVAL_TO_RUNE",
+        "rune-primeval:RUNE_DOCK"
+      ],
+      "harbor": "PRIMEVAL_DOCK",
+      "name": "Первобытный остров → Руна",
+      "city": "rune",
+      "vendor": {
+        "x": 10304,
+        "y": -25024,
+        "z": -3680,
+        "source": "spawns/Others/20_17.xml",
+        "npcId": 32106,
+        "name": "Singsing"
+      },
+      "dock": {
+        "x": 10342,
+        "y": -27279,
+        "z": -3610
+      },
+      "oust": {
+        "x": 10447,
+        "y": -24982,
+        "z": -3664
+      },
+      "ticket": 8924,
+      "buylist": "buylists/3210600.xml",
+      "ticketPrice": 37500,
+      "priceConfig": {
+        "id": "18",
+        "name": "Neutral Territory",
+        "baseTax": "50"
+      },
+      "island": "primeval-isle"
     }
   },
   "paths": {
@@ -706,6 +797,168 @@ export default {
       [
         -96622,
         261660,
+        -3610,
+        150,
+        1800
+      ]
+    ],
+    "RUNE_TO_PRIMEVAL": [
+      [
+        32750,
+        -39300,
+        -3610,
+        180,
+        800
+      ],
+      [
+        27440,
+        -39328,
+        -3610,
+        250,
+        1000
+      ],
+      [
+        19616,
+        -39360,
+        -3610,
+        270,
+        1000
+      ],
+      [
+        3840,
+        -38528,
+        -3610,
+        270,
+        1000
+      ],
+      [
+        1664,
+        -37120,
+        -3610,
+        270,
+        1000
+      ],
+      [
+        896,
+        -34560,
+        -3610,
+        180,
+        1800
+      ],
+      [
+        832,
+        -31104,
+        -3610,
+        180,
+        180
+      ],
+      [
+        2240,
+        -29132,
+        -3610,
+        150,
+        1800
+      ],
+      [
+        4160,
+        -27828,
+        -3610,
+        150,
+        1800
+      ],
+      [
+        5888,
+        -27279,
+        -3610,
+        150,
+        1800
+      ],
+      [
+        7000,
+        -27279,
+        -3610,
+        150,
+        1800
+      ],
+      [
+        10342,
+        -27279,
+        -3610,
+        150,
+        1800
+      ]
+    ],
+    "PRIMEVAL_TO_RUNE": [
+      [
+        15528,
+        -27279,
+        -3610,
+        180,
+        800
+      ],
+      [
+        22304,
+        -29664,
+        -3610,
+        290,
+        800
+      ],
+      [
+        33824,
+        -26880,
+        -3610,
+        290,
+        800
+      ],
+      [
+        38848,
+        -21792,
+        -3610,
+        240,
+        1200
+      ],
+      [
+        43424,
+        -22080,
+        -3610,
+        180,
+        1800
+      ],
+      [
+        44320,
+        -25152,
+        -3610,
+        180,
+        1800
+      ],
+      [
+        40576,
+        -31616,
+        -3610,
+        250,
+        800
+      ],
+      [
+        36819,
+        -35315,
+        -3610,
+        220,
+        800
+      ]
+    ],
+    "rune-primeval:RUNE_DOCK": [
+      [
+        34381,
+        -37680,
+        -3610,
+        220,
+        800
+      ]
+    ],
+    "PRIMEVAL_DOCK": [
+      [
+        10342,
+        -27279,
         -3610,
         150,
         1800

@@ -49,7 +49,7 @@ const lines=[
  '- `node scripts/l2j/import-geodata-reference.mjs` — закреплённые Java-классы чтения.',
  '- `python scripts/l2j/import-native-world.py` — исходные городские точки, двери и вода из локального закреплённого datapack.',
  '- `node scripts/l2j/build-native-routes.mjs` — пути с проверкой каждого отрезка и обратного прохода.',
- '- `node scripts/l2j/check-geodata-java.mjs` — сравнение 7720 сырых высот/NSWE с оригинальными Java-классами; требуется JDK.',
+ '- `node scripts/l2j/check-geodata-java.mjs` — сравнение сырых высот/NSWE с оригинальными Java-классами; требуется JDK.',
  '- `node --test test/l2j-geodata.test.js test/native-travel.test.js test/map-rendering.test.js` — формат, слои, запреты, сохранение, бюджеты движения, переходы и HP.',
  '- `node scripts/ui/check-native-world.mjs` — реальные действия на 320/390/1100 px и без Canvas.',
  '- `NATIVE_FIRST_ZONE=angel-waterfall node scripts/ui/check-native-world.mjs` — тот же сценарий для Водопада Ангелов без дворянства.',

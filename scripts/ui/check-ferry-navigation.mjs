@@ -5,6 +5,8 @@ import {createRequire} from 'node:module';
 import {bundlePageAssets} from '../../miniapp/pageAssets.js';
 import {worldState,worldAction,advanceWorld,ensureWorld,cityPoint,CITIES} from '../../functions/game/world/world.js';
 import data from '../../template/ferryData.js';
+import shores from '../../template/nativePortRoutes.js';
+import islandRoutes from '../../template/nativeIslandRoutes.js';
 import {ferryDock} from '../../functions/game/world/ferryTravel.js';
 import {nativeTownHub} from '../../functions/game/world/nativeTownGraph.js';
 import change from '../../functions/game/player/changePlayerGameClass.js';
@@ -16,10 +18,10 @@ const styles=[...assets.html.matchAll(/<(?:link rel="stylesheet"|meta name="game
 const browser=await chromium.launch({headless:true,executablePath:process.env.DESIGN_BROWSER||'C:/Users/kubai/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe'});
 try{for(const reverse of [false,true])for(const {width,noCanvas=false} of [{width:320},{width:390},{width:1100},{width:320,noCanvas:true}]){
  let now=1800000000000;
- const pair=process.env.FERRY_ROUTE==='talking'?['talking-gludin','gludin-talking']:['gludin','rune'],originPort=pair[reverse?1:0],targetPort=pair[reverse?0:1],origin=data.ports[originPort].city,destination=data.ports[targetPort].city,remainingGold=1000000-data.ports[originPort].ticketPrice;
+ const pair=process.env.FERRY_ROUTE==='primeval'?['rune-primeval','primeval-rune']:process.env.FERRY_ROUTE==='talking'?['talking-gludin','gludin-talking']:['gludin','rune'],originPort=pair[reverse?1:0],targetPort=pair[reverse?0:1],origin=data.ports[originPort].city,destination=data.ports[targetPort].city,remainingGold=1000000-data.ports[originPort].ticketPrice;
  const s={userId:1,game:{stats:{lvl:85,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
  change(s,'humanFighter');update(s);ensureWorld(s,now);
- const hub=nativeTownHub(origin);Object.assign(s.game.world,{city:origin,z:hub.z},cityPoint(CITIES.find(c=>c.id===origin),hub));
+ const hub=nativeTownHub(origin);Object.assign(s.game.world,{city:origin,z:hub.z},cityPoint(CITIES.find(c=>c.id===origin),hub));if(data.ports[originPort].island)Object.assign(s.game.world,{mode:'native',nativeIsland:data.ports[originPort].island,nativePosition:{...islandRoutes.routes[data.ports[originPort].island].to}});
  const dto=()=>({world:{...worldState(s,now),holdings:[],corpses:[]}}),errors=[],calls=[],requests=[];
  const page=await browser.newPage({viewport:{width,height:900},hasTouch:width<500,reducedMotion:width===390?'no-preference':'reduce'});
  page.on('pageerror',e=>errors.push(e.message));
@@ -60,15 +62,17 @@ try{for(const reverse of [false,true])for(const {width,noCanvas=false} of [{widt
  assert.equal(await page.locator('.atlas-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  await page.screenshot({path:path.join(out,`${origin}-${width}${noCanvas?'-fallback':''}.png`)});
  now=trip.until;await live(p=>p.mode==='native'&&p.city===destination);
+ if(!data.ports[targetPort].island){
  await page.locator('[data-movement]').click();await page.getByRole('combobox',{name:'Разделы телепорта',exact:true}).click();await page.getByRole('option',{name:'Города',exact:true}).click();
  await page.locator('[data-quick-go]').filter({hasText:CITIES.find(c=>c.id===destination).name}).click();
  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_walk_city'),page.locator('[data-native-city]').click()]);
  now=s.game.world.walkHome.until+1;await live(p=>p.mode==='city'&&p.city===destination);
+ }else {assert.deepEqual(worldState(s,now).nativeWalkCities,[]);assert.equal(worldState(s,now).nativeWalk['primeval-isle'].enabled,true);}
  assert.equal(s.game.world.city,destination);assert.equal(s.game.inventory.gold,remainingGold);
  assert.equal(s.game.inventory.materials['l2_'+data.ports[originPort].ticket],0);
  await page.locator('.atlas-panel [data-dismiss]').first().click();await page.waitForSelector('.atlas-panel',{state:'detached'});
  assert.equal(await page.locator('[inert],dialog[open]').count(),0);
  const count=requests.length;await page.waitForTimeout(2200);assert.equal(requests.length,count);
  assert.equal(requests.some(u=>u.includes('l2j-geodata')||u.endsWith('.gz')),false);assert.deepEqual(errors,[]);
- await page.close();console.log(`PASS ferry ${origin} -> ${destination} ${width}${noCanvas?' noCanvas':''}`);
+ await page.close();console.log(`PASS ferry ${originPort} -> ${targetPort} ${width}${noCanvas?' noCanvas':''}`);
 }}finally{await browser.close();}

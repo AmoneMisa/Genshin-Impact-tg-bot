@@ -7,7 +7,7 @@ import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';
 import {findNativePath,nativeSegment} from '../../functions/game/world/nativeNavigation.js';
 const routes={};
 for(const port of Object.values(data.ports)){
- const approach=findNativePath(nativeTownHub(port.city),port.vendor,{allowed:nativeGroundAllowed,maxNodes:120000,stride:4,heuristicWeight:2,margin:512,reversible:true});
+ const approach=port.island?{ok:true,start:geo.point(port.vendor),path:[]}:findNativePath(nativeTownHub(port.city),port.vendor,{allowed:nativeGroundAllowed,maxNodes:120000,stride:4,heuristicWeight:2,margin:512,reversible:true});
  if(!approach.ok)throw new Error(port.id+': no verified vendor approach');
  // Find a walkable shore point within the source vehicle boarding sphere. These
  // are derived path endpoints, never original NPC spawns or fictitious TownZones.
@@ -18,7 +18,7 @@ for(const port of Object.values(data.ports)){
  if(!boarding)throw new Error(port.id+': no verified boarding approach');
  const clean=p=>({x:p.x,y:p.y,z:p.z}),path=[...approach.path,...boarding.path].map(clean),from=clean(approach.start),to=path.at(-1);
  let at=from;for(const p of path){if(!nativeSegment(at,p,{allowed:nativeGroundAllowed,reversible:true}))throw new Error('Invalid shore segment');at=p;}
- routes[port.id]={city:port.city,from,to,vendor:clean(approach.path.at(-1)),vendorIndex:approach.path.length,boardingGeometry:'derived-native-shore',path,returnPath:[from,...path.slice(0,-1)].reverse()};
+ routes[port.id]={city:port.city,...(port.island?{island:port.island}:{}),from,to,vendor:clean(approach.path.at(-1)||approach.start),vendorIndex:approach.path.length,boardingGeometry:'derived-native-shore',path,returnPath:[from,...path.slice(0,-1)].reverse()};
  console.log(port.id,port.ticketPrice,'adena',path.length,'verified waypoints');
 }
 fs.writeFileSync('template/nativePortRoutes.js','// Derived native shore paths, verified in both directions; no authored spawn points.\n// L2J High Five geodata (GPL-3.0); see data/l2j-geodata/LICENSE.\nexport default '+JSON.stringify({geodataCommit:geo.manifest.commit,worldCommit:data.source.commit,barriersSha256:createHash('sha256').update(fs.readFileSync('template/nativeWorld.js')).digest('hex'),routes},null,2)+';\n');

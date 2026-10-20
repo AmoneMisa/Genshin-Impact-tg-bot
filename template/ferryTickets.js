@@ -39,5 +39,25 @@ export const FERRY_TICKETS={
     "type": "EtcItem",
     "grade": "NONE",
     "etc": "ticket"
+  },
+  "8925": {
+    "id": 8925,
+    "name": "Boat Ticket: Rune to Primeval Isle.",
+    "icon": "icon.etc_ticket_blue_i00",
+    "price": 25000,
+    "weight": 20,
+    "type": "EtcItem",
+    "grade": "NONE",
+    "etc": "ticket"
+  },
+  "8924": {
+    "id": 8924,
+    "name": "Boat Ticket: Primeval Isle to Rune.",
+    "icon": "icon.etc_ticket_red_i00",
+    "price": 25000,
+    "weight": 20,
+    "type": "EtcItem",
+    "grade": "NONE",
+    "etc": "ticket"
   }
 };

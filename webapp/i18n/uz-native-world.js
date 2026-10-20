@@ -1,4 +1,7 @@
 export default {
+ 'К причалу':'Bandargohga borish',
+ 'Руна → Первобытный остров':'Rune → Ibtidoiy orol',
+ 'Первобытный остров → Руна':'Ibtidoiy orol → Rune',
  'Говорящий остров → Глудин':'Gapiruvchi orol → Gludin',
  'Глудин → Говорящий остров':'Gludin → Gapiruvchi orol',
  'Ожидание свободного причала':'Bo‘sh bandargohni kutish',
