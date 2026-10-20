@@ -1623,6 +1623,206 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/gludio_castle_town.xml"
+  },
+  "dion": {
+    "polygon": [
+      [
+        15264,
+        141764
+      ],
+      [
+        15434,
+        143574
+      ],
+      [
+        15760,
+        144707
+      ],
+      [
+        15846,
+        145302
+      ],
+      [
+        16134,
+        146850
+      ],
+      [
+        16715,
+        147153
+      ],
+      [
+        17844,
+        147640
+      ],
+      [
+        18139,
+        147138
+      ],
+      [
+        18541,
+        146758
+      ],
+      [
+        18782,
+        146598
+      ],
+      [
+        19069,
+        146521
+      ],
+      [
+        19430,
+        146485
+      ],
+      [
+        20363,
+        146421
+      ],
+      [
+        20722,
+        146319
+      ],
+      [
+        21415,
+        146319
+      ],
+      [
+        21402,
+        145011
+      ],
+      [
+        21381,
+        143675
+      ],
+      [
+        20696,
+        142841
+      ],
+      [
+        20380,
+        142492
+      ],
+      [
+        19060,
+        142463
+      ],
+      [
+        18821,
+        142512
+      ],
+      [
+        17885,
+        143046
+      ],
+      [
+        17447,
+        143348
+      ],
+      [
+        17019,
+        144028
+      ],
+      [
+        16780,
+        142908
+      ],
+      [
+        17344,
+        142847
+      ],
+      [
+        17327,
+        142650
+      ],
+      [
+        17483,
+        142634
+      ],
+      [
+        17396,
+        141776
+      ],
+      [
+        17238,
+        141792
+      ],
+      [
+        17218,
+        141574
+      ],
+      [
+        15265,
+        141765
+      ]
+    ],
+    "minZ": -3250,
+    "maxZ": -2600,
+    "sourceZone": "Dion Castle Town",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 7680,
+    "arrivals": [
+      {
+        "x": 19025,
+        "y": 145245,
+        "z": -3107
+      },
+      {
+        "x": 18576,
+        "y": 145136,
+        "z": -3104
+      },
+      {
+        "x": 18717,
+        "y": 145711,
+        "z": -3097
+      },
+      {
+        "x": 18512,
+        "y": 145536,
+        "z": -3100
+      },
+      {
+        "x": 18954,
+        "y": 144428,
+        "z": -3000
+      },
+      {
+        "x": 19150,
+        "y": 143941,
+        "z": -3020
+      },
+      {
+        "x": 19134,
+        "y": 144847,
+        "z": -3020
+      },
+      {
+        "x": 19613,
+        "y": 145607,
+        "z": -3020
+      },
+      {
+        "x": 18078,
+        "y": 145925,
+        "z": -3020
+      },
+      {
+        "x": 17398,
+        "y": 145456,
+        "z": -3000
+      },
+      {
+        "x": 17144,
+        "y": 145055,
+        "z": -3000
+      },
+      {
+        "x": 19012,
+        "y": 145140,
+        "z": -3020
+      }
+    ],
+    "arrivalSource": "mapregion/dion_castle_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -1645,6 +1845,28 @@ export const CITY_NPC_UPDATES = {
     "z": -3464,
     "adapted": false,
     "source": "spawns/Others/22_22.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "dion:npc:0": {
+    "npcId": 30059,
+    "name": "Trisha",
+    "city": "dion",
+    "x": 15631,
+    "y": 142885,
+    "z": -2704,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  "dion:npc:1": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "dion",
+    "x": 20560,
+    "y": 144768,
+    "z": -3080,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml",
     "role": "Хранитель склада",
     "service": "warehouse"
   },
@@ -1692,6 +1914,18 @@ export const CITY_NPC_UPDATES = {
     "role": "Хранитель склада",
     "service": "warehouse"
   },
+  "giran:Ranspo": {
+    "npcId": 30594,
+    "name": "Ranspo",
+    "city": "dion",
+    "x": 21017,
+    "y": 144481,
+    "z": -3065,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
   "rune:Manakia": {
     "npcId": 30515,
     "name": "Manakia",
@@ -1713,6 +1947,16 @@ export const CITY_NPC_UPDATES = {
     "z": -3112,
     "adapted": false,
     "source": "spawns/Others/19_21.xml"
+  },
+  "dion:instance": {
+    "npcId": 30071,
+    "name": "Lucas",
+    "city": "dion",
+    "x": 18199,
+    "y": 146081,
+    "z": -3080,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
   },
   "talking-island-village:30001": {
     "npcId": 30001,
@@ -2280,6 +2524,16 @@ export const CITY_NPC_UPDATES = {
     "role": "Торговец",
     "service": "merchant"
   },
+  "dion:gracia-survivor": {
+    "npcId": 32632,
+    "name": "Gracian Survivor",
+    "city": "dion",
+    "x": 16132,
+    "y": 142821,
+    "z": -2696,
+    "adapted": false,
+    "source": "spawns/Gracia/GludioAirshipField.xml"
+  },
   "giran:gracia-survivor": {
     "npcId": 32632,
     "name": "Gracian Survivor",
@@ -2371,6 +2625,48 @@ export const CITY_SOURCE_NPCS = [
     "x": -13489,
     "y": 125562,
     "z": -3128,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "dion:source:32199:16259:146282:-3096",
+    "npcId": 32199,
+    "name": "Holst",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 16259,
+    "y": 146282,
+    "z": -3096,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "dion:source:32200:16279:146242:-3096",
+    "npcId": 32200,
+    "name": "Entien",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 16279,
+    "y": 146242,
+    "z": -3096,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "dion:source:32201:16292:146310:-3096",
+    "npcId": 32201,
+    "name": "Rindy",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 16292,
+    "y": 146310,
+    "z": -3096,
     "service": "trainer",
     "gateway": false,
     "adapted": false,
@@ -3579,6 +3875,426 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Others/20_18.xml"
+  },
+  {
+    "id": "dion:source:30057:20777:144971:-3068",
+    "npcId": 30057,
+    "name": "Aldo",
+    "role": "Хранитель склада",
+    "city": "dion",
+    "x": 20777,
+    "y": 144971,
+    "z": -3068,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30058:20750:144432:-3068",
+    "npcId": 30058,
+    "name": "Holvas",
+    "role": "Хранитель склада",
+    "city": "dion",
+    "x": 20750,
+    "y": 144432,
+    "z": -3068,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30060:17999:144484:-3046",
+    "npcId": 30060,
+    "name": "Sabrin",
+    "role": "Торговец",
+    "city": "dion",
+    "x": 17999,
+    "y": 144484,
+    "z": -3046,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30061:17948:144560:-3046",
+    "npcId": 30061,
+    "name": "Casey",
+    "role": "Торговец",
+    "city": "dion",
+    "x": 17948,
+    "y": 144560,
+    "z": -3046,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30062:19313:146229:-3069",
+    "npcId": 30062,
+    "name": "Sonia",
+    "role": "Торговец",
+    "city": "dion",
+    "x": 19313,
+    "y": 146229,
+    "z": -3069,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30063:19223:146228:-3069",
+    "npcId": 30063,
+    "name": "Lara",
+    "role": "Торговец",
+    "city": "dion",
+    "x": 19223,
+    "y": 146228,
+    "z": -3069,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30064:19708:144780:-3088",
+    "npcId": 30064,
+    "name": "Terry",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 19708,
+    "y": 144780,
+    "z": -3088,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30065:19725:144567:-3088",
+    "npcId": 30065,
+    "name": "Arnelle",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 19725,
+    "y": 144567,
+    "z": -3088,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30066:19516:144772:-3088",
+    "npcId": 30066,
+    "name": "Pabris",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 19516,
+    "y": 144772,
+    "z": -3088,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30067:16269:142461:-2688",
+    "npcId": 30067,
+    "name": "Glyvka",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 16269,
+    "y": 142461,
+    "z": -2688,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30068:16456:142447:-2688",
+    "npcId": 30068,
+    "name": "Shegfield",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 16456,
+    "y": 142447,
+    "z": -2688,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30069:16236:142153:-2688",
+    "npcId": 30069,
+    "name": "Rollant",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 16236,
+    "y": 142153,
+    "z": -2688,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30070:15795:142347:-2680",
+    "npcId": 30070,
+    "name": "Sylvain",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 15795,
+    "y": 142347,
+    "z": -2680,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30458:19737:143122:-3028",
+    "npcId": 30458,
+    "name": "Poitan",
+    "role": "Кузнец",
+    "city": "dion",
+    "x": 19737,
+    "y": 143122,
+    "z": -3028,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30459:19696:144336:-3088",
+    "npcId": 30459,
+    "name": "Wandius",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 19696,
+    "y": 144336,
+    "z": -3088,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30460:19472:144334:-3088",
+    "npcId": 30460,
+    "name": "Cardien",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 19472,
+    "y": 144334,
+    "z": -3088,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30461:16427:142131:-2688",
+    "npcId": 30461,
+    "name": "Mirien",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 16427,
+    "y": 142131,
+    "z": -2688,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30462:17168:146720:-3085",
+    "npcId": 30462,
+    "name": "Tronix",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 17168,
+    "y": 146720,
+    "z": -3085,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30463:17384:146605:-3085",
+    "npcId": 30463,
+    "name": "Ixia",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 17384,
+    "y": 146605,
+    "z": -3085,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30464:17280:146944:-3085",
+    "npcId": 30464,
+    "name": "Clayton",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 17280,
+    "y": 146944,
+    "z": -3085,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30508:19932:143232:-3040",
+    "npcId": 30508,
+    "name": "Castor",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 19932,
+    "y": 143232,
+    "z": -3040,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30509:20050:143308:-3040",
+    "npcId": 30509,
+    "name": "Dowki",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 20050,
+    "y": 143308,
+    "z": -3040,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30510:19924:143196:-3040",
+    "npcId": 30510,
+    "name": "Somak",
+    "role": "Наставник",
+    "city": "dion",
+    "x": 19924,
+    "y": 143196,
+    "z": -3040,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:30595:19712:143307:-3025",
+    "npcId": 30595,
+    "name": "Opix",
+    "role": "Кузнец",
+    "city": "dion",
+    "x": 19712,
+    "y": 143307,
+    "z": -3025,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:31418:16694:142336:-2691",
+    "npcId": 31418,
+    "name": "Rouke",
+    "role": "Торговец",
+    "city": "dion",
+    "x": 16694,
+    "y": 142336,
+    "z": -2691,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:31434:19600:143344:-3026",
+    "npcId": 31434,
+    "name": "Shaling",
+    "role": "Торговец",
+    "city": "dion",
+    "x": 19600,
+    "y": 143344,
+    "z": -3026,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:31441:19536:143072:-3026",
+    "npcId": 31441,
+    "name": "Gordo",
+    "role": "Торговец",
+    "city": "dion",
+    "x": 19536,
+    "y": 143072,
+    "z": -3026,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:32876:19626:143091:-3024",
+    "npcId": 32876,
+    "name": "Desian",
+    "role": "Торговец",
+    "city": "dion",
+    "x": 19626,
+    "y": 143091,
+    "z": -3024,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:35145:17882:144184:-3051",
+    "npcId": 35145,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "dion",
+    "x": 17882,
+    "y": 144184,
+    "z": -3051,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "dion:source:35145:19342:145105:-3106",
+    "npcId": 35145,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "dion",
+    "x": 19342,
+    "y": 145105,
+    "z": -3106,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_22.xml"
   },
   {
     "id": "elven-village:source:30154:44692:52261:-2792",
