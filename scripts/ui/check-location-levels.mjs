@@ -8,6 +8,8 @@ import {enterHuntField,moveHuntField,advanceHunt,ensureHunt,selectHuntTarget,use
 import {roomLayout,adjacent} from '../../functions/game/hunt/huntRooms.js';
 import {getZone} from '../../functions/game/hunt/huntMobs.js';
 import {FIELD_POPULATIONS} from '../../template/fieldPopulations.js';
+import {continuousField} from '../../functions/game/world/continuousField.js';
+import {npcPhotoUrl} from '../../webapp/art/l2-npc-art.js';
 import {initialPopulationSlots} from '../../functions/game/hunt/sourcePopulation.js';
 import {createShipVoyage} from '../../functions/game/world/zakenShip.js';
 import {ensureWorld,worldAction,bindWorldInstances} from '../../functions/game/world/world.js';
@@ -65,6 +67,7 @@ try{for(const {width,mode} of configurations){
  const focused=floors.filter(({id,f})=>id==='dragon-valley'||id==='pagan-temple'&&f.number>=3||id==='seed-of-destruction'&&f.number===1||id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4||id==='tower-of-insolence'&&f.number===12||id==='cruma-tower'&&f.number===3);
  const selected=process.env.LOCATION_LEVEL_ZONE?floors.filter(({id})=>process.env.LOCATION_LEVEL_ZONE.split(',').includes(id)):mode==='auto'?(process.env.LOCATION_LEVEL_SMOKE?focused:floors):floors.filter(({id,f})=>id==='ivory-tower'&&f.number===3||id==='devils-isle'&&f.number===4);
  const cases=selected.flatMap(c=>c.id==='hellbound'?[0,1,4,11].map(stage=>({...c,stage})):[c]);
+ let checked=0;
  for(const {id,f,stage} of cases){
   now=Date.now();s={userId:1,userChatData:{user:{id:1}},game:{stats:{lvl:80,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
   chat={game:id==='hellbound'?{hellbound:{level:stage}}:{},members:[s]};s.ownerDocument=()=>chat;
@@ -82,8 +85,11 @@ try{for(const {width,mode} of configurations){
   const heading=await page.locator('#hunt-heading').textContent();assert.ok(f.title.split(' · ').every(part=>heading.includes(part)));
   assert.ok(await page.locator('[data-target]').count()<=(width<500?8:16));
   assert.equal(await page.locator('.hunt-iso-wall,.iso-front,.iso-side,.iso-top').count(),0,'collision rectangles never become box walls');
+  const actors=(await state()).field.mobs;
   for(const image of await page.locator('.hunt-actor img').all()){
-   assert.match(await image.getAttribute('src'),/^\/art\/npcs\/l2\/\d+-128\.webp$/,'exact NPC photograph');
+   const target=await image.evaluate(n=>n.closest('[data-target]').dataset.target),actor=actors.find(m=>m.instanceId===target);
+   assert.ok(actor);
+   assert.equal(await image.getAttribute('src'),npcPhotoUrl(actor)||'/art/ui/v1/spirit-128.webp','exact NPC photograph or explicit generic placeholder');
    await image.evaluate(img=>img.decode());
   }
   for(const [kind,color] of [['aggressive','rgb(255, 116, 116)'],['social','rgb(112, 201, 255)']])for(const node of await page.locator(`.ui-npc-name[data-disposition="${kind}"]`).all())assert.equal(await node.evaluate(n=>getComputedStyle(n).color),color,kind+' name color');
@@ -123,6 +129,28 @@ try{for(const {width,mode} of configurations){
    await page.locator('[data-ship-candle]').first().click();await page.waitForTimeout(100);
    await page.locator('[data-ship-candle]').first().click();await page.waitForTimeout(100);
    assert.equal(Object.keys(chat.game.worldInstances.fixture.candles).length,1);
+  }
+  if(id!=='cruma-marshlands'&&continuousField(getZone(id),roomLayout(getZone(id)))){
+   const field=s.game.hunt.field,layout=roomLayout(getZone(id)),current=layout.rooms.find(r=>r.id===field.room),east=current.col<layout.cols-1;
+   Object.assign(field,{x:east?.96:.04,y:.7,path:[]});quiet();await page.waitForTimeout(1500);
+   const oldRoom=field.room,oldIds=field.mobs.map(m=>m.instanceId);
+   const point=await page.evaluate(async east=>{
+    const {isoPoint}=await import('/hunt-isometric.js'),ground=document.querySelector('.hunt-ground'),box=ground.getBoundingClientRect(),m=new DOMMatrix(getComputedStyle(document.querySelector('.hunt-world')).transform);
+    for(const y of [.7,.6,.8,.5,.4,.3]){
+     const p=isoPoint({x:east?1.01:-.01,y},{width:box.width,height:box.height}),point={x:box.left+p.x+m.e,y:box.top+p.y+m.f},hit=document.elementFromPoint(point.x,point.y);
+     if(hit?.closest('.hunt-ground')&&!hit.closest('button,[data-target],[data-player-target]'))return point;
+    }
+    return null;
+   },east);
+   assert.ok(point,id+' free neighbouring terrain');
+   await page.mouse.click(point.x,point.y);await page.waitForTimeout(250);
+   assert.notEqual(field.room,oldRoom,id+' terrain crossing');
+   assert.deepEqual(field.rooms[oldRoom].mobs.map(m=>m.instanceId),oldIds,id+' persistent actors');
+   assert.ok(await page.locator('[data-terrain-cell]').count()<=9);
+   assert.ok(await page.locator('[data-terrain-blend="edge"]').count()>0);
+   assert.equal(await page.locator('[data-terrain-props]').count(),await page.locator('[data-terrain-cell]').count());
+   assert.equal(await page.locator('.hunt-phaser canvas').count(),0);
+   if(mode==='auto')await page.screenshot({path:path.join(out,`${id}-continuous-${width}.png`)});
   }
   if(id==='cruma-marshlands'){
    const field=s.game.hunt.field,layout=roomLayout(getZone(id)),current=layout.rooms.find(r=>r.id===field.room),east=current.col<layout.cols-1;
@@ -206,6 +234,7 @@ try{for(const {width,mode} of configurations){
   if((FIELD_POPULATIONS[id]||id==='ivory-tower'&&f.number===3||f.ship)&&mode==='auto')await page.screenshot({path:path.join(out,`${id}-${stage??f.number}-${width}.png`)});
   await page.locator('.hunt-overlay [data-dismiss]').first().click();await page.waitForSelector('.hunt-overlay',{state:'detached'});
   assert.equal(await page.locator('dialog[open],[inert],.hunt-phaser canvas').count(),0);
+  if(++checked%25===0)console.log(`Checked ${checked}/${cases.length}: ${width}px ${mode}, ${id}`);
  }
  assert.deepEqual(errors,[]);console.log(`PASS multilevel ${width}px ${mode}: ${cases.length} floors, navigation, focus and cleanup`);await page.close();
 }}finally{await browser.close();}
