@@ -1,3 +1,4 @@
+import {nativeTownPath} from '../../functions/game/world/nativeTownGraph.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
@@ -15,7 +16,7 @@ import {WORLD_EXTENSION} from '../../template/worldExtension.js';
 import compiled from '../../template/nativeRoutes.js';
 const firstId=process.env.NATIVE_FIRST_ZONE||'forsaken-plains',secondId=process.env.NATIVE_SECOND_ZONE||'silent-valley';
 const first=compiled.routes[firstId],second=compiled.routes[secondId];
-assert.ok(first?.available&&second?.available&&first.city===second.city&&firstId!==secondId,'two native routes must share their source town');
+assert.ok(first?.available&&second?.available&&Boolean(nativeTownPath(first.city,second.city))&&firstId!==secondId,'two native routes must have a verified town connection');
 const zoneName=id=>WORLD_EXTENSION.find(r=>r.zone.id===id)?.zone.title||LOCATIONS.find(l=>l.id===id)?.name||id;
 const {chromium}=createRequire(process.env.PLAYWRIGHT_PACKAGE||'C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json')('playwright');
 const root=path.resolve('webapp'),out=path.resolve('.tmp/native-world-ui');fs.mkdirSync(out,{recursive:true});
@@ -84,8 +85,9 @@ try{for(const {width,noCanvas=false} of configurations){
  assert.equal(s.game.world.mode,'native');assert.ok(s.game.world.nativePosition);
  if(!noCanvas){
   const from=s.game.world.nativePosition,box=await page.locator('canvas').boundingBox();
-  const candidates=[[0,2200],[2200,0],[-2200,0],[0,-2200],[1800,1800],[-1800,-1800]];
-  const goal=candidates.map(([dx,dy])=>({x:from.x+dx,y:from.y+dy,z:from.z})).find(p=>findNativePath(from,p,{allowed:nativeGroundAllowed,maxNodes:2000,reversible:true}).ok);
+  const candidates=[[0,2200],[2200,0],[-2200,0],[0,-2200],[1800,1800],[-1800,-1800],[0,6000],[0,-6000],[6000,0],[-6000,0],[4800,4800],[-4800,-4800]];
+  const npcs=worldState(s,now).npcs.filter(n=>n.city===s.game.world.city);
+  const goal=candidates.map(([dx,dy])=>({x:from.x+dx,y:from.y+dy,z:from.z})).find(p=>npcs.every(n=>Math.hypot(p.x-n.x,p.y-n.y)>1800)&&findNativePath(from,p,{allowed:nativeGroundAllowed,maxNodes:2000,reversible:true}).ok);
   assert.ok(goal,'a nearby verified click target exists');
   await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('canvas').click({position:{x:box.width/2+(goal.x-from.x)*box.width/14000,y:box.height/2+(goal.y-from.y)*box.width/14000}})]);await page.waitForTimeout(100);
   assert.ok(calls.some(c=>c.action==='native_move'),'background click submits a native walk');

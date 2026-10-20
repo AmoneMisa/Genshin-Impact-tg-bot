@@ -3968,6 +3968,81 @@ export default {
           "reason": null
         }
       ]
+    },
+    "ketra-outpost": {
+      "city": "goddard",
+      "available": true,
+      "from": {
+        "x": 147966,
+        "y": -55228,
+        "z": -2728
+      },
+      "to": {
+        "x": 146990,
+        "y": -67128,
+        "z": -3648
+      },
+      "sourceTown": {
+        "npcId": 31275,
+        "name": "Tatiana",
+        "x": 147966,
+        "y": -55228,
+        "z": -2728,
+        "file": "spawns/Others/24_16.xml"
+      },
+      "sourceEntry": {
+        "file": "teleporters/town/31275.xml",
+        "npcId": 31275,
+        "name": "Ketra Orc Outpost",
+        "type": "NORMAL",
+        "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+        "sha256": "812a374e2a26cd653f9139c2e5835d84f486d585d40b80045e4a6980f413a8d2"
+      },
+      "distance": 11956.18841834327,
+      "path": [
+        {
+          "x": 147576,
+          "y": -60472,
+          "z": -3216
+        },
+        {
+          "x": 147576,
+          "y": -63032,
+          "z": -3448
+        },
+        {
+          "x": 146990,
+          "y": -67128,
+          "z": -3648
+        }
+      ],
+      "returnPath": [
+        {
+          "x": 147576,
+          "y": -63032,
+          "z": -3448
+        },
+        {
+          "x": 147576,
+          "y": -60472,
+          "z": -3216
+        },
+        {
+          "x": 147966,
+          "y": -55228,
+          "z": -2728
+        }
+      ],
+      "attempts": [
+        {
+          "stride": 8,
+          "maxNodes": 30000,
+          "heuristicWeight": 1,
+          "margin": 256,
+          "visited": 289,
+          "reason": null
+        }
+      ]
     }
   }
 };
