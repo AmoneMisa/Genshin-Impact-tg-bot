@@ -24,6 +24,7 @@ import {nativeRoute,nativeTravel,nativeFreeWalk,nativeWalkOptions,nativeWalkCiti
 import {advanceNativeJourney,nativeJourneyDto,nativeJourneyPosition} from './nativeJourney.js';
 import {saveNativeField,restoreNativeField} from './nativeFieldBanks.js';
 import {nativeCityAt} from './nativeTownGraph.js';
+import {airshipJourneyPosition} from './graciaTravel.js';
 
 export {CITIES,REGIONS,LOCATIONS,CITY_NPCS};
 const PUBLIC_CITIES=CITIES.map(({arrivals,arrivalSource,...city})=>city);
@@ -460,6 +461,6 @@ export function bindWorldInstances(chat,now=Date.now()) {
 export function worldState(session,now=Date.now()){
     const w=advanceWorld(session,now);
     const {mode,city,location,x,y,path,moveAt,pending,channel,walkHome,holding,instanceId,readyHolding,boss,bossPosition,bossRoom}=w;
-    const nativePosition=mode==='road'?nativeJourneyPosition(walkHome):mode==='native'?{worldPoint:w.nativePosition,worldPath:[]}:null;
+    const nativePosition=mode==='road'?(airshipJourneyPosition(walkHome,now)||nativeJourneyPosition(walkHome)):mode==='native'?{worldPoint:w.nativePosition,worldPath:[]}:null;
     return {now,nativeWalk:nativeWalkOptions(session),nativeWalkCities:nativeWalkCities(session),locationTravel:Object.fromEntries(LOCATIONS.map(l=>[l.id,locationTravelQuote(session,l,CITY_NPCS.find(n=>n.city===w.city&&n.gateway),now)])),cityTravel:Object.fromEntries(CITIES.map(c=>[c.id,townTravelQuote(session,c.id,now)])),questTargets:questTargets(session,LOCATIONS),quickTravel:{multiplier:QUICK_TRAVEL_MULTIPLIER,blocked:quickTravelBlock(session,now),cities:CITIES.flatMap(c=>{const gold=quickCityGold(session,c,now);return gold===null?[]:[{id:c.id,gold}];}),locations:LOCATIONS.filter(l=>!l.instance&&!siegePoint(l)&&!regionAccessBlock(session,l,{now})).map(l=>({id:l.id,gold:teleportPrice(session,quickTravelPrice(l),now)}))},death:w.death?{...w.death}:null,player:{hallRoom:w.hallRoom,areaSize:mode==='city'?citySize(cityOf(w)):ENTRANCE_SIZE,entryOrigin:mode==='entrance'?w.entryOrigin:null,userId:String(session.userId),mode,city,location,x,y,path,moveAt,pending,channel,walkHome:nativeJourneyDto(walkHome),holding,instanceId,readyHolding,...nativePosition,runSpeed:walkHome?.native&&l2ActionBlock(session,{move:true},now)?0:getSpeed(session)*l2MoveMultiplier(session,now),boss,bossPosition,bossRoom,hp:session.game.gameClass?.stats?.hp,level:session.game.stats?.lvl},cities:PUBLIC_CITIES,regions:REGIONS,locations:LOCATIONS,npcs:CITY_NPCS,gold:session.game.inventory.gold,scrolls:session.game.inventory.materials?.scroll_escape||0};
 }

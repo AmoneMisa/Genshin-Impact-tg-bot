@@ -1,4 +1,6 @@
 export default {
+ 'Ожидание отправления корабля':'Kema jo‘nashini kutish',
+ 'Проход через воздушные врата':'Havo darvozasidan o‘tish',
  'Наставник':'Ustoz',
  'Проводник':'Yo‘l boshlovchi',
  'Телепорт недоступен':'Teleport mavjud emas',
