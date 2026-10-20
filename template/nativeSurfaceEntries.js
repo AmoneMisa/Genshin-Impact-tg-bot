@@ -815,5 +815,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "blazing-swamp": {
+    "x": 155310,
+    "y": -16339,
+    "z": -3320,
+    "region": "aden",
+    "teleportGold": 6800,
+    "entrySource": {
+      "file": "teleporters/town/30848.xml",
+      "npcId": 30848,
+      "name": "Blazing Swamp",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "3457ecb3855741d523d960755b9f2c8a1db3bba15d6d53dd2245d6c7a5f8ac24"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30848,
+        "npcName": "Elisa",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 6800,
+        "source": {
+          "file": "teleporters/town/30848.xml",
+          "npcId": 30848,
+          "name": "Blazing Swamp",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "3457ecb3855741d523d960755b9f2c8a1db3bba15d6d53dd2245d6c7a5f8ac24"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        150310,
+        -21339
+      ],
+      [
+        160310,
+        -21339
+      ],
+      [
+        160310,
+        -11339
+      ],
+      [
+        150310,
+        -11339
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
