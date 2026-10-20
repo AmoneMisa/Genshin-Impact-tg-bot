@@ -560,5 +560,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "bee-hive": {
+    "x": 34475,
+    "y": 188095,
+    "z": -2976,
+    "region": "dion",
+    "teleportGold": 2900,
+    "entrySource": {
+      "file": "teleporters/town/30059.xml",
+      "npcId": 30059,
+      "name": "Bee Hive",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "c958e4a75e6325a995a05e8d2659a8942a2e0ce12509136107a465ce64666433"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30059,
+        "npcName": "Trisha",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 2900,
+        "source": {
+          "file": "teleporters/town/30059.xml",
+          "npcId": 30059,
+          "name": "Bee Hive",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "c958e4a75e6325a995a05e8d2659a8942a2e0ce12509136107a465ce64666433"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        29475,
+        183095
+      ],
+      [
+        39475,
+        183095
+      ],
+      [
+        39475,
+        193095
+      ],
+      [
+        29475,
+        193095
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
