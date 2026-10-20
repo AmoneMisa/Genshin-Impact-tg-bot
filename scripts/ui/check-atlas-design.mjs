@@ -42,13 +42,10 @@ try{for(const width of [320,390,820]){
  assert.equal(await page.locator('[data-shops],[data-fight],.atlas-hint').count(),0);
  assert.equal(await page.locator('.atlas-panel').evaluate(p=>p.scrollWidth<=p.clientWidth+1),true);
  await page.screenshot({path:path.join(out,'map-'+width+'.png')});
- await page.locator('[data-mode="city"]').click();await page.locator('[data-city-view]').click();
- await page.waitForFunction(()=>document.querySelector('.atlas-popup img')?.naturalWidth>0);
- assert.match(await page.locator('.atlas-popup img').getAttribute('src'),/city-dion-mobile-v1/);
- assert.equal(await page.locator('.atlas-popup').evaluate(p=>p.scrollWidth<=p.clientWidth+1),true);
- await page.screenshot({path:path.join(out,'city-scene-'+width+'.png')});await page.locator('.atlas-popup [data-dismiss]').click();
+ await page.locator('[data-mode="city"]').click();assert.equal(await page.locator('[data-city-view]').count(),0);
  assert.equal(await page.locator('.atlas-popup').isVisible(),false);
- await page.locator('[data-mode="region"]').click();assert.equal(await page.locator('[data-city-view]').isVisible(),false);
+ await page.screenshot({path:path.join(out,'city-map-'+width+'.png')});
+ await page.locator('[data-mode="region"]').click();
  await page.getByRole('combobox',{name:'Показать на карте'}).click();await page.getByRole('option',{name:'Грация · обзор',exact:true}).click();
  assert.equal(await page.locator('.atlas-popup figure').count(),4);assert.match(await page.locator('.atlas-popup').innerText(),/База альянса/);
  assert.equal(await page.locator('.atlas-popup [data-quick-go],.atlas-popup [data-location-quick]').count(),0);
@@ -79,7 +76,7 @@ try{for(const width of [320,390,820]){
  if(width===320){
   await page.evaluate(async()=>{HTMLCanvasElement.prototype.getContext=()=>null;await(await import('/world-map.js')).openWorldMap({api:window.fixtureApi});});
   assert.match(await page.locator('.atlas-status').innerText(),/Карта недоступна/);
-  await page.locator('[data-mode="city"]').click();await page.locator('[data-city-view]').click();await page.waitForFunction(()=>document.querySelector('.atlas-popup img')?.naturalWidth>0);await page.keyboard.press('Escape');
+  await page.locator('[data-mode="city"]').click();assert.equal(await page.locator('[data-city-view]').count(),0);
   await page.locator('[data-movement]').click();await page.locator('[data-quick-go]').first().click();assert.equal(await page.locator('[data-quick-confirm]').isEnabled(),true);
   await page.keyboard.press('Escape');await page.keyboard.press('Escape');await page.waitForSelector('.atlas-overlay',{state:'detached'});assert.deepEqual(errors,[]);
  }

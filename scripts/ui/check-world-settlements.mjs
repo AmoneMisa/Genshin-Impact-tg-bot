@@ -37,10 +37,9 @@ try{for(const width of [320,390,1100]){
  await page.locator('[data-mode="city"]').click();
  for(const city of SETTLEMENTS){
   await page.getByRole('combobox',{name:'Регион',exact:true}).click();await page.getByRole('option',{name:city.name,exact:true}).click();
-  await page.locator('[data-city-view]').click();await page.waitForFunction(()=>document.querySelector('.atlas-popup img')?.naturalWidth>0);
-  assert.match(await page.locator('.atlas-popup img').getAttribute('src'),new RegExp('city-'+city.id));
-  assert.equal(await page.locator('.atlas-popup').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
-  await page.keyboard.press('Escape');
+  assert.equal(await page.locator('[data-city-view]').count(),0);
+  assert.equal(await page.locator('.atlas-popup').isVisible(),false);
+  assert.equal(await page.locator('.atlas-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  }
  await page.waitForTimeout(200);assert.ok([...loaded].some(u=>/\/l2\/.*\.webp/.test(u)));
  const city=SETTLEMENTS.find(c=>c.id==='kamael-village'),npc=SETTLEMENT_NPCS.find(n=>n.city===city.id),box=await page.locator('canvas').boundingBox();
@@ -59,5 +58,5 @@ try{for(const width of [320,390,1100]){
  assert.equal(s.game.world.mode,'entrance');assert.equal(s.game.world.entryOrigin.x,h.entry.x);
  await page.locator('[data-close]').click();
  if(width===320){arriveHoldingEntrance(s,h,now);hallAction(s,clan,h,record,{action:'hall_enter'},now);await page.evaluate(async()=>{HTMLCanvasElement.prototype.getContext=()=>null;await window.openAtlas();});await page.locator('[data-interior-objects]').click();await page.locator('[data-room-exit]').click();assert.equal(await page.locator('[data-door-leave]').isEnabled(),true);await page.locator('[data-door-leave]').click();assert.equal(s.game.world.mode,'entrance');await page.locator('[data-close]').click();}
- assert.deepEqual(errors,[]);assert.equal(await page.locator('[inert]').count(),0);await page.close();console.log('PASS settlements '+width+': eight previews, original tiles, hall walk/exit, no overflow, fallback and cleanup');
+ assert.deepEqual(errors,[]);assert.equal(await page.locator('[inert]').count(),0);await page.close();console.log('PASS settlements '+width+': eight town maps, original tiles, hall walk/exit, no overflow, fallback and cleanup');
 }}finally{await browser.close();}

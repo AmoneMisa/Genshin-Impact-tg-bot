@@ -39,8 +39,8 @@ try{for(const width of [320,390,1100]){
  await page.locator('[data-mode="city"]').click();
  for(const c of GRACIA_CITIES){
   await page.getByRole('combobox',{name:'Регион',exact:true}).click();await page.getByRole('option',{name:c.name,exact:true}).click();
-  await page.locator('[data-city-view]').click();await page.waitForFunction(()=>document.querySelector('.atlas-popup img')?.naturalWidth>0);
-  assert.equal(await page.locator('.atlas-popup').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);await page.keyboard.press('Escape');
+  assert.equal(await page.locator('[data-city-view]').count(),0);
+  assert.equal(await page.locator('.atlas-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  }
  await page.getByRole('combobox',{name:'Показать на карте'}).click();await page.getByRole('option',{name:'Грация · обзор',exact:true}).click();
  assert.equal(await page.locator('.atlas-popup figure').count(),4);await page.keyboard.press('Escape');
