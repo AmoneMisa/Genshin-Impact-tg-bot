@@ -611,5 +611,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "cruma-marshlands": {
+    "x": 5106,
+    "y": 126916,
+    "z": -3664,
+    "region": "dion",
+    "teleportGold": 760,
+    "entrySource": {
+      "file": "teleporters/town/30059.xml",
+      "npcId": 30059,
+      "name": "Cruma Marshlands",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "c958e4a75e6325a995a05e8d2659a8942a2e0ce12509136107a465ce64666433"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30059,
+        "npcName": "Trisha",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 760,
+        "source": {
+          "file": "teleporters/town/30059.xml",
+          "npcId": 30059,
+          "name": "Cruma Marshlands",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "c958e4a75e6325a995a05e8d2659a8942a2e0ce12509136107a465ce64666433"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        106,
+        121916
+      ],
+      [
+        10106,
+        121916
+      ],
+      [
+        10106,
+        131916
+      ],
+      [
+        106,
+        131916
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
