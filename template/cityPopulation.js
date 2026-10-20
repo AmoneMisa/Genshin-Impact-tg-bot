@@ -3306,6 +3306,166 @@ export const CITY_GEOMETRY = {
     "mapSize": 4096,
     "arrivals": [],
     "arrivalSource": "mapregion/floran_town.xml"
+  },
+  "kamael-village": {
+    "polygon": [
+      [
+        -121743,
+        44424
+      ],
+      [
+        -121032,
+        43295
+      ],
+      [
+        -120886,
+        42480
+      ],
+      [
+        -120203,
+        41012
+      ],
+      [
+        -118418,
+        40332
+      ],
+      [
+        -112554,
+        40643
+      ],
+      [
+        -111161,
+        40894
+      ],
+      [
+        -110912,
+        41569
+      ],
+      [
+        -110910,
+        41908
+      ],
+      [
+        -111011,
+        42108
+      ],
+      [
+        -111186,
+        42197
+      ],
+      [
+        -111601,
+        42194
+      ],
+      [
+        -111736,
+        42102
+      ],
+      [
+        -111827,
+        41951
+      ],
+      [
+        -113240,
+        41951
+      ],
+      [
+        -113330,
+        42107
+      ],
+      [
+        -113477,
+        42193
+      ],
+      [
+        -113905,
+        42190
+      ],
+      [
+        -114072,
+        42096
+      ],
+      [
+        -114146,
+        41940
+      ],
+      [
+        -114602,
+        41944
+      ],
+      [
+        -114536,
+        43719
+      ],
+      [
+        -114513,
+        46154
+      ],
+      [
+        -114275,
+        46912
+      ],
+      [
+        -114275,
+        47297
+      ],
+      [
+        -114665,
+        48163
+      ],
+      [
+        -115473,
+        48310
+      ],
+      [
+        -118971,
+        48310
+      ],
+      [
+        -119259,
+        47970
+      ],
+      [
+        -120430,
+        47970
+      ],
+      [
+        -120654,
+        47199
+      ],
+      [
+        -120917,
+        46429
+      ]
+    ],
+    "minZ": 250,
+    "maxZ": 2250,
+    "sourceZone": "Kamael Village",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 13824,
+    "arrivals": [
+      {
+        "x": -118092,
+        "y": 46955,
+        "z": 342
+      },
+      {
+        "x": -116739,
+        "y": 45949,
+        "z": 342
+      },
+      {
+        "x": -118087,
+        "y": 45021,
+        "z": 341
+      },
+      {
+        "x": -119401,
+        "y": 45949,
+        "z": 342
+      }
+    ],
+    "arrivalSource": "mapregion/kamael_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -4405,6 +4565,112 @@ export const CITY_NPC_UPDATES = {
     "role": "Торговец",
     "service": "merchant"
   },
+  "kamael-village:32167": {
+    "npcId": 32167,
+    "name": "Nika",
+    "city": "kamael-village",
+    "x": -117153,
+    "y": 48075,
+    "z": 456,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "kamael-village:32163": {
+    "npcId": 32163,
+    "name": "Ragara",
+    "city": "kamael-village",
+    "x": -116879,
+    "y": 46591,
+    "z": 360,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  "kamael-village:32166": {
+    "npcId": 32166,
+    "name": "Trevor",
+    "city": "kamael-village",
+    "x": -116749,
+    "y": 48077,
+    "z": 462,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "kamael-village:32164": {
+    "npcId": 32164,
+    "name": "Erinu",
+    "city": "kamael-village",
+    "x": -115888,
+    "y": 43568,
+    "z": 524,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "kamael-village:32165": {
+    "npcId": 32165,
+    "name": "Zakone",
+    "city": "kamael-village",
+    "x": -115486,
+    "y": 43567,
+    "z": 525,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "kamael-village:32478": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "kamael-village",
+    "x": -115215,
+    "y": 45059,
+    "z": 496,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "kamael-village:36456": {
+    "npcId": 36456,
+    "name": "Manor Manager",
+    "city": "kamael-village",
+    "x": -115169,
+    "y": 44156,
+    "z": 512,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "kamael-village:32170": {
+    "npcId": 32170,
+    "name": "Benis",
+    "city": "kamael-village",
+    "x": -114975,
+    "y": 44658,
+    "z": 512,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "kamael-village:32172": {
+    "npcId": 32172,
+    "name": "Saylem",
+    "city": "kamael-village",
+    "x": -114801,
+    "y": 45031,
+    "z": 525,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
   "dion:gracia-survivor": {
     "npcId": 32632,
     "name": "Gracian Survivor",
@@ -4612,6 +4878,356 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Castles/Goddard.xml"
+  },
+  {
+    "id": "kamael-village:source:32154:-120706:45079:408",
+    "npcId": 32154,
+    "name": "Aldenia",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -120706,
+    "y": 45079,
+    "z": 408,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32156:-120604:44960:408",
+    "npcId": 32156,
+    "name": "Talbot",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -120604,
+    "y": 44960,
+    "z": 408,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32149:-120442:47125:408",
+    "npcId": 32149,
+    "name": "Ennear",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -120442,
+    "y": 47125,
+    "z": 408,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32153:-120432:45296:408",
+    "npcId": 32153,
+    "name": "Prana",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -120432,
+    "y": 45296,
+    "z": 408,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32148:-120407:46755:408",
+    "npcId": 32148,
+    "name": "Cindet",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -120407,
+    "y": 46755,
+    "z": 408,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32147:-120400:46921:400",
+    "npcId": 32147,
+    "name": "Rivian",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -120400,
+    "y": 46921,
+    "z": 400,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32155:-120356:45293:408",
+    "npcId": 32155,
+    "name": "Nabot",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -120356,
+    "y": 45293,
+    "z": 408,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32150:-120294:46013:384",
+    "npcId": 32150,
+    "name": "Took",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -120294,
+    "y": 46013,
+    "z": 384,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32152:-120158:46221:344",
+    "npcId": 32152,
+    "name": "Henri",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -120158,
+    "y": 46221,
+    "z": 344,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32151:-120157:45813:344",
+    "npcId": 32151,
+    "name": "Herz",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -120157,
+    "y": 45813,
+    "z": 344,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32142:-119104:43152:544",
+    "npcId": 32142,
+    "name": "Tenor",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -119104,
+    "y": 43152,
+    "z": 544,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32141:-119104:43280:544",
+    "npcId": 32141,
+    "name": "Nerga",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -119104,
+    "y": 43280,
+    "z": 544,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32162:-118918:47956:464",
+    "npcId": 32162,
+    "name": "Martika",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -118918,
+    "y": 47956,
+    "z": 464,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32160:-118720:48062:464",
+    "npcId": 32160,
+    "name": "Devon",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -118720,
+    "y": 48062,
+    "z": 464,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32161:-118527:47955:464",
+    "npcId": 32161,
+    "name": "Black",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -118527,
+    "y": 47955,
+    "z": 464,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32145:-118192:42384:824",
+    "npcId": 32145,
+    "name": "Maynard",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -118192,
+    "y": 42384,
+    "z": 824,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32139:-118132:42788:712",
+    "npcId": 32139,
+    "name": "Casca",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -118132,
+    "y": 42788,
+    "z": 712,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32159:-118030:47930:456",
+    "npcId": 32159,
+    "name": "Kincaid",
+    "role": "Кузнец",
+    "city": "kamael-village",
+    "x": -118030,
+    "y": 47930,
+    "z": 456,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32140:-118028:42778:712",
+    "npcId": 32140,
+    "name": "Zenya",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -118028,
+    "y": 42778,
+    "z": 712,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32146:-117968:42384:824",
+    "npcId": 32146,
+    "name": "Valpor",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -117968,
+    "y": 42384,
+    "z": 824,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32157:-117824:48080:464",
+    "npcId": 32157,
+    "name": "Moka",
+    "role": "Кузнец",
+    "city": "kamael-village",
+    "x": -117824,
+    "y": 48080,
+    "z": 464,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32158:-117605:48079:456",
+    "npcId": 32158,
+    "name": "Fisler",
+    "role": "Хранитель склада",
+    "city": "kamael-village",
+    "x": -117605,
+    "y": 48079,
+    "z": 456,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32144:-117060:43296:544",
+    "npcId": 32144,
+    "name": "Xonia",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -117060,
+    "y": 43296,
+    "z": 544,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32143:-117056:43168:544",
+    "npcId": 32143,
+    "name": "Belkis",
+    "role": "Наставник",
+    "city": "kamael-village",
+    "x": -117056,
+    "y": 43168,
+    "z": 544,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
+  },
+  {
+    "id": "kamael-village:source:32171:-114802:44821:524",
+    "npcId": 32171,
+    "name": "Hoffa",
+    "role": "Хранитель склада",
+    "city": "kamael-village",
+    "x": -114802,
+    "y": 44821,
+    "z": 524,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/IsleOfSouls.xml"
   },
   {
     "id": "gludin:source:32194:-84773:153134:-3160",
