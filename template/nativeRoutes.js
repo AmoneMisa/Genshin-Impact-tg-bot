@@ -731,28 +731,180 @@ export default {
     },
     "enchanted-valley": {
       "city": "hunters",
-      "available": false,
-      "reason": "geodata_search_limit",
+      "available": true,
+      "from": {
+        "x": 117129,
+        "y": 76917,
+        "z": -2688
+      },
+      "to": {
+        "x": 124904,
+        "y": 61992,
+        "z": -3944
+      },
+      "sourceTown": {
+        "npcId": 30233,
+        "name": "Esmeralda",
+        "x": 117129,
+        "y": 76917,
+        "z": -2689,
+        "file": "spawns/Others/23_20.xml"
+      },
+      "sourceEntry": {
+        "name": "Enchanted Valley, Southern Region",
+        "x": "124904",
+        "y": "61992",
+        "z": "-3920",
+        "feeCount": "1300",
+        "type": "NORMAL",
+        "npc": "30233",
+        "file": "teleporters/town/30233.xml"
+      },
+      "distance": 23784.951810638897,
+      "path": [
+        {
+          "x": 112648,
+          "y": 70776,
+          "z": -3208
+        },
+        {
+          "x": 112904,
+          "y": 69496,
+          "z": -3424
+        },
+        {
+          "x": 113160,
+          "y": 68728,
+          "z": -3552
+        },
+        {
+          "x": 115464,
+          "y": 66936,
+          "z": -2888
+        },
+        {
+          "x": 116872,
+          "y": 66936,
+          "z": -2840
+        },
+        {
+          "x": 117512,
+          "y": 67064,
+          "z": -2904
+        },
+        {
+          "x": 119176,
+          "y": 66168,
+          "z": -3016
+        },
+        {
+          "x": 119304,
+          "y": 66168,
+          "z": -3064
+        },
+        {
+          "x": 124296,
+          "y": 62072,
+          "z": -3928
+        },
+        {
+          "x": 124904,
+          "y": 61992,
+          "z": -3944
+        }
+      ],
+      "returnPath": [
+        {
+          "x": 124296,
+          "y": 62072,
+          "z": -3928
+        },
+        {
+          "x": 119304,
+          "y": 66168,
+          "z": -3064
+        },
+        {
+          "x": 119176,
+          "y": 66168,
+          "z": -3016
+        },
+        {
+          "x": 117512,
+          "y": 67064,
+          "z": -2904
+        },
+        {
+          "x": 116872,
+          "y": 66936,
+          "z": -2840
+        },
+        {
+          "x": 115464,
+          "y": 66936,
+          "z": -2888
+        },
+        {
+          "x": 113160,
+          "y": 68728,
+          "z": -3552
+        },
+        {
+          "x": 112904,
+          "y": 69496,
+          "z": -3424
+        },
+        {
+          "x": 112648,
+          "y": 70776,
+          "z": -3208
+        },
+        {
+          "x": 117129,
+          "y": 76917,
+          "z": -2688
+        }
+      ],
       "attempts": [
         {
           "stride": 8,
+          "maxNodes": 30000,
+          "heuristicWeight": 1,
+          "margin": 256,
           "visited": 5010,
           "reason": "path_blocked"
         },
         {
           "stride": 4,
+          "maxNodes": 30000,
+          "heuristicWeight": 1,
+          "margin": 256,
           "visited": 20201,
           "reason": "path_blocked"
         },
         {
           "stride": 2,
+          "maxNodes": 50000,
+          "heuristicWeight": 1,
+          "margin": 256,
           "visited": 50000,
           "reason": "geodata_search_limit"
         },
         {
           "stride": 1,
+          "maxNodes": 60000,
+          "heuristicWeight": 1,
+          "margin": 256,
           "visited": 60000,
           "reason": "geodata_search_limit"
+        },
+        {
+          "stride": 8,
+          "maxNodes": 120000,
+          "heuristicWeight": 2,
+          "margin": 1024,
+          "visited": 4124,
+          "reason": null
         }
       ]
     },
