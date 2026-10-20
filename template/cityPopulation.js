@@ -1253,6 +1253,216 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/gludin_town.xml"
+  },
+  "dwarven-village": {
+    "polygon": [
+      [
+        115499,
+        -176771
+      ],
+      [
+        115301,
+        -176769
+      ],
+      [
+        114877,
+        -176811
+      ],
+      [
+        113385,
+        -177602
+      ],
+      [
+        112934,
+        -178507
+      ],
+      [
+        113954,
+        -183578
+      ],
+      [
+        115493,
+        -183698
+      ],
+      [
+        115748,
+        -184078
+      ],
+      [
+        115936,
+        -184197
+      ],
+      [
+        116268,
+        -184243
+      ],
+      [
+        116716,
+        -184246
+      ],
+      [
+        117023,
+        -184162
+      ],
+      [
+        117211,
+        -184022
+      ],
+      [
+        117325,
+        -183825
+      ],
+      [
+        117490,
+        -183411
+      ],
+      [
+        117629,
+        -182930
+      ],
+      [
+        117762,
+        -182686
+      ],
+      [
+        117762,
+        -182260
+      ],
+      [
+        117734,
+        -182090
+      ],
+      [
+        117531,
+        -181747
+      ],
+      [
+        117452,
+        -180534
+      ],
+      [
+        117492,
+        -180010
+      ],
+      [
+        117466,
+        -179559
+      ],
+      [
+        117327,
+        -179170
+      ],
+      [
+        117328,
+        -178966
+      ],
+      [
+        117303,
+        -178695
+      ],
+      [
+        116860,
+        -177230
+      ],
+      [
+        116806,
+        -177131
+      ],
+      [
+        116650,
+        -176975
+      ],
+      [
+        116418,
+        -176887
+      ],
+      [
+        115929,
+        -176804
+      ],
+      [
+        115490,
+        -176767
+      ]
+    ],
+    "minZ": -1600,
+    "maxZ": -800,
+    "sourceZone": "Dwarven Village",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 13568,
+    "arrivals": [
+      {
+        "x": 116176,
+        "y": -182448,
+        "z": -1400
+      },
+      {
+        "x": 116476,
+        "y": -182904,
+        "z": -1500
+      },
+      {
+        "x": 115248,
+        "y": -178816,
+        "z": -850
+      },
+      {
+        "x": 116352,
+        "y": -179264,
+        "z": -1000
+      },
+      {
+        "x": 115271,
+        "y": -178561,
+        "z": -820
+      },
+      {
+        "x": 115249,
+        "y": -177859,
+        "z": -820
+      },
+      {
+        "x": 115485,
+        "y": -178077,
+        "z": -820
+      },
+      {
+        "x": 115790,
+        "y": -179146,
+        "z": -890
+      },
+      {
+        "x": 116507,
+        "y": -179597,
+        "z": -1000
+      },
+      {
+        "x": 116725,
+        "y": -180147,
+        "z": -1000
+      },
+      {
+        "x": 116738,
+        "y": -181494,
+        "z": -1300
+      },
+      {
+        "x": 116775,
+        "y": -182367,
+        "z": -1400
+      },
+      {
+        "x": 116587,
+        "y": -183032,
+        "z": -1400
+      },
+      {
+        "x": 116321,
+        "y": -182734,
+        "z": -1400
+      }
+    ],
+    "arrivalSource": "mapregion/dwarf_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -1769,6 +1979,112 @@ export const CITY_NPC_UPDATES = {
     "z": -240,
     "adapted": false,
     "source": "spawns/Others/18_14.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "dwarven-village:30516": {
+    "npcId": 30516,
+    "name": "Reep",
+    "city": "dwarven-village",
+    "x": 115741,
+    "y": -181645,
+    "z": -1320,
+    "adapted": false,
+    "source": "spawns/Others/23_12.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "dwarven-village:30517": {
+    "npcId": 30517,
+    "name": "Shari",
+    "city": "dwarven-village",
+    "x": 116192,
+    "y": -181072,
+    "z": -1336,
+    "adapted": false,
+    "source": "spawns/Others/23_12.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "dwarven-village:30518": {
+    "npcId": 30518,
+    "name": "Garita",
+    "city": "dwarven-village",
+    "x": 115900,
+    "y": -177316,
+    "z": -880,
+    "adapted": false,
+    "source": "spawns/Others/23_12.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "dwarven-village:30519": {
+    "npcId": 30519,
+    "name": "Mion",
+    "city": "dwarven-village",
+    "x": 116268,
+    "y": -177524,
+    "z": -880,
+    "adapted": false,
+    "source": "spawns/Others/23_12.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "dwarven-village:30521": {
+    "npcId": 30521,
+    "name": "Murdoc",
+    "city": "dwarven-village",
+    "x": 114716,
+    "y": -180018,
+    "z": -872,
+    "adapted": false,
+    "source": "spawns/Others/23_12.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "dwarven-village:30522": {
+    "npcId": 30522,
+    "name": "Airy",
+    "city": "dwarven-village",
+    "x": 114832,
+    "y": -179520,
+    "z": -856,
+    "adapted": false,
+    "source": "spawns/Others/23_12.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "dwarven-village:30540": {
+    "npcId": 30540,
+    "name": "Wirphy",
+    "city": "dwarven-village",
+    "x": 115072,
+    "y": -178176,
+    "z": -880,
+    "adapted": false,
+    "source": "spawns/Others/23_12.xml"
+  },
+  "dwarven-village:32478": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "dwarven-village",
+    "x": 115020,
+    "y": -179728,
+    "z": -880,
+    "adapted": false,
+    "source": "spawns/Others/23_12.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "dwarven-village:35644": {
+    "npcId": 35644,
+    "name": "Manor Manager",
+    "city": "dwarven-village",
+    "x": 116176,
+    "y": -181600,
+    "z": -1360,
+    "adapted": false,
+    "source": "spawns/Others/23_12.xml",
     "role": "Торговец",
     "service": "merchant"
   },
@@ -3365,5 +3681,61 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "dwarven-village:source:30520:115205:-180024:-872",
+    "npcId": 30520,
+    "name": "Reed",
+    "role": "Хранитель склада",
+    "city": "dwarven-village",
+    "x": 115205,
+    "y": -180024,
+    "z": -872,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_12.xml"
+  },
+  {
+    "id": "dwarven-village:source:30525:115468:-182446:-1440",
+    "npcId": 30525,
+    "name": "Bronk",
+    "role": "Кузнец",
+    "city": "dwarven-village",
+    "x": 115468,
+    "y": -182446,
+    "z": -1440,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_12.xml"
+  },
+  {
+    "id": "dwarven-village:source:30526:115315:-182155:-1440",
+    "npcId": 30526,
+    "name": "Brunon",
+    "role": "Кузнец",
+    "city": "dwarven-village",
+    "x": 115315,
+    "y": -182155,
+    "z": -1440,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_12.xml"
+  },
+  {
+    "id": "dwarven-village:source:30527:115271:-182692:-1440",
+    "npcId": 30527,
+    "name": "Silvera",
+    "role": "Кузнец",
+    "city": "dwarven-village",
+    "x": 115271,
+    "y": -182692,
+    "z": -1440,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_12.xml"
   }
 ];
