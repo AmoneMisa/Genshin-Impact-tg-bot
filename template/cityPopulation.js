@@ -328,6 +328,100 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/giran_castle_town.xml"
+  },
+  "dark-elven-village": {
+    "polygon": [
+      [
+        15704,
+        15397
+      ],
+      [
+        15765,
+        15878
+      ],
+      [
+        15801,
+        16332
+      ],
+      [
+        14098,
+        19672
+      ],
+      [
+        10278,
+        20689
+      ],
+      [
+        8852,
+        20421
+      ],
+      [
+        7484,
+        18628
+      ],
+      [
+        7236,
+        18042
+      ],
+      [
+        7141,
+        17507
+      ],
+      [
+        7045,
+        16819
+      ],
+      [
+        7382,
+        14486
+      ],
+      [
+        13891,
+        13025
+      ],
+      [
+        15542,
+        15230
+      ]
+    ],
+    "minZ": -4700,
+    "maxZ": -3600,
+    "sourceZone": "Dark Elven Village",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 13568,
+    "arrivals": [
+      {
+        "x": 12501,
+        "y": 16768,
+        "z": -4500
+      },
+      {
+        "x": 12104,
+        "y": 17385,
+        "z": -4500
+      },
+      {
+        "x": 12519,
+        "y": 16376,
+        "z": -4500
+      },
+      {
+        "x": 10355,
+        "y": 17270,
+        "z": -4500
+      },
+      {
+        "x": 10146,
+        "y": 16965,
+        "z": -4500
+      },
+      {
+        "x": 10691,
+        "y": 16343,
+        "z": -4500
+      }
+    ],
+    "arrivalSource": "mapregion/darkelf_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -364,6 +458,124 @@ export const CITY_NPC_UPDATES = {
     "source": "spawns/Others/22_22.xml",
     "role": "Наставник",
     "service": "trainer"
+  },
+  "dark-elven-village:30134": {
+    "npcId": 30134,
+    "name": "Jasmine",
+    "city": "dark-elven-village",
+    "x": 9670,
+    "y": 15537,
+    "z": -4568,
+    "adapted": false,
+    "source": "spawns/Others/20_18.xml"
+  },
+  "dark-elven-village:30135": {
+    "npcId": 30135,
+    "name": "Iria",
+    "city": "dark-elven-village",
+    "x": 10761,
+    "y": 17970,
+    "z": -4554,
+    "adapted": false,
+    "source": "spawns/Others/20_18.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "dark-elven-village:30136": {
+    "npcId": 30136,
+    "name": "Payne",
+    "city": "dark-elven-village",
+    "x": 10823,
+    "y": 18013,
+    "z": -4554,
+    "adapted": false,
+    "source": "spawns/Others/20_18.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "dark-elven-village:30137": {
+    "npcId": 30137,
+    "name": "Vollodos",
+    "city": "dark-elven-village",
+    "x": 11951,
+    "y": 15661,
+    "z": -4554,
+    "adapted": false,
+    "source": "spawns/Others/20_18.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "dark-elven-village:30138": {
+    "npcId": 30138,
+    "name": "Minaless",
+    "city": "dark-elven-village",
+    "x": 12009,
+    "y": 15704,
+    "z": -4554,
+    "adapted": false,
+    "source": "spawns/Others/20_18.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "dark-elven-village:30139": {
+    "npcId": 30139,
+    "name": "Dorankus",
+    "city": "dark-elven-village",
+    "x": 13380,
+    "y": 17430,
+    "z": -4536,
+    "adapted": false,
+    "source": "spawns/Others/20_18.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "dark-elven-village:30140": {
+    "npcId": 30140,
+    "name": "Erviante",
+    "city": "dark-elven-village",
+    "x": 13464,
+    "y": 17751,
+    "z": -4536,
+    "adapted": false,
+    "source": "spawns/Others/20_18.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "dark-elven-village:30350": {
+    "npcId": 30350,
+    "name": "Carlon",
+    "city": "dark-elven-village",
+    "x": 13763,
+    "y": 17501,
+    "z": -4542,
+    "adapted": false,
+    "source": "spawns/Others/20_18.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "dark-elven-village:32478": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "dark-elven-village",
+    "x": 13436,
+    "y": 17248,
+    "z": -4568,
+    "adapted": false,
+    "source": "spawns/Others/20_18.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "dark-elven-village:35231": {
+    "npcId": 35231,
+    "name": "Manor Manager",
+    "city": "dark-elven-village",
+    "x": 9383,
+    "y": 17746,
+    "z": -4568,
+    "adapted": false,
+    "source": "spawns/Others/20_18.xml",
+    "role": "Торговец",
+    "service": "merchant"
   },
   "giran:gracia-survivor": {
     "npcId": 32632,
@@ -432,6 +644,76 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "dark-elven-village:source:30143:11283:14226:-4240",
+    "npcId": 30143,
+    "name": "Trudy",
+    "role": "Наставник",
+    "city": "dark-elven-village",
+    "x": 11283,
+    "y": 14226,
+    "z": -4240,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_18.xml"
+  },
+  {
+    "id": "dark-elven-village:source:30144:10344:14445:-4240",
+    "npcId": 30144,
+    "name": "Harne",
+    "role": "Наставник",
+    "city": "dark-elven-village",
+    "x": 10344,
+    "y": 14445,
+    "z": -4240,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_18.xml"
+  },
+  {
+    "id": "dark-elven-village:source:30145:11258:14431:-4240",
+    "npcId": 30145,
+    "name": "Vlasty",
+    "role": "Наставник",
+    "city": "dark-elven-village",
+    "x": 11258,
+    "y": 14431,
+    "z": -4240,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_18.xml"
+  },
+  {
+    "id": "dark-elven-village:source:30358:10775:14190:-4240",
+    "npcId": 30358,
+    "name": "Thifiell",
+    "role": "Наставник",
+    "city": "dark-elven-village",
+    "x": 10775,
+    "y": 14190,
+    "z": -4240,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_18.xml"
+  },
+  {
+    "id": "dark-elven-village:source:30360:10447:14620:-4240",
+    "npcId": 30360,
+    "name": "Harant",
+    "role": "Наставник",
+    "city": "dark-elven-village",
+    "x": 10447,
+    "y": 14620,
+    "z": -4240,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/20_18.xml"
   },
   {
     "id": "giran:source:30081:80518:147922:-3506",
