@@ -1070,5 +1070,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "giants-cave": {
+    "x": 174491,
+    "y": 50942,
+    "z": -4360,
+    "region": "aden",
+    "teleportGold": 7400,
+    "entrySource": {
+      "file": "teleporters/town/30848.xml",
+      "npcId": 30848,
+      "name": "Entrance to The Giant's Cave",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "3457ecb3855741d523d960755b9f2c8a1db3bba15d6d53dd2245d6c7a5f8ac24"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30848,
+        "npcName": "Elisa",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 7400,
+        "source": {
+          "file": "teleporters/town/30848.xml",
+          "npcId": 30848,
+          "name": "Entrance to The Giant's Cave",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "3457ecb3855741d523d960755b9f2c8a1db3bba15d6d53dd2245d6c7a5f8ac24"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        169491,
+        45942
+      ],
+      [
+        179491,
+        45942
+      ],
+      [
+        179491,
+        55942
+      ],
+      [
+        169491,
+        55942
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
