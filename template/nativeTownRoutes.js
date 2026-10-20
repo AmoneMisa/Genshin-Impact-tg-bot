@@ -84,6 +84,22 @@ export default {
       "y": -55228,
       "z": -2728,
       "file": "spawns/Others/24_16.xml"
+    },
+    "rune": {
+      "npcId": 31320,
+      "name": "Ilyana",
+      "x": 43824,
+      "y": -47664,
+      "z": -800,
+      "file": "spawns/Others/21_16.xml"
+    },
+    "schuttgart": {
+      "npcId": 31964,
+      "name": "Bilia",
+      "x": 87048,
+      "y": -143448,
+      "z": -1293,
+      "file": "spawns/Others/22_13.xml"
     }
   },
   "routes": {
@@ -3101,6 +3117,123 @@ export default {
           "heuristicWeight": 4,
           "margin": 2048,
           "visited": 180000,
+          "reason": "geodata_search_limit"
+        }
+      ]
+    },
+    "oren:rune": {
+      "fromCity": "oren",
+      "toCity": "rune",
+      "available": false,
+      "reason": "geodata_search_limit",
+      "attempts": [
+        {
+          "direction": "reverse",
+          "stride": 4,
+          "maxNodes": 180000,
+          "heuristicWeight": 2,
+          "margin": 2048,
+          "visited": 180000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "direction": "reverse",
+          "stride": 8,
+          "maxNodes": 180000,
+          "heuristicWeight": 2,
+          "margin": 2048,
+          "visited": 180000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "direction": "reverse",
+          "stride": 2,
+          "maxNodes": 120000,
+          "heuristicWeight": 4,
+          "margin": 2048,
+          "visited": 120000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "viaFields": [
+            "plains-of-the-lizardmen",
+            "beast-farm"
+          ],
+          "stride": 8,
+          "maxNodes": 60000,
+          "heuristicWeight": 2,
+          "margin": 1024,
+          "visited": 60000,
+          "reason": "geodata_search_limit"
+        }
+      ]
+    },
+    "goddard:rune": {
+      "fromCity": "rune",
+      "toCity": "goddard",
+      "available": false,
+      "reason": "geodata_search_limit",
+      "attempts": [
+        {
+          "direction": "reverse",
+          "stride": 4,
+          "maxNodes": 180000,
+          "heuristicWeight": 2,
+          "margin": 2048,
+          "visited": 180000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "direction": "reverse",
+          "stride": 8,
+          "maxNodes": 180000,
+          "heuristicWeight": 2,
+          "margin": 2048,
+          "visited": 180000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "direction": "reverse",
+          "stride": 2,
+          "maxNodes": 120000,
+          "heuristicWeight": 4,
+          "margin": 2048,
+          "visited": 120000,
+          "reason": "geodata_search_limit"
+        }
+      ]
+    },
+    "goddard:schuttgart": {
+      "fromCity": "goddard",
+      "toCity": "schuttgart",
+      "available": false,
+      "reason": "geodata_search_limit",
+      "attempts": [
+        {
+          "direction": "reverse",
+          "stride": 4,
+          "maxNodes": 180000,
+          "heuristicWeight": 2,
+          "margin": 2048,
+          "visited": 180000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "direction": "reverse",
+          "stride": 8,
+          "maxNodes": 180000,
+          "heuristicWeight": 2,
+          "margin": 2048,
+          "visited": 180000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "direction": "reverse",
+          "stride": 2,
+          "maxNodes": 120000,
+          "heuristicWeight": 4,
+          "margin": 2048,
+          "visited": 120000,
           "reason": "geodata_search_limit"
         }
       ]
