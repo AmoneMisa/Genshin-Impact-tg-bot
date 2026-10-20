@@ -924,6 +924,177 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/elf_town.xml"
+  },
+  "orc-village": {
+    "polygon": [
+      [
+        -45528,
+        -110079
+      ],
+      [
+        -45711,
+        -110075
+      ],
+      [
+        -45704,
+        -110164
+      ],
+      [
+        -46633,
+        -110080
+      ],
+      [
+        -46625,
+        -109992
+      ],
+      [
+        -46803,
+        -109993
+      ],
+      [
+        -47345,
+        -109973
+      ],
+      [
+        -47388,
+        -110012
+      ],
+      [
+        -47388,
+        -113001
+      ],
+      [
+        -47351,
+        -113039
+      ],
+      [
+        -47102,
+        -113038
+      ],
+      [
+        -47107,
+        -113382
+      ],
+      [
+        -47326,
+        -113379
+      ],
+      [
+        -47326,
+        -113829
+      ],
+      [
+        -47114,
+        -113826
+      ],
+      [
+        -47102,
+        -114171
+      ],
+      [
+        -47350,
+        -114170
+      ],
+      [
+        -47388,
+        -114199
+      ],
+      [
+        -47391,
+        -117182
+      ],
+      [
+        -47339,
+        -117239
+      ],
+      [
+        -46791,
+        -117240
+      ],
+      [
+        -46607,
+        -117240
+      ],
+      [
+        -46619,
+        -117151
+      ],
+      [
+        -45701,
+        -117000
+      ],
+      [
+        -45705,
+        -117085
+      ],
+      [
+        -45523,
+        -117088
+      ],
+      [
+        -44169,
+        -116722
+      ],
+      [
+        -44147,
+        -116804
+      ],
+      [
+        -43838,
+        -116717
+      ],
+      [
+        -43855,
+        -116638
+      ],
+      [
+        -43779,
+        -116620
+      ],
+      [
+        -42581,
+        -115424
+      ],
+      [
+        -42472,
+        -115258
+      ],
+      [
+        -42051,
+        -113671
+      ],
+      [
+        -42050,
+        -113502
+      ],
+      [
+        -42474,
+        -111925
+      ],
+      [
+        -42554,
+        -111775
+      ],
+      [
+        -43843,
+        -110456
+      ],
+      [
+        -44147,
+        -110375
+      ],
+      [
+        -45529,
+        -110078
+      ]
+    ],
+    "minZ": -400,
+    "maxZ": -200,
+    "sourceZone": "Orc Village",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 10496,
+    "arrivals": [],
+    "arrivalSource": "mapregion/orc_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -1327,6 +1498,100 @@ export const CITY_NPC_UPDATES = {
     "role": "Торговец",
     "service": "merchant"
   },
+  "orc-village:30558": {
+    "npcId": 30558,
+    "name": "Jakal",
+    "city": "orc-village",
+    "x": -44416,
+    "y": -111486,
+    "z": -216,
+    "adapted": false,
+    "source": "spawns/Others/18_14.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "orc-village:30559": {
+    "npcId": 30559,
+    "name": "Kunai",
+    "city": "orc-village",
+    "x": -43905,
+    "y": -111824,
+    "z": -216,
+    "adapted": false,
+    "source": "spawns/Others/18_14.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "orc-village:30562": {
+    "npcId": 30562,
+    "name": "Grookin",
+    "city": "orc-village",
+    "x": -43109,
+    "y": -113770,
+    "z": -216,
+    "adapted": false,
+    "source": "spawns/Others/18_14.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "orc-village:30563": {
+    "npcId": 30563,
+    "name": "Imantu",
+    "city": "orc-village",
+    "x": -43114,
+    "y": -113404,
+    "z": -216,
+    "adapted": false,
+    "source": "spawns/Others/18_14.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "orc-village:30576": {
+    "npcId": 30576,
+    "name": "Tamil",
+    "city": "orc-village",
+    "x": -45264,
+    "y": -112512,
+    "z": -240,
+    "adapted": false,
+    "source": "spawns/Others/18_14.xml"
+  },
+  "orc-village:31424": {
+    "npcId": 31424,
+    "name": "Shantra",
+    "city": "orc-village",
+    "x": -46397,
+    "y": -112935,
+    "z": -229,
+    "adapted": false,
+    "source": "spawns/Others/18_14.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "orc-village:32478": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "orc-village",
+    "x": -43728,
+    "y": -113472,
+    "z": -240,
+    "adapted": false,
+    "source": "spawns/Others/18_14.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "orc-village:35645": {
+    "npcId": 35645,
+    "name": "Manor Manager",
+    "city": "orc-village",
+    "x": -44172,
+    "y": -112236,
+    "z": -240,
+    "adapted": false,
+    "source": "spawns/Others/18_14.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
   "giran:gracia-survivor": {
     "npcId": 32632,
     "name": "Gracian Survivor",
@@ -1520,6 +1785,62 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Others/17_25.xml"
+  },
+  {
+    "id": "orc-village:source:30569:-45952:-114784:-200",
+    "npcId": 30569,
+    "name": "Brukurse",
+    "role": "Наставник",
+    "city": "orc-village",
+    "x": -45952,
+    "y": -114784,
+    "z": -200,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/18_14.xml"
+  },
+  {
+    "id": "orc-village:source:30570:-45952:-114496:-200",
+    "npcId": 30570,
+    "name": "Karukia",
+    "role": "Наставник",
+    "city": "orc-village",
+    "x": -45952,
+    "y": -114496,
+    "z": -200,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/18_14.xml"
+  },
+  {
+    "id": "orc-village:source:30571:-45863:-112621:-200",
+    "npcId": 30571,
+    "name": "Tanapi",
+    "role": "Наставник",
+    "city": "orc-village",
+    "x": -45863,
+    "y": -112621,
+    "z": -200,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/18_14.xml"
+  },
+  {
+    "id": "orc-village:source:30572:-45864:-112540:-200",
+    "npcId": 30572,
+    "name": "Livina",
+    "role": "Наставник",
+    "city": "orc-village",
+    "x": -45864,
+    "y": -112540,
+    "z": -200,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/18_14.xml"
   },
   {
     "id": "dark-elven-village:source:30143:11283:14226:-4240",
