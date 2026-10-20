@@ -10,6 +10,12 @@ import {findNativePath} from '../../functions/game/world/nativeNavigation.js';
 import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';
 import change from '../../functions/game/player/changePlayerGameClass.js';
 import update from '../../functions/game/player/updatePlayerStats.js';
+import {WORLD_EXTENSION} from '../../template/worldExtension.js';
+import compiled from '../../template/nativeRoutes.js';
+const firstId=process.env.NATIVE_FIRST_ZONE||'forsaken-plains',secondId=process.env.NATIVE_SECOND_ZONE||'silent-valley';
+const first=compiled.routes[firstId],second=compiled.routes[secondId];
+assert.ok(first?.available&&second?.available&&first.city===second.city&&firstId!==secondId,'two native routes must share their source town');
+const zoneName=id=>WORLD_EXTENSION.find(r=>r.zone.id===id)?.zone.title||id;
 const {chromium}=createRequire(process.env.PLAYWRIGHT_PACKAGE||'C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json')('playwright');
 const root=path.resolve('webapp'),out=path.resolve('.tmp/native-world-ui');fs.mkdirSync(out,{recursive:true});
 const assets=bundlePageAssets(fs.readFileSync(path.join(root,'index.html'),'utf8'),f=>fs.readFileSync(path.join(root,f.slice(1)),'utf8'));
@@ -18,7 +24,7 @@ const browser=await chromium.launch({headless:true,executablePath:process.env.DE
 const configurations=[{width:320},{width:390},{width:1100},{width:320,noCanvas:true}];
 try{for(const {width,noCanvas=false} of configurations){
  let now=1800000000000,finishNext=false;
- const s={userId:1,userChatData:{user:{id:1}},game:{stats:{lvl:85,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:'aden',x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
+ const s={userId:1,userChatData:{user:{id:1}},game:{stats:{lvl:85,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:first.city,x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
  const chat={game:{},members:[s]};s.ownerDocument=()=>chat;change(s,'humanFighter');update(s);
  const quiet=()=>{const f=s.game.hunt?.field;if(f)for(const m of [f,...Object.values(f.rooms||{})].flatMap(r=>r.mobs||[]))Object.assign(m,{aggressive:false,aggro:false,aggroRange:0,nextAttackAt:now+1e12});};
  const dto=()=>{
@@ -66,7 +72,7 @@ try{for(const {width,noCanvas=false} of configurations){
   await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='walk_location'),walk.click()]);
   await page.waitForTimeout(100);
  }
- await selectWalk('Забытые равнины');assert.equal(s.game.world.mode,'road');assert.ok(s.game.world.walkHome.native);
+ await selectWalk(zoneName(firstId));assert.equal(s.game.world.mode,'road');assert.ok(s.game.world.walkHome.native);
  assert.equal(await page.locator('[data-mode="city"]').textContent(),'Местность');
  assert.equal(await page.locator('[data-city-view]').isVisible(),false);
  assert.equal(s.game.inventory.gold,1000000);assert.ok(calls.some(c=>c.action==='walk_location'));assert.ok(!calls.some(c=>c.action==='quick_travel'));
@@ -85,16 +91,16 @@ try{for(const {width,noCanvas=false} of configurations){
   assert.equal(s.game.world.walkHome.location,null);
   finishNext=true;await page.waitForFunction(()=>document.querySelector('.atlas-status')?.textContent.includes('Выберите место на карте'));
  }
- await selectWalk('Забытые равнины');assert.equal(s.game.world.walkHome.location,'forsaken-plains');
- finishNext=true;await page.waitForSelector('.hunt-ground');await page.waitForSelector('.atlas-panel',{state:'detached'});assert.equal(s.game.world.location,'forsaken-plains');
+ await selectWalk(zoneName(firstId));assert.equal(s.game.world.walkHome.location,firstId);
+ finishNext=true;await page.waitForSelector('.hunt-ground');await page.waitForSelector('.atlas-panel',{state:'detached'});assert.equal(s.game.world.location,firstId);
  assert.equal(await page.locator('.atlas-panel').count(),0,'native arrival opens its hunting room in the same navigation flow');
  quiet();await page.locator('[data-level-travel]').click();const exit=page.locator('dialog[open] [data-native-exit]');assert.equal(await exit.isEnabled(),true);
  await exit.click();await page.waitForSelector('.atlas-panel');await page.waitForSelector('.hunt-overlay',{state:'detached'});assert.equal(await page.locator('.hunt-overlay').count(),0);
- await selectWalk('Тихая долина');assert.ok(s.game.world.nativeFields['forsaken-plains']);
+ await selectWalk(zoneName(secondId));assert.ok(s.game.world.nativeFields[firstId]);
  await page.locator('[data-movement]').click();finishNext=true;
  // The trip can finish on the server just before a stop request arrives.
  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_stop'),page.locator('[data-native-stop]').click()]);
- await page.waitForSelector('.hunt-ground');assert.equal(s.game.world.location,'silent-valley');
+ await page.waitForSelector('.hunt-ground');assert.equal(s.game.world.location,secondId);
  assert.equal(await page.locator('.hunt-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  await page.screenshot({path:path.join(out,`native-arrival-${width}${noCanvas?'-fallback':''}.png`)});
  await page.locator('.hunt-overlay [data-dismiss]').first().click();await page.waitForSelector('.hunt-overlay',{state:'detached'});

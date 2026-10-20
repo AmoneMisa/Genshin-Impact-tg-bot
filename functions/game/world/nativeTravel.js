@@ -8,6 +8,27 @@ import {outdoorPoint} from './holdingEntry.js';
 import {worldGeodata,geoRegionId} from './l2jGeodata.js';
 
 export const nativeRoute=id=>routes.routes[id]?.available?routes.routes[id]:null;
+/** Rejoin an already verified trail locally instead of searching a whole long valley again. */
+function reconnectNativeTrail(from,to,city){
+ const candidates=[];
+ for(const route of Object.values(routes.routes)){
+  if(!route.available||route.city!==(to?.city||city))continue;
+  const vertices=[route.from,...route.path];
+  for(let index=0;index<vertices.length;index++){
+   const point=vertices[index],distance=Math.hypot(from.x-point.x,from.y-point.y);
+   if(distance>8192)continue;
+   const suffix=to===route?vertices.slice(index+1):[...vertices.slice(0,index).reverse(),...(to?.path||[])];
+   let remaining=0,previous=point;for(const next of suffix){remaining+=Math.hypot(next.x-previous.x,next.y-previous.y);previous=next;}
+   candidates.push({point,suffix,score:distance+remaining});
+  }
+ }
+ candidates.sort((a,b)=>a.score-b.score);
+ for(const {point,suffix} of candidates.slice(0,6)){
+  const prefix=findNativePath(from,point,{allowed:nativeGroundAllowed,maxNodes:1000,stride:2,margin:128,reversible:true});
+  if(prefix.ok)return {...prefix,path:[...prefix.path,...suffix]};
+ }
+ return null;
+}
 export function nativeExit(session){
  const w=session.game.world,f=session.game.hunt?.field,route=nativeRoute(w?.location);
  if(w?.mode!=='location'||session.game.hunt?.zone!==w.location||!route?.returnPath||!f)return null;
@@ -32,7 +53,7 @@ export function nativeTravel(session,target,now,speed){
  }else if(w.mode==='native'&&w.nativePosition){
   const endpoint=to?.to||nativeWorld.towns[arrivalCity];
   if(!endpoint)return {ok:false,reason:'location_path_required'};
-  const plan=findNativePath(w.nativePosition,endpoint,{allowed:nativeGroundAllowed,maxNodes:12000,reversible:true});
+  const plan=reconnectNativeTrail(w.nativePosition,to,arrivalCity)||findNativePath(w.nativePosition,endpoint,{allowed:nativeGroundAllowed,maxNodes:6000,reversible:true});
   if(!plan.ok)return plan;start=plan.start;path=plan.path;
  }else return {ok:false,reason:'location_path_required'};
  const trip=createNativeJourney(start,path,{now,speed,location:to?target.location:null,city:arrivalCity});

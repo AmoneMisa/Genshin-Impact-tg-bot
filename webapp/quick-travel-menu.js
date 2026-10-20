@@ -16,7 +16,10 @@ export function quickTravelDestinations(state, section='cities', level='all') {
     return city && (city.id!==state.player.city||state.player.mode!=='city') ? [{...city,...quote,kind:'city'}] : [];
   });
   const band=QUICK_TRAVEL_LEVELS.find(b=>b.id===level)||QUICK_TRAVEL_LEVELS[0];
-  return (state.quickTravel?.locations||[]).flatMap(quote=>{
+  const quotes=state.quickTravel?.locations||[];
+  // A restricted teleport must not hide a server-advertised walking destination.
+  const walking=Object.keys(state.nativeWalk||{}).filter(id=>!quotes.some(q=>q.id===id)).map(id=>({id,gold:null,unavailable:true,walkingOnly:true}));
+  return [...quotes,...walking].flatMap(quote=>{
     const place=state.locations.find(l=>l.id===quote.id);
     if(!place||place.instance)return [];
     const catacomb=place.id.startsWith('catacomb-')||place.id.startsWith('necropolis-');

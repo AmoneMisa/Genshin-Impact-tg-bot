@@ -10,7 +10,21 @@ import {moveHuntField,advanceHunt} from '../functions/game/hunt/huntFight.js';
 import change from '../functions/game/player/changePlayerGameClass.js';
 import update from '../functions/game/player/updatePlayerStats.js';
 import routes from '../template/nativeRoutes.js';
+import {quickTravelDestinations} from '../webapp/quick-travel-menu.js';
+import {movementHtml} from '../webapp/atlas-ui.js';
 const NOW=1800000000000;
+test('a noblesse-only teleport stays restricted while its native walking entrance remains visible in the shared Atlas',()=>{
+ const s=hero(),dto=worldState(s,NOW);
+ assert.ok(!dto.quickTravel.locations.some(q=>q.id==='angel-waterfall'));
+ const rows=quickTravelDestinations(dto,'hunting'),entry=rows.find(q=>q.id==='angel-waterfall');
+ assert.ok(entry?.walkingOnly&&entry.unavailable);assert.equal(entry.gold,null);
+ assert.equal(rows.filter(q=>q.id==='forsaken-plains').length,1);
+ const html=movementHtml(dto,{section:'hunting',selected:{kind:'location',id:'angel-waterfall'}});
+ assert.match(html,/data-quick-confirm disabled/);assert.match(html,/Телепорт недоступен/);
+ assert.ok(dto.nativeWalk['angel-waterfall'].enabled);
+ assert.equal(worldAction(s,{action:'quick_travel',location:'angel-waterfall'},NOW).reason,'noblesse_required');
+ assert.ok(worldAction(s,{action:'walk_location',location:'angel-waterfall'},NOW).ok);
+});
 function hero(){
  const s={userId:1,game:{stats:{lvl:85,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:'aden',x:.5,y:.5,path:[],moveAt:NOW,locks:{}}}};
  change(s,'humanFighter');update(s);return s;
@@ -18,13 +32,30 @@ function hero(){
 function quiet(field){for(const m of [field,...Object.values(field.rooms||{})].flatMap(r=>r.mobs||[]))Object.assign(m,{aggressive:false,aggro:false,aggroRange:0,nextAttackAt:NOW+1e12});}
 function finish(s,now){const trip=s.game.world.walkHome;assert.ok(trip.native);advanceWorld(s,now);assert.equal(s.game.world.walkHome,undefined);}
 test('all published native city and return links verify every original cell in both directions',()=>{
- const available=Object.values(routes.routes).filter(r=>r.available);assert.equal(available.length,7);
+ const available=Object.values(routes.routes).filter(r=>r.available);assert.equal(available.length,11);
  for(const route of available){
   let point=route.from;
   for(const next of route.path){assert.ok(nativeSegment(point,next,{allowed:nativeGroundAllowed,reversible:true}));point=next;}
   assert.deepEqual(point,route.to);
   for(const next of route.returnPath){assert.ok(nativeSegment(point,next,{allowed:nativeGroundAllowed}));point=next;}
   assert.deepEqual(point,route.from);
+ }
+});
+test('every native location can be reached from its town and left through the physical entrance after save/load',async()=>{
+ for(const [id,route] of Object.entries(routes.routes).filter(([,r])=>r.available)){
+  let s=hero();s.game.world.city=route.city;
+  const gold=s.game.inventory.gold;
+  const departure=worldAction(s,{action:'walk_location',location:id},NOW);
+  assert.ok(departure.ok,id+': '+departure.reason);
+  assert.ok(s.game.world.walkHome.native.path.length<=512,id+' bounded journey');
+  s=JSON.parse(JSON.stringify(s));finish(s,NOW+10000000);
+  assert.equal(s.game.world.location,id);assert.equal(s.game.hunt.zone,id);
+  await getHuntState(s,NOW+10000000);quiet(s.game.hunt.field);
+  const back=worldAction(s,{action:'walk_exit'},NOW+10000000);
+  assert.ok(back.ok,id+': return '+back.reason);
+  s=JSON.parse(JSON.stringify(s));finish(s,NOW+20000000);
+  assert.equal(s.game.world.mode,'city');assert.equal(s.game.world.city,route.city);
+  assert.equal(s.game.inventory.gold,gold);assert.ok(s.game.world.nativeFields[id]);
  }
 });
 test('one distance budget crosses native region boundaries identically before and after save/load',()=>{
@@ -41,6 +72,22 @@ test('one distance budget crosses native region boundaries identically before an
  assert.deepEqual(paused.native.point,point);assert.equal(paused.until,null);
  advanceNativeJourney(paused,NOW+duration+61000,100);
  assert.ok(Math.abs(a.native.remaining-paused.native.remaining-100)<1e-6,'paused time does not become free movement');
+});
+test('long native trails can resume after a saved midpoint stop and can return to their town without a new global search',()=>{
+ for(const id of ['angel-waterfall','enchanted-valley','beast-farm','plains-of-the-lizardmen']){
+  const route=nativeRoute(id);let s=hero();s.game.world.city=route.city;
+  assert.ok(worldAction(s,{action:'walk_location',location:id},NOW).ok);
+  const middle=NOW+Math.floor((s.game.world.walkHome.until-NOW)*.53);
+  assert.ok(worldAction(s,{action:'native_stop'},middle).ok);
+  const stopped={...s.game.world.nativePosition};s=JSON.parse(JSON.stringify(s));
+  const resume=worldAction(s,{action:'walk_location',location:id},middle+1);
+  assert.ok(resume.ok,id+': resume '+resume.reason);
+  assert.deepEqual(s.game.world.walkHome.native.point,stopped,id+' resumes at the actual point');
+  assert.ok(worldAction(s,{action:'native_stop'},middle+1).ok);
+  const back=worldAction(s,{action:'native_walk_city',city:route.city},middle+2);
+  assert.ok(back.ok,id+': return '+back.reason);finish(s,middle+10000000);
+  assert.equal(s.game.world.city,route.city);assert.equal(s.game.world.mode,'city');
+ }
 });
 test('native walking is server-owned, conserves money and hides full route/banks from both DTOs',async()=>{
  const s=hero(),gold=s.game.inventory.gold;
