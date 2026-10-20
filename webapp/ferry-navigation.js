@@ -13,7 +13,7 @@ function disabled(state,port,action){
 }
 export function ferryPanelHtml(state,id){
  const ports=state.ferries||[],port=ports.find(p=>p.id===id);
- if(!port)return '<div class="atlas-movement-content ui-choice-list">'+ports.map(p=>`<button type="button" class="ui-button ui-choice-row" data-ferry-select="${esc(p.id)}">${esc(p.name)}</button>`).join('')+'</div>';
+ if(!port)return '<div class="atlas-movement-content ui-choice-list">'+ports.map(p=>`<button type="button" class="ui-button ui-choice-row" data-ferry-select="${esc(p.id)}"><span>${esc(p.name)}<small>${esc(state.cities.find(c=>c.id===p.destination)?.name||'')}</small></span></button>`).join('')+'</div>';
  return `<div class="atlas-movement-content" data-ferry-panel="${esc(id)}"><p>${esc(port.vendor.name)}</p><p class="ui-inset-row">${l2MaterialIcon('l2_'+port.ticket)}<span>Билетов:</span><span data-ferry-stock>${fmt(port.tickets)}</span></p>${!port.tickets&&!state.player.walkHome?.paid?'<p>Без билета корабль высадит вас при отправлении.</p>':''}<p data-ferry-eta></p><div class="atlas-travel-confirm">${sailing(state)?'<button type="button" class="ui-button" data-ferry-action="leave">Сойти на берег</button>':`<button type="button" class="ui-button" data-ferry-action="walk" data-stop="vendor">К продавцу билетов</button><button type="button" class="ui-button" data-ferry-action="ticket">Купить билет · ${fmt(port.ticketPrice)} аден</button><button type="button" class="ui-button" data-ferry-action="walk" data-stop="boarding">К трапу</button><button type="button" class="ui-button primary" data-ferry-action="board">Подняться на корабль</button>`}</div></div>`;
 }
 export function refreshFerryPanel(root,state){

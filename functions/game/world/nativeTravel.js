@@ -84,7 +84,7 @@ export function nativeTravel(session,target,now,speed){
   if(!plan.ok)return plan;start=plan.start;path=plan.path;
  }else return {ok:false,reason:'location_path_required'};
  const trip=createNativeJourney(start,path,{now,speed,location:to?target.location:null,city:arrivalCity});
- if(trip&&target?.port)trip.port=target.port;
+ if(trip&&target?.port){trip.port=target.port;trip.portCity=to.city;}
  return trip?{ok:true,trip}:{ok:false,reason:'path_blocked'};
 }
 

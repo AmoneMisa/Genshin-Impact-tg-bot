@@ -21,29 +21,30 @@ function hero(city='gludin'){
  const point=nativeTownHub(city);Object.assign(s.game.world,{city,z:point.z},cityPoint(CITIES.find(c=>c.id===city),point));return s;
 }
 const near=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
-for(const id of ['gludin','rune'])test(`original ${id} harbor has reversible ground paths and a genuine, correctly priced ticket`,()=>{
- const route=shores.routes[id],port=data.ports[id];assert.deepEqual(route.from,nativeTownHub(id));
+for(const id of ['gludin','rune','talking-gludin','gludin-talking'])test(`original ${id} harbor has reversible ground paths and a genuine, correctly priced ticket`,()=>{
+ const route=shores.routes[id],port=data.ports[id];const hub=nativeTownHub(port.city);assert.deepEqual(route.from,{x:hub.x,y:hub.y,z:hub.z});
  let at=route.from;for(const p of route.path){assert.ok(nativeSegment(at,p,{allowed:nativeGroundAllowed,reversible:true}));at=p;}
  assert.deepEqual(at,route.to);for(const p of route.returnPath){assert.ok(nativeSegment(at,p,{allowed:nativeGroundAllowed,reversible:true}));at=p;}
  assert.deepEqual(at,route.from);assert.deepEqual(route.vendor,route.path[route.vendorIndex-1]);
  assert.equal(route.vendor.x,port.vendor.x);assert.equal(route.vendor.y,port.vendor.y);assert.ok(near(route.to,port.dock)<=1000);assert.ok(nativeGroundAllowed(route.to));
- assert.equal(port.ticketPrice,7500);assert.equal(port.priceConfig.name,'Neutral Territory');
- const item=materialInfo('l2_'+port.ticket);assert.equal(item.metadataMissing,undefined);assert.match(item.name,/^Boat Ticket:/);assert.equal(item.price,5000);assert.equal(item.kind,'consumable');
- const art=L2_MATERIAL_ART[item.key];assert.equal(art,'icon-etc_ticket_red_i00');assert.ok(fs.existsSync('webapp'+l2IconUrl(art)));
+ assert.equal(port.ticketPrice,port.ticket===1074?1500:7500);assert.equal(port.priceConfig.name,'Neutral Territory');
+ const item=materialInfo('l2_'+port.ticket);assert.equal(item.metadataMissing,undefined);assert.match(item.name,/^Boat Ticket:/);assert.equal(item.price,port.ticket===1074?1000:5000);assert.equal(item.kind,'consumable');
+ const art=L2_MATERIAL_ART[item.key];assert.equal(art,port.ticket===1075?'icon-etc_ticket_blue_i00':'icon-etc_ticket_red_i00');assert.ok(fs.existsSync('webapp'+l2IconUrl(art)));
 });
 
-for(const origin of ['gludin','rune'])test(`complete ${origin} ferry trip preserves source shores, charges at departure and rejoins the destination city`,()=>{
- let s=hero(origin),now=NOW;const target=origin==='gludin'?'rune':'gludin',port=data.ports[origin];
+for(const origin of ['gludin','rune','talking-gludin','gludin-talking'])test(`complete ${origin} ferry trip preserves source shores, charges at departure and rejoins the destination city`,()=>{
+ const port=data.ports[origin],targetPort=port.destination,target=data.ports[targetPort].city,remainingGold=1000000-port.ticketPrice;let s=hero(port.city),now=NOW;
  assert.equal(worldAction(s,{action:'ferry_ticket',port:origin},now).reason,'npc_too_far');
  assert.equal(worldAction(s,{action:'ferry_board',port:origin},now).reason,'ferry_boarding_required');
  assert.equal(worldAction(s,{action:'ferry_walk',port:origin,stop:'vendor'},now).ok,true);
  now=s.game.world.walkHome.until+1;advanceWorld(s,now);assert.equal(s.game.world.mode,'native');assert.deepEqual(s.game.world.nativePosition,shores.routes[origin].vendor);
- assert.equal(worldAction(s,{action:'ferry_ticket',port:origin},now).ok,true);assert.equal(s.game.inventory.gold,992500);
+ assert.equal(worldAction(s,{action:'ferry_ticket',port:origin},now).ok,true);assert.equal(s.game.inventory.gold,remainingGold);
  assert.equal(worldAction(s,{action:'ferry_walk',port:origin,stop:'boarding'},now).ok,true);
  now=s.game.world.walkHome.until+1;advanceWorld(s,now);assert.deepEqual(s.game.world.nativePosition,shores.routes[origin].to);
  now=ferryDock(origin,now).dockAt+1000;
  assert.equal(worldAction(s,{action:'ferry_board',port:origin},now).ok,true);assert.equal(s.game.inventory.materials['l2_'+port.ticket],1);
  assert.equal(worldAction(s,{action:'ferry_leave'},now+1).ok,true);assert.equal(s.game.inventory.materials['l2_'+port.ticket],1);
+ assert.equal(worldState(s,now+1).player.city,port.city);assert.ok(worldState(s,now+1).ferries.some(p=>p.id===origin));
  assert.equal(worldAction(s,{action:'ferry_board',port:origin},now+2).ok,true);
  const trip={...s.game.world.walkHome};assert.equal(worldState(s,trip.departureAt-1).player.transportPhase,'waiting');
  const departure=worldState(s,trip.departureAt);assert.equal(departure.player.transportPhase,'sailing');assert.equal(s.game.inventory.materials['l2_'+port.ticket],0);
@@ -51,15 +52,15 @@ for(const origin of ['gludin','rune'])test(`complete ${origin} ferry trip preser
  const mid=trip.departureAt+10000,before=worldState(s,mid).player.worldPoint;s=JSON.parse(JSON.stringify(s));assert.deepEqual(worldState(s,mid).player.worldPoint,before);
  assert.equal(s.game.inventory.materials['l2_'+port.ticket],0);
  for(const body of [{action:'ferry_leave'},{action:'native_stop'},{action:'native_move',point:{x:0,y:0}},{action:'quick_travel',city:'giran'},{action:'ferry_ticket',port:origin}])assert.equal(worldAction(s,body,mid).ok,false);
- assert.equal(s.game.world.walkHome.until,trip.until);assert.equal(s.game.inventory.gold,992500);
+ assert.equal(s.game.world.walkHome.until,trip.until);assert.equal(s.game.inventory.gold,remainingGold);
  const position=ferryJourneyPosition(trip,mid),predicted=displayedPosition({...position,runSpeed:99999},1000).worldPoint,actual=ferryJourneyPosition(trip,mid+1000).worldPoint;
  assert.ok(near(predicted,actual)<1e-7);assert.ok(position.worldMotion.length<=17);
  advanceWorld(s,trip.until-1);assert.equal(s.game.world.mode,'road');advanceWorld(s,trip.until);
- assert.equal(s.game.world.mode,'native');assert.equal(s.game.world.city,target);assert.deepEqual(s.game.world.nativePosition,shores.routes[target].to);
+ assert.equal(s.game.world.mode,'native');assert.equal(s.game.world.city,target);assert.deepEqual(s.game.world.nativePosition,shores.routes[targetPort].to);
  assert.equal(worldAction(s,{action:'native_walk_city',city:target},trip.until+1).ok,true);
  now=s.game.world.walkHome.until+1;advanceWorld(s,now);assert.equal(s.game.world.mode,'city');assert.equal(s.game.world.city,target);
  const hub=nativeTownHub(target);assert.deepEqual({x:s.game.world.x,y:s.game.world.y},cityPoint(CITIES.find(c=>c.id===target),hub));
- assert.equal(s.game.inventory.gold,992500);assert.equal(nativeTownPath('gludin','rune'),null);
+ assert.equal(s.game.inventory.gold,remainingGold);assert.equal(nativeTownPath('gludin','rune'),null);
 });
 
 test('vessel absence, wrong tickets, height, missing position and removing the ticket before departure fail closed',()=>{

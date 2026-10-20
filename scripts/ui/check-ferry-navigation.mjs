@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {bundlePageAssets} from '../../miniapp/pageAssets.js';
 import {worldState,worldAction,advanceWorld,ensureWorld,cityPoint,CITIES} from '../../functions/game/world/world.js';
+import data from '../../template/ferryData.js';
 import {ferryDock} from '../../functions/game/world/ferryTravel.js';
 import {nativeTownHub} from '../../functions/game/world/nativeTownGraph.js';
 import change from '../../functions/game/player/changePlayerGameClass.js';
@@ -15,7 +16,7 @@ const styles=[...assets.html.matchAll(/<(?:link rel="stylesheet"|meta name="game
 const browser=await chromium.launch({headless:true,executablePath:process.env.DESIGN_BROWSER||'C:/Users/kubai/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe'});
 try{for(const reverse of [false,true])for(const {width,noCanvas=false} of [{width:320},{width:390},{width:1100},{width:320,noCanvas:true}]){
  let now=1800000000000;
- const origin=reverse?'rune':'gludin',destination=reverse?'gludin':'rune';
+ const pair=process.env.FERRY_ROUTE==='talking'?['talking-gludin','gludin-talking']:['gludin','rune'],originPort=pair[reverse?1:0],targetPort=pair[reverse?0:1],origin=data.ports[originPort].city,destination=data.ports[targetPort].city,remainingGold=1000000-data.ports[originPort].ticketPrice;
  const s={userId:1,game:{stats:{lvl:85,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
  change(s,'humanFighter');update(s);ensureWorld(s,now);
  const hub=nativeTownHub(origin);Object.assign(s.game.world,{city:origin,z:hub.z},cityPoint(CITIES.find(c=>c.id===origin),hub));
@@ -40,15 +41,15 @@ try{for(const reverse of [false,true])for(const {width,noCanvas=false} of [{widt
   await(await import('/world-map.js')).openWorldMap({api,haptic:()=>{},renderState:()=>{}});
  });
  async function live(predicate){await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&predicate((await r.json()).world.player));}
- async function menu(){await page.locator('[data-movement]').click();await page.locator('[data-ferry-menu]').click();const select=page.locator(`[data-ferry-select="${origin}"]`);if(await select.count())await select.click();}
+ async function menu(){await page.locator('[data-movement]').click();await page.locator('[data-ferry-menu]').click();const select=page.locator(`[data-ferry-select="${originPort}"]`);if(await select.count())await select.click();}
  async function action(name,stop){const button=page.locator(`[data-ferry-action="${name}"]${stop?'[data-stop="'+stop+'"]':''}`);assert.equal(await button.isEnabled(),true);await button.focus();assert.equal(await button.evaluate(n=>n===document.activeElement),true);await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='ferry_'+name),button.click()]);}
  await menu();assert.equal(await page.locator('[data-ferry-action="ticket"]').isDisabled(),true);assert.equal(await page.locator('[data-ferry-action="board"]').isDisabled(),true);
  await action('walk','vendor');now=s.game.world.walkHome.until+1;await live(p=>p.mode==='native');
- await menu();await action('ticket');assert.equal(s.game.inventory.gold,992500);await page.waitForFunction(()=>document.querySelector('[data-ferry-stock]')?.textContent==='1');
+ await menu();await action('ticket');assert.equal(s.game.inventory.gold,remainingGold);await page.waitForFunction(()=>document.querySelector('[data-ferry-stock]')?.textContent==='1');
  assert.equal(await page.locator('[data-ferry-panel] img').evaluate(img=>img.complete&&img.naturalWidth>0),true);
  await page.screenshot({path:path.join(out,`${origin}-vendor-${width}${noCanvas?'-fallback':''}.png`)});
  await action('walk','boarding');now=s.game.world.walkHome.until+1;await live(p=>p.mode==='native');
- now=ferryDock(origin,now).dockAt+1000;await live(p=>p.mode==='native');
+ now=ferryDock(originPort,now).dockAt+1000;await live(p=>p.mode==='native');
  await menu();await action('board');const trip={...s.game.world.walkHome};
  await page.waitForFunction(()=>document.querySelector('.atlas-status')?.textContent.includes('Ожидание отправления'));
  await menu();assert.equal(await page.locator('[data-native-stop]').count(),0);assert.equal(await page.locator('[data-ferry-action="leave"]').isEnabled(),true);
@@ -63,8 +64,8 @@ try{for(const reverse of [false,true])for(const {width,noCanvas=false} of [{widt
  await page.locator('[data-quick-go]').filter({hasText:CITIES.find(c=>c.id===destination).name}).click();
  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_walk_city'),page.locator('[data-native-city]').click()]);
  now=s.game.world.walkHome.until+1;await live(p=>p.mode==='city'&&p.city===destination);
- assert.equal(s.game.world.city,destination);assert.equal(s.game.inventory.gold,992500);
- assert.equal(s.game.inventory.materials['l2_'+(origin==='gludin'?7905:7904)],0);
+ assert.equal(s.game.world.city,destination);assert.equal(s.game.inventory.gold,remainingGold);
+ assert.equal(s.game.inventory.materials['l2_'+data.ports[originPort].ticket],0);
  await page.locator('.atlas-panel [data-dismiss]').first().click();await page.waitForSelector('.atlas-panel',{state:'detached'});
  assert.equal(await page.locator('[inert],dialog[open]').count(),0);
  const count=requests.length;await page.waitForTimeout(2200);assert.equal(requests.length,count);

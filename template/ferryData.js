@@ -9,19 +9,52 @@ export default {
     "vendorInteractionRadius": 250,
     "files": {
       "scripts/vehicles/BoatGludinRune.java": "b113bf32c65f4dc6e7c090514c7f822ae507462b6a3ca7b903b4ab561b4c24c3",
+      "scripts/vehicles/BoatTalkingGludin.java": "ff88a9b425128854bb86166d3a8e582a2a92526ac780682dfa992ed2f067b5b8",
       "MerchantPriceConfig.xml": "3be8ea0e4f05208b61d7bd5da91970d8c580d44ebedf92a636f82c99289203aa",
       "zones/custom_town.xml": "076adfa7ab63a774b9a8d9c62469a9bae79cfd4af20c1e4827bfd9ad99323223",
       "stats/items/07900-07999.xml": "23ab5b5f1ac3fe5c950122d73ce22e231df951de9cf02d8c9811ea09542f4a43",
+      "stats/items/01000-01099.xml": "bbd86db45b549f872bdf1bb4ce8c48ea0ae76d80c9f3a3586899e62995aa562a",
       "spawns/Others/17_22.xml": "eb2046a66fee9aa1f10fa566536432e1e60178a457e63391953ef2bdb011ab3b",
       "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+      "spawns/Others/17_25.xml": "5c55658cc7b5a1f9e15adf1130be2334c0ecfa1082fc9bbbdc5e5a64007f237c",
       "buylists/3038700.xml": "5c050def8c86936a82872499f761f711aa81312f7a7e3e602fb869b9257b32d0",
-      "buylists/3135100.xml": "604d435b8e3e98c0dfa4b001eaaa88528788ec1d146dd62d849535630960dc69"
+      "buylists/3135100.xml": "604d435b8e3e98c0dfa4b001eaaa88528788ec1d146dd62d849535630960dc69",
+      "buylists/3004700.xml": "a60cd4cbd98ceefeb97e5d48bd83c1d13fc76f794d7c6437b5d6837d39509e14"
     }
   },
   "dockMs": 600000,
+  "vessels": [
+    {
+      "id": "gludin-rune",
+      "file": "BoatGludinRune.java",
+      "ports": [
+        "gludin",
+        "rune"
+      ],
+      "dockMs": 600000,
+      "initialDockMs": 480000
+    },
+    {
+      "id": "talking-gludin",
+      "file": "BoatTalkingGludin.java",
+      "ports": [
+        "talking-gludin",
+        "gludin-talking"
+      ],
+      "dockMs": 600000,
+      "initialDockMs": 480000
+    }
+  ],
   "ports": {
     "gludin": {
       "id": "gludin",
+      "vessel": "gludin-rune",
+      "destination": "rune",
+      "pathNames": [
+        "GLUDIN_TO_RUNE",
+        "RUNE_DOCK"
+      ],
+      "harbor": "GLUDIN_DOCK",
       "name": "Порт Глудина",
       "city": "gludin",
       "vendor": {
@@ -53,6 +86,13 @@ export default {
     },
     "rune": {
       "id": "rune",
+      "vessel": "gludin-rune",
+      "destination": "gludin",
+      "pathNames": [
+        "RUNE_TO_GLUDIN",
+        "GLUDIN_DOCK"
+      ],
+      "harbor": "RUNE_DOCK",
       "name": "Порт Руны",
       "city": "rune",
       "vendor": {
@@ -81,27 +121,85 @@ export default {
         "name": "Neutral Territory",
         "baseTax": "50"
       }
+    },
+    "talking-gludin": {
+      "id": "talking-gludin",
+      "vessel": "talking-gludin",
+      "destination": "gludin-talking",
+      "pathNames": [
+        "TALKING_TO_GLUDIN",
+        "GLUDIN_DOCK"
+      ],
+      "harbor": "TALKING_DOCK",
+      "name": "Говорящий остров → Глудин",
+      "city": "talking-island-village",
+      "vendor": {
+        "x": -97131,
+        "y": 258946,
+        "z": -3616,
+        "source": "spawns/Others/17_25.xml",
+        "npcId": 30047,
+        "name": "Firon"
+      },
+      "dock": {
+        "x": -96622,
+        "y": 261660,
+        "z": -3610
+      },
+      "oust": {
+        "x": -96777,
+        "y": 258970,
+        "z": -3623
+      },
+      "ticket": 1074,
+      "buylist": "buylists/3004700.xml",
+      "ticketPrice": 1500,
+      "priceConfig": {
+        "id": "18",
+        "name": "Neutral Territory",
+        "baseTax": "50"
+      }
+    },
+    "gludin-talking": {
+      "id": "gludin-talking",
+      "vessel": "talking-gludin",
+      "destination": "talking-gludin",
+      "pathNames": [
+        "GLUDIN_TO_TALKING",
+        "TALKING_DOCK"
+      ],
+      "harbor": "GLUDIN_DOCK",
+      "name": "Глудин → Говорящий остров",
+      "city": "gludin",
+      "vendor": {
+        "x": -91792,
+        "y": 149968,
+        "z": -3629,
+        "source": "spawns/Others/17_22.xml",
+        "npcId": 30387,
+        "name": "Clancy"
+      },
+      "dock": {
+        "x": -95686,
+        "y": 150514,
+        "z": -3610
+      },
+      "oust": {
+        "x": -90015,
+        "y": 150422,
+        "z": -3610
+      },
+      "ticket": 1075,
+      "buylist": "buylists/3038700.xml",
+      "ticketPrice": 7500,
+      "priceConfig": {
+        "id": "18",
+        "name": "Neutral Territory",
+        "baseTax": "50"
+      }
     }
   },
   "paths": {
-    "GLUDIN_DOCK": [
-      [
-        -95686,
-        150514,
-        -3610,
-        150,
-        800
-      ]
-    ],
-    "RUNE_DOCK": [
-      [
-        34381,
-        -37680,
-        -3610,
-        200,
-        800
-      ]
-    ],
     "GLUDIN_TO_RUNE": [
       [
         -95686,
@@ -293,6 +391,15 @@ export default {
         800
       ]
     ],
+    "RUNE_DOCK": [
+      [
+        34381,
+        -37680,
+        -3610,
+        200,
+        800
+      ]
+    ],
     "RUNE_TO_GLUDIN": [
       [
         32750,
@@ -447,6 +554,161 @@ export default {
         -3610,
         200,
         800
+      ]
+    ],
+    "GLUDIN_DOCK": [
+      [
+        -95686,
+        150514,
+        -3610,
+        150,
+        800
+      ]
+    ],
+    "TALKING_TO_GLUDIN": [
+      [
+        -121385,
+        261660,
+        -3610,
+        180,
+        800
+      ],
+      [
+        -127694,
+        253312,
+        -3610,
+        200,
+        800
+      ],
+      [
+        -129274,
+        237060,
+        -3610,
+        250,
+        800
+      ],
+      [
+        -114688,
+        139040,
+        -3610,
+        200,
+        800
+      ],
+      [
+        -109663,
+        135704,
+        -3610,
+        180,
+        800
+      ],
+      [
+        -102151,
+        135704,
+        -3610,
+        180,
+        800
+      ],
+      [
+        -96686,
+        140595,
+        -3610,
+        180,
+        800
+      ],
+      [
+        -95686,
+        147718,
+        -3610,
+        180,
+        800
+      ],
+      [
+        -95686,
+        148718,
+        -3610,
+        180,
+        800
+      ],
+      [
+        -95686,
+        149718,
+        -3610,
+        150,
+        800
+      ]
+    ],
+    "GLUDIN_TO_TALKING": [
+      [
+        -95686,
+        155514,
+        -3610,
+        180,
+        800
+      ],
+      [
+        -95686,
+        185514,
+        -3610,
+        250,
+        800
+      ],
+      [
+        -60136,
+        238816,
+        -3610,
+        200,
+        800
+      ],
+      [
+        -60520,
+        259609,
+        -3610,
+        180,
+        1800
+      ],
+      [
+        -65344,
+        261460,
+        -3610,
+        180,
+        1800
+      ],
+      [
+        -83344,
+        261560,
+        -3610,
+        180,
+        1800
+      ],
+      [
+        -88344,
+        261660,
+        -3610,
+        180,
+        1800
+      ],
+      [
+        -92344,
+        261660,
+        -3610,
+        150,
+        1800
+      ],
+      [
+        -94242,
+        261659,
+        -3610,
+        150,
+        1800
+      ]
+    ],
+    "TALKING_DOCK": [
+      [
+        -96622,
+        261660,
+        -3610,
+        150,
+        1800
       ]
     ]
   }

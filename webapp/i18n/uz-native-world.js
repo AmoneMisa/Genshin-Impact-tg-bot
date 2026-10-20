@@ -1,4 +1,7 @@
 export default {
+ 'Говорящий остров → Глудин':'Gapiruvchi orol → Gludin',
+ 'Глудин → Говорящий остров':'Gludin → Gapiruvchi orol',
+ 'Ожидание свободного причала':'Bo‘sh bandargohni kutish',
  'Морские рейсы':'Dengiz qatnovlari',
  'Морской переход':'Dengiz safari',
  'Порт Глудина':'Gludin porti',

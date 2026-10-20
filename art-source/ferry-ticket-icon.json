@@ -1,11 +1,20 @@
 {
-  "original": "icon.etc_ticket_red_i00.png",
-  "sha256": "34fbac4672031c0a6f91bd0bbb5c4efcb5ff9b90ce17725a3195c9a76faf71f9",
+  "icons": {
+    "icon.etc_ticket_red_i00": {
+      "original": "icon.etc_ticket_red_i00.png",
+      "sha256": "34fbac4672031c0a6f91bd0bbb5c4efcb5ff9b90ce17725a3195c9a76faf71f9"
+    },
+    "icon.etc_ticket_blue_i00": {
+      "original": "icon.etc_ticket_blue_i00.png",
+      "sha256": "b328b97bffd8caeb72d5f05f824c2a7ef30d91f53ec7c3ec8026fff88b68901d"
+    }
+  },
   "items": [
+    7905,
     7904,
-    7905
+    1074,
+    1075
   ],
-  "clientIcon": "icon.etc_ticket_red_i00",
   "conversion": "nearest, lossless WebP",
   "sizes": [
     128,

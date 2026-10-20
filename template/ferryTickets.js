@@ -19,5 +19,25 @@ export const FERRY_TICKETS={
     "type": "EtcItem",
     "grade": "NONE",
     "etc": "ticket"
+  },
+  "1074": {
+    "id": 1074,
+    "name": "Boat Ticket: Talking Island to Gludin",
+    "icon": "icon.etc_ticket_red_i00",
+    "price": 1000,
+    "weight": 20,
+    "type": "EtcItem",
+    "grade": "NONE",
+    "etc": "ticket"
+  },
+  "1075": {
+    "id": 1075,
+    "name": "Boat Ticket: Gludin to Talking Island",
+    "icon": "icon.etc_ticket_blue_i00",
+    "price": 5000,
+    "weight": 20,
+    "type": "EtcItem",
+    "grade": "NONE",
+    "etc": "ticket"
   }
 };
