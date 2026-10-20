@@ -2021,6 +2021,152 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/oren_castle_town.xml"
+  },
+  "hunters": {
+    "polygon": [
+      [
+        115318,
+        74260
+      ],
+      [
+        115019,
+        74495
+      ],
+      [
+        113919,
+        75365
+      ],
+      [
+        114386,
+        77505
+      ],
+      [
+        114653,
+        78197
+      ],
+      [
+        115063,
+        80068
+      ],
+      [
+        117015,
+        81804
+      ],
+      [
+        120527,
+        81006
+      ],
+      [
+        121485,
+        79049
+      ],
+      [
+        121631,
+        74718
+      ],
+      [
+        119999,
+        74209
+      ],
+      [
+        118499,
+        74097
+      ],
+      [
+        117946,
+        74068
+      ],
+      [
+        117404,
+        73671
+      ],
+      [
+        115622,
+        74026
+      ],
+      [
+        115328,
+        74252
+      ]
+    ],
+    "minZ": -2800,
+    "maxZ": -1500,
+    "sourceZone": "Hunter Village",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 10752,
+    "arrivals": [
+      {
+        "x": 116127,
+        "y": 76015,
+        "z": -2729
+      },
+      {
+        "x": 115683,
+        "y": 77610,
+        "z": -2650
+      },
+      {
+        "x": 117304,
+        "y": 76318,
+        "z": -2670
+      },
+      {
+        "x": 119862,
+        "y": 76603,
+        "z": -2220
+      },
+      {
+        "x": 117671,
+        "y": 78998,
+        "z": -2210
+      },
+      {
+        "x": 117189,
+        "y": 78952,
+        "z": -2210
+      },
+      {
+        "x": 115861,
+        "y": 75200,
+        "z": -2550
+      },
+      {
+        "x": 118275,
+        "y": 74859,
+        "z": -2557
+      },
+      {
+        "x": 118229,
+        "y": 74677,
+        "z": -2450
+      },
+      {
+        "x": 115685,
+        "y": 75072,
+        "z": -2550
+      },
+      {
+        "x": 116704,
+        "y": 75695,
+        "z": -2680
+      },
+      {
+        "x": 116737,
+        "y": 76738,
+        "z": -2650
+      },
+      {
+        "x": 115193,
+        "y": 77594,
+        "z": -2670
+      },
+      {
+        "x": 116158,
+        "y": 77443,
+        "z": -2660
+      }
+    ],
+    "arrivalSource": "mapregion/hunter_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -2187,6 +2333,160 @@ export const CITY_NPC_UPDATES = {
     "z": -1552,
     "adapted": false,
     "source": "spawns/Others/22_19.xml"
+  },
+  "hunters:30230": {
+    "npcId": 30230,
+    "name": "Edroc",
+    "city": "hunters",
+    "x": 115116,
+    "y": 75923,
+    "z": -2580,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "hunters:30231": {
+    "npcId": 30231,
+    "name": "Garette",
+    "city": "hunters",
+    "x": 116109,
+    "y": 75022,
+    "z": -2583,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "hunters:30232": {
+    "npcId": 30232,
+    "name": "Sorint",
+    "city": "hunters",
+    "x": 115271,
+    "y": 76705,
+    "z": -2650,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "hunters:30233": {
+    "npcId": 30233,
+    "name": "Esmeralda",
+    "city": "hunters",
+    "x": 117129,
+    "y": 76917,
+    "z": -2689,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  "hunters:30301": {
+    "npcId": 30301,
+    "name": "Hally",
+    "city": "hunters",
+    "x": 116646,
+    "y": 74820,
+    "z": -2581,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "hunters:30684": {
+    "npcId": 30684,
+    "name": "Viktor",
+    "city": "hunters",
+    "x": 115310,
+    "y": 75447,
+    "z": -2581,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "hunters:30686": {
+    "npcId": 30686,
+    "name": "Silva",
+    "city": "hunters",
+    "x": 115435,
+    "y": 76541,
+    "z": -2649,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "hunters:31667": {
+    "npcId": 31667,
+    "name": "Raik",
+    "city": "hunters",
+    "x": 120108,
+    "y": 74780,
+    "z": -2372,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "hunters:31669": {
+    "npcId": 31669,
+    "name": "Onyx",
+    "city": "hunters",
+    "x": 117572,
+    "y": 75592,
+    "z": -2648,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "hunters:31670": {
+    "npcId": 31670,
+    "name": "Burns",
+    "city": "hunters",
+    "x": 118740,
+    "y": 78248,
+    "z": -2160,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "hunters:32478": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "hunters",
+    "x": 115656,
+    "y": 76620,
+    "z": -2664,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "hunters:32887": {
+    "npcId": 32887,
+    "name": "Metar",
+    "city": "hunters",
+    "x": 117410,
+    "y": 75082,
+    "z": -2648,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "hunters:35277": {
+    "npcId": 35277,
+    "name": "Manor Manager",
+    "city": "hunters",
+    "x": 116780,
+    "y": 75504,
+    "z": -2727,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml",
+    "role": "Торговец",
+    "service": "merchant"
   },
   "talking-island-village:30001": {
     "npcId": 30001,
@@ -3019,6 +3319,62 @@ export const CITY_SOURCE_NPCS = [
     "x": 83680,
     "y": 54480,
     "z": -1512,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "hunters:source:32220:115888:79141:-2417",
+    "npcId": 32220,
+    "name": "Selsia",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 115888,
+    "y": 79141,
+    "z": -2417,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "hunters:source:32218:115917:79194:-2417",
+    "npcId": 32218,
+    "name": "Miya",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 115917,
+    "y": 79194,
+    "z": -2417,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "hunters:source:32217:116064:79188:-2417",
+    "npcId": 32217,
+    "name": "Barta",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 116064,
+    "y": 79188,
+    "z": -2417,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "hunters:source:32219:116110:79155:-2417",
+    "npcId": 32219,
+    "name": "Fabnor",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 116110,
+    "y": 79155,
+    "z": -2417,
     "service": "trainer",
     "gateway": false,
     "adapted": false,
@@ -5865,5 +6221,285 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Others/23_12.xml"
+  },
+  {
+    "id": "hunters:source:30685:115647:77114:-2649",
+    "npcId": 30685,
+    "name": "Baxt",
+    "role": "Хранитель склада",
+    "city": "hunters",
+    "x": 115647,
+    "y": 77114,
+    "z": -2649,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30687:117649:75415:-2646",
+    "npcId": 30687,
+    "name": "Vergara",
+    "role": "Кузнец",
+    "city": "hunters",
+    "x": 117649,
+    "y": 75415,
+    "z": -2646,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30688:117613:75310:-2648",
+    "npcId": 30688,
+    "name": "Duning",
+    "role": "Кузнец",
+    "city": "hunters",
+    "x": 117613,
+    "y": 75310,
+    "z": -2648,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30689:119673:77618:-2243",
+    "npcId": 30689,
+    "name": "Siria",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 119673,
+    "y": 77618,
+    "z": -2243,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30690:119472:77835:-2243",
+    "npcId": 30690,
+    "name": "Luther",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 119472,
+    "y": 77835,
+    "z": -2243,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30691:119249:77663:-2243",
+    "npcId": 30691,
+    "name": "Aren Athebaldt",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 119249,
+    "y": 77663,
+    "z": -2243,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30692:119892:77284:-2243",
+    "npcId": 30692,
+    "name": "Stedmiel",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 119892,
+    "y": 77284,
+    "z": -2243,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30693:119727:77137:-2243",
+    "npcId": 30693,
+    "name": "Queenien",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 119727,
+    "y": 77137,
+    "z": -2243,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30694:119043:78586:-2158",
+    "npcId": 30694,
+    "name": "Scraide",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 119043,
+    "y": 78586,
+    "z": -2158,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30695:119156:78356:-2158",
+    "npcId": 30695,
+    "name": "Moses",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 119156,
+    "y": 78356,
+    "z": -2158,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30696:118890:78104:-2158",
+    "npcId": 30696,
+    "name": "Page",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 118890,
+    "y": 78104,
+    "z": -2158,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30697:118887:78752:-2158",
+    "npcId": 30697,
+    "name": "Videlrien",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 118887,
+    "y": 78752,
+    "z": -2158,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30698:118571:78513:-2158",
+    "npcId": 30698,
+    "name": "Evelyn",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 118571,
+    "y": 78513,
+    "z": -2158,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30699:120249:76031:-2259",
+    "npcId": 30699,
+    "name": "Medown",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 120249,
+    "y": 76031,
+    "z": -2259,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30700:120251:76247:-2260",
+    "npcId": 30700,
+    "name": "Prestan",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 120251,
+    "y": 76247,
+    "z": -2260,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30701:120180:75807:-2260",
+    "npcId": 30701,
+    "name": "Errickin",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 120180,
+    "y": 75807,
+    "z": -2260,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30704:120100:74739:-2372",
+    "npcId": 30704,
+    "name": "Garvarentz",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 120100,
+    "y": 74739,
+    "z": -2372,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30705:120079:74847:-2374",
+    "npcId": 30705,
+    "name": "Chakiris",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 120079,
+    "y": 74847,
+    "z": -2374,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:30706:120039:74650:-2374",
+    "npcId": 30706,
+    "name": "Lazenby",
+    "role": "Наставник",
+    "city": "hunters",
+    "x": 120039,
+    "y": 74650,
+    "z": -2374,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "hunters:source:32864:117168:76834:-2688",
+    "npcId": 32864,
+    "name": "Separated Soul",
+    "role": "Проводник",
+    "city": "hunters",
+    "x": 117168,
+    "y": 76834,
+    "z": -2688,
+    "service": "resident",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_20.xml"
   }
 ];
