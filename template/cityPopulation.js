@@ -3020,6 +3020,197 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/heiness_town.xml"
+  },
+  "schuttgart": {
+    "polygon": [
+      [
+        91098,
+        -144458
+      ],
+      [
+        91477,
+        -143218
+      ],
+      [
+        91170,
+        -141327
+      ],
+      [
+        90797,
+        -140803
+      ],
+      [
+        90404,
+        -141058
+      ],
+      [
+        90077,
+        -140615
+      ],
+      [
+        90424,
+        -140324
+      ],
+      [
+        89997,
+        -139845
+      ],
+      [
+        88300,
+        -138977
+      ],
+      [
+        87659,
+        -138913
+      ],
+      [
+        87656,
+        -139375
+      ],
+      [
+        87044,
+        -139383
+      ],
+      [
+        87039,
+        -138938
+      ],
+      [
+        86427,
+        -138981
+      ],
+      [
+        84717,
+        -139826
+      ],
+      [
+        84295,
+        -140324
+      ],
+      [
+        84648,
+        -140602
+      ],
+      [
+        84286,
+        -141095
+      ],
+      [
+        83959,
+        -140825
+      ],
+      [
+        83562,
+        -141356
+      ],
+      [
+        83229,
+        -143217
+      ],
+      [
+        83821,
+        -145580
+      ],
+      [
+        84373,
+        -148184
+      ],
+      [
+        89454,
+        -148688
+      ],
+      [
+        91280,
+        -145403
+      ],
+      [
+        91084,
+        -144472
+      ]
+    ],
+    "minZ": -2350,
+    "maxZ": -1200,
+    "sourceZone": "Town of Schuttgart",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 12544,
+    "arrivals": [
+      {
+        "x": 88240,
+        "y": -142736,
+        "z": -1341
+      },
+      {
+        "x": 88624,
+        "y": -142480,
+        "z": -1344
+      },
+      {
+        "x": 87408,
+        "y": -142304,
+        "z": -1341
+      },
+      {
+        "x": 87344,
+        "y": -141696,
+        "z": -1341
+      },
+      {
+        "x": 86400,
+        "y": -142672,
+        "z": -1344
+      },
+      {
+        "x": 85968,
+        "y": -142384,
+        "z": -1341
+      },
+      {
+        "x": 84720,
+        "y": -141936,
+        "z": -1542
+      },
+      {
+        "x": 85056,
+        "y": -141328,
+        "z": -1542
+      },
+      {
+        "x": 85472,
+        "y": -140752,
+        "z": -1542
+      },
+      {
+        "x": 86560,
+        "y": -140320,
+        "z": -1542
+      },
+      {
+        "x": 87184,
+        "y": -140256,
+        "z": -1542
+      },
+      {
+        "x": 87776,
+        "y": -140384,
+        "z": -1542
+      },
+      {
+        "x": 88448,
+        "y": -140512,
+        "z": -1542
+      },
+      {
+        "x": 89360,
+        "y": -140944,
+        "z": -1542
+      },
+      {
+        "x": 89712,
+        "y": -141472,
+        "z": -1542
+      }
+    ],
+    "arrivalSource": "mapregion/town_of_schuttgart.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -3177,6 +3368,18 @@ export const CITY_NPC_UPDATES = {
     "role": "Хранитель склада",
     "service": "warehouse"
   },
+  "schuttgart:npc:0": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "schuttgart",
+    "x": 88940,
+    "y": -140816,
+    "z": -1536,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
   "gludin:npc:0": {
     "npcId": 30320,
     "name": "Richlin",
@@ -3220,6 +3423,16 @@ export const CITY_NPC_UPDATES = {
     "source": "spawns/Others/23_24.xml",
     "role": "Хранитель склада",
     "service": "warehouse"
+  },
+  "schuttgart:gatekeeper": {
+    "npcId": 31964,
+    "name": "Bilia",
+    "city": "schuttgart",
+    "x": 87048,
+    "y": -143448,
+    "z": -1293,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
   },
   "aden:Ferris": {
     "npcId": 30847,
@@ -3320,6 +3533,16 @@ export const CITY_NPC_UPDATES = {
     "z": -1552,
     "adapted": false,
     "source": "spawns/Others/22_19.xml"
+  },
+  "schuttgart:instance": {
+    "npcId": 31981,
+    "name": "Vishotsky",
+    "city": "schuttgart",
+    "x": 85865,
+    "y": -142153,
+    "z": -1342,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
   },
   "rune:instance": {
     "npcId": 31340,
@@ -4091,6 +4314,16 @@ export const CITY_NPC_UPDATES = {
     "adapted": false,
     "source": "spawns/Gracia/GludioAirshipField.xml"
   },
+  "schuttgart:gracia-survivor": {
+    "npcId": 32632,
+    "name": "Gracian Survivor",
+    "city": "schuttgart",
+    "x": 87205,
+    "y": -143485,
+    "z": -1288,
+    "adapted": false,
+    "source": "spawns/Gracia/GludioAirshipField.xml"
+  },
   "heine:gracia-survivor": {
     "npcId": 32632,
     "name": "Gracian Survivor",
@@ -4538,6 +4771,76 @@ export const CITY_SOURCE_NPCS = [
     "x": 83680,
     "y": 54480,
     "z": -1512,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "schuttgart:source:32203:90380:-144353:-1520",
+    "npcId": 32203,
+    "name": "Ramen",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 90380,
+    "y": -144353,
+    "z": -1520,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "schuttgart:source:32204:90408:-144246:-1520",
+    "npcId": 32204,
+    "name": "Fiske",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 90408,
+    "y": -144246,
+    "z": -1520,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "schuttgart:source:32233:90415:-144342:-1520",
+    "npcId": 32233,
+    "name": "Zoldart",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 90415,
+    "y": -144342,
+    "z": -1520,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "schuttgart:source:32234:90438:-144275:-1520",
+    "npcId": 32234,
+    "name": "Nizer",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 90438,
+    "y": -144275,
+    "z": -1520,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "schuttgart:source:32202:90449:-144316:-1520",
+    "npcId": 32202,
+    "name": "Khadava",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 90449,
+    "y": -144316,
+    "z": -1520,
     "service": "trainer",
     "gateway": false,
     "adapted": false,
@@ -6936,6 +7239,594 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Others/21_19.xml"
+  },
+  {
+    "id": "schuttgart:source:31945:86459:-139631:-1527",
+    "npcId": 31945,
+    "name": "Auzendorff",
+    "role": "Торговец",
+    "city": "schuttgart",
+    "x": 86459,
+    "y": -139631,
+    "z": -1527,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31946:86311:-139669:-1553",
+    "npcId": 31946,
+    "name": "Hombre",
+    "role": "Торговец",
+    "city": "schuttgart",
+    "x": 86311,
+    "y": -139669,
+    "z": -1553,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31947:86285:-139679:-1553",
+    "npcId": 31947,
+    "name": "Owaki",
+    "role": "Торговец",
+    "city": "schuttgart",
+    "x": 86285,
+    "y": -139679,
+    "z": -1553,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31948:86144:-139800:-1527",
+    "npcId": 31948,
+    "name": "Adrian",
+    "role": "Торговец",
+    "city": "schuttgart",
+    "x": 86144,
+    "y": -139800,
+    "z": -1527,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31949:85672:-141146:-1528",
+    "npcId": 31949,
+    "name": "Rouge",
+    "role": "Торговец",
+    "city": "schuttgart",
+    "x": 85672,
+    "y": -141146,
+    "z": -1528,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31950:85779:-141100:-1528",
+    "npcId": 31950,
+    "name": "Mailland",
+    "role": "Торговец",
+    "city": "schuttgart",
+    "x": 85779,
+    "y": -141100,
+    "z": -1528,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31951:85659:-141181:-1528",
+    "npcId": 31951,
+    "name": "Jose",
+    "role": "Торговец",
+    "city": "schuttgart",
+    "x": 85659,
+    "y": -141181,
+    "z": -1528,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31952:85753:-141360:-1528",
+    "npcId": 31952,
+    "name": "Pele",
+    "role": "Торговец",
+    "city": "schuttgart",
+    "x": 85753,
+    "y": -141360,
+    "z": -1528,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31956:88626:-141206:-1527",
+    "npcId": 31956,
+    "name": "Rydel",
+    "role": "Хранитель склада",
+    "city": "schuttgart",
+    "x": 88626,
+    "y": -141206,
+    "z": -1527,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31957:88663:-141231:-1527",
+    "npcId": 31957,
+    "name": "Cherbal",
+    "role": "Хранитель склада",
+    "city": "schuttgart",
+    "x": 88663,
+    "y": -141231,
+    "z": -1527,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31958:88552:-140784:-1527",
+    "npcId": 31958,
+    "name": "Yasheni",
+    "role": "Хранитель склада",
+    "city": "schuttgart",
+    "x": 88552,
+    "y": -140784,
+    "z": -1527,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31959:88904:-141324:-1527",
+    "npcId": 31959,
+    "name": "Axel",
+    "role": "Хранитель склада",
+    "city": "schuttgart",
+    "x": 88904,
+    "y": -141324,
+    "z": -1527,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31960:88467:-139841:-1533",
+    "npcId": 31960,
+    "name": "Buryun",
+    "role": "Кузнец",
+    "city": "schuttgart",
+    "x": 88467,
+    "y": -139841,
+    "z": -1533,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31961:88405:-139769:-1533",
+    "npcId": 31961,
+    "name": "Newyear",
+    "role": "Кузнец",
+    "city": "schuttgart",
+    "x": 88405,
+    "y": -139769,
+    "z": -1533,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31963:88181:-139576:-1534",
+    "npcId": 31963,
+    "name": "Hitchi",
+    "role": "Торговец",
+    "city": "schuttgart",
+    "x": 88181,
+    "y": -139576,
+    "z": -1534,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31965:86238:-145065:-1293",
+    "npcId": 31965,
+    "name": "Hector",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 86238,
+    "y": -145065,
+    "z": -1293,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31966:86058:-145067:-1293",
+    "npcId": 31966,
+    "name": "Karamon",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 86058,
+    "y": -145067,
+    "z": -1293,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31967:86336:-145078:-1293",
+    "npcId": 31967,
+    "name": "Euline",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 86336,
+    "y": -145078,
+    "z": -1293,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31968:87444:-146042:-1293",
+    "npcId": 31968,
+    "name": "Baryl",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 87444,
+    "y": -146042,
+    "z": -1293,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31969:87721:-146230:-1293",
+    "npcId": 31969,
+    "name": "Evelyn",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 87721,
+    "y": -146230,
+    "z": -1293,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31970:86988:-146216:-1293",
+    "npcId": 31970,
+    "name": "Sinis",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 86988,
+    "y": -146216,
+    "z": -1293,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31971:88374:-145081:-1293",
+    "npcId": 31971,
+    "name": "Otillo",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 88374,
+    "y": -145081,
+    "z": -1293,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31972:88660:-145083:-1293",
+    "npcId": 31972,
+    "name": "Atraxia",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 88660,
+    "y": -145083,
+    "z": -1293,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31973:87238:-144817:-1291",
+    "npcId": 31973,
+    "name": "Raheel",
+    "role": "Торговец",
+    "city": "schuttgart",
+    "x": 87238,
+    "y": -144817,
+    "z": -1291,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31974:90559:-141911:-1527",
+    "npcId": 31974,
+    "name": "Drizzit",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 90559,
+    "y": -141911,
+    "z": -1527,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31975:90313:-141801:-1527",
+    "npcId": 31975,
+    "name": "Aerina",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 90313,
+    "y": -141801,
+    "z": -1527,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31976:90388:-142185:-1527",
+    "npcId": 31976,
+    "name": "Talia",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 90388,
+    "y": -142185,
+    "z": -1527,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31977:89959:-143257:-1527",
+    "npcId": 31977,
+    "name": "Shaka",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 89959,
+    "y": -143257,
+    "z": -1527,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31978:90000:-143286:-1527",
+    "npcId": 31978,
+    "name": "Tazeer",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 90000,
+    "y": -143286,
+    "z": -1527,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31979:89986:-143186:-1527",
+    "npcId": 31979,
+    "name": "Moira",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 89986,
+    "y": -143186,
+    "z": -1527,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31980:89939:-143454:-1527",
+    "npcId": 31980,
+    "name": "Rumba",
+    "role": "Торговец",
+    "city": "schuttgart",
+    "x": 89939,
+    "y": -143454,
+    "z": -1527,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31990:88447:-139675:-1533",
+    "npcId": 31990,
+    "name": "Siger",
+    "role": "Кузнец",
+    "city": "schuttgart",
+    "x": 88447,
+    "y": -139675,
+    "z": -1533,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:31996:88470:-145080:-1293",
+    "npcId": 31996,
+    "name": "Javier",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 88470,
+    "y": -145080,
+    "z": -1293,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:32092:88529:-140816:-1527",
+    "npcId": 32092,
+    "name": "Alder",
+    "role": "Хранитель склада",
+    "city": "schuttgart",
+    "x": 88529,
+    "y": -140816,
+    "z": -1527,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:32093:88427:-139823:-1533",
+    "npcId": 32093,
+    "name": "Bolin",
+    "role": "Кузнец",
+    "city": "schuttgart",
+    "x": 88427,
+    "y": -139823,
+    "z": -1533,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:32094:86170:-145068:-1293",
+    "npcId": 32094,
+    "name": "Schule",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 86170,
+    "y": -145068,
+    "z": -1293,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:32095:87282:-146057:-1293",
+    "npcId": 32095,
+    "name": "Marie",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 87282,
+    "y": -146057,
+    "z": -1293,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:32096:90582:-141999:-1527",
+    "npcId": 32096,
+    "name": "Helminter",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 90582,
+    "y": -141999,
+    "z": -1527,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:32097:89964:-143221:-1527",
+    "npcId": 32097,
+    "name": "Finker",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 89964,
+    "y": -143221,
+    "z": -1527,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:32098:88571:-145073:-1293",
+    "npcId": 32098,
+    "name": "Celes",
+    "role": "Наставник",
+    "city": "schuttgart",
+    "x": 88571,
+    "y": -145073,
+    "z": -1293,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:32882:88254:-139601:-1528",
+    "npcId": 32882,
+    "name": "Prouse",
+    "role": "Торговец",
+    "city": "schuttgart",
+    "x": 88254,
+    "y": -139601,
+    "z": -1528,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
+  },
+  {
+    "id": "schuttgart:source:35558:89340:-141591:-1536",
+    "npcId": 35558,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "schuttgart",
+    "x": 89340,
+    "y": -141591,
+    "z": -1536,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_13.xml"
   },
   {
     "id": "oren:source:30178:79111:53657:-1548",
