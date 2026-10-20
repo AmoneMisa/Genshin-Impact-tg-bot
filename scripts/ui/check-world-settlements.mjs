@@ -44,7 +44,7 @@ try{for(const width of [320,390,1100]){
  }
  await page.waitForTimeout(200);assert.ok([...loaded].some(u=>/\/l2\/.*\.webp/.test(u)));
  const city=SETTLEMENTS.find(c=>c.id==='kamael-village'),npc=SETTLEMENT_NPCS.find(n=>n.city===city.id),box=await page.locator('canvas').boundingBox();
- await page.locator('canvas').click({position:{x:box.width/2+(npc.x-city.x)*box.width/14000,y:box.height/2+(npc.y-city.y)*box.width/14000}});
+ await page.locator('canvas').click({position:{x:box.width/2+(npc.x-city.x)*box.width/city.size,y:box.height/2+(npc.y-city.y)*box.width/city.size}});
  if(await page.locator('[data-group]').count())await page.locator('[data-group]').first().click();
  assert.equal(await page.locator('[data-approach]').count(),1);await page.keyboard.press('Escape');
  assert.equal(await page.locator('.atlas-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
