@@ -968,5 +968,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "cruma-tower": {
+    "x": 17225,
+    "y": 114173,
+    "z": -3440,
+    "region": "dion",
+    "teleportGold": 2300,
+    "entrySource": {
+      "file": "teleporters/town/30059.xml",
+      "npcId": 30059,
+      "name": "Cruma Tower",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "c958e4a75e6325a995a05e8d2659a8942a2e0ce12509136107a465ce64666433"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30059,
+        "npcName": "Trisha",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 2300,
+        "source": {
+          "file": "teleporters/town/30059.xml",
+          "npcId": 30059,
+          "name": "Cruma Tower",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "c958e4a75e6325a995a05e8d2659a8942a2e0ce12509136107a465ce64666433"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        12225,
+        109173
+      ],
+      [
+        22225,
+        109173
+      ],
+      [
+        22225,
+        119173
+      ],
+      [
+        12225,
+        119173
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
