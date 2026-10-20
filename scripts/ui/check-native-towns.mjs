@@ -57,12 +57,22 @@ try{for(const {width,noCanvas=false} of configurations){
   assert.equal(await page.locator('.atlas-popup').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
   return walk;
  }
- let walk=await selectCity('Флоран');
- assert.equal(await page.locator('[data-quick-confirm]').isDisabled(),true);
- assert.match(await page.locator('[data-quick-confirm]').textContent(),/Телепорт недоступен/);
- await page.keyboard.press('Escape');
- walk=await selectCity(destinationName);
- await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_walk_city'),walk.click()]);
+ if(worldState(s,now).nativeWalkCities.includes('floran')){
+  await selectCity('Флоран');
+  assert.equal(await page.locator('[data-quick-confirm]').isDisabled(),true);
+  assert.match(await page.locator('[data-quick-confirm]').textContent(),/Телепорт недоступен/);
+  await page.keyboard.press('Escape');
+ }
+ if(process.env.TOWN_MARKER&&!noCanvas){
+  await page.locator('[data-mode="world"]').click();
+  const box=await page.locator('canvas').boundingBox(),city=CITIES.find(c=>c.id===destination),scale=box.width/524288;
+  await page.locator('canvas').click({position:{x:box.width/2+(city.x+32768)*scale,y:box.height/2+(city.y-16384)*scale}});
+  const button=page.locator('[data-town-tp]');assert.equal(await button.isEnabled(),true);assert.match(await button.textContent(),/Дойти пешком/);
+  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='travel_city'),button.click()]);
+ }else{
+  const walk=await selectCity(destinationName);
+  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_walk_city'),walk.click()]);
+ }
  await page.waitForTimeout(100);assert.equal(s.game.world.mode,'road');assert.ok(s.game.world.walkHome.native);
  assert.equal(await page.locator('[data-mode="city"]').textContent(),'Местность');
  assert.equal(await page.locator('[data-city-view]').count(),0);
@@ -73,7 +83,7 @@ try{for(const {width,noCanvas=false} of configurations){
  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_stop'),page.locator('[data-native-stop]').click()]);
  await page.waitForTimeout(100);assert.equal(s.game.world.mode,'native');
  const stop={...s.game.world.nativePosition};s.game=JSON.parse(JSON.stringify(s.game));
- walk=await selectCity(destinationName);
+ const walk=await selectCity(destinationName);
  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_walk_city'),walk.click()]);
  assert.deepEqual(s.game.world.walkHome.native.point,stop);
  finishNext=true;await page.waitForResponse(async r=>{if(!r.url().endsWith('/api/world?live=1'))return false;const p=(await r.json()).world?.player;return p?.city===destination&&p?.mode==='city';});
@@ -84,5 +94,5 @@ try{for(const {width,noCanvas=false} of configurations){
  await page.locator('.atlas-panel [data-dismiss]').first().click();await page.waitForSelector('.atlas-panel',{state:'detached'});
  assert.equal(await page.locator('[inert],dialog[open]').count(),0);
  assert.equal(requests.some(u=>u.includes('l2j-geodata')||u.endsWith('.gz')),false);
- assert.deepEqual(errors,[]);await page.close();console.log(`PASS towns ${origin} -> ${destination} ${width}${noCanvas?' no canvas':''}: walking-only town, intercity road, stop, save/load, resume, arrival, focus, cleanup`);
+ assert.deepEqual(errors,[]);await page.close();console.log(`PASS towns ${origin} -> ${destination} ${width}${noCanvas?' no canvas':''}: shared town list, intercity road, stop, save/load, resume, arrival, focus, cleanup`);
 }}finally{await browser.close();}

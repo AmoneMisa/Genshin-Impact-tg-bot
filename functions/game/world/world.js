@@ -31,6 +31,14 @@ export const CITY_SIZE=14000;
 export const citySize=city=>city?.size||CITY_SIZE;
 const cityOf = w => CITIES.find(c=>c.id===w.city) || CITIES[1];
 const alive=s=>s.game.gameClass?.stats?.hp>0;
+function beginNativeCityWalk(session,target,now){
+    const denied=quickTravelBlock(session,now);if(denied)return {ok:false,reason:denied};
+    const city=CITIES.find(c=>c.id===target);if(!city)return {ok:false,reason:'unknown_zone'};
+    const result=nativeTravel(session,{city:city.id},now,getSpeed(session)*l2MoveMultiplier(session,now));if(!result.ok)return result;
+    const w=session.game.world;if(w.mode==='location')saveNativeField(session,now);
+    if(session.game.hunt){session.game.hunt.field=null;session.game.hunt.mob=null;}
+    Object.assign(w,{mode:'road',location:null,walkHome:result.trip,path:[],pending:null,channel:null});delete w.nativePosition;delete w.cityWalk;return {ok:true};
+}
 export function ensureWorld(session,now=Date.now()) {
     const existing=session.game.hunt?.field;
     if(!session.game.world){const location=existing&&LOCATIONS.find(l=>l.id===session.game.hunt.zone);session.game.world={version:1,city:location?.region||'giran',location:location?.id||null,mode:location?'location':'city',x:.5,y:.5,moveAt:now,path:[],locks:{}};}
@@ -169,13 +177,7 @@ export function worldAction(session,body,now=Date.now()){
         Object.assign(w,{mode:'road',location:null,walkHome:result.trip,path:[],pending:null,channel:null});delete w.nativePosition;delete w.cityWalk;return {ok:true};
     }
     if(body.action==='native_walk_city'){
-        const denied=quickTravelBlock(session,now);if(denied)return {ok:false,reason:denied};
-        const city=CITIES.find(c=>c.id===body.city);if(!city)return {ok:false,reason:'unknown_zone'};
-        const result=nativeTravel(session,{city:city.id},now,getSpeed(session)*l2MoveMultiplier(session,now));
-        if(!result.ok)return result;
-        if(w.mode==='location')saveNativeField(session,now);
-        if(session.game.hunt){session.game.hunt.field=null;session.game.hunt.mob=null;}
-        Object.assign(w,{mode:'road',walkHome:result.trip,path:[],pending:null,channel:null});delete w.nativePosition;return {ok:true};
+        return beginNativeCityWalk(session,body.city,now);
     }
     if(body.action==='approach_npc'){
         const target=CITY_NPCS.find(n=>n.id===body.npc);
@@ -245,7 +247,7 @@ export function worldAction(session,body,now=Date.now()){
         if(quote.mode==='airship'){const blocked=quickTravelBlock(session,now);if(blocked)return {ok:false,reason:blocked};}
         if(quote.npc)npc=CITY_NPCS.find(n=>n.id===quote.npc&&n.city===w.city);
         if(quote.mode==='walk'){
-            const from=outdoorPoint(session);w.walkHome={until:now+Math.max(1000,Math.hypot(city.x-from.x,city.y-from.y)/Math.max(1,getSpeed(session))*1000),city:city.id};w.mode='road';w.path=[];w.pending=null;w.channel=null;return {ok:true};
+            return beginNativeCityWalk(session,city.id,now);
         }
         if(!npc)return {ok:false,reason:'gatekeeper_required'};
         if(!(session.game.inventory.gold>=quote.gold))return {ok:false,reason:'not_enough_gold'};

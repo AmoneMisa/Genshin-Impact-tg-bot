@@ -41,6 +41,30 @@ test('Gludin joins the central mainland across the reverse-compiled Gludio to Di
  assert.ok(worldAction(s,{action:'native_walk_city',city:'gludin'},middle+1e7).ok);finish(s,middle+2e7);
  assert.equal(s.game.world.city,'gludin');assert.equal(s.game.inventory.gold,1000000);
 });
+
+test('Goddard and Rune share a verified road and the Beast Farm keeps its canonical bank across it',async()=>{
+ let s=hero('goddard');assert.ok(worldState(s,NOW).nativeWalkCities.includes('rune'));
+ assert.ok(worldAction(s,{action:'walk_location',location:'beast-farm'},NOW).ok);finish(s,NOW+1e7);await getHuntState(s,NOW+1e7);quiet(s);
+ const f=s.game.hunt.field,mob=[f,...Object.values(f.rooms||{})].flatMap(r=>r.mobs||[])[0];mob.currentHp=2;const id=mob.instanceId;
+ assert.ok(worldState(s,NOW+1e7).nativeWalkCities.includes('goddard'));
+ assert.ok(worldAction(s,{action:'native_walk_city',city:'goddard'},NOW+1e7).ok);
+ s=JSON.parse(JSON.stringify(s));finish(s,NOW+2e7);assert.equal(s.game.world.city,'goddard');assert.equal(s.game.world.mode,'city');
+ assert.ok(worldAction(s,{action:'walk_location',location:'beast-farm'},NOW+2e7).ok);finish(s,NOW+3e7);
+ const returned=s.game.hunt.field;
+ assert.equal([returned,...Object.values(returned.rooms||{})].flatMap(r=>r.mobs||[]).find(m=>m.instanceId===id).currentHp,2);
+ assert.equal(s.game.world.nativeFields['beast-farm'],undefined);assert.equal(s.game.inventory.gold,1000000);
+});
+
+test('the Floran city-marker walking action uses the same physical journey as the shared movement list',()=>{
+ const a=hero('floran'),b=hero('floran');
+ assert.ok(worldAction(a,{action:'travel_city',city:'dion'},NOW).ok);
+ assert.ok(worldAction(b,{action:'native_walk_city',city:'dion'},NOW).ok);
+ assert.deepEqual(a.game.world.walkHome,b.game.world.walkHome);assert.ok(a.game.world.walkHome.native);
+ const middle=NOW+Math.floor((a.game.world.walkHome.until-NOW)/2);
+ assert.ok(worldAction(a,{action:'native_stop'},middle).ok);const point={...a.game.world.nativePosition};
+ assert.ok(worldAction(a,{action:'native_walk_city',city:'dion'},middle+1).ok);assert.deepEqual(a.game.world.walkHome.native.point,point);
+ finish(a,middle+1e7);assert.equal(a.game.world.city,'dion');assert.equal(a.game.inventory.gold,1000000);
+});
 test('a city journey crosses intermediate towns without paying or teleporting and resumes from a saved physical stop',()=>{
  let s=hero(),gold=s.game.inventory.gold;
  const dto=worldState(s,NOW);assert.ok(dto.nativeWalkCities.includes('heine'));assert.ok(!dto.nativeWalkCities.includes('dion'));
