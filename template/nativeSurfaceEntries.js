@@ -764,5 +764,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "hot-springs": {
+    "x": 144880,
+    "y": -113468,
+    "z": -2560,
+    "region": "goddard",
+    "teleportGold": 9300,
+    "entrySource": {
+      "file": "teleporters/town/31275.xml",
+      "npcId": 31275,
+      "name": "Hot Springs",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "812a374e2a26cd653f9139c2e5835d84f486d585d40b80045e4a6980f413a8d2"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 31275,
+        "npcName": "Tatiana",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 9300,
+        "source": {
+          "file": "teleporters/town/31275.xml",
+          "npcId": 31275,
+          "name": "Hot Springs",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "812a374e2a26cd653f9139c2e5835d84f486d585d40b80045e4a6980f413a8d2"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        139880,
+        -118468
+      ],
+      [
+        149880,
+        -118468
+      ],
+      [
+        149880,
+        -108468
+      ],
+      [
+        139880,
+        -108468
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
