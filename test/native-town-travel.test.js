@@ -17,16 +17,29 @@ function hero(city='dion'){
 }
 function finish(s,now){assert.ok(s.game.world.walkHome?.native);advanceWorld(s,now);assert.equal(s.game.world.walkHome,undefined);}
 function quiet(s){const f=s.game.hunt.field;for(const m of [f,...Object.values(f.rooms||{})].flatMap(r=>r.mobs||[]))Object.assign(m,{aggressive:false,aggro:false,aggroRange:0,nextAttackAt:NOW+1e12});}
-test('seven original town links verify every cell in both directions and graph joins preserve exact hub positions',()=>{
- assert.equal(nativeTownEdges().length,7);
+test('published original town links verify every cell in both directions and graph joins preserve exact hub positions',()=>{
+ assert.ok(nativeTownEdges().length>=8);
  for(const route of nativeTownEdges()){
+  assert.deepEqual(route.from,nativeTownHub(route.fromCity));assert.deepEqual(route.to,nativeTownHub(route.toCity));
   let at=route.from;for(const next of route.path){assert.ok(nativeSegment(at,next,{allowed:nativeGroundAllowed,reversible:true}));at=next;}assert.deepEqual(at,route.to);
   for(const next of route.returnPath){assert.ok(nativeSegment(at,next,{allowed:nativeGroundAllowed}));at=next;}assert.deepEqual(at,route.from);
  }
  const path=nativeTownPath('dion','heine');assert.deepEqual(path.cities,['dion','giran','heine']);
  assert.equal(path.distance,compiled.routes['dion:giran'].distance+compiled.routes['giran:heine'].distance);
  let at=path.start;for(const next of path.path){assert.ok(nativeSegment(at,next,{allowed:nativeGroundAllowed,reversible:true}));at=next;}assert.deepEqual(at,nativeTownHub('heine'));
- assert.ok(nativeTownCities('dion').includes('aden'));assert.equal(nativeTownPath('gludio','dion'),null);assert.equal(nativeTownPath('dion','keucereus-alliance-base'),null);
+ assert.ok(nativeTownCities('dion').includes('aden'));assert.ok(nativeTownPath('gludio','dion'));assert.equal(nativeTownPath('dion','keucereus-alliance-base'),null);
+});
+
+test('Gludin joins the central mainland across the reverse-compiled Gludio to Dion road',()=>{
+ let s=hero('gludin');const link=nativeTownPath('gludin','aden');
+ assert.deepEqual(link.cities.slice(0,3),['gludin','gludio','dion']);assert.ok(link.path.length<512);
+ assert.ok(worldAction(s,{action:'native_walk_city',city:'aden'},NOW).ok);
+ const trip=s.game.world.walkHome,middle=NOW+Math.floor((trip.until-NOW)*.42);
+ assert.ok(worldAction(s,{action:'native_stop'},middle).ok);const point={...s.game.world.nativePosition};s=JSON.parse(JSON.stringify(s));
+ assert.ok(worldAction(s,{action:'native_walk_city',city:'aden'},middle+1).ok);assert.deepEqual(s.game.world.walkHome.native.point,point);
+ finish(s,middle+1e7);assert.equal(s.game.world.city,'aden');assert.equal(s.game.inventory.gold,1000000);
+ assert.ok(worldAction(s,{action:'native_walk_city',city:'gludin'},middle+1e7).ok);finish(s,middle+2e7);
+ assert.equal(s.game.world.city,'gludin');assert.equal(s.game.inventory.gold,1000000);
 });
 test('a city journey crosses intermediate towns without paying or teleporting and resumes from a saved physical stop',()=>{
  let s=hero(),gold=s.game.inventory.gold;

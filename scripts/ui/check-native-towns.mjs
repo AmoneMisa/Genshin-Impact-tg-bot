@@ -3,10 +3,12 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {bundlePageAssets} from '../../miniapp/pageAssets.js';
-import {worldState,worldAction,advanceWorld} from '../../functions/game/world/world.js';
+import {worldState,worldAction,advanceWorld,CITIES} from '../../functions/game/world/world.js';
 import change from '../../functions/game/player/changePlayerGameClass.js';
 import update from '../../functions/game/player/updatePlayerStats.js';
 const {chromium}=createRequire(process.env.PLAYWRIGHT_PACKAGE||'C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json')('playwright');
+const origin=process.env.TOWN_ORIGIN||'dion',destination=process.env.TOWN_DESTINATION||'heine',destinationName=CITIES.find(c=>c.id===destination)?.name;
+assert.ok(destinationName,'known destination city');
 const root=path.resolve('webapp'),out=path.resolve('.tmp/native-town-ui');fs.mkdirSync(out,{recursive:true});
 const assets=bundlePageAssets(fs.readFileSync(path.join(root,'index.html'),'utf8'),f=>fs.readFileSync(path.join(root,f.slice(1)),'utf8'));
 const styles=[...assets.html.matchAll(/<(?:link rel="stylesheet"|meta name="game-feature-styles")[^>]+>/g)].map(m=>m[0]).join('');
@@ -14,7 +16,7 @@ const browser=await chromium.launch({headless:true,executablePath:process.env.DE
 const configurations=[{width:320},{width:390},{width:1100},{width:320,noCanvas:true}];
 try{for(const {width,noCanvas=false} of configurations){
  let now=1800000000000,finishNext=false;
- const s={userId:1,userChatData:{user:{id:1}},game:{stats:{lvl:85,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:'dion',x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
+ const s={userId:1,userChatData:{user:{id:1}},game:{stats:{lvl:85,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:origin,x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
  const chat={game:{},members:[s]};s.ownerDocument=()=>chat;change(s,'humanFighter');update(s);
  const dto=()=>{
   if(finishNext&&s.game.world.walkHome?.native){now=Math.max(now,s.game.world.walkHome.until+1);finishNext=false;}
@@ -59,7 +61,7 @@ try{for(const {width,noCanvas=false} of configurations){
  assert.equal(await page.locator('[data-quick-confirm]').isDisabled(),true);
  assert.match(await page.locator('[data-quick-confirm]').textContent(),/Телепорт недоступен/);
  await page.keyboard.press('Escape');
- walk=await selectCity('Хейн');
+ walk=await selectCity(destinationName);
  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_walk_city'),walk.click()]);
  await page.waitForTimeout(100);assert.equal(s.game.world.mode,'road');assert.ok(s.game.world.walkHome.native);
  assert.equal(await page.locator('[data-mode="city"]').textContent(),'Местность');
@@ -71,16 +73,16 @@ try{for(const {width,noCanvas=false} of configurations){
  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_stop'),page.locator('[data-native-stop]').click()]);
  await page.waitForTimeout(100);assert.equal(s.game.world.mode,'native');
  const stop={...s.game.world.nativePosition};s.game=JSON.parse(JSON.stringify(s.game));
- walk=await selectCity('Хейн');
+ walk=await selectCity(destinationName);
  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_walk_city'),walk.click()]);
  assert.deepEqual(s.game.world.walkHome.native.point,stop);
- finishNext=true;await page.waitForResponse(async r=>{if(!r.url().endsWith('/api/world?live=1'))return false;const p=(await r.json()).world?.player;return p?.city==='heine'&&p?.mode==='city';});
- await page.waitForFunction(noCanvas=>noCanvas?document.querySelector('.atlas-status')?.textContent.includes('список перемещения'):document.querySelector('.atlas-status')?.textContent==='Вы в Хейн',noCanvas);
- assert.equal(s.game.world.mode,'city');assert.equal(s.game.world.city,'heine');assert.equal(s.game.inventory.gold,1000000);
+ finishNext=true;await page.waitForResponse(async r=>{if(!r.url().endsWith('/api/world?live=1'))return false;const p=(await r.json()).world?.player;return p?.city===destination&&p?.mode==='city';});
+ await page.waitForFunction(({noCanvas,name})=>noCanvas?document.querySelector('.atlas-status')?.textContent.includes('список перемещения'):document.querySelector('.atlas-status')?.textContent==='Вы в '+name,{noCanvas,name:destinationName});
+ assert.equal(s.game.world.mode,'city');assert.equal(s.game.world.city,destination);assert.equal(s.game.inventory.gold,1000000);
  assert.ok(!calls.some(c=>c.action==='quick_travel'));
  await page.screenshot({path:path.join(out,`town-arrival-${width}${noCanvas?'-fallback':''}.png`)});
  await page.locator('.atlas-panel [data-dismiss]').first().click();await page.waitForSelector('.atlas-panel',{state:'detached'});
  assert.equal(await page.locator('[inert],dialog[open]').count(),0);
  assert.equal(requests.some(u=>u.includes('l2j-geodata')||u.endsWith('.gz')),false);
- assert.deepEqual(errors,[]);await page.close();console.log(`PASS towns ${width}${noCanvas?' no canvas':''}: walking-only town, intercity road, stop, save/load, resume, arrival, focus, cleanup`);
+ assert.deepEqual(errors,[]);await page.close();console.log(`PASS towns ${origin} -> ${destination} ${width}${noCanvas?' no canvas':''}: walking-only town, intercity road, stop, save/load, resume, arrival, focus, cleanup`);
 }}finally{await browser.close();}
