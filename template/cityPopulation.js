@@ -2599,6 +2599,114 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/godard_town.xml"
+  },
+  "rune": {
+    "polygon": [
+      [
+        47150,
+        -44815
+      ],
+      [
+        32531,
+        -44815
+      ],
+      [
+        32531,
+        -52045
+      ],
+      [
+        47150,
+        -52045
+      ]
+    ],
+    "minZ": -1200,
+    "maxZ": 3000,
+    "sourceZone": "Rune Castle Town",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 18000,
+    "arrivals": [
+      {
+        "x": 38096,
+        "y": -46976,
+        "z": 899
+      },
+      {
+        "x": 38608,
+        "y": -47168,
+        "z": 899
+      },
+      {
+        "x": 38752,
+        "y": -47792,
+        "z": 899
+      },
+      {
+        "x": 38848,
+        "y": -48640,
+        "z": 899
+      },
+      {
+        "x": 38272,
+        "y": -49008,
+        "z": 899
+      },
+      {
+        "x": 38112,
+        "y": -49792,
+        "z": 899
+      },
+      {
+        "x": 43408,
+        "y": -51120,
+        "z": -800
+      },
+      {
+        "x": 43536,
+        "y": -50416,
+        "z": -800
+      },
+      {
+        "x": 44368,
+        "y": -50592,
+        "z": -800
+      },
+      {
+        "x": 44000,
+        "y": -49952,
+        "z": -800
+      },
+      {
+        "x": 45072,
+        "y": -49936,
+        "z": -800
+      },
+      {
+        "x": 45824,
+        "y": -49056,
+        "z": -800
+      },
+      {
+        "x": 45632,
+        "y": -47968,
+        "z": -800
+      },
+      {
+        "x": 44864,
+        "y": -47824,
+        "z": -800
+      },
+      {
+        "x": 43744,
+        "y": -47920,
+        "z": -800
+      },
+      {
+        "x": 43792,
+        "y": -48928,
+        "z": -800
+      }
+    ],
+    "arrivalSource": "mapregion/rune_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -2643,6 +2751,28 @@ export const CITY_NPC_UPDATES = {
     "z": -3464,
     "adapted": false,
     "source": "spawns/Others/22_22.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "rune:npc:0": {
+    "npcId": 31320,
+    "name": "Ilyana",
+    "city": "rune",
+    "x": 43824,
+    "y": -47664,
+    "z": -800,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  "rune:npc:1": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "rune",
+    "x": 43568,
+    "y": -48976,
+    "z": -792,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml",
     "role": "Хранитель склада",
     "service": "warehouse"
   },
@@ -2845,6 +2975,16 @@ export const CITY_NPC_UPDATES = {
     "z": -1552,
     "adapted": false,
     "source": "spawns/Others/22_19.xml"
+  },
+  "rune:instance": {
+    "npcId": 31340,
+    "name": "Mathias",
+    "city": "rune",
+    "x": 42596,
+    "y": -47988,
+    "z": -800,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
   },
   "hunters:30230": {
     "npcId": 30230,
@@ -3576,6 +3716,16 @@ export const CITY_NPC_UPDATES = {
     "adapted": false,
     "source": "spawns/Gracia/GludioAirshipField.xml"
   },
+  "rune:gracia-survivor": {
+    "npcId": 32632,
+    "name": "Gracian Survivor",
+    "city": "rune",
+    "x": 43648,
+    "y": -47742,
+    "z": -792,
+    "adapted": false,
+    "source": "spawns/Gracia/GludioAirshipField.xml"
+  },
   "oren:gracia-survivor": {
     "npcId": 32632,
     "name": "Gracian Survivor",
@@ -3865,6 +4015,62 @@ export const CITY_SOURCE_NPCS = [
     "x": 16292,
     "y": 146310,
     "z": -3096,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "rune:source:32231:42983:-51691:-776",
+    "npcId": 32231,
+    "name": "Luben",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 42983,
+    "y": -51691,
+    "z": -776,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "rune:source:32229:43021:-51704:-776",
+    "npcId": 32229,
+    "name": "Hagel",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 43021,
+    "y": -51704,
+    "z": -776,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "rune:source:32230:43070:-51683:-776",
+    "npcId": 32230,
+    "name": "Ceci",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 43070,
+    "y": -51683,
+    "z": -776,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "rune:source:32232:43090:-51647:-776",
+    "npcId": 32232,
+    "name": "Minuet",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 43090,
+    "y": -51647,
+    "z": -776,
     "service": "trainer",
     "gateway": false,
     "adapted": false,
@@ -5717,6 +5923,538 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Others/20_22.xml"
+  },
+  {
+    "id": "rune:source:31300:44692:-47312:-800",
+    "npcId": 31300,
+    "name": "Drumond",
+    "role": "Торговец",
+    "city": "rune",
+    "x": 44692,
+    "y": -47312,
+    "z": -800,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31301:44700:-47396:-800",
+    "npcId": 31301,
+    "name": "Nils",
+    "role": "Торговец",
+    "city": "rune",
+    "x": 44700,
+    "y": -47396,
+    "z": -800,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31302:44704:-47472:-800",
+    "npcId": 31302,
+    "name": "Vladimir",
+    "role": "Торговец",
+    "city": "rune",
+    "x": 44704,
+    "y": -47472,
+    "z": -800,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31303:44620:-47620:-800",
+    "npcId": 31303,
+    "name": "Alisha",
+    "role": "Торговец",
+    "city": "rune",
+    "x": 44620,
+    "y": -47620,
+    "z": -800,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31304:45472:-47424:-796",
+    "npcId": 31304,
+    "name": "Astrid",
+    "role": "Торговец",
+    "city": "rune",
+    "x": 45472,
+    "y": -47424,
+    "z": -796,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31305:45184:-47444:-796",
+    "npcId": 31305,
+    "name": "Candice",
+    "role": "Торговец",
+    "city": "rune",
+    "x": 45184,
+    "y": -47444,
+    "z": -796,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31307:45120:-47452:-796",
+    "npcId": 31307,
+    "name": "Weber",
+    "role": "Торговец",
+    "city": "rune",
+    "x": 45120,
+    "y": -47452,
+    "z": -796,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31311:43556:-48592:-800",
+    "npcId": 31311,
+    "name": "Hugin",
+    "role": "Хранитель склада",
+    "city": "rune",
+    "x": 43556,
+    "y": -48592,
+    "z": -800,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31312:43348:-48444:-800",
+    "npcId": 31312,
+    "name": "Durin",
+    "role": "Хранитель склада",
+    "city": "rune",
+    "x": 43348,
+    "y": -48444,
+    "z": -800,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31313:43308:-48444:-800",
+    "npcId": 31313,
+    "name": "Lunin",
+    "role": "Хранитель склада",
+    "city": "rune",
+    "x": 43308,
+    "y": -48444,
+    "z": -800,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31314:43560:-48912:-800",
+    "npcId": 31314,
+    "name": "Donal",
+    "role": "Хранитель склада",
+    "city": "rune",
+    "x": 43560,
+    "y": -48912,
+    "z": -800,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31315:43556:-48640:-800",
+    "npcId": 31315,
+    "name": "Daisy",
+    "role": "Хранитель склада",
+    "city": "rune",
+    "x": 43556,
+    "y": -48640,
+    "z": -800,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31316:45072:-48784:-800",
+    "npcId": 31316,
+    "name": "Vincenz",
+    "role": "Кузнец",
+    "city": "rune",
+    "x": 45072,
+    "y": -48784,
+    "z": -800,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31317:45136:-48624:-800",
+    "npcId": 31317,
+    "name": "Lombert",
+    "role": "Кузнец",
+    "city": "rune",
+    "x": 45136,
+    "y": -48624,
+    "z": -800,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31319:45620:-48460:-800",
+    "npcId": 31319,
+    "name": "Hans",
+    "role": "Торговец",
+    "city": "rune",
+    "x": 45620,
+    "y": -48460,
+    "z": -800,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31321:38368:-46912:-1131",
+    "npcId": 31321,
+    "name": "Siegmund",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 38368,
+    "y": -46912,
+    "z": -1131,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31322:38060:-46920:-1143",
+    "npcId": 31322,
+    "name": "Erian",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 38060,
+    "y": -46920,
+    "z": -1143,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31323:37240:-46916:-1143",
+    "npcId": 31323,
+    "name": "Beryl",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 37240,
+    "y": -46916,
+    "z": -1143,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31324:38368:-47096:-1143",
+    "npcId": 31324,
+    "name": "Andromeda",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 38368,
+    "y": -47096,
+    "z": -1143,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31325:36832:-46916:-1143",
+    "npcId": 31325,
+    "name": "Themis",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 36832,
+    "y": -46916,
+    "z": -1143,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31326:38368:-46728:-1143",
+    "npcId": 31326,
+    "name": "Lambac",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 38368,
+    "y": -46728,
+    "z": -1143,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31327:37648:-46920:-1135",
+    "npcId": 31327,
+    "name": "Tazki",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 37648,
+    "y": -46920,
+    "z": -1135,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31328:36476:-49032:-1104",
+    "npcId": 31328,
+    "name": "Innocentin",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 36476,
+    "y": -49032,
+    "z": -1104,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31329:36528:-49024:-1104",
+    "npcId": 31329,
+    "name": "Eliyah",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 36528,
+    "y": -49024,
+    "z": -1104,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31330:36448:-49072:-1104",
+    "npcId": 31330,
+    "name": "Wagner",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 36448,
+    "y": -49072,
+    "z": -1104,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31331:36256:-49536:-1104",
+    "npcId": 31331,
+    "name": "Valdis",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 36256,
+    "y": -49536,
+    "z": -1104,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31332:36336:-49904:-1104",
+    "npcId": 31332,
+    "name": "Amelia",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 36336,
+    "y": -49904,
+    "z": -1104,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31333:36548:-50064:-1104",
+    "npcId": 31333,
+    "name": "Rumiel",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 36548,
+    "y": -50064,
+    "z": -1104,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31334:38464:-49920:-1105",
+    "npcId": 31334,
+    "name": "Tifaren",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 38464,
+    "y": -49920,
+    "z": -1105,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31335:38512:-49552:-1105",
+    "npcId": 31335,
+    "name": "Kayan",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 38512,
+    "y": -49552,
+    "z": -1105,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31336:38432:-49184:-1105",
+    "npcId": 31336,
+    "name": "Rahorakti",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 38432,
+    "y": -49184,
+    "z": -1105,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31337:38220:-49012:-1105",
+    "npcId": 31337,
+    "name": "Mekara",
+    "role": "Наставник",
+    "city": "rune",
+    "x": 38220,
+    "y": -49012,
+    "z": -1105,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31698:38208:-48048:899",
+    "npcId": 31698,
+    "name": "Arisha",
+    "role": "Проводник",
+    "city": "rune",
+    "x": 38208,
+    "y": -48048,
+    "z": 899,
+    "service": "resident",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:31699:38384:-48064:-1151",
+    "npcId": 31699,
+    "name": "Stanislava",
+    "role": "Проводник",
+    "city": "rune",
+    "x": 38384,
+    "y": -48064,
+    "z": -1151,
+    "service": "resident",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:32039:34842:-49756:-763",
+    "npcId": 32039,
+    "name": "Triol's Mirror",
+    "role": "Проводник",
+    "city": "rune",
+    "x": 34842,
+    "y": -49756,
+    "z": -763,
+    "service": "resident",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:32612:44267:-49213:-792",
+    "npcId": 32612,
+    "name": "Olf Adams",
+    "role": "Торговец",
+    "city": "rune",
+    "x": 44267,
+    "y": -49213,
+    "z": -792,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:32883:45524:-48446:-792",
+    "npcId": 32883,
+    "name": "Hedinger",
+    "role": "Торговец",
+    "city": "rune",
+    "x": 45524,
+    "y": -48446,
+    "z": -792,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
+  },
+  {
+    "id": "rune:source:35512:38278:-48426:896",
+    "npcId": 35512,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "rune",
+    "x": 38278,
+    "y": -48426,
+    "z": 896,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_16.xml"
   },
   {
     "id": "elven-village:source:30154:44692:52261:-2792",
