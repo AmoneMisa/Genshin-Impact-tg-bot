@@ -50,5 +50,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "swamp-of-screams": {
+    "x": 69340,
+    "y": -50203,
+    "z": -3288,
+    "region": "rune",
+    "teleportGold": 3000,
+    "entrySource": {
+      "file": "teleporters/town/31320.xml",
+      "npcId": 31320,
+      "name": "Swamp of Screams",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "188bc55efcd72b8e655f4fa22ecc6b91a704f5cb4915f89856af1eb880f53c98"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 31320,
+        "npcName": "Ilyana",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 3000,
+        "source": {
+          "file": "teleporters/town/31320.xml",
+          "npcId": 31320,
+          "name": "Swamp of Screams",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "188bc55efcd72b8e655f4fa22ecc6b91a704f5cb4915f89856af1eb880f53c98"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        64340,
+        -55203
+      ],
+      [
+        74340,
+        -55203
+      ],
+      [
+        74340,
+        -45203
+      ],
+      [
+        64340,
+        -45203
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
