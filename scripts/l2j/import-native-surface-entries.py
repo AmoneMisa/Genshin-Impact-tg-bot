@@ -5,7 +5,7 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
-config={'valley-of-saints':('rune','Valley of Saints'),'swamp-of-screams':('rune','Swamp of Screams'),'fields-of-massacre':('aden','Fields of Massacre'),'ketra-outpost':('goddard','Ketra Orc Outpost'),'varka-outpost':('goddard','Varka Silenos Stronghold')}
+config={'valley-of-saints':('rune','Valley of Saints'),'swamp-of-screams':('rune','Swamp of Screams'),'fields-of-massacre':('aden','Fields of Massacre'),'ketra-outpost':('goddard','Ketra Orc Outpost'),'varka-outpost':('goddard','Varka Silenos Stronghold'),'sea-of-spores':('oren','Sea of Spores'),'outlaw-forest':('oren','Outlaw Forest')}
 world=json.loads(Path('template/nativeWorld.js').read_text(encoding='utf-8').split('export default ',1)[1].strip().rstrip(';'))
 file=Path('template/nativeSurfaceEntries.js')
 entries=json.loads(file.read_text(encoding='utf-8').split('export default ',1)[1].strip().rstrip(';')) if file.exists() else {}

@@ -203,5 +203,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "varka-outpost": {
+    "x": 125740,
+    "y": -40864,
+    "z": -3736,
+    "region": "goddard",
+    "teleportGold": 4200,
+    "entrySource": {
+      "file": "teleporters/town/31275.xml",
+      "npcId": 31275,
+      "name": "Varka Silenos Stronghold",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "812a374e2a26cd653f9139c2e5835d84f486d585d40b80045e4a6980f413a8d2"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 31275,
+        "npcName": "Tatiana",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 4200,
+        "source": {
+          "file": "teleporters/town/31275.xml",
+          "npcId": 31275,
+          "name": "Varka Silenos Stronghold",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "812a374e2a26cd653f9139c2e5835d84f486d585d40b80045e4a6980f413a8d2"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        120740,
+        -45864
+      ],
+      [
+        130740,
+        -45864
+      ],
+      [
+        130740,
+        -35864
+      ],
+      [
+        120740,
+        -35864
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
