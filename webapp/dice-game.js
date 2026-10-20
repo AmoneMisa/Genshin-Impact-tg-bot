@@ -2,6 +2,7 @@ import { dialogHeading } from './dialog-heading.js';
 import { installOverlayA11y } from './overlay-a11y.js';
 import { enhanceSelects } from './design/select.js';
 import { escapeHtml as esc } from './escape-html.js';
+import { sfx } from './audio.js';
 import { STAKE_CHOICES, stakeBodyOf, stakeText } from './stakes.js';
 import { createDiceMotion, PIPS } from './dice-motion.js';
 import { FACE_NAMES, COMBINATIONS, LEVELS, REROLLS, ROUNDS_TO_WIN, evaluate, newMatch, playerThrow, aiSteps, settleRound, nextRound } from './dice-poker.js';
@@ -9,6 +10,7 @@ import { FACE_NAMES, COMBINATIONS, LEVELS, REROLLS, ROUNDS_TO_WIN, evaluate, new
 const RULES = `Кости из «Ведьмака»: у каждого пять костей. Бросьте их, затем один раз перебросьте любые, оставив нужные, или оставьте всё как есть. Побеждает сильнейшая комбинация; если они одинаковые, решает сумма костей комбинации, при равенстве — ничья. Матч идёт до ${ROUNDS_TO_WIN} побед. Ничья не считается, раунд играется заново.`;
 const button = (label, attrs = '', primary = false) => `<button type="button" class="ui-button${primary ? ' primary' : ''}" ${attrs}>${label}</button>`;
 const STEP_MS = 800;
+const ROLL_HINT = 'Отметьте кости, которые хотите оставить. Остальные будут брошены заново, это можно сделать один раз.';
 const POLL_MS = 2500;
 
 /**
@@ -22,6 +24,10 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
   let screen = api && initialInvite ? 'lobby' : 'start', focusedInvite = api ? initialInvite : null, level = 'hard', match = null, keep = new Set(), fresh = new Set(), busy = false, note = '', closed = false, surrenderArmed = false;
   let net = { friends: [], incoming: [], outgoing: [], invitation: null, match: null }, wallet = null, stakeChoice = '', pollTimer = null, requestId = 0;
   const timers = new Set();
+  /** The dice rattle in the hand and knock on the table. */
+  const rattle = () => { sfx('diceShake'); later(() => sfx('diceLand'), 450); };
+  /** How a round or the whole match ended, for the player (`won`: true, false or null for a draw). */
+  const endSound = (won, over) => sfx(over ? (won ? 'matchWin' : 'matchLose') : won === null ? 'draw' : won ? 'roundWin' : 'roundLose');
   const later = (fn, ms) => { const id = setTimeout(() => { timers.delete(id); if (!closed) fn(); }, ms); timers.add(id); };
 
   const overlay = document.createElement('section');
@@ -45,6 +51,8 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
         : `<span class="ui-button ${classes} is-static" ${motionAttrs} role="img" aria-label="${esc(name)}">${face}</span>`;
     }).join('')}</div>`;
   }
+  /** The only action of a throw: the marked dice stay, the rest are thrown again; with all five marked it just ends the throw. */
+  const rollButton = () => button(keep.size === 5 ? 'Оставить все кости' : keep.size ? 'Бросить остальные' : 'Бросить все кости', `data-roll ${busy ? 'disabled' : ''}`, true);
   function combinations() {
     return `<details class="ui-disclosure dice-combinations"><summary>Комбинации</summary><ol class="dice-combination-list">${[...COMBINATIONS].reverse().map(([name, text]) => `<li class="ui-inset-row"><strong>${name}</strong><small>${text}</small></li>`).join('')}</ol></details>`;
   }
@@ -65,12 +73,12 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
   }
 
   function aiMatchScreen() {
-    const mine = evaluate(match.dice.player), theirs = evaluate(match.dice.ai), left = REROLLS - match.rolls.player;
+    const mine = evaluate(match.dice.player), theirs = evaluate(match.dice.ai);
     const over = match.phase === 'over', result = match.result;
     const verdict = !result ? '' : over ? (match.winner === 'player' ? 'Вы выиграли матч!' : 'Соперник выиграл матч.') : result.winner === 'draw' ? 'Ничья: раунд будет сыгран заново.' : result.winner === 'player' ? 'Раунд за вами!' : 'Раунд за соперником.';
     const controls = match.phase === 'throw'
-      ? `<div class="dice-actions">${button(`Перебросить · осталось ${left}`, `data-reroll ${busy || left <= 0 || keep.size === 5 ? 'disabled' : ''}`)}${button('Оставить', `data-stand ${busy ? 'disabled' : ''}`, true)}</div>
-         <p class="dice-hint">${busy ? 'Соперник бросает кости…' : 'Нажмите на кости, которые хотите оставить.'}</p>`
+      ? `<div class="dice-actions">${rollButton()}</div>
+         <p class="dice-hint">${busy ? 'Соперник бросает кости…' : ROLL_HINT}</p>`
       : `${verdict ? `<p class="dice-verdict" role="status" data-winner="${over ? match.winner : result.winner}">${verdict}</p>` : ''}
          <div class="dice-actions">${over ? button('Новая игра', 'data-restart', true) : button('Дальше', 'data-next', true)}</div>`;
     return `${scoreHtml(match.round, match.wins.player, match.wins.ai)}
@@ -110,13 +118,12 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
   function onlineMatchScreen() {
     const view = net.match;
     const over = view.phase === 'over', result = view.result, inRound = view.phase === 'throw';
-    const left = REROLLS - view.rolls;
     const verdict = over ? (view.winner === 'me' ? 'Вы выиграли матч!' : view.winner === 'draw' ? 'Матч завершён вничью.' : 'Соперник выиграл матч.')
       : result ? (result.winner === 'draw' ? 'Ничья: раунд будет сыгран заново.' : result.winner === 'me' ? 'Раунд за вами!' : 'Раунд за соперником.') : '';
     const opponentDice = view.opponentDice || Array(5).fill(null);
     let controls;
     const event = inRound && view.event ? `<p class="dice-hint" role="status">${view.event.winner === 'me' ? 'Соперник сбросил: раунд ваш.' : 'Вы сбросили: раунд за соперником.'}</p>` : '';
-    if (inRound && !view.done) controls = `${event}<div class="dice-actions">${button(`Перебросить · осталось ${left}`, `data-reroll ${busy || left <= 0 || keep.size === 5 ? 'disabled' : ''}`)}${button('Оставить', `data-stand ${busy ? 'disabled' : ''}`, true)}</div><p class="dice-hint">Нажмите на кости, которые хотите оставить.</p>`;
+    if (inRound && !view.done) controls = `${event}<div class="dice-actions">${rollButton()}</div><p class="dice-hint">${ROLL_HINT}</p>`;
     else if (inRound) controls = `${event}<p class="dice-hint" role="status">${view.opponentDone ? 'Считаем результат…' : 'Ждём соперника…'}</p>`;
     else if (!over && view.raise?.by === 'opponent') controls = `<p class="dice-verdict" role="status">${esc(view.opponent)} повышает ставку на ${stakeText({ ...view.stake, amount: view.raise.amount })}</p>${stakeLine(view.stake)}
       <p class="dice-hint">Примите повышение или сбросьте раунд: он засчитается сопернику.</p>
@@ -148,12 +155,12 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
   }
 
   // ---- the game against the tavern ----
-  function startRound() { keep = new Set(); note = ''; fresh = new Set(match.dice.player.map((_, i) => `p${i}`).concat(match.dice.ai.map((_, i) => `a${i}`))); }
+  function startRound() { sfx('turn'); rattle(); keep = new Set(); note = ''; fresh = new Set(match.dice.player.map((_, i) => `p${i}`).concat(match.dice.ai.map((_, i) => `a${i}`))); }
   function throwDice() {
     const result = playerThrow(match, [...keep]);
     if (result.error) { note = result.error; return render(); }
     fresh = new Set(match.dice.player.map((_, i) => (keep.has(i) ? null : `p${i}`)).filter(Boolean));
-    match = result.match; keep = new Set(); haptic('light');
+    match = result.match; keep = new Set(); haptic('light'); rattle();
     if (match.rolls.player >= REROLLS) { busy = true; later(stand, 700); }
     render();
   }
@@ -163,16 +170,16 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
     const steps = aiSteps(match);
     steps.forEach((step, n) => later(() => {
       fresh = new Set(step.dice.map((value, i) => (value !== match.dice.ai[i] ? `a${i}` : null)).filter(Boolean));
-      match = { ...match, dice: { ...match.dice, ai: step.dice } }; haptic('light'); render();
+      match = { ...match, dice: { ...match.dice, ai: step.dice } }; haptic('light'); rattle(); render();
     }, STEP_MS * (n + 1)));
-    later(() => { match = settleRound(match); busy = false; haptic(match.result.winner === 'player' ? 'success' : 'warning'); render(); }, STEP_MS * (steps.length + 1));
+    later(() => { match = settleRound(match); busy = false; endSound(match.result.winner === 'draw' ? null : match.result.winner === 'player', match.phase === 'over'); haptic(match.result.winner === 'player' ? 'success' : 'warning'); render(); }, STEP_MS * (steps.length + 1));
   }
 
   // ---- the game against a player ----
   function accept(data) {
     if (data.wallet) wallet = data.wallet;
     if (data.credited?.length) note = `Получено: ${data.credited.map(stakeText).join(', ')}`;
-    const before = net.match;
+    const before = net.match, invitesBefore = net.incoming.length;
     net = { friends: data.friends || [], incoming: data.incoming || [], outgoing: data.outgoing || [], invitation: data.invitation || null, match: data.match || null };
     if (net.match) {
       if (!before || before.id !== net.match.id || before.round !== net.match.round) keep = new Set();
@@ -182,8 +189,21 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
       if (!before || before.id !== net.match.id) surrenderArmed = false;
       if (screen === 'lobby' || screen === 'online') screen = 'online';
     } else if (screen === 'online') { screen = 'lobby'; surrenderArmed = false; }
+    hearOnline(before, net.match, invitesBefore);
     render();
     schedulePoll();
+  }
+  /** Sound follows what changed: a new match or round, the dice thrown, the round or the match ended, a raise. */
+  function hearOnline(before, now, invitesBefore) {
+    if (net.incoming.length > invitesBefore) sfx('turn');
+    if (!now) return;
+    const same = before?.id === now.id;
+    if (!same) { sfx('turn'); rattle(); return; }
+    if (now.phase === 'over' && before.phase !== 'over') { sfx('diceLand'); later(() => endSound(now.winner === 'draw' ? null : now.winner === 'me', true), 500); return; }
+    if (now.round !== before.round) { sfx('turn'); rattle(); return; }
+    if (before.phase === 'throw' && now.phase === 'result') { sfx('diceLand'); later(() => endSound(now.result.winner === 'draw' ? null : now.result.winner === 'me', false), 500); return; }
+    if (!before.raise && now.raise) sfx('chip');
+    else if (before.rolls !== now.rolls && now.phase === 'throw') rattle();
   }
   async function send(body) {
     if (busy) return;
@@ -229,9 +249,12 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
     else if (d.level) { level = d.level; render(); }
     else if ('start' in d || 'restart' in d) { match = newMatch(Math.random, level); startRound(); screen = 'ai'; render(); }
     else if ('next' in d) { const result = nextRound(match); if (result.match) { match = result.match; startRound(); render(); } }
-    else if (d.die !== undefined) { const i = Number(d.die); if (keep.has(i)) keep.delete(i); else keep.add(i); render(); panel.querySelector(`[data-die="${i}"]`)?.focus({ preventScroll: true }); }
-    else if ('reroll' in d) { if (screen === 'ai') throwDice(); else await send({ action: 'throw', matchId: net.match.id, round: net.match.round, rolls: net.match.rolls, keep: [...keep] }); }
-    else if ('stand' in d) { if (screen === 'ai') stand(); else await send({ action: 'stand', matchId: net.match.id, round: net.match.round, rolls: net.match.rolls }); }
+    else if (d.die !== undefined) { const i = Number(d.die); if (keep.has(i)) { keep.delete(i); sfx('diceFree'); } else { keep.add(i); sfx('diceKeep'); } render(); panel.querySelector(`[data-die="${i}"]`)?.focus({ preventScroll: true }); }
+    else if ('roll' in d) {
+      const holdAll = keep.size === 5;
+      if (screen === 'ai') { if (holdAll) stand(); else throwDice(); }
+      else await send({ action: holdAll ? 'stand' : 'throw', matchId: net.match.id, round: net.match.round, rolls: net.match.rolls, keep: [...keep] });
+    }
     else if ('createLink' in d) await send({ action: 'invite', open: true, ...stakeBodyOf(stakeChoice) });
     else if (d.copyInvite) { const item = net.outgoing.find(entry => entry.id === d.copyInvite); if (item?.url) { try { await navigator.clipboard.writeText(item.url); note = 'Ссылка скопирована'; } catch { note = 'Скопируйте выделенную ссылку'; } render(); panel.querySelector('.dice-share-link')?.select?.(); } }
     else if ('rematch' in d) await send({ action: 'rematch', matchId: net.match.id });

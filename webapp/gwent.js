@@ -548,7 +548,25 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       return;
     }
     if (JSON.stringify(next.weather) !== JSON.stringify(prev.weather)) { sfx(Object.values(next.weather || {}).some(Boolean) ? 'weather' : 'clear'); return; }
-    sfx('cardPlay');
+    sfx(cardSound(prev, next));
+    // After the opponent's move the turn comes back to the player.
+    if (!remote?.spectator && prev.turn !== 'player' && next.turn === 'player' && next.phase === 'playing') setTimeout(() => { if (!closed) sfx('turn'); }, 420);
+  }
+  /** What the played card sounded like, from what appeared on or left the board: a hero, a unit, a horn, a burn, a spell, a swap. */
+  function cardSound(prev, next) {
+    const seats = next.seats || Object.keys(next.sides);
+    const cards = state => seats.flatMap(seat => Object.values(state.sides[seat]?.rows || {}).flat());
+    const before = new Set(cards(prev).map(card => card.uid)), after = new Set(cards(next).map(card => card.uid));
+    const added = cards(next).filter(card => !before.has(card.uid)), removed = cards(prev).filter(card => !after.has(card.uid));
+    if (removed.length && !added.length) return 'fire';
+    if (removed.length && added.length) return 'flip';
+    if (added.some(card => card.special === 'horn' || card.horn)) return 'horn';
+    if (added.some(card => card.hero)) return 'hero';
+    if (added.some(card => card.heal || card.medic || card.ability === 'medic')) return 'heal';
+    if (added.length) return 'unit';
+    const traps = state => seats.map(seat => Object.values(state.sides[seat]?.traps || {}).filter(Boolean).length).join();
+    if (traps(prev) !== traps(next)) return 'trap';
+    return 'cast';
   }
   // ---- Motion: new cards land, scores pulse, the AI visibly thinks and lays its card before it is played. ----
   const calm = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch { return false; } };

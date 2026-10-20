@@ -2,6 +2,7 @@ import {arcadeTabIconHtml} from './art/arcade-art.js';
 import {dialogHeading} from './dialog-heading.js';
 import { escapeHtml } from './escape-html.js';
 import { playThrow, stageHtml } from './arcade-stage.js';
+import { sfx } from './audio.js';
 
 const REASONS = {
   invalid_bet: 'Ставка должна быть целым неотрицательным числом.',
@@ -218,6 +219,7 @@ export async function openArcadeGame({ api, renderState, haptic, statusElement }
       if (payload.state) renderState(payload.state);
       lastResult = payload.result || null;
       haptic(payload.result?.won ? 'heavy' : 'light');
+      if (payload.finished) sfx(payload.result?.won ? 'win' : 'lose');
       feedback.textContent = payload.finished ? '' : `Выпало ${payload.value}.`;
       statusElement.textContent = `Аркада: ${payload.finished ? (payload.result?.won ? 'победа' : 'раунд завершён') : `выпало ${payload.value}`}.`;
       renderAll();

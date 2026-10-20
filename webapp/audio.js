@@ -26,7 +26,7 @@ function ensure() {
     musicBus = ctx.createGain(); musicBus.gain.value = prefs.music * 0.5; musicBus.connect(master);
     if (!light) {
       const delay = ctx.createDelay(1), feedback = ctx.createGain(), tone = ctx.createBiquadFilter(), wet = ctx.createGain();
-      delay.delayTime.value = 0.32; feedback.gain.value = 0.38; tone.type = 'lowpass'; tone.frequency.value = 2200; wet.gain.value = 0.5;
+      delay.delayTime.value = 0.32; feedback.gain.value = 0.3; tone.type = 'lowpass'; tone.frequency.value = 1300; wet.gain.value = 0.4;
       echoSend = ctx.createGain(); echoSend.connect(delay); delay.connect(tone); tone.connect(feedback); feedback.connect(delay); tone.connect(wet); wet.connect(musicBus);
     }
     const length = ctx.sampleRate; noiseBuffer = ctx.createBuffer(1, length, ctx.sampleRate);
@@ -88,7 +88,7 @@ function tone(freq, { at = 0, dur = 0.2, type = 'sine', vol = 0.3, slide = 0, at
   if (slide) osc.frequency.exponentialRampToValueAtTime(Math.max(20, slide), t + dur);
   gain.gain.setValueAtTime(0.0001, t); gain.gain.exponentialRampToValueAtTime(vol, t + attack); gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   let node = osc;
-  if (lowpass) { const filter = ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = lowpass; osc.connect(filter); node = filter; }
+  if (lowpass) { const filter = ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = lowpass; if (bus === musicBus) filter.Q.value = 0.5; osc.connect(filter); node = filter; }
   node.connect(gain); gain.connect(bus);
   if (echo && echoSend && bus === musicBus) { const send = ctx.createGain(); send.gain.value = echo; gain.connect(send); send.connect(echoSend); }
   osc.start(t); osc.stop(t + dur + 0.05);
@@ -130,6 +130,29 @@ const EFFECTS = {
   twentyOne: () => { notes([N.e5, N.g5, N.c6, N.e5 * 2], 0.07, { dur: 0.55, type: 'sine', vol: 0.12 }); hiss({ at: 0.1, dur: 0.6, freq: 6000, to: 9000, vol: 0.04 }); },
   win: () => { EFFECTS.chip(); notes([N.g4, N.c5, N.e5, N.g5], 0.08, { dur: 0.45, type: 'triangle', vol: 0.14, at: 0.1 }); },
   lose: () => notes([N.e4, N.c4], 0.18, { dur: 0.6, type: 'triangle', vol: 0.12, lowpass: 1200 }),
+  // Dice: a rattle in the hand, then the dice knocking on the table.
+  diceShake: () => { for (let i = 0; i < 7; i++) { hiss({ at: i * 0.055, dur: 0.04, freq: 2200 + Math.random() * 2500, q: 2, vol: 0.12 }); tone(500 + Math.random() * 500, { at: i * 0.055, dur: 0.03, type: 'square', vol: 0.03 }); } },
+  diceLand: () => [0, 0.09, 0.17].forEach((at, i) => { hiss({ at, dur: 0.05, freq: 1800 - i * 300, q: 1.5, vol: 0.2 }); tone(260 - i * 40, { at, dur: 0.07, type: 'sine', vol: 0.18, slide: 120 }); }),
+  diceKeep: () => tone(1100, { dur: 0.05, type: 'triangle', vol: 0.09 }),
+  diceFree: () => tone(760, { dur: 0.05, type: 'triangle', vol: 0.07 }),
+  // Sport: bounces, nets, posts, darts, pins and reels.
+  ballBounce: () => [0, 0.19, 0.33, 0.42].forEach((at, i) => tone(150 - i * 12, { at, dur: 0.12, type: 'sine', vol: 0.32 - i * 0.07, slide: 70 })),
+  swish: () => { hiss({ dur: 0.38, freq: 5200, to: 2600, q: 0.6, vol: 0.14 }); tone(900, { at: 0.04, dur: 0.2, type: 'sine', vol: 0.04, slide: 500 }); },
+  rim: () => { tone(1500, { dur: 0.3, type: 'triangle', vol: 0.15, slide: 1000 }); tone(2250, { at: 0.02, dur: 0.22, type: 'triangle', vol: 0.08, slide: 1500 }); hiss({ dur: 0.05, freq: 4000, vol: 0.1 }); },
+  kick: () => { hiss({ dur: 0.07, freq: 400, type: 'lowpass', vol: 0.32 }); tone(120, { dur: 0.14, type: 'sine', vol: 0.36, slide: 55 }); },
+  goal: () => { hiss({ dur: 0.18, freq: 5200, to: 2600, vol: 0.12 }); hiss({ at: 0.15, dur: 1.1, freq: 700, to: 1500, q: 0.4, vol: 0.12 }); tone(2000, { at: 0.2, dur: 0.35, type: 'triangle', vol: 0.06 }); },
+  dartThrow: () => hiss({ dur: 0.22, freq: 1500, to: 4200, q: 0.8, vol: 0.12 }),
+  dartHit: () => { tone(190, { dur: 0.12, type: 'sine', vol: 0.3, slide: 90 }); hiss({ dur: 0.05, freq: 2400, vol: 0.12 }); },
+  bullseye: () => { EFFECTS.dartHit(); notes([N.e5 * 2, N.c6 * 1.5], 0.08, { at: 0.08, dur: 0.5, type: 'sine', vol: 0.11 }); },
+  pinRoll: () => { hiss({ dur: 0.75, freq: 260, to: 150, q: 0.5, vol: 0.26, type: 'lowpass' }); tone(75, { dur: 0.75, type: 'sine', vol: 0.14, slide: 62 }); },
+  pinsCrash: () => { for (let i = 0; i < 9; i++) { hiss({ at: i * 0.045 + Math.random() * 0.03, dur: 0.07, freq: 1800 + Math.random() * 2600, q: 2, vol: 0.18 }); tone(380 + Math.random() * 500, { at: i * 0.045, dur: 0.08, type: 'triangle', vol: 0.06 }); } },
+  strike: () => { EFFECTS.pinsCrash(); notes([N.c5, N.g5, N.c6], 0.08, { at: 0.3, dur: 0.5, type: 'triangle', vol: 0.12 }); },
+  reelSpin: () => { for (let i = 0; i < 14; i++) tone(900 + (i % 3) * 120, { at: i * 0.06, dur: 0.025, type: 'square', vol: 0.035, lowpass: 2400 }); },
+  reelStop: () => { tone(200, { dur: 0.09, type: 'square', vol: 0.12, slide: 110, lowpass: 900 }); hiss({ dur: 0.04, freq: 1200, vol: 0.1 }); },
+  jackpot: () => { for (let i = 0; i < 8; i++) tone(N.c6 * (1 + (i % 4) * 0.25), { at: i * 0.07, dur: 0.18, type: 'triangle', vol: 0.1 }); hiss({ dur: 0.8, freq: 6000, to: 9000, vol: 0.05 }); },
+  // Elements: a rune drawn from the ring.
+  runeSpin: () => { for (let i = 0; i < 9; i++) tone(500 + i * 90, { at: i * 0.1, dur: 0.12, type: 'sine', vol: 0.05 }); hiss({ dur: 0.9, freq: 700, to: 3600, q: 1.2, vol: 0.05 }); },
+  runeLand: () => { notes([N.g5, N.c6, N.e5 * 2], 0.06, { dur: 0.45, type: 'sine', vol: 0.12 }); hiss({ dur: 0.3, freq: 4000, to: 8000, vol: 0.06, type: 'highpass' }); },
   // Casting: the wind-up and the result.
   castStart: () => { tone(300, { dur: 0.35, type: 'sine', vol: 0.1, slide: 900 }); hiss({ dur: 0.35, freq: 800, to: 4200, q: 1.5, vol: 0.06 }); },
   cast: () => { tone(300, { dur: 0.35, type: 'sine', vol: 0.1, slide: 900 }); hiss({ dur: 0.35, freq: 800, to: 4200, q: 1.5, vol: 0.06 }); },
@@ -173,11 +196,11 @@ const midi = n => 440 * 2 ** ((n - 69) / 12);
 
 export const TRACKS = {
   // Calm background for the whole game.
-  ambient: { root: 57, scale: 'pent', bpm: 54, bar: 4, pad: true, lead: { type: 'sine', density: 0.45, range: [0, 7], lowpass: 2400 }, bass: false },
+  ambient: { root: 57, scale: 'pent', bpm: 54, bar: 4, pad: true, lead: { type: 'sine', density: 0.45, range: [0, 7], lowpass: 1300 }, bass: false },
   // Lute-like duets for a Gwent table.
-  gwent1: { root: 50, scale: 'dorian', bpm: 96, bar: 6, pad: false, lead: { type: 'triangle', density: 0.7, range: [0, 9], lowpass: 3000, pluck: true }, bass: true },
-  gwent2: { root: 57, scale: 'minor', bpm: 78, bar: 4, pad: true, lead: { type: 'triangle', density: 0.55, range: [2, 10], lowpass: 2600, pluck: true, vibrato: true }, bass: true },
-  gwent3: { root: 52, scale: 'phrygian', bpm: 66, bar: 4, pad: true, lead: { type: 'sine', density: 0.4, range: [0, 8], lowpass: 2000, vibrato: true }, bass: true },
+  gwent1: { root: 50, scale: 'dorian', bpm: 96, bar: 6, pad: false, lead: { type: 'triangle', density: 0.7, range: [0, 9], lowpass: 1500, pluck: true }, bass: true },
+  gwent2: { root: 57, scale: 'minor', bpm: 78, bar: 4, pad: true, lead: { type: 'triangle', density: 0.55, range: [2, 10], lowpass: 1400, pluck: true, vibrato: true }, bass: true },
+  gwent3: { root: 52, scale: 'phrygian', bpm: 66, bar: 4, pad: true, lead: { type: 'sine', density: 0.4, range: [0, 8], lowpass: 1100, vibrato: true }, bass: true },
 };
 export const GWENT_TRACKS = ['gwent1', 'gwent2', 'gwent3'];
 
@@ -198,9 +221,9 @@ function scheduleBar(track, start) {
     if (Math.random() > lead.density) continue;
     degree = Math.max(lead.range[0], Math.min(lead.range[1], degree + [-2, -1, -1, 0, 1, 1, 2][Math.floor(Math.random() * 7)]));
     // Strong beats rest on the chord.
-    const deg = i % 2 === 0 && Math.random() < 0.5 ? chordRoot + [0, 2, 4][Math.floor(Math.random() * 3)] + 7 : degree;
+    const deg = i % 2 === 0 && Math.random() < 0.5 ? chordRoot + [0, 2, 4][Math.floor(Math.random() * 3)] : degree;
     const hold = lead.pluck ? beat * 1.4 : beat * 2.2;
-    tone(pitch(track, deg, 0), { at: at + i * beat / 2, dur: hold, type: lead.type, vol: lead.pluck ? 0.32 : 0.24, attack: lead.pluck ? 0.004 : 0.12, lowpass: lead.lowpass, bus: musicBus, echo: 0.35 });
+    tone(pitch(track, deg, 0), { at: at + i * beat / 2, dur: hold, type: lead.type, vol: lead.pluck ? 0.24 : 0.2, attack: lead.pluck ? 0.03 : 0.12, lowpass: lead.lowpass, bus: musicBus, echo: 0.25 });
   }
   step++;
   return start + bar;

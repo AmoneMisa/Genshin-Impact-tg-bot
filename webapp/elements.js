@@ -1,4 +1,5 @@
 import {dialogHeading} from './dialog-heading.js';
+import { sfx } from './audio.js';
 // Elements as a shared table: registration (join, then bets) with seats and a
 // countdown ring, play with every opponent as a compact seat tile and your
 // own seat pinned at the bottom, results as seats with payouts.
@@ -77,7 +78,8 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
 
   // The seven runes race around the altar, the drawn one lands in the centre.
   async function playDraw(element) {
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    sfx('runeSpin');
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { sfx('runeLand'); return; }
     altar.className = `elements-altar tone-${elementTone(element)}`;
     altar.innerHTML = `
       <div class="el-ring">${ELEMENT_RING.map((rune, i) => `<span class="tone-${elementTone(rune)}" style="--i:${i}">${elementIcon(rune)}</span>`).join('')}</div>
@@ -87,6 +89,7 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
     altar.hidden = false;
     requestAnimationFrame(() => altar.classList.add('spinning'));
     await wait(1100);
+    sfx('runeLand');
     altar.classList.add('landed');
     haptic('heavy');
     await wait(1000);
@@ -223,7 +226,20 @@ export async function openElementsGame({ api, renderState, haptic, statusElement
     } catch {}
   }
 
+  // The table's phases are heard once: the bets open, the round starts, the game is won or lost.
+  let heardPhase = state.phase;
+  function hearPhase() {
+    if (state.phase === heardPhase) return;
+    const was = heardPhase; heardPhase = state.phase;
+    if (state.phase === 'betting') sfx('chip');
+    else if (state.phase === 'playing') sfx('turn');
+    else if (state.phase === 'finished' && was !== 'idle') {
+      const mine = (state.result?.players || []).find(player => player.id === state.me.id);
+      if (mine) sfx(mine.won ? 'win' : 'lose');
+    }
+  }
   function renderAll() {
+    hearPhase();
     const typing = content.querySelector('[data-table-bet]');
     const draft = typing && document.activeElement === typing ? typing.value : null;
     const view = state.phase === 'join' ? registration('Запись за стол')

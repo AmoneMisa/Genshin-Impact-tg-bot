@@ -95,4 +95,8 @@ export default {
   "Ставка уже повышена": "Stavka allaqachon oshirilgan",
   "Ставку можно менять между раундами": "Stavkani raundlar orasida o‘zgartirish mumkin",
   "Такое повышение недоступно": "Bunday oshirish mavjud emas",
+  "Бросить все кости": "Hamma zarlarni tashlash",
+  "Бросить остальные": "Qolganlarini tashlash",
+  "Оставить все кости": "Hamma zarlarni qoldirish",
+  "Отметьте кости, которые хотите оставить. Остальные будут брошены заново, это можно сделать один раз.": "Qoldirmoqchi bo‘lgan zarlarni belgilang. Qolganlari qaytadan tashlanadi, buni bir marta qilish mumkin.",
 };

@@ -7,6 +7,7 @@
 
 import { arcadeArtUrl, arcadeSpriteHtml, slotPaintingHtml } from './art/arcade-art.js';
 import { worldArtUrl } from './art/world-art-url.js';
+import { sfx } from './audio.js';
 
 const SLOT_STRIP = ['😈', '❤️', '💋', '🤏', '🛫', '🚗', '💩', '👻', '👽', '☠️'];
 
@@ -118,9 +119,36 @@ function flash(stage, kind) {
  * Plays one throw on a mounted stage and resolves when it has landed.
  * `value` is the server's roll; for slots pass the final reels array.
  */
+/** The sounds of a throw, timed to its animation; they play even when the animation is switched off. */
+export function throwSounds(gameId, outcome, value) {
+  const at = (ms, name) => setTimeout(() => sfx(name), ms);
+  if (gameId === 'basketball') {
+    at(0, 'dartThrow');
+    if (outcome === 'hit') at(850, 'swish');
+    else { at(850, outcome === 'rim' ? 'rim' : 'ballBounce'); if (outcome === 'rim') at(1000, 'ballBounce'); }
+  } else if (gameId === 'football') {
+    at(0, 'kick');
+    at(650, outcome === 'hit' ? 'goal' : outcome === 'post' ? 'rim' : 'miss');
+  } else if (gameId === 'darts') {
+    at(0, 'dartThrow');
+    at(420, outcome === 'bull' ? 'bullseye' : 'dartHit');
+  } else if (gameId === 'bowling') {
+    at(0, 'pinRoll');
+    if (outcome !== 'miss') at(700, outcome === 'strike' ? 'strike' : 'pinsCrash');
+  } else if (gameId === 'slots') {
+    at(0, 'reelSpin'); at(480, 'reelSpin');
+    [900, 1250, 1600].forEach(ms => at(ms, 'reelStop'));
+    const reels = Array.isArray(value) ? value : String(value).split('');
+    if (reels.length === 3 && reels.every(symbol => symbol === reels[0])) at(1800, 'jackpot');
+  } else {
+    at(0, 'diceShake'); at(820, 'diceLand');
+  }
+}
+
 export async function playThrow(stage, gameId, value, { maxValue = 6 } = {}) {
-  if (!stage || reduced()) return;
   const outcome = throwOutcome(gameId, value, maxValue);
+  if (stage) throwSounds(gameId, outcome, value);
+  if (!stage || reduced()) return;
   const stageRect = stage.getBoundingClientRect();
   const shot = stage.querySelector('[data-shot]');
   const target = stage.querySelector('[data-target]');
