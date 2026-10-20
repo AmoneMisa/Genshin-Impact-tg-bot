@@ -3466,6 +3466,32 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/kamael_town.xml"
+  },
+  "keucereus-alliance-base": {
+    "polygon": [
+      [
+        -187342,
+        238059
+      ],
+      [
+        -181849,
+        238059
+      ],
+      [
+        -181849,
+        247548
+      ],
+      [
+        -187342,
+        247548
+      ]
+    ],
+    "minZ": 1080,
+    "maxZ": 3210,
+    "sourceZone": "Keucereus",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 12288,
+    "arrivals": []
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -4670,6 +4696,500 @@ export const CITY_NPC_UPDATES = {
     "source": "spawns/Kamael/IsleOfSouls.xml",
     "role": "Хранитель склада",
     "service": "warehouse"
+  },
+  "keucereus-alliance-base:32607:10": {
+    "npcId": 32607,
+    "name": "Airship Controller",
+    "city": "keucereus-alliance-base",
+    "x": -186762,
+    "y": 244230,
+    "z": 2664,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32563:11": {
+    "npcId": 32563,
+    "name": "Plenos",
+    "city": "keucereus-alliance-base",
+    "x": -186692,
+    "y": 243539,
+    "z": 2608,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32618:12": {
+    "npcId": 32618,
+    "name": "Thyimi",
+    "city": "keucereus-alliance-base",
+    "x": -186650,
+    "y": 244239,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32626:13": {
+    "npcId": 32626,
+    "name": "Royal Guard",
+    "city": "keucereus-alliance-base",
+    "x": -186450,
+    "y": 242431,
+    "z": 2552,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32627:14": {
+    "npcId": 32627,
+    "name": "Nottingale",
+    "city": "keucereus-alliance-base",
+    "x": -186449,
+    "y": 243338,
+    "z": 2616,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32626:15": {
+    "npcId": 32626,
+    "name": "Royal Guard",
+    "city": "keucereus-alliance-base",
+    "x": -186431,
+    "y": 242367,
+    "z": 2552,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32548:16": {
+    "npcId": 32548,
+    "name": "Keucereus",
+    "city": "keucereus-alliance-base",
+    "x": -186399,
+    "y": 242412,
+    "z": 2552,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32556:17": {
+    "npcId": 32556,
+    "name": "El",
+    "city": "keucereus-alliance-base",
+    "x": -186252,
+    "y": 242594,
+    "z": 1680,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32558:18": {
+    "npcId": 32558,
+    "name": "Barrier Orb",
+    "city": "keucereus-alliance-base",
+    "x": -186213,
+    "y": 242469,
+    "z": 2552,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32555:19": {
+    "npcId": 32555,
+    "name": "Tenius",
+    "city": "keucereus-alliance-base",
+    "x": -186177,
+    "y": 242341,
+    "z": 1680,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32562:20": {
+    "npcId": 32562,
+    "name": "Siest",
+    "city": "keucereus-alliance-base",
+    "x": -186170,
+    "y": 245014,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32559:21": {
+    "npcId": 32559,
+    "name": "Artius",
+    "city": "keucereus-alliance-base",
+    "x": -186109,
+    "y": 242500,
+    "z": 2552,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32560:22": {
+    "npcId": 32560,
+    "name": "Orbyu",
+    "city": "keucereus-alliance-base",
+    "x": -186072,
+    "y": 241295,
+    "z": 2608,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32733:23": {
+    "npcId": 32733,
+    "name": "Kbaldir",
+    "city": "keucereus-alliance-base",
+    "x": -185957,
+    "y": 245068,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32517:24": {
+    "npcId": 32517,
+    "name": "Airship Controller",
+    "city": "keucereus-alliance-base",
+    "x": -185775,
+    "y": 246408,
+    "z": 1280,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32549:25": {
+    "npcId": 32549,
+    "name": "Dilios",
+    "city": "keucereus-alliance-base",
+    "x": -185615,
+    "y": 240748,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:26": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185502,
+    "y": 240861,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:27": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185480,
+    "y": 240790,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:28": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185458,
+    "y": 240717,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:29": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185406,
+    "y": 240891,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:30": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185384,
+    "y": 240819,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:31": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185362,
+    "y": 240747,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:32": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185309,
+    "y": 240921,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:33": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185287,
+    "y": 240849,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:34": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185265,
+    "y": 240777,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:35": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185213,
+    "y": 240950,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:36": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185191,
+    "y": 240878,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:37": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185169,
+    "y": 240805,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:38": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185116,
+    "y": 240979,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:39": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185094,
+    "y": 240907,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32566:40": {
+    "npcId": 32566,
+    "name": "Ginby",
+    "city": "keucereus-alliance-base",
+    "x": -185090,
+    "y": 242809,
+    "z": 1576,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:41": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185072,
+    "y": 240835,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:42": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -185020,
+    "y": 241009,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:43": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -184998,
+    "y": 240937,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:18669:44": {
+    "npcId": 18669,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -184991,
+    "y": 242893,
+    "z": 1554,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32619:45": {
+    "npcId": 32619,
+    "name": null,
+    "city": "keucereus-alliance-base",
+    "x": -184976,
+    "y": 240865,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32622:46": {
+    "npcId": 32622,
+    "name": "Anatole",
+    "city": "keucereus-alliance-base",
+    "x": -184856,
+    "y": 245248,
+    "z": 1528,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32561:47": {
+    "npcId": 32561,
+    "name": "Kunota",
+    "city": "keucereus-alliance-base",
+    "x": -184773,
+    "y": 240380,
+    "z": 1568,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32557:48": {
+    "npcId": 32557,
+    "name": "Lekon",
+    "city": "keucereus-alliance-base",
+    "x": -184545,
+    "y": 243120,
+    "z": 1576,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32550:49": {
+    "npcId": 32550,
+    "name": "Kirklan",
+    "city": "keucereus-alliance-base",
+    "x": -184460,
+    "y": 242848,
+    "z": 1584,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32611:50": {
+    "npcId": 32611,
+    "name": "Tolonis",
+    "city": "keucereus-alliance-base",
+    "x": -184406,
+    "y": 243017,
+    "z": 1576,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:36570:51": {
+    "npcId": 36570,
+    "name": "Emery Compressor",
+    "city": "keucereus-alliance-base",
+    "x": -184110,
+    "y": 238592,
+    "z": 1432,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml",
+    "role": "Проводник",
+    "service": "resident"
+  },
+  "keucereus-alliance-base:32553:52": {
+    "npcId": 32553,
+    "name": "Jisans",
+    "city": "keucereus-alliance-base",
+    "x": -184048,
+    "y": 245160,
+    "z": 1448,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32782:53": {
+    "npcId": 32782,
+    "name": "Lionel",
+    "city": "keucereus-alliance-base",
+    "x": -183980,
+    "y": 242722,
+    "z": 1576,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml",
+    "role": "Проводник",
+    "service": "resident"
+  },
+  "keucereus-alliance-base:32554:54": {
+    "npcId": 32554,
+    "name": "Moira",
+    "city": "keucereus-alliance-base",
+    "x": -183970,
+    "y": 244911,
+    "z": 1448,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32606:55": {
+    "npcId": 32606,
+    "name": "Airship Controller",
+    "city": "keucereus-alliance-base",
+    "x": -183661,
+    "y": 239438,
+    "z": 1280,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32624:56": {
+    "npcId": 32624,
+    "name": "Anbram",
+    "city": "keucereus-alliance-base",
+    "x": -183543,
+    "y": 240912,
+    "z": 1528,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32551:57": {
+    "npcId": 32551,
+    "name": "Noiless",
+    "city": "keucereus-alliance-base",
+    "x": -182991,
+    "y": 241681,
+    "z": 1448,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
+  },
+  "keucereus-alliance-base:32552:58": {
+    "npcId": 32552,
+    "name": "Tomaris",
+    "city": "keucereus-alliance-base",
+    "x": -182914,
+    "y": 241429,
+    "z": 1448,
+    "adapted": false,
+    "source": "spawns/Gracia/Gracia.xml"
   },
   "dion:gracia-survivor": {
     "npcId": 32632,
