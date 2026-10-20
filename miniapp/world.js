@@ -22,14 +22,19 @@ import {withLock} from '../functions/general/chatLock.js';
 import {hallScenario,ensureHallContest,advanceHallContest,hallContestState} from '../functions/game/world/hallConquest.js';
 import {syncClanPerks} from '../functions/game/clans/clanPerks.js';
 import ClanHallAuction from '../db/models/ClanHallAuction.js';
+import {withTeleportSieges} from '../functions/game/world/teleportSieges.js';
 
 export async function worldRequestState(session,body,now=Date.now()){
     return withLock('world:holdings',()=>lockedWorldRequestState(session,body,now));
 }
 async function lockedWorldRequestState(session,body,now){
+    const records=await WorldHolding.find().exec();reconcileMilitaryOwnership(records);
+    return withTeleportSieges(session,records,()=>loadedWorldRequestState(session,body,now,records));
+}
+async function loadedWorldRequestState(session,body,now,records){
     ensureWorld(session,now);await loadWorldInstances(session,{joinAssembly:body?.action==='seed_join'?String(body.assembly||''):null});await attachPartyPeers(session);
     const chat=session.ownerDocument(),clan=await getClan(Number(session.userId));bindWorldInstances(chat,now);
-    let result={ok:true};const records=await WorldHolding.find().exec();reconcileMilitaryOwnership(records);
+    let result={ok:true};
     for(const h of holdings.filter(hallScenario)){
         let r=records.find(r=>r._id===h.id);if(!r){r=new WorldHolding({_id:h.id});records.push(r);}
         ensureHallContest(r,h,now);advanceHallContest(r,h,now,records);

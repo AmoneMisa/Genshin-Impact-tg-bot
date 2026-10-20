@@ -1172,5 +1172,60 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "ivory-tower": {
+    "x": 85391,
+    "y": 16228,
+    "z": -3672,
+    "region": "oren",
+    "teleportGold": 3700,
+    "entrySource": {
+      "file": "teleporters/town/30177.xml",
+      "npcId": 30177,
+      "name": "Ivory Tower",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "770b5b53e2860719bfc7024d07581748b2946a68fd4aa9d270c6e2175dc05e08"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30177,
+        "npcName": "Valentina",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 3700,
+        "source": {
+          "file": "teleporters/town/30177.xml",
+          "npcId": 30177,
+          "name": "Ivory Tower",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "770b5b53e2860719bfc7024d07581748b2946a68fd4aa9d270c6e2175dc05e08"
+        },
+        "castleIds": [
+          4
+        ]
+      }
+    ],
+    "nativeEntryFloor": 1,
+    "polygon": [
+      [
+        80391,
+        11228
+      ],
+      [
+        90391,
+        11228
+      ],
+      [
+        90391,
+        21228
+      ],
+      [
+        80391,
+        21228
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
