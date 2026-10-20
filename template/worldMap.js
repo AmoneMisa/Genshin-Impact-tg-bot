@@ -17,9 +17,9 @@ export const CITIES=[...BASE_CITIES.map(c=>GATEKEEPER_CORRECTIONS[c.id]?{...c,gk
 export const CITY_NPCS=[...BASE_CITY_NPCS.map(n=>n.gateway&&GATEKEEPER_CORRECTIONS[n.city]?{...n,...GATEKEEPER_CORRECTIONS[n.city],adapted:false}:n),...SETTLEMENT_NPCS,PAGAN_CHURCH,...GRACIA_NPCS].map(n=>({...n,...CITY_NPC_UPDATES[n.id]})).concat(CITY_SOURCE_NPCS);
 
 export const LOCATIONS=[...BASE_LOCATIONS.filter(l=>!HUNTING_EXPANSION_LOCATIONS.some(extra=>extra.id===l.id)),...HUNTING_EXPANSION_LOCATIONS,...WORLD_EXTENSION_LOCATIONS].map(l=>{
- l={...l,...NATIVE_ISLAND_ENTRIES[l.id],...NATIVE_SURFACE_ENTRIES[l.id]};const source=LOCATION_LEVELS[l.id];if(!source)return l;
+ const entry={...NATIVE_ISLAND_ENTRIES[l.id],...NATIVE_SURFACE_ENTRIES[l.id]};const source=LOCATION_LEVELS[l.id];if(!source)return {...l,...entry};
  const levels=source.mobs.map(m=>m.level);
- return {...l,...source.atlas,floors:source.floors.length,...(source.source?{levelMin:Math.min(...levels),levelMax:Math.max(...levels)}:{})};
+ return {...l,...source.atlas,floors:source.floors.length,...(source.source?{levelMin:Math.min(...levels),levelMax:Math.max(...levels)}:{}),...entry};
 });
 
 // Atlas selection extent, not original client geodata.

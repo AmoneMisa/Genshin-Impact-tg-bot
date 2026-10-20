@@ -1,6 +1,7 @@
 import {worldGeodata} from './l2jGeodata.js';
 import {nativeSegment} from './nativeNavigation.js';
 import {nativeGroundAllowed} from './nativeGround.js';
+import {advanceNativeJourney} from './nativeJourney.js';
 const same=(a,b)=>a&&b&&['x','y','z'].every(k=>Math.abs(a[k]-b[k])<1e-7);
 const xyz=p=>({x:p.x,y:p.y,z:p.z});
 const surface=p=>[p?.x,p?.y,p?.z].every(Number.isFinite)&&worldGeodata.point(p)?.z===p.z;
@@ -22,4 +23,21 @@ export function nativeTrailBack(world){
  if(!trail.points.every(surface))return null;
  for(let i=1;i<trail.points.length;i++)if(!nativeSegment(trail.points[i-1],trail.points[i],{allowed:nativeGroundAllowed,reversible:true}))return null;
  return {root:trail.points[0],path:trail.points.slice(0,-1).reverse().map(xyz)};
+}
+/** Keep the original raster leg when pausing a named route inside a narrow passage. */
+export function rememberNativeResume(world,trip){
+ const route=trip?.native;if(!route||route.blocked||route.commit!==worldGeodata.manifest.commit||!Array.isArray(route.path)||route.path.length>512)return false;
+ const target=route.target||{location:trip.location||null,city:trip.city||null,port:trip.port||null,stop:'vendor'};
+ if(!target.location&&!target.city&&!target.port)return false;
+ world.nativeResume={island:world.nativeIsland||null,target:{...target},trip:structuredClone(trip)};return true;
+}
+export function resumeNativeJourney(world,target,now,speed){
+ const saved=world.nativeResume;if(world.mode!=='native'||saved?.island!==(world.nativeIsland||null)||!same(saved?.trip?.native?.point,world.nativePosition))return null;
+ const wanted={location:target?.location||null,city:target?.city||null,port:target?.port||null,stop:target?.stop||'vendor'};
+ if(!['location','city','port','stop'].every(k=>saved.target?.[k]===wanted[k]))return null;
+ const trip=structuredClone(saved.trip),route=trip.native;
+ advanceNativeJourney(trip,now,0);
+ const next=route.path?.[route.index];
+ if(route.blocked||!next||!surface(route.point)||!nativeSegment(route.legStart,next,{allowed:nativeGroundAllowed,reversible:true}))return null;
+ route.moveAt=now;trip.until=now+Math.ceil(route.remaining/Math.max(1,speed)*1000);return trip;
 }

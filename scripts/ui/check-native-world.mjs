@@ -4,7 +4,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {bundlePageAssets} from '../../miniapp/pageAssets.js';
-import {worldState,worldAction,advanceWorld} from '../../functions/game/world/world.js';
+import {worldState,worldAction,advanceWorld,CITIES} from '../../functions/game/world/world.js';
 import {getHuntState} from '../../miniapp/hunt.js';
 import {moveHuntField,advanceHunt} from '../../functions/game/hunt/huntFight.js';
 import {findNativePath} from '../../functions/game/world/nativeNavigation.js';
@@ -16,7 +16,7 @@ import {WORLD_EXTENSION} from '../../template/worldExtension.js';
 import compiled from '../../template/nativeRoutes.js';
 const firstId=process.env.NATIVE_FIRST_ZONE||'forsaken-plains',secondId=process.env.NATIVE_SECOND_ZONE||'silent-valley';
 const first=compiled.routes[firstId],second=compiled.routes[secondId];
-assert.ok(first?.available&&second?.available&&Boolean(nativeTownPath(first.city,second.city))&&firstId!==secondId,'two native routes must have a verified town connection');
+assert.ok(first?.available&&second?.available&&Boolean(nativeTownPath(first.city,second.city)),'two native routes must have a verified town connection');
 const zoneName=id=>WORLD_EXTENSION.find(r=>r.zone.id===id)?.zone.title||LOCATIONS.find(l=>l.id===id)?.name||id;
 const {chromium}=createRequire(process.env.PLAYWRIGHT_PACKAGE||'C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json')('playwright');
 const root=path.resolve('webapp'),out=path.resolve('.tmp/native-world-ui');fs.mkdirSync(out,{recursive:true});
@@ -85,9 +85,11 @@ try{for(const {width,noCanvas=false} of configurations){
  assert.equal(s.game.world.mode,'native');assert.ok(s.game.world.nativePosition);
  if(!noCanvas){
   const from=s.game.world.nativePosition,box=await page.locator('canvas').boundingBox();
-  const candidates=[[0,2200],[2200,0],[-2200,0],[0,-2200],[1800,1800],[-1800,-1800],[0,6000],[0,-6000],[6000,0],[-6000,0],[4800,4800],[-4800,-4800],...[-6000,-4000,4000,6000].flatMap(x=>[-2200,-1000,1000,2200].map(y=>[x,y]))];
-  const npcs=worldState(s,now).npcs.filter(n=>n.city===s.game.world.city);
-  const goal=candidates.map(([dx,dy])=>({x:from.x+dx,y:from.y+dy,z:from.z})).find(p=>{const x=box.width/2+(p.x-from.x)*box.width/14000,y=box.height/2+(p.y-from.y)*box.width/14000;return x>40&&x<box.width-40&&y>40&&y<box.height-40&&npcs.every(n=>Math.hypot(p.x-n.x,p.y-n.y)>1800)&&findNativePath(from,p,{allowed:nativeGroundAllowed,maxNodes:2000,reversible:true}).ok;});
+  const candidates=[[0,1400],[1400,0],[-1400,0],[0,-1400],[0,2200],[2200,0],[-2200,0],[0,-2200],[1800,1800],[-1800,-1800],[0,6000],[0,-6000],[6000,0],[-6000,0],[4800,4800],[-4800,-4800],...[-6000,-4000,4000,6000].flatMap(x=>[-2200,-1000,1000,2200].map(y=>[x,y]))];
+  const npcs=worldState(s,now).npcs.filter(n=>n.city===s.game.world.city),centres=[];
+  for(const npc of npcs)if(!centres.some(n=>Math.hypot(n.x-npc.x,n.y-npc.y)*box.width/14000<55))centres.push(npc);
+  for(const p of first.path)if(Math.hypot(p.x-from.x,p.y-from.y)<=6500)candidates.push([p.x-from.x,p.y-from.y]);
+  const goal=candidates.map(([dx,dy])=>({x:from.x+dx,y:from.y+dy,z:from.z})).find(p=>{const x=box.width/2+(p.x-from.x)*box.width/14000,y=box.height/2+(p.y-from.y)*box.width/14000;return x>40&&x<box.width-40&&y>40&&y<box.height-40&&centres.every(n=>Math.hypot(p.x-n.x,p.y-n.y)*box.width/14000>30)&&findNativePath(from,p,{allowed:nativeGroundAllowed,maxNodes:6000,reversible:true}).ok;});
   assert.ok(goal,'a nearby verified click target exists');
   try{await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('canvas').click({position:{x:box.width/2+(goal.x-from.x)*box.width/14000,y:box.height/2+(goal.y-from.y)*box.width/14000}})]);await page.waitForTimeout(100);}catch(error){await page.screenshot({path:path.join(out,`native-click-failure-${width}.png`)});console.error(JSON.stringify({from,goal,calls,errors,status:await page.locator('.atlas-status').textContent(),popup:await page.locator('.atlas-popup').textContent()}));throw error;}
   assert.ok(calls.some(c=>c.action==='native_move'),'background click submits a native walk');
@@ -99,6 +101,12 @@ try{for(const {width,noCanvas=false} of configurations){
  assert.equal(await page.locator('.atlas-panel').count(),0,'native arrival opens its hunting room in the same navigation flow');
  quiet();await page.locator('[data-level-travel]').click();const exit=page.locator('dialog[open] [data-native-exit]');assert.equal(await exit.isEnabled(),true);
  await exit.click();await page.waitForSelector('.atlas-panel');await page.waitForSelector('.hunt-overlay',{state:'detached'});assert.equal(await page.locator('.hunt-overlay').count(),0);
+ if(firstId===secondId){
+  await page.locator('[data-movement]').click();await page.getByRole('combobox',{name:'Разделы телепорта',exact:true}).click();await page.getByRole('option',{name:'Города',exact:true}).click();
+  await page.locator('[data-quick-go]').filter({hasText:CITIES.find(c=>c.id===first.city).name}).click();
+  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_walk_city'),page.locator('[data-native-city]').click()]);
+  finishNext=true;await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.player.mode==='city');
+ }
  await selectWalk(zoneName(secondId));assert.ok(s.game.world.nativeFields[firstId]);
  await page.locator('[data-movement]').click();finishNext=true;
  // The trip can finish on the server just before a stop request arrives.

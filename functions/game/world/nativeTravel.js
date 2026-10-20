@@ -8,7 +8,7 @@ import {worldGeodata,geoRegionId} from './l2jGeodata.js';
 import {nativeTownPath,nativeTownCities,nativeTownHub,nativeTownEdges,nativeTownSource} from './nativeTownGraph.js';
 import ports from '../../../template/nativePortRoutes.js';
 import islands from '../../../template/nativeIslandRoutes.js';
-import {nativeTrailBack} from './nativeTrail.js';
+import {nativeTrailBack,resumeNativeJourney} from './nativeTrail.js';
 
 export const nativeRoute=id=>islands.routes[id]?.available?islands.routes[id]:routes.routes[id]?.available?routes.routes[id]:null;
 export const nativeIsland=session=>session.game.world.mode==='location'?nativeRoute(session.game.world.location)?.island||null:session.game.world.nativeIsland||null;
@@ -75,6 +75,8 @@ export function nativeTravel(session,target,now,speed){
  let start,path,arrivalCity=target?.city||null;
  if(target?.location&&target.location===w.location&&w.mode==='location')return {ok:false,reason:'location_path_required'};
  const island=to?.island||from?.island||nativeIsland(session);
+ if(island&&(to?.island!==island||arrivalCity))return {ok:false,reason:'location_path_required'};
+ const resumed=resumeNativeJourney(w,target,now,speed);if(resumed){delete w.nativeResume;return {ok:true,trip:resumed};}
  if(island){
   if(to?.island!==island||arrivalCity)return {ok:false,reason:'location_path_required'};
   if(w.mode==='location'&&from?.island===island){
@@ -104,6 +106,7 @@ export function nativeTravel(session,target,now,speed){
   if(!plan.ok)return plan;start=plan.start;path=plan.path;
  }else return {ok:false,reason:'location_path_required'};
  const trip=createNativeJourney(start,path,{now,speed,location:to?target.location:null,city:arrivalCity});
+ if(trip){trip.native.target={location:target?.location||null,city:target?.city||null,port:target?.port||null,stop:target?.stop||'vendor'};delete w.nativeResume;}
  if(trip&&target?.port){trip.port=target.port;trip.portCity=to.city;}
  if(trip&&island)trip.island=island;
  return trip?{ok:true,trip}:{ok:false,reason:'path_blocked'};
@@ -119,7 +122,7 @@ export function nativeFreeWalk(session,point,now,speed){
  const plan=findNativePath(from,{x,y,z:from.z},{allowed:nativeGroundAllowed,maxNodes:6000,reversible:true});
  if(!plan.ok)return plan;
  const trip=createNativeJourney(plan.start,plan.path,{now,speed});
- if(trip)trip.native.historyStart={x:plan.start.x,y:plan.start.y,z:plan.start.z};
+ if(trip){trip.native.historyStart={x:plan.start.x,y:plan.start.y,z:plan.start.z};delete w.nativeResume;}
  return trip?{ok:true,trip}:{ok:false,reason:'path_blocked'};
 }
 

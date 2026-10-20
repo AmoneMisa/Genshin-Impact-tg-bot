@@ -407,5 +407,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "dark-forest": {
+    "x": -22224,
+    "y": 14168,
+    "z": -3232,
+    "region": "dark-elven-village",
+    "teleportGold": 890,
+    "entrySource": {
+      "file": "teleporters/town/30134.xml",
+      "npcId": 30134,
+      "name": "Dark Forest",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "4dc2b144e46b6c699a45771e0eeef40cedc9d12ff9b01b4764358278c42e645b"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30134,
+        "npcName": "Jasmine",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 890,
+        "source": {
+          "file": "teleporters/town/30134.xml",
+          "npcId": 30134,
+          "name": "Dark Forest",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "4dc2b144e46b6c699a45771e0eeef40cedc9d12ff9b01b4764358278c42e645b"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        -27224,
+        9168
+      ],
+      [
+        -17224,
+        9168
+      ],
+      [
+        -17224,
+        19168
+      ],
+      [
+        -27224,
+        19168
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
