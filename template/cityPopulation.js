@@ -672,6 +672,258 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/talking_island_town.xml"
+  },
+  "elven-village": {
+    "polygon": [
+      [
+        45364,
+        46535
+      ],
+      [
+        45895,
+        46578
+      ],
+      [
+        46388,
+        46713
+      ],
+      [
+        46861,
+        46934
+      ],
+      [
+        47290,
+        47232
+      ],
+      [
+        47659,
+        47598
+      ],
+      [
+        47959,
+        48024
+      ],
+      [
+        48182,
+        48499
+      ],
+      [
+        48318,
+        49006
+      ],
+      [
+        48364,
+        49523
+      ],
+      [
+        48319,
+        50048
+      ],
+      [
+        48186,
+        50548
+      ],
+      [
+        47963,
+        51022
+      ],
+      [
+        47661,
+        51450
+      ],
+      [
+        47286,
+        51836
+      ],
+      [
+        46864,
+        52126
+      ],
+      [
+        46398,
+        52345
+      ],
+      [
+        46313,
+        52598
+      ],
+      [
+        45768,
+        52597
+      ],
+      [
+        45735,
+        52665
+      ],
+      [
+        45651,
+        52791
+      ],
+      [
+        45520,
+        52878
+      ],
+      [
+        45363,
+        52912
+      ],
+      [
+        45210,
+        52882
+      ],
+      [
+        45077,
+        52794
+      ],
+      [
+        44993,
+        52667
+      ],
+      [
+        44961,
+        52600
+      ],
+      [
+        44422,
+        52600
+      ],
+      [
+        44342,
+        52347
+      ],
+      [
+        43867,
+        52131
+      ],
+      [
+        43438,
+        51827
+      ],
+      [
+        43075,
+        51458
+      ],
+      [
+        42766,
+        51019
+      ],
+      [
+        42546,
+        50557
+      ],
+      [
+        42412,
+        50051
+      ],
+      [
+        42367,
+        49530
+      ],
+      [
+        42410,
+        49012
+      ],
+      [
+        42547,
+        48509
+      ],
+      [
+        42769,
+        48034
+      ],
+      [
+        43065,
+        47602
+      ],
+      [
+        43437,
+        47232
+      ],
+      [
+        43859,
+        46937
+      ],
+      [
+        44336,
+        46713
+      ],
+      [
+        44843,
+        46575
+      ],
+      [
+        45395,
+        46530
+      ]
+    ],
+    "minZ": -3600,
+    "maxZ": -2750,
+    "sourceZone": "Elven Village",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 11008,
+    "arrivals": [
+      {
+        "x": 45487,
+        "y": 49767,
+        "z": -2950
+      },
+      {
+        "x": 45080,
+        "y": 49614,
+        "z": -2950
+      },
+      {
+        "x": 45284,
+        "y": 49309,
+        "z": -2950
+      },
+      {
+        "x": 45576,
+        "y": 49412,
+        "z": -2950
+      },
+      {
+        "x": 45896,
+        "y": 49831,
+        "z": -2950
+      },
+      {
+        "x": 45463,
+        "y": 50097,
+        "z": -2950
+      },
+      {
+        "x": 44935,
+        "y": 49798,
+        "z": -2950
+      },
+      {
+        "x": 44798,
+        "y": 49475,
+        "z": -2950
+      },
+      {
+        "x": 45100,
+        "y": 49025,
+        "z": -2950
+      },
+      {
+        "x": 45912,
+        "y": 49363,
+        "z": -2950
+      },
+      {
+        "x": 45788,
+        "y": 49861,
+        "z": -2950
+      },
+      {
+        "x": 45325,
+        "y": 50067,
+        "z": -2950
+      }
+    ],
+    "arrivalSource": "mapregion/elf_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -836,6 +1088,124 @@ export const CITY_NPC_UPDATES = {
     "z": -3728,
     "adapted": false,
     "source": "spawns/Others/17_25.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "elven-village:30146": {
+    "npcId": 30146,
+    "name": "Mirabel",
+    "city": "elven-village",
+    "x": 46926,
+    "y": 51511,
+    "z": -2976,
+    "adapted": false,
+    "source": "spawns/Others/21_19.xml"
+  },
+  "elven-village:30147": {
+    "npcId": 30147,
+    "name": "Unoren",
+    "city": "elven-village",
+    "x": 44667,
+    "y": 46896,
+    "z": -2982,
+    "adapted": false,
+    "source": "spawns/Others/21_19.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "elven-village:30148": {
+    "npcId": 30148,
+    "name": "Ariel",
+    "city": "elven-village",
+    "x": 44683,
+    "y": 46952,
+    "z": -2981,
+    "adapted": false,
+    "source": "spawns/Others/21_19.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "elven-village:30149": {
+    "npcId": 30149,
+    "name": "Creamees",
+    "city": "elven-village",
+    "x": 42700,
+    "y": 50057,
+    "z": -2984,
+    "adapted": false,
+    "source": "spawns/Others/21_19.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "elven-village:30150": {
+    "npcId": 30150,
+    "name": "Herbiel",
+    "city": "elven-village",
+    "x": 42766,
+    "y": 50037,
+    "z": -2984,
+    "adapted": false,
+    "source": "spawns/Others/21_19.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "elven-village:30151": {
+    "npcId": 30151,
+    "name": "Chad",
+    "city": "elven-village",
+    "x": 47868,
+    "y": 50167,
+    "z": -2983,
+    "adapted": false,
+    "source": "spawns/Others/21_19.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "elven-village:30152": {
+    "npcId": 30152,
+    "name": "Julia",
+    "city": "elven-village",
+    "x": 47912,
+    "y": 50170,
+    "z": -2983,
+    "adapted": false,
+    "source": "spawns/Others/21_19.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "elven-village:30153": {
+    "npcId": 30153,
+    "name": "Markius",
+    "city": "elven-village",
+    "x": 47780,
+    "y": 49568,
+    "z": -2984,
+    "adapted": false,
+    "source": "spawns/Others/21_19.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "elven-village:32478": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "elven-village",
+    "x": 47600,
+    "y": 49920,
+    "z": -2992,
+    "adapted": false,
+    "source": "spawns/Others/21_19.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "elven-village:35230": {
+    "npcId": 35230,
+    "name": "Manor Manager",
+    "city": "elven-village",
+    "x": 43849,
+    "y": 50558,
+    "z": -3056,
+    "adapted": false,
+    "source": "spawns/Others/21_19.xml",
     "role": "Торговец",
     "service": "merchant"
   },
@@ -1220,6 +1590,76 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Others/20_18.xml"
+  },
+  {
+    "id": "elven-village:source:30154:44692:52261:-2792",
+    "npcId": 30154,
+    "name": "Asterios",
+    "role": "Наставник",
+    "city": "elven-village",
+    "x": 44692,
+    "y": 52261,
+    "z": -2792,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_19.xml"
+  },
+  {
+    "id": "elven-village:source:30155:45725:52105:-2792",
+    "npcId": 30155,
+    "name": "Ellenia",
+    "role": "Наставник",
+    "city": "elven-village",
+    "x": 45725,
+    "y": 52105,
+    "z": -2792,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_19.xml"
+  },
+  {
+    "id": "elven-village:source:30156:44823:52414:-2792",
+    "npcId": 30156,
+    "name": "Cobendell",
+    "role": "Наставник",
+    "city": "elven-village",
+    "x": 44823,
+    "y": 52414,
+    "z": -2792,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_19.xml"
+  },
+  {
+    "id": "elven-village:source:30157:45000:52101:-2792",
+    "npcId": 30157,
+    "name": "Greenis",
+    "role": "Наставник",
+    "city": "elven-village",
+    "x": 45000,
+    "y": 52101,
+    "z": -2792,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_19.xml"
+  },
+  {
+    "id": "elven-village:source:30158:45919:52414:-2792",
+    "npcId": 30158,
+    "name": "Esrandell",
+    "role": "Наставник",
+    "city": "elven-village",
+    "x": 45919,
+    "y": 52414,
+    "z": -2792,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/21_19.xml"
   },
   {
     "id": "giran:source:30081:80518:147922:-3506",
