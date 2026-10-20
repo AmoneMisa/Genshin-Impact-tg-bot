@@ -78,6 +78,1059 @@ export const CITY_POPULATION_SOURCE = {
     "zones/custom_town.xml": "076adfa7ab63a774b9a8d9c62469a9bae79cfd4af20c1e4827bfd9ad99323223"
   }
 };
-export const CITY_GEOMETRY = {};
-export const CITY_NPC_UPDATES = {};
-export const CITY_SOURCE_NPCS = [];
+export const CITY_GEOMETRY = {
+  "giran": {
+    "polygon": [
+      [
+        77170,
+        147420
+      ],
+      [
+        79200,
+        147420
+      ],
+      [
+        79200,
+        144780
+      ],
+      [
+        80310,
+        144780
+      ],
+      [
+        80310,
+        143630
+      ],
+      [
+        83120,
+        143630
+      ],
+      [
+        83120,
+        143505
+      ],
+      [
+        83700,
+        143505
+      ],
+      [
+        83700,
+        141500
+      ],
+      [
+        84070,
+        141500
+      ],
+      [
+        84070,
+        143505
+      ],
+      [
+        85040,
+        143505
+      ],
+      [
+        85040,
+        145760
+      ],
+      [
+        86115,
+        145760
+      ],
+      [
+        86115,
+        146910
+      ],
+      [
+        88425,
+        146910
+      ],
+      [
+        88425,
+        147175
+      ],
+      [
+        90430,
+        147175
+      ],
+      [
+        90430,
+        147540
+      ],
+      [
+        88425,
+        147540
+      ],
+      [
+        88425,
+        150050
+      ],
+      [
+        86495,
+        150050
+      ],
+      [
+        86495,
+        150250
+      ],
+      [
+        85995,
+        150250
+      ],
+      [
+        85995,
+        152250
+      ],
+      [
+        86780,
+        152250
+      ],
+      [
+        86780,
+        153600
+      ],
+      [
+        84850,
+        153600
+      ],
+      [
+        84850,
+        152250
+      ],
+      [
+        85625,
+        152250
+      ],
+      [
+        85265,
+        150250
+      ],
+      [
+        85085,
+        150250
+      ],
+      [
+        85085,
+        149875
+      ],
+      [
+        83680,
+        149875
+      ],
+      [
+        83680,
+        149920
+      ],
+      [
+        83500,
+        149920
+      ],
+      [
+        83500,
+        151270
+      ],
+      [
+        82705,
+        151270
+      ],
+      [
+        82705,
+        152820
+      ],
+      [
+        79195,
+        152820
+      ],
+      [
+        79195,
+        149805
+      ],
+      [
+        77170,
+        149805
+      ]
+    ],
+    "minZ": -3800,
+    "maxZ": -3300,
+    "sourceZone": "Giran Castle Town",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 14000,
+    "arrivals": [
+      {
+        "x": 82480,
+        "y": 149087,
+        "z": -3350
+      },
+      {
+        "x": 81440,
+        "y": 149119,
+        "z": -3350
+      },
+      {
+        "x": 81376,
+        "y": 148095,
+        "z": -3350
+      },
+      {
+        "x": 82496,
+        "y": 148095,
+        "z": -3350
+      },
+      {
+        "x": 83473,
+        "y": 149223,
+        "z": -3300
+      },
+      {
+        "x": 83426,
+        "y": 148835,
+        "z": -3300
+      },
+      {
+        "x": 83409,
+        "y": 148578,
+        "z": -3300
+      },
+      {
+        "x": 83415,
+        "y": 148235,
+        "z": -3300
+      },
+      {
+        "x": 82272,
+        "y": 147801,
+        "z": -3350
+      },
+      {
+        "x": 81562,
+        "y": 147782,
+        "z": -3350
+      },
+      {
+        "x": 81062,
+        "y": 148144,
+        "z": -3350
+      },
+      {
+        "x": 81033,
+        "y": 148883,
+        "z": -3350
+      },
+      {
+        "x": 81637,
+        "y": 149427,
+        "z": -3350
+      },
+      {
+        "x": 82292,
+        "y": 149450,
+        "z": -3350
+      }
+    ],
+    "arrivalSource": "mapregion/giran_castle_town.xml"
+  }
+};
+export const CITY_NPC_UPDATES = {
+  "giran:npc:0": {
+    "npcId": 30080,
+    "name": "Clarissa",
+    "city": "giran",
+    "x": 83396,
+    "y": 147904,
+    "z": -3404,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  "giran:npc:1": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "giran",
+    "x": 82672,
+    "y": 146752,
+    "z": -3464,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "rune:Manakia": {
+    "npcId": 30515,
+    "name": "Manakia",
+    "city": "giran",
+    "x": 80464,
+    "y": 144592,
+    "z": -3529,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml",
+    "role": "Наставник",
+    "service": "trainer"
+  },
+  "giran:gracia-survivor": {
+    "npcId": 32632,
+    "name": "Gracian Survivor",
+    "city": "giran",
+    "x": 83659,
+    "y": 148382,
+    "z": -3400,
+    "adapted": false,
+    "source": "spawns/Gracia/GludioAirshipField.xml"
+  }
+};
+export const CITY_SOURCE_NPCS = [
+  {
+    "id": "giran:source:32216:81004:150734:-3512",
+    "npcId": 32216,
+    "name": "Noir",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 81004,
+    "y": 150734,
+    "z": -3512,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "giran:source:32213:81041:150731:-3512",
+    "npcId": 32213,
+    "name": "Vitus",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 81041,
+    "y": 150731,
+    "z": -3512,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "giran:source:32215:81061:150669:-3512",
+    "npcId": 32215,
+    "name": "Tenain",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 81061,
+    "y": 150669,
+    "z": -3512,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "giran:source:32214:81066:150706:-3512",
+    "npcId": 32214,
+    "name": "Meldina",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 81066,
+    "y": 150706,
+    "z": -3512,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "giran:source:30081:80518:147922:-3506",
+    "npcId": 30081,
+    "name": "Helvetia",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 80518,
+    "y": 147922,
+    "z": -3506,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30082:80518:147873:-3506",
+    "npcId": 30082,
+    "name": "Denkus",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 80518,
+    "y": 147873,
+    "z": -3506,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30083:80329:145482:-3533",
+    "npcId": 30083,
+    "name": "Pochi",
+    "role": "Хранитель склада",
+    "city": "giran",
+    "x": 80329,
+    "y": 145482,
+    "z": -3533,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30084:79747:146492:-3518",
+    "npcId": 30084,
+    "name": "Graham",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 79747,
+    "y": 146492,
+    "z": -3518,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30085:79801:146493:-3518",
+    "npcId": 30085,
+    "name": "Stanford",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 79801,
+    "y": 146493,
+    "z": -3518,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30086:80752:146400:-3533",
+    "npcId": 30086,
+    "name": "Taurin",
+    "role": "Хранитель склада",
+    "city": "giran",
+    "x": 80752,
+    "y": 146400,
+    "z": -3533,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30087:79711:150788:-3520",
+    "npcId": 30087,
+    "name": "Peta",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 79711,
+    "y": 150788,
+    "z": -3520,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30088:79654:150788:-3520",
+    "npcId": 30088,
+    "name": "Radia",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 79654,
+    "y": 150788,
+    "z": -3520,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30090:80511:149183:-3508",
+    "npcId": 30090,
+    "name": "Sandra",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 80511,
+    "y": 149183,
+    "z": -3508,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30091:80510:149250:-3508",
+    "npcId": 30091,
+    "name": "Ellie",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 80510,
+    "y": 149250,
+    "z": -3508,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30092:79248:149552:-3531",
+    "npcId": 30092,
+    "name": "Collob",
+    "role": "Хранитель склада",
+    "city": "giran",
+    "x": 79248,
+    "y": 149552,
+    "z": -3531,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30093:83305:150521:-3514",
+    "npcId": 30093,
+    "name": "Groot",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 83305,
+    "y": 150521,
+    "z": -3514,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30094:83317:150821:-3514",
+    "npcId": 30094,
+    "name": "Gentler",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 83317,
+    "y": 150821,
+    "z": -3514,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30095:82405:149905:-3520",
+    "npcId": 30095,
+    "name": "Randolf",
+    "role": "Хранитель склада",
+    "city": "giran",
+    "x": 82405,
+    "y": 149905,
+    "z": -3520,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30097:79599:145522:-3494",
+    "npcId": 30097,
+    "name": "Galladucci",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 79599,
+    "y": 145522,
+    "z": -3494,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30103:83264:146602:-3464",
+    "npcId": 30103,
+    "name": "Valkon",
+    "role": "Хранитель склада",
+    "city": "giran",
+    "x": 83264,
+    "y": 146602,
+    "z": -3464,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30104:83263:146736:-3464",
+    "npcId": 30104,
+    "name": "Parman",
+    "role": "Хранитель склада",
+    "city": "giran",
+    "x": 83263,
+    "y": 146736,
+    "z": -3464,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30105:85505:146208:-3399",
+    "npcId": 30105,
+    "name": "Genwitter",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 85505,
+    "y": 146208,
+    "z": -3399,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30106:85234:146634:-3399",
+    "npcId": 30106,
+    "name": "Dufner",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 85234,
+    "y": 146634,
+    "z": -3399,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30107:85502:146752:-3399",
+    "npcId": 30107,
+    "name": "Goldian",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 85502,
+    "y": 146752,
+    "z": -3399,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30108:85055:146560:-3399",
+    "npcId": 30108,
+    "name": "Macken",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 85055,
+    "y": 146560,
+    "z": -3399,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30109:85655:146471:-3399",
+    "npcId": 30109,
+    "name": "Hannavalt",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 85655,
+    "y": 146471,
+    "z": -3399,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30110:85289:153341:-3494",
+    "npcId": 30110,
+    "name": "Iker",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 85289,
+    "y": 153341,
+    "z": -3494,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30111:86359:152970:-3494",
+    "npcId": 30111,
+    "name": "Dieter",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 86359,
+    "y": 152970,
+    "z": -3494,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30112:86362:153337:-3494",
+    "npcId": 30112,
+    "name": "Maurius",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 86362,
+    "y": 153337,
+    "z": -3494,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30113:85253:153153:-3494",
+    "npcId": 30113,
+    "name": "Juris",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 85253,
+    "y": 153153,
+    "z": -3494,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30114:85297:152963:-3494",
+    "npcId": 30114,
+    "name": "Roa",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 85297,
+    "y": 152963,
+    "z": -3494,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30115:85823:153248:-3494",
+    "npcId": 30115,
+    "name": "Jurek",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 85823,
+    "y": 153248,
+    "z": -3494,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30116:86912:148802:-3392",
+    "npcId": 30116,
+    "name": "Dustin",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 86912,
+    "y": 148802,
+    "z": -3392,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30117:86472:148848:-3392",
+    "npcId": 30117,
+    "name": "Primos",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 86472,
+    "y": 148848,
+    "z": -3392,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30118:86485:148384:-3392",
+    "npcId": 30118,
+    "name": "Pupina",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 86485,
+    "y": 148384,
+    "z": -3392,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30119:85828:148894:-3392",
+    "npcId": 30119,
+    "name": "Isabellin",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 85828,
+    "y": 148894,
+    "z": -3392,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30120:87058:148634:-3392",
+    "npcId": 30120,
+    "name": "Maximilian",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 87058,
+    "y": 148634,
+    "z": -3392,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30300:77458:148169:-3595",
+    "npcId": 30300,
+    "name": "Pushkin",
+    "role": "Кузнец",
+    "city": "giran",
+    "x": 77458,
+    "y": 148169,
+    "z": -3595,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30471:77712:148288:-3595",
+    "npcId": 30471,
+    "name": "Rupio",
+    "role": "Кузнец",
+    "city": "giran",
+    "x": 77712,
+    "y": 148288,
+    "z": -3595,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30472:85231:146328:-3399",
+    "npcId": 30472,
+    "name": "Rosheria",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 85231,
+    "y": 146328,
+    "z": -3399,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30473:85829:148365:-3392",
+    "npcId": 30473,
+    "name": "Bandellos",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 85829,
+    "y": 148365,
+    "z": -3392,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30474:79059:149457:-3596",
+    "npcId": 30474,
+    "name": "Angus",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 79059,
+    "y": 149457,
+    "z": -3596,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30475:78766:149239:-3596",
+    "npcId": 30475,
+    "name": "Stapin",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 78766,
+    "y": 149239,
+    "z": -3596,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30476:78928:149041:-3596",
+    "npcId": 30476,
+    "name": "Kaira",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 78928,
+    "y": 149041,
+    "z": -3596,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30511:83263:146667:-3464",
+    "npcId": 30511,
+    "name": "Gesto",
+    "role": "Хранитель склада",
+    "city": "giran",
+    "x": 83263,
+    "y": 146667,
+    "z": -3464,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30512:77659:148089:-3595",
+    "npcId": 30512,
+    "name": "Kusto",
+    "role": "Кузнец",
+    "city": "giran",
+    "x": 77659,
+    "y": 148089,
+    "z": -3595,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30513:80420:144499:-3536",
+    "npcId": 30513,
+    "name": "Penatus",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 80420,
+    "y": 144499,
+    "z": -3536,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:30514:80464:144368:-3533",
+    "npcId": 30514,
+    "name": "Vokian",
+    "role": "Наставник",
+    "city": "giran",
+    "x": 80464,
+    "y": 144368,
+    "z": -3533,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:31435:77652:148328:-3600",
+    "npcId": 31435,
+    "name": "Daeger",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 77652,
+    "y": 148328,
+    "z": -3600,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:31442:77446:148302:-3600",
+    "npcId": 31442,
+    "name": "Kiki",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 77446,
+    "y": 148302,
+    "z": -3600,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:32877:77467:148270:-3592",
+    "npcId": 32877,
+    "name": "Plani",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 77467,
+    "y": 148270,
+    "z": -3592,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:35187:79296:148128:-3536",
+    "npcId": 35187,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 79296,
+    "y": 148128,
+    "z": -3536,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:35187:80544:152288:-3536",
+    "npcId": 35187,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 80544,
+    "y": 152288,
+    "z": -3536,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  },
+  {
+    "id": "giran:source:35187:81936:149584:-3472",
+    "npcId": 35187,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "giran",
+    "x": 81936,
+    "y": 149584,
+    "z": -3472,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_22.xml"
+  }
+];
