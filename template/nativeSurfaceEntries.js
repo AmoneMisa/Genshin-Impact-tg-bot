@@ -356,5 +356,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "brekas-stronghold": {
+    "x": 85546,
+    "y": 131328,
+    "z": -3672,
+    "region": "giran",
+    "teleportGold": 1000,
+    "entrySource": {
+      "file": "teleporters/town/30080.xml",
+      "npcId": 30080,
+      "name": "Breka's Stronghold",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "8c01e023e75b46bf01c6be9e9b117cb6f1d4f33b416cda98e1b5e21dbee1c6f5"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30080,
+        "npcName": "Clarissa",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 1000,
+        "source": {
+          "file": "teleporters/town/30080.xml",
+          "npcId": 30080,
+          "name": "Breka's Stronghold",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "8c01e023e75b46bf01c6be9e9b117cb6f1d4f33b416cda98e1b5e21dbee1c6f5"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        80546,
+        126328
+      ],
+      [
+        90546,
+        126328
+      ],
+      [
+        90546,
+        136328
+      ],
+      [
+        80546,
+        136328
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
