@@ -1095,6 +1095,164 @@ export const CITY_GEOMETRY = {
     "mapSize": 10496,
     "arrivals": [],
     "arrivalSource": "mapregion/orc_town.xml"
+  },
+  "gludin": {
+    "polygon": [
+      [
+        -84867,
+        149371
+      ],
+      [
+        -82581,
+        149364
+      ],
+      [
+        -82499,
+        149139
+      ],
+      [
+        -81593,
+        149177
+      ],
+      [
+        -81551,
+        149410
+      ],
+      [
+        -79270,
+        149392
+      ],
+      [
+        -79275,
+        150365
+      ],
+      [
+        -79055,
+        150368
+      ],
+      [
+        -78820,
+        150429
+      ],
+      [
+        -78644,
+        150595
+      ],
+      [
+        -78558,
+        150837
+      ],
+      [
+        -78567,
+        152410
+      ],
+      [
+        -78796,
+        152420
+      ],
+      [
+        -78803,
+        154319
+      ],
+      [
+        -77131,
+        155437
+      ],
+      [
+        -78190,
+        156459
+      ],
+      [
+        -79978,
+        156104
+      ],
+      [
+        -84876,
+        156106
+      ],
+      [
+        -84875,
+        149371
+      ]
+    ],
+    "minZ": -3300,
+    "maxZ": -3000,
+    "sourceZone": "Gludin Village",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 14000,
+    "arrivals": [
+      {
+        "x": -83520,
+        "y": 150560,
+        "z": -3000
+      },
+      {
+        "x": -82464,
+        "y": 150848,
+        "z": -3000
+      },
+      {
+        "x": -84064,
+        "y": 150864,
+        "z": -3000
+      },
+      {
+        "x": -83408,
+        "y": 151376,
+        "z": -3000
+      },
+      {
+        "x": -82195,
+        "y": 150489,
+        "z": -3000
+      },
+      {
+        "x": -81787,
+        "y": 150780,
+        "z": -3000
+      },
+      {
+        "x": -81721,
+        "y": 151202,
+        "z": -3000
+      },
+      {
+        "x": -82241,
+        "y": 151163,
+        "z": -3000
+      },
+      {
+        "x": -82575,
+        "y": 151025,
+        "z": -3000
+      },
+      {
+        "x": -82909,
+        "y": 150357,
+        "z": -3000
+      },
+      {
+        "x": -83584,
+        "y": 150512,
+        "z": -3000
+      },
+      {
+        "x": -83529,
+        "y": 151205,
+        "z": -3000
+      },
+      {
+        "x": -82035,
+        "y": 152647,
+        "z": -3000
+      },
+      {
+        "x": -80053,
+        "y": 154348,
+        "z": -3000
+      }
+    ],
+    "arrivalSource": "mapregion/gludin_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -1117,6 +1275,28 @@ export const CITY_NPC_UPDATES = {
     "z": -3464,
     "adapted": false,
     "source": "spawns/Others/22_22.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "gludin:npc:0": {
+    "npcId": 30320,
+    "name": "Richlin",
+    "city": "gludin",
+    "x": -80752,
+    "y": 149776,
+    "z": -3044,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  "gludin:npc:1": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "gludin",
+    "x": -82368,
+    "y": 153664,
+    "z": -3168,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml",
     "role": "Хранитель склада",
     "service": "warehouse"
   },
@@ -1605,6 +1785,48 @@ export const CITY_NPC_UPDATES = {
 };
 export const CITY_SOURCE_NPCS = [
   {
+    "id": "gludin:source:32194:-84773:153134:-3160",
+    "npcId": 32194,
+    "name": "Shubain",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -84773,
+    "y": 153134,
+    "z": -3160,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "gludin:source:32193:-84734:153122:-3160",
+    "npcId": 32193,
+    "name": "Yeniche",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -84734,
+    "y": 153122,
+    "z": -3160,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "gludin:source:32195:-84697:153134:-3160",
+    "npcId": 32195,
+    "name": "Sione",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -84697,
+    "y": 153134,
+    "z": -3160,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
     "id": "giran:source:32216:81004:150734:-3512",
     "npcId": 32216,
     "name": "Noir",
@@ -1659,6 +1881,468 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "gludin:source:30010:-81861:149197:-3125",
+    "npcId": 30010,
+    "name": "Auron",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -81861,
+    "y": 149197,
+    "z": -3125,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30014:-82212:149197:-3125",
+    "npcId": 30014,
+    "name": "Celma",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -82212,
+    "y": 149197,
+    "z": -3125,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30022:-79256:150676:-3043",
+    "npcId": 30022,
+    "name": "Zigaunt",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -79256,
+    "y": 150676,
+    "z": -3043,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30034:-79559:150661:-3043",
+    "npcId": 30034,
+    "name": "Iris",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -79559,
+    "y": 150661,
+    "z": -3043,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30037:-78982:150830:-3033",
+    "npcId": 30037,
+    "name": "Levian",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -78982,
+    "y": 150830,
+    "z": -3033,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30207:-80343:154897:-3162",
+    "npcId": 30207,
+    "name": "Arodin",
+    "role": "Торговец",
+    "city": "gludin",
+    "x": -80343,
+    "y": 154897,
+    "z": -3162,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30208:-80935:155526:-3162",
+    "npcId": 30208,
+    "name": "Damion",
+    "role": "Торговец",
+    "city": "gludin",
+    "x": -80935,
+    "y": 155526,
+    "z": -3162,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30209:-81908:152077:-3125",
+    "npcId": 30209,
+    "name": "Colleen",
+    "role": "Торговец",
+    "city": "gludin",
+    "x": -81908,
+    "y": 152077,
+    "z": -3125,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30210:-81857:153545:-3171",
+    "npcId": 30210,
+    "name": "Norman",
+    "role": "Хранитель склада",
+    "city": "gludin",
+    "x": -81857,
+    "y": 153545,
+    "z": -3171,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30290:-84401:149606:-3127",
+    "npcId": 30290,
+    "name": "Xenos",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -84401,
+    "y": 149606,
+    "z": -3127,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30313:-81266:152076:-3125",
+    "npcId": 30313,
+    "name": "Asha",
+    "role": "Торговец",
+    "city": "gludin",
+    "x": -81266,
+    "y": 152076,
+    "z": -3125,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30314:-80108:153307:-3162",
+    "npcId": 30314,
+    "name": "Nestle",
+    "role": "Торговец",
+    "city": "gludin",
+    "x": -80108,
+    "y": 153307,
+    "z": -3162,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30315:-79405:153963:-3160",
+    "npcId": 30315,
+    "name": "Poesia",
+    "role": "Торговец",
+    "city": "gludin",
+    "x": -79405,
+    "y": 153963,
+    "z": -3160,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30316:-81966:153547:-3170",
+    "npcId": 30316,
+    "name": "Raut",
+    "role": "Хранитель склада",
+    "city": "gludin",
+    "x": -81966,
+    "y": 153547,
+    "z": -3170,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30317:-83172:155483:-3174",
+    "npcId": 30317,
+    "name": "Kluto",
+    "role": "Кузнец",
+    "city": "gludin",
+    "x": -83172,
+    "y": 155483,
+    "z": -3174,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30369:-81864:149502:-3125",
+    "npcId": 30369,
+    "name": "Baenedes",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -81864,
+    "y": 149502,
+    "z": -3125,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30373:-81688:149350:-3125",
+    "npcId": 30373,
+    "name": "Ramos",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -81688,
+    "y": 149350,
+    "z": -3125,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30374:-82211:149504:-3125",
+    "npcId": 30374,
+    "name": "Rhodiell",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -82211,
+    "y": 149504,
+    "z": -3125,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30375:-79274:150966:-3031",
+    "npcId": 30375,
+    "name": "Adonius",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -79274,
+    "y": 150966,
+    "z": -3031,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30376:-79557:150982:-3043",
+    "npcId": 30376,
+    "name": "Nell",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -79557,
+    "y": 150982,
+    "z": -3043,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30377:-84642:149630:-3127",
+    "npcId": 30377,
+    "name": "Talbot",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -84642,
+    "y": 149630,
+    "z": -3127,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30378:-84661:149989:-3127",
+    "npcId": 30378,
+    "name": "Estella",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -84661,
+    "y": 149989,
+    "z": -3127,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30498:-81913:153545:-3171",
+    "npcId": 30498,
+    "name": "Moke",
+    "role": "Хранитель склада",
+    "city": "gludin",
+    "x": -81913,
+    "y": 153545,
+    "z": -3171,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30499:-82954:155618:-3180",
+    "npcId": 30499,
+    "name": "Tapoy",
+    "role": "Кузнец",
+    "city": "gludin",
+    "x": -82954,
+    "y": 155618,
+    "z": -3180,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30500:-80386:153282:-3176",
+    "npcId": 30500,
+    "name": "Osborn",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -80386,
+    "y": 153282,
+    "z": -3176,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30501:-80448:153408:-3176",
+    "npcId": 30501,
+    "name": "Kasman",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -80448,
+    "y": 153408,
+    "z": -3176,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:30502:-80448:153208:-3176",
+    "npcId": 30502,
+    "name": "Umos",
+    "role": "Наставник",
+    "city": "gludin",
+    "x": -80448,
+    "y": 153208,
+    "z": -3176,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:31416:-80324:150762:-3039",
+    "npcId": 31416,
+    "name": "Aren",
+    "role": "Торговец",
+    "city": "gludin",
+    "x": -80324,
+    "y": 150762,
+    "z": -3039,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:31425:-80387:153328:-3176",
+    "npcId": 31425,
+    "name": "Koram",
+    "role": "Торговец",
+    "city": "gludin",
+    "x": -80387,
+    "y": 153328,
+    "z": -3176,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:31439:-83197:155347:-3174",
+    "npcId": 31439,
+    "name": "Rogen",
+    "role": "Торговец",
+    "city": "gludin",
+    "x": -83197,
+    "y": 155347,
+    "z": -3174,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:32874:-82930:155352:-3176",
+    "npcId": 32874,
+    "name": "Lyann",
+    "role": "Торговец",
+    "city": "gludin",
+    "x": -82930,
+    "y": 155352,
+    "z": -3176,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:35103:-82640:150016:-3120",
+    "npcId": 35103,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "gludin",
+    "x": -82640,
+    "y": 150016,
+    "z": -3120,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
+  },
+  {
+    "id": "gludin:source:35103:-81824:155264:-3168",
+    "npcId": 35103,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "gludin",
+    "x": -81824,
+    "y": 155264,
+    "z": -3168,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_22.xml"
   },
   {
     "id": "talking-island-village:source:30026:-83326:242964:-3720",
