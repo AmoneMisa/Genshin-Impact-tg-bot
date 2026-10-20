@@ -2167,9 +2167,226 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/hunter_town.xml"
+  },
+  "aden": {
+    "polygon": [
+      [
+        143209,
+        25727
+      ],
+      [
+        143209,
+        26975
+      ],
+      [
+        143463,
+        27286
+      ],
+      [
+        143473,
+        30074
+      ],
+      [
+        144386,
+        30947
+      ],
+      [
+        146209,
+        30946
+      ],
+      [
+        146649,
+        31179
+      ],
+      [
+        146830,
+        31508
+      ],
+      [
+        148081,
+        31511
+      ],
+      [
+        148275,
+        31176
+      ],
+      [
+        148696,
+        30937
+      ],
+      [
+        150367,
+        30942
+      ],
+      [
+        151289,
+        30008
+      ],
+      [
+        151233,
+        25914
+      ],
+      [
+        151399,
+        25719
+      ],
+      [
+        151403,
+        24470
+      ],
+      [
+        151205,
+        24271
+      ],
+      [
+        151198,
+        21168
+      ],
+      [
+        150233,
+        20225
+      ],
+      [
+        148287,
+        20227
+      ],
+      [
+        148086,
+        19992
+      ],
+      [
+        146836,
+        19992
+      ],
+      [
+        146642,
+        20199
+      ],
+      [
+        144429,
+        20204
+      ],
+      [
+        143459,
+        21124
+      ],
+      [
+        143446,
+        25542
+      ],
+      [
+        143198,
+        25731
+      ]
+    ],
+    "minZ": -2700,
+    "maxZ": -1900,
+    "sourceZone": "Town of Aden",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 14000,
+    "arrivals": [
+      {
+        "x": 146494,
+        "y": 30584,
+        "z": -2420
+      },
+      {
+        "x": 146038,
+        "y": 30519,
+        "z": -2420
+      },
+      {
+        "x": 148112,
+        "y": 30439,
+        "z": -2420
+      },
+      {
+        "x": 148565,
+        "y": 30463,
+        "z": -2420
+      },
+      {
+        "x": 150227,
+        "y": 29104,
+        "z": -2420
+      },
+      {
+        "x": 144626,
+        "y": 29145,
+        "z": -2420
+      },
+      {
+        "x": 144635,
+        "y": 26664,
+        "z": -2220
+      },
+      {
+        "x": 144526,
+        "y": 24661,
+        "z": -2100
+      },
+      {
+        "x": 144559,
+        "y": 22835,
+        "z": -2100
+      },
+      {
+        "x": 145686,
+        "y": 21114,
+        "z": -2100
+      },
+      {
+        "x": 148946,
+        "y": 21121,
+        "z": -2070
+      },
+      {
+        "x": 148010,
+        "y": 27996,
+        "z": -2256
+      },
+      {
+        "x": 147970,
+        "y": 27040,
+        "z": -2191
+      },
+      {
+        "x": 146814,
+        "y": 27108,
+        "z": -2189
+      },
+      {
+        "x": 146819,
+        "y": 28063,
+        "z": -2252
+      }
+    ],
+    "arrivalSource": "mapregion/aden_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
+  "aden:npc:0": {
+    "npcId": 30848,
+    "name": "Elisa",
+    "city": "aden",
+    "x": 146737,
+    "y": 25807,
+    "z": -2013,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  "aden:npc:1": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "aden",
+    "x": 148400,
+    "y": 26576,
+    "z": -2200,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
   "giran:npc:0": {
     "npcId": 30080,
     "name": "Clarissa",
@@ -2277,6 +2494,30 @@ export const CITY_NPC_UPDATES = {
     "z": -3168,
     "adapted": false,
     "source": "spawns/Others/17_22.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "aden:Ferris": {
+    "npcId": 30847,
+    "name": "Ferris",
+    "city": "aden",
+    "x": 150337,
+    "y": 28398,
+    "z": -2246,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml",
+    "role": "Кузнец",
+    "service": "blacksmith"
+  },
+  "aden:Walderal": {
+    "npcId": 30844,
+    "name": "Walderal",
+    "city": "aden",
+    "x": 148155,
+    "y": 26254,
+    "z": -2217,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml",
     "role": "Хранитель склада",
     "service": "warehouse"
   },
@@ -3083,6 +3324,16 @@ export const CITY_NPC_UPDATES = {
     "z": -3400,
     "adapted": false,
     "source": "spawns/Gracia/GludioAirshipField.xml"
+  },
+  "aden:gracia-survivor": {
+    "npcId": 32632,
+    "name": "Gracian Survivor",
+    "city": "aden",
+    "x": 147100,
+    "y": 25605,
+    "z": -2008,
+    "adapted": false,
+    "source": "spawns/Gracia/GludioAirshipField.xml"
   }
 };
 export const CITY_SOURCE_NPCS = [
@@ -3375,6 +3626,62 @@ export const CITY_SOURCE_NPCS = [
     "x": 116110,
     "y": 79155,
     "z": -2417,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "aden:source:32221:143904:22688:-2120",
+    "npcId": 32221,
+    "name": "Brome",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 143904,
+    "y": 22688,
+    "z": -2120,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "aden:source:32222:143904:22736:-2120",
+    "npcId": 32222,
+    "name": "Liane",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 143904,
+    "y": 22736,
+    "z": -2120,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "aden:source:32223:143936:22672:-2120",
+    "npcId": 32223,
+    "name": "Duroga",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 143936,
+    "y": 22672,
+    "z": -2120,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "aden:source:32224:143936:22752:-2120",
+    "npcId": 32224,
+    "name": "Auren",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 143936,
+    "y": 22752,
+    "z": -2120,
     "service": "trainer",
     "gateway": false,
     "adapted": false,
@@ -6501,5 +6808,509 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "aden:source:30837:146787:26255:-2189",
+    "npcId": 30837,
+    "name": "Woodrow",
+    "role": "Торговец",
+    "city": "aden",
+    "x": 146787,
+    "y": 26255,
+    "z": -2189,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30838:146046:27293:-2189",
+    "npcId": 30838,
+    "name": "Woodley",
+    "role": "Торговец",
+    "city": "aden",
+    "x": 146046,
+    "y": 27293,
+    "z": -2189,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30839:146054:27988:-2250",
+    "npcId": 30839,
+    "name": "Holly",
+    "role": "Торговец",
+    "city": "aden",
+    "x": 146054,
+    "y": 27988,
+    "z": -2250,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30840:146893:28982:-2250",
+    "npcId": 30840,
+    "name": "Lorenzo",
+    "role": "Торговец",
+    "city": "aden",
+    "x": 146893,
+    "y": 28982,
+    "z": -2250,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30841:148860:27959:-2253",
+    "npcId": 30841,
+    "name": "Carson",
+    "role": "Торговец",
+    "city": "aden",
+    "x": 148860,
+    "y": 27959,
+    "z": -2253,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30842:148142:28986:-2253",
+    "npcId": 30842,
+    "name": "Alexis",
+    "role": "Торговец",
+    "city": "aden",
+    "x": 148142,
+    "y": 28986,
+    "z": -2253,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30843:148859:27258:-2216",
+    "npcId": 30843,
+    "name": "Romp",
+    "role": "Хранитель склада",
+    "city": "aden",
+    "x": 148859,
+    "y": 27258,
+    "z": -2216,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30845:148960:26145:-2218",
+    "npcId": 30845,
+    "name": "Klump",
+    "role": "Хранитель склада",
+    "city": "aden",
+    "x": 148960,
+    "y": 26145,
+    "z": -2218,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30846:150608:28510:-2247",
+    "npcId": 30846,
+    "name": "Wilbert",
+    "role": "Кузнец",
+    "city": "aden",
+    "x": 150608,
+    "y": 28510,
+    "z": -2247,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30849:149216:24960:-2122",
+    "npcId": 30849,
+    "name": "Sedrick",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 149216,
+    "y": 24960,
+    "z": -2122,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30850:148960:25120:-2121",
+    "npcId": 30850,
+    "name": "Aiken",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 148960,
+    "y": 25120,
+    "z": -2121,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30851:149216:25648:-2121",
+    "npcId": 30851,
+    "name": "Kendra",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 149216,
+    "y": 25648,
+    "z": -2121,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30852:148960:25408:-2121",
+    "npcId": 30852,
+    "name": "Sinden",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 148960,
+    "y": 25408,
+    "z": -2121,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30853:149488:25504:-2121",
+    "npcId": 30853,
+    "name": "Raien",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 149488,
+    "y": 25504,
+    "z": -2121,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30854:145856:23168:-2115",
+    "npcId": 30854,
+    "name": "Drikiyan",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 145856,
+    "y": 23168,
+    "z": -2115,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30855:145648:22752:-2116",
+    "npcId": 30855,
+    "name": "Desmond",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 145648,
+    "y": 22752,
+    "z": -2116,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30856:145646:23568:-2116",
+    "npcId": 30856,
+    "name": "Winonin",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 145646,
+    "y": 23568,
+    "z": -2116,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30857:147456:22576:-1989",
+    "npcId": 30857,
+    "name": "Orven",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 147456,
+    "y": 22576,
+    "z": -1989,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30858:147216:22848:-1992",
+    "npcId": 30858,
+    "name": "Ross",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 147216,
+    "y": 22848,
+    "z": -1992,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30859:147693:23067:-1991",
+    "npcId": 30859,
+    "name": "Vivyan",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 147693,
+    "y": 23067,
+    "z": -1991,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30860:147692:22848:-1991",
+    "npcId": 30860,
+    "name": "Flownia",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 147692,
+    "y": 22848,
+    "z": -1991,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30861:147214:23067:-1991",
+    "npcId": 30861,
+    "name": "Leonard",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 147214,
+    "y": 23067,
+    "z": -1991,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30862:143776:23936:-2118",
+    "npcId": 30862,
+    "name": "Oltran",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 143776,
+    "y": 23936,
+    "z": -2118,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30863:143968:24256:-2118",
+    "npcId": 30863,
+    "name": "Ghest",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 143968,
+    "y": 24256,
+    "z": -2118,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30864:144096:23584:-2117",
+    "npcId": 30864,
+    "name": "Hanellin",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 144096,
+    "y": 23584,
+    "z": -2117,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30865:144512:25696:-2125",
+    "npcId": 30865,
+    "name": "Ladanza",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 144512,
+    "y": 25696,
+    "z": -2125,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30866:144496:25360:-2124",
+    "npcId": 30866,
+    "name": "Marestella",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 144496,
+    "y": 25360,
+    "z": -2124,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:30867:143856:25696:-2125",
+    "npcId": 30867,
+    "name": "Reva",
+    "role": "Наставник",
+    "city": "aden",
+    "x": 143856,
+    "y": 25696,
+    "z": -2125,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:31423:147328:24992:-1989",
+    "npcId": 31423,
+    "name": "Romas",
+    "role": "Торговец",
+    "city": "aden",
+    "x": 147328,
+    "y": 24992,
+    "z": -1989,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:31431:144272:25328:-2124",
+    "npcId": 31431,
+    "name": "Karai",
+    "role": "Торговец",
+    "city": "aden",
+    "x": 144272,
+    "y": 25328,
+    "z": -2124,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:31445:150912:28112:-2246",
+    "npcId": 31445,
+    "name": "Shutner",
+    "role": "Торговец",
+    "city": "aden",
+    "x": 150912,
+    "y": 28112,
+    "z": -2246,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:31666:145332:23112:-2116",
+    "npcId": 31666,
+    "name": "Lumen",
+    "role": "Торговец",
+    "city": "aden",
+    "x": 145332,
+    "y": 23112,
+    "z": -2116,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:32610:148559:28031:-2264",
+    "npcId": 32610,
+    "name": "Olf Kanore",
+    "role": "Торговец",
+    "city": "aden",
+    "x": 148559,
+    "y": 28031,
+    "z": -2264,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:32880:150915:28398:-2248",
+    "npcId": 32880,
+    "name": "Dolphren",
+    "role": "Торговец",
+    "city": "aden",
+    "x": 150915,
+    "y": 28398,
+    "z": -2248,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:35277:146504:28468:-2272",
+    "npcId": 35277,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "aden",
+    "x": 146504,
+    "y": 28468,
+    "z": -2272,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
+  },
+  {
+    "id": "aden:source:35277:148408:28476:-2272",
+    "npcId": 35277,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "aden",
+    "x": 148408,
+    "y": 28476,
+    "z": -2272,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_18.xml"
   }
 ];
