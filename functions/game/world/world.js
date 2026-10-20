@@ -35,7 +35,20 @@ export function ensureWorld(session,now=Date.now()) {
 }
 export function terrainAt(x,y){const point={x,y};return {location:LOCATIONS.find(l=>pointInPolygon(point,l.polygon))?.id||null,region:REGIONS.find(r=>pointInPolygon(point,r.polygon))?.id||null};}
 export function cityPoint(city,npc){return {x:.5+(npc.x-city.x)/citySize(city),y:.5+(npc.y-city.y)/citySize(city)};}
-function arriveCity(session,world){world.mode='city';world.location=null;world.holding=null;world.instanceId=null;world.entryOrigin=null;delete world.holdingReturn;world.x=.5;world.y=.5;world.path=[];world.channel=null;world.pending=null;world.readyHolding=null;session.game.hunt&&(session.game.hunt.field=null,session.game.hunt.mob=null);}
+function arriveCity(session,world,now=Date.now()){if(world.mode==='location')saveNativeField(session,now);world.mode='city';world.location=null;world.holding=null;world.instanceId=null;world.entryOrigin=null;delete world.holdingReturn;delete world.walkHome;delete world.nativePosition;world.x=.5;world.y=.5;world.path=[];world.channel=null;world.pending=null;world.readyHolding=null;session.game.hunt&&(session.game.hunt.field=null,session.game.hunt.mob=null);}
+function enterPublicField(session,id,{departure,...options}){
+    const result=enterHuntField(session,id,options);if(!result.ok)return result;
+    if(departure)saveNativeField(session,options.now,departure);
+    if(nativeRoute(id)){
+        if(options.targetMobId){if(session.game.world.nativeFields)delete session.game.world.nativeFields[id];}
+        else restoreNativeField(session,id,options.now);
+    }
+    return result;
+}
+function stopNativeWalk(w){
+    if(w.mode!=='road'||!w.walkHome?.native)return false;
+    w.nativePosition={...w.walkHome.native.point};w.mode='native';w.location=null;w.path=[];delete w.walkHome;return true;
+}
 export function advanceWorld(session,now=Date.now()) {
     const w=ensureWorld(session,now);
     if(!alive(session)){markWorldDeath(session,now);return w;}
@@ -46,12 +59,11 @@ export function advanceWorld(session,now=Date.now()) {
         if(trip.holding){const h=holdings.find(h=>h.id===trip.holding);if(h)arriveHoldingEntrance(session,h,now);}
         else if(trip.location){
             const l=LOCATIONS.find(l=>l.id===trip.location);
-            if(l&&!regionAccessBlock(session,l,{walking:true,now})&&enterHuntField(session,l.id,{now}).ok){
-                if(trip.native)restoreNativeField(session,l.id,now);
+            if(l&&!regionAccessBlock(session,l,{walking:true,now})&&enterPublicField(session,l.id,{now}).ok){
                 Object.assign(w,{city:l.region,mode:'location',location:l.id,path:[],pending:null,channel:null});
-            }else arriveCity(session,w);
+            }else arriveCity(session,w,now);
         }else if(trip.native&&!trip.city){Object.assign(w,{mode:'native',location:null,nativePosition:{...trip.native.point},path:[],pending:null,channel:null});}
-        else {if(trip.city)w.city=trip.city;arriveCity(session,w);if(trip.native){Object.assign(w,cityPoint(cityOf(w),trip.native.point));w.z=trip.native.point.z;}if(trip.arrivalPoint){Object.assign(w,cityPoint(cityOf(w),trip.arrivalPoint));w.z=trip.arrivalPoint.z;}}
+        else {if(trip.city)w.city=trip.city;arriveCity(session,w,now);if(trip.native){Object.assign(w,cityPoint(cityOf(w),trip.native.point));w.z=trip.native.point.z;}if(trip.arrivalPoint){Object.assign(w,cityPoint(cityOf(w),trip.arrivalPoint));w.z=trip.arrivalPoint.z;}}
         delete w.walkHome;
     }
     if(w.died){delete w.died;delete w.death;}
@@ -59,7 +71,7 @@ export function advanceWorld(session,now=Date.now()) {
     if(!alive(session)){markWorldDeath(session,now);return w;}
     if(w.channel){
         if(Number(session.game.gameClass.stats.hp)<w.channel.hp||l2ActionBlock(session,{move:true},now)){w.channel=null;return w;}
-        if(now>=w.channel.until){if(spendMaterials(session,{scroll_escape:1}))arriveCity(session,w);else w.channel=null;}
+        if(now>=w.channel.until){if(spendMaterials(session,{scroll_escape:1}))arriveCity(session,w,now);else w.channel=null;}
     }
     if(['hall','stronghold','entrance'].includes(w.mode))advancePath(w,now,l2ActionBlock(session,{move:true},now)?0:getSpeed(session)*l2MoveMultiplier(session,now));
     if(w.mode==='city'){
@@ -70,7 +82,7 @@ export function advanceWorld(session,now=Date.now()) {
                 const current=townTravelQuote(session,pending.city,now);
                 if(!current||current.gold!==pending.gold)return w;
                 if(current.mode==='airship'){if(quickTravelBlock(session,now))return w;w.mode='road';w.walkHome={until:current.until,city:pending.city,kind:'airship',departureAt:current.departureAt,arrivalPoint:current.arrivalPoint};w.path=[];return w;}
-                session.game.inventory.gold-=pending.gold;w.city=pending.city;arriveCity(session,w);
+                session.game.inventory.gold-=pending.gold;w.city=pending.city;arriveCity(session,w,now);
                 if(pending.arrival){Object.assign(w,cityPoint(cityOf(w),pending.arrival));w.z=pending.arrival.z;}
                 const target=CITY_NPCS.find(n=>n.id===pending.approachNpc&&n.city===w.city);
                 if(target){w.path=findPath(w,cityPoint(cityOf(w),target))||[];w.moveAt=now;}
@@ -78,7 +90,7 @@ export function advanceWorld(session,now=Date.now()) {
             else if(location&&npc&&npc.city===w.city&&npc.gateway&&nearNpc(w,npc)&&locationTravelQuote(session,location,npc,now)&&Number(session.game.inventory.gold)>=locationTravelQuote(session,location,npc,now).gold){
                 const quote=locationTravelQuote(session,location,npc,now);
                 if(regionAccessBlock(session,location)||quote.item!==57&&getMaterialCount(session,'l2_'+quote.item)<quote.count)return w;
-                const entered=enterHuntField(session,location.id,{now});
+                const entered=enterPublicField(session,location.id,{now});
                 if(entered.ok){const fare=locationTravelQuote(session,location,npc,now).gold;if(quote.item!==57)spendMaterials(session,{['l2_'+quote.item]:quote.count});session.game.inventory.gold-=fare;w.city=location.region;w.mode='location';w.location=location.id;w.x=.5;w.y=.95;w.lastTeleport={to:location.id,gold:fare,at:now};}
             }
         }
@@ -126,10 +138,10 @@ export function quickTravel(session,body,now=Date.now()){
     if(location){
         const previous=session.game.hunt;
         session.game.hunt=null;
-        const entered=enterHuntField(session,location.id,{now,targetMobId:quest?.mobId});
+        const entered=enterPublicField(session,location.id,{now,targetMobId:quest?.mobId,departure:w.mode==='location'?previous:null});
         if(!entered.ok){session.game.hunt=previous;return entered;}
         spendRegionFare(session,location);Object.assign(w,{city:location.region,mode:'location',location:location.id,x:.5,y:.95});
-    }else {w.city=city.id;arriveCity(session,w);}
+    }else {w.city=city.id;arriveCity(session,w,now);}
     Object.assign(w,{path:[],pending:null,channel:null,holding:null,instanceId:null,readyHolding:null,moveAt:now});delete w.walkHome;
     session.game.inventory.gold-=gold;w.lastTeleport={to:target.id,gold,at:now,quick:true};session.needsSave=true;
     return {ok:true,gold};
@@ -139,8 +151,7 @@ export function worldAction(session,body,now=Date.now()){
     const w=advanceWorld(session,now);
     if(!alive(session))return {ok:false,reason:'dead'};
     if(body.action==='native_stop'){
-        if(w.mode!=='road'||!w.walkHome?.native)return {ok:false,reason:'no_field'};
-        w.nativePosition={...w.walkHome.native.point};w.mode='native';w.location=null;w.path=[];delete w.walkHome;return {ok:true};
+        return stopNativeWalk(w)?{ok:true}:{ok:false,reason:'no_field'};
     }
     if(body.action==='native_move'){
         const denied=quickTravelBlock(session,now);if(denied)return {ok:false,reason:denied};
@@ -228,6 +239,7 @@ export function worldAction(session,body,now=Date.now()){
         if(w.channel)return {ok:false,reason:'channel_busy'};
         if(!(session.game.inventory.materials?.scroll_escape>0))return {ok:false,reason:'no_escape_scroll'};
         const field=session.game.hunt?.field;if(field)stopHuntAction(field,now);
+        stopNativeWalk(w);
         w.path=[];w.pending=null;w.channel={until:now+15000,hp:Number(session.game.gameClass.stats.hp)};return {ok:true};
     }
     if(body.action==='holding_travel'){

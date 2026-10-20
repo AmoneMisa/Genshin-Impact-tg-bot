@@ -6,6 +6,7 @@ import {nativeSegment} from '../functions/game/world/nativeNavigation.js';
 import {nativeGroundAllowed} from '../functions/game/world/nativeGround.js';
 import {createNativeJourney,advanceNativeJourney,nativeJourneyDto} from '../functions/game/world/nativeJourney.js';
 import {getHuntState} from '../miniapp/hunt.js';
+import {moveHuntField,advanceHunt} from '../functions/game/hunt/huntFight.js';
 import change from '../functions/game/player/changePlayerGameClass.js';
 import update from '../functions/game/player/updatePlayerStats.js';
 import routes from '../template/nativeRoutes.js';
@@ -86,4 +87,39 @@ test('stopping a native walk keeps its real world point; a new click ignores cli
  assert.ok(worldAction(s,{action:'native_move',point:{x:point.x,y:point.y+32,z:1e9,floor:999,zone:'pagan-temple'}},NOW+5000).ok);
  assert.equal(s.game.world.walkHome.location,null);assert.notEqual(s.game.world.walkHome.native.path.at(-1).z,1e9);
  finish(s,NOW+6000);assert.equal(s.game.world.mode,'native');assert.equal(s.game.world.location,null);
+});
+
+test('escape scroll stops native walking, a new move interrupts the cast, and a completed cast consumes exactly one scroll',()=>{
+ const s=hero();s.game.inventory.materials.scroll_escape=2;
+ assert.ok(worldAction(s,{action:'walk_location',location:'forsaken-plains'},NOW).ok);advanceWorld(s,NOW+5000);
+ const point={...s.game.world.walkHome.native.point};
+ assert.ok(worldAction(s,{action:'escape'},NOW+5000).ok);
+ assert.equal(s.game.world.mode,'native');assert.equal(s.game.world.walkHome,undefined);
+ advanceWorld(s,NOW+10000);assert.deepEqual(s.game.world.nativePosition,point);assert.equal(s.game.inventory.materials.scroll_escape,2);
+ assert.ok(worldAction(s,{action:'native_move',point:{x:point.x,y:point.y+32}},NOW+10000).ok);
+ assert.equal(s.game.world.channel,null);finish(s,NOW+11000);assert.equal(s.game.inventory.materials.scroll_escape,2);
+ assert.ok(worldAction(s,{action:'escape'},NOW+11000).ok);
+ const until=s.game.world.channel.until;advanceWorld(s,until-1);assert.equal(s.game.inventory.materials.scroll_escape,2);
+ advanceWorld(s,until);assert.equal(s.game.inventory.materials.scroll_escape,1);assert.equal(s.game.world.mode,'city');
+ assert.equal(s.game.world.nativePosition,undefined);assert.equal(s.game.world.walkHome,undefined);
+});
+
+test('escape and paid travel preserve the canonical field bank, consume snapshots on entry, and arrive at the real entrance',async()=>{
+ const s=hero();s.game.inventory.materials.scroll_escape=1;
+ assert.ok(worldAction(s,{action:'walk_location',location:'forsaken-plains'},NOW).ok);finish(s,NOW+1000000);
+ await getHuntState(s,NOW+1000000);quiet(s.game.hunt.field);
+ const all=()=>[s.game.hunt.field,...Object.values(s.game.hunt.field.rooms||{})].flatMap(r=>r.mobs||[]);
+ const mob=all()[0],id=mob.instanceId;mob.currentHp=7;
+ assert.ok(moveHuntField(s,'room:r0c1',NOW+1000000).ok);advanceHunt(s,NOW+1030000);quiet(s.game.hunt.field);
+ assert.equal(s.game.hunt.field.room,'r0c1');
+ assert.ok(worldAction(s,{action:'escape'},NOW+1030000).ok);advanceWorld(s,NOW+1045000);
+ assert.equal(s.game.world.mode,'city');assert.ok(s.game.world.nativeFields['forsaken-plains']);
+ assert.ok(worldAction(s,{action:'walk_location',location:'forsaken-plains'},NOW+1045000).ok);finish(s,NOW+2045000);
+ assert.equal(s.game.hunt.field.room,'r0c0');assert.equal(s.game.hunt.field.x,.5);assert.equal(s.game.hunt.field.y,.95);
+ assert.equal(all().find(m=>m.instanceId===id).currentHp,7);assert.equal(s.game.world.nativeFields['forsaken-plains'],undefined);
+ assert.equal(new Set(all().map(m=>m.instanceId)).size,all().length,'one canonical owner after changing arrival room');
+ quiet(s.game.hunt.field);all().find(m=>m.instanceId===id).currentHp=3;
+ assert.ok(worldAction(s,{action:'quick_travel',city:'aden'},NOW+2045000).ok);assert.ok(s.game.world.nativeFields['forsaken-plains']);
+ assert.ok(worldAction(s,{action:'quick_travel',location:'forsaken-plains'},NOW+2045000).ok);
+ assert.equal(all().find(m=>m.instanceId===id).currentHp,3);assert.equal(s.game.world.nativeFields['forsaken-plains'],undefined);
 });
