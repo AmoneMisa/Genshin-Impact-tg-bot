@@ -76,6 +76,8 @@ test('bounded native search finds a real detour and fails closed when the work b
  const route=findNativePath(from,to,{geo,stride:1,maxNodes:200,margin:6,reversible:true});assert.ok(route.ok);
  assert.ok(route.path.some(p=>p.y>=88),'walks through the actual opening');
  let p=from;for(const q of route.path){assert.ok(nativeSegment(p,q,{geo,reversible:true}));p=q;}
+ const guided=findNativePath(from,to,{geo,stride:1,maxNodes:200,margin:6,reversible:true,heuristicWeight:2});assert.ok(guided.ok);
+ p=from;for(const q of guided.path){assert.ok(nativeSegment(p,q,{geo,reversible:true}));p=q;}
  assert.equal(findNativePath(from,to,{geo,stride:1,maxNodes:1,margin:6}).reason,'geodata_search_limit');
 });
 test('water, holding interiors and door volumes cannot become public walking shortcuts',()=>{

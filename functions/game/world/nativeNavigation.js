@@ -56,7 +56,10 @@ function simplify(from,path,options){
 }
 
 /** Bounded A* on native (x,y,height) nodes. Separate bridge/cave layers cannot share a search key. */
-export function findNativePath(from,to,{geo=worldGeodata,allowed=()=>true,maxNodes=12000,margin=256,stride=8,reversible=false}={}){
+export function findNativePath(from,to,{geo=worldGeodata,allowed=()=>true,maxNodes=12000,margin=256,stride=8,reversible=false,heuristicWeight=1}={}){
+ // Offline route compilation may prefer progress toward the destination over shortest distance.
+ // This only orders the bounded queue; every accepted edge still checks all native cells.
+ const weight=Number.isFinite(heuristicWeight)?Math.max(1,Math.min(4,heuristicWeight)):1;
  const options={geo,allowed,reversible},start=geo.point(from),target=geo.point(to);
  if(!start||!target)return {ok:false,reason:'geodata_missing'};
  if(!start.nswe||!target.nswe||!allowed(start)||!allowed(target))return {ok:false,reason:'path_blocked'};
@@ -65,7 +68,7 @@ export function findNativePath(from,to,{geo=worldGeodata,allowed=()=>true,maxNod
  const sx=geoCell(start.x),sy=geoCell(start.y),tx=geoCell(target.x),ty=geoCell(target.y);
  const bounds={left:Math.min(sx,tx)-margin,right:Math.max(sx,tx)+margin,top:Math.min(sy,ty)-margin,bottom:Math.max(sy,ty)+margin};
  if([sx,sy,tx,ty].some(n=>n< -65536||n>=65536))return {ok:false,reason:'geodata_missing'};
- const heuristic=(x,y)=>{const dx=Math.abs(tx-x),dy=Math.abs(ty-y);return Math.max(dx,dy)+(Math.SQRT2-1)*Math.min(dx,dy);};
+ const heuristic=(x,y)=>{const dx=Math.abs(tx-x),dy=Math.abs(ty-y);return weight*(Math.max(dx,dy)+(Math.SQRT2-1)*Math.min(dx,dy));};
  const first={gx:sx,gy:sy,z:start.z,nswe:start.nswe,cost:0,score:heuristic(sx,sy),parent:null};
  const heap=[],nodes=new Map([[key(sx,sy,start.z),first]]);push(heap,first);let visited=0;
  while(heap.length&&visited<maxNodes){

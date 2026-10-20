@@ -11,9 +11,9 @@ for(const {location:target} of WORLD_EXTENSION.filter(r=>r.levels.source?.coordi
  if(ids.length&&!ids.includes(target.id))continue;
  const from=nativeWorld.towns[target.region],to={x:target.x,y:target.y,z:target.z};
  let result={ok:false,reason:'source_anchor_missing'},attempts=[];
- if(from)for(const [stride,maxNodes] of [[8,30000],[4,30000],[2,50000],[1,60000]]){
-  const start=performance.now();result=findNativePath(from,to,{allowed:nativeGroundAllowed,stride,maxNodes,reversible:true});
-  attempts.push({stride,visited:result.visited||0,reason:result.reason||null});
+ if(from)for(const [stride,maxNodes,heuristicWeight=1,margin=256] of [[8,30000],[4,30000],[2,50000],[1,60000],[8,120000,2,1024],[4,120000,2,1024]]){
+  const start=performance.now();result=findNativePath(from,to,{allowed:nativeGroundAllowed,stride,maxNodes,heuristicWeight,margin,reversible:true});
+  attempts.push({stride,maxNodes,heuristicWeight,margin,visited:result.visited||0,reason:result.reason||null});
   console.log(target.id,stride,result.ok,result.reason||'',result.visited,Math.round(performance.now()-start)+'ms');
   if(result.ok)break;
  }
