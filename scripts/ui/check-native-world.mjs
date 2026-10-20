@@ -67,6 +67,8 @@ try{for(const {width,noCanvas=false} of configurations){
   await page.waitForTimeout(100);
  }
  await selectWalk('Забытые равнины');assert.equal(s.game.world.mode,'road');assert.ok(s.game.world.walkHome.native);
+ assert.equal(await page.locator('[data-mode="city"]').textContent(),'Местность');
+ assert.equal(await page.locator('[data-city-view]').isVisible(),false);
  assert.equal(s.game.inventory.gold,1000000);assert.ok(calls.some(c=>c.action==='walk_location'));assert.ok(!calls.some(c=>c.action==='quick_travel'));
  assert.equal(await page.locator('.atlas-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  await page.screenshot({path:path.join(out,`native-route-${width}${noCanvas?'-fallback':''}.png`)});

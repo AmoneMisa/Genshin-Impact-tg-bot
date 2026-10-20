@@ -1,4 +1,5 @@
 export default {
+ 'Местность':'Atrof',
  'Выберите место на карте, чтобы идти дальше.':'Yo‘lni davom ettirish uchun xaritadan joy tanlang.',
  'Выход · выбрать путь в Атласе':'Chiqish · Atlasda yo‘lni tanlash',
  'Идти пешком через':'Piyoda yo‘l:',
