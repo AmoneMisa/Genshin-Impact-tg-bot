@@ -2,12 +2,15 @@ import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 import nativeWorld from '../../template/nativeWorld.js';
 import {WORLD_EXTENSION} from '../../template/worldExtension.js';
+import surfaceEntries from '../../template/nativeSurfaceEntries.js';
+import {LOCATIONS} from '../../template/worldMap.js';
 import {worldGeodata} from '../../functions/game/world/l2jGeodata.js';
 import {findNativePath,nativeSegment} from '../../functions/game/world/nativeNavigation.js';
 import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';
 
 const ids=process.argv.slice(2),routes={};
-for(const {location:target} of WORLD_EXTENSION.filter(r=>r.levels.source?.coordinateSpace==='surface')){
+const candidates=[...WORLD_EXTENSION.filter(r=>r.levels.source?.coordinateSpace==='surface').map(r=>r.location),...LOCATIONS.filter(l=>surfaceEntries[l.id])];
+for(const target of candidates){
  if(ids.length&&!ids.includes(target.id))continue;
  const from=nativeWorld.towns[target.region],to={x:target.x,y:target.y,z:target.z};
  let result={ok:false,reason:'source_anchor_missing'},attempts=[];

@@ -1,3 +1,4 @@
+import SURFACE_ENTRIES from '../template/nativeSurfaceEntries.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {worldAction,worldState,advanceWorld} from '../functions/game/world/world.js';
@@ -33,7 +34,7 @@ function hero(){
 function quiet(field){for(const m of [field,...Object.values(field.rooms||{})].flatMap(r=>r.mobs||[]))Object.assign(m,{aggressive:false,aggro:false,aggroRange:0,nextAttackAt:NOW+1e12});}
 function finish(s,now){const trip=s.game.world.walkHome;assert.ok(trip.native);advanceWorld(s,now);assert.equal(s.game.world.walkHome,undefined);}
 test('all published native city and return links verify every original cell in both directions',()=>{
- const available=Object.values(routes.routes).filter(r=>r.available);assert.equal(available.length,11);
+ const available=Object.values(routes.routes).filter(r=>r.available);assert.equal(available.length,11+Object.keys(SURFACE_ENTRIES).length);
  for(const route of available){
   let point=route.from;
   for(const next of route.path){assert.ok(nativeSegment(point,next,{allowed:nativeGroundAllowed,reversible:true}));point=next;}
