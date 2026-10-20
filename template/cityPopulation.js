@@ -2362,6 +2362,243 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/aden_town.xml"
+  },
+  "goddard": {
+    "polygon": [
+      [
+        144345,
+        -53353
+      ],
+      [
+        145283,
+        -52411
+      ],
+      [
+        146840,
+        -51665
+      ],
+      [
+        148575,
+        -51659
+      ],
+      [
+        150128,
+        -52405
+      ],
+      [
+        151075,
+        -53362
+      ],
+      [
+        152091,
+        -54735
+      ],
+      [
+        151974,
+        -55898
+      ],
+      [
+        151852,
+        -56567
+      ],
+      [
+        151737,
+        -57217
+      ],
+      [
+        151608,
+        -57387
+      ],
+      [
+        151239,
+        -57131
+      ],
+      [
+        150447,
+        -58201
+      ],
+      [
+        150832,
+        -58488
+      ],
+      [
+        150551,
+        -58851
+      ],
+      [
+        148717,
+        -59764
+      ],
+      [
+        148590,
+        -59759
+      ],
+      [
+        148590,
+        -59291
+      ],
+      [
+        146839,
+        -59291
+      ],
+      [
+        146842,
+        -59768
+      ],
+      [
+        146700,
+        -59766
+      ],
+      [
+        144860,
+        -58848
+      ],
+      [
+        144589,
+        -58489
+      ],
+      [
+        144967,
+        -58193
+      ],
+      [
+        144179,
+        -57141
+      ],
+      [
+        143807,
+        -57392
+      ],
+      [
+        143685,
+        -57210
+      ],
+      [
+        143335,
+        -55225
+      ],
+      [
+        143679,
+        -53917
+      ],
+      [
+        143887,
+        -53081
+      ]
+    ],
+    "minZ": -3550,
+    "maxZ": -2600,
+    "sourceZone": "Town of Goddard",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 11776,
+    "arrivals": [
+      {
+        "x": 148560,
+        "y": -55904,
+        "z": -2779
+      },
+      {
+        "x": 150704,
+        "y": -55744,
+        "z": -2979
+      },
+      {
+        "x": 150400,
+        "y": -56752,
+        "z": -2979
+      },
+      {
+        "x": 149872,
+        "y": -57424,
+        "z": -2979
+      },
+      {
+        "x": 149088,
+        "y": -56256,
+        "z": -2779
+      },
+      {
+        "x": 147664,
+        "y": -56464,
+        "z": -2779
+      },
+      {
+        "x": 147680,
+        "y": -56928,
+        "z": -2779
+      },
+      {
+        "x": 146832,
+        "y": -55904,
+        "z": -2779
+      },
+      {
+        "x": 146368,
+        "y": -56256,
+        "z": -2779
+      },
+      {
+        "x": 149120,
+        "y": -58064,
+        "z": -2979
+      },
+      {
+        "x": 148288,
+        "y": -58304,
+        "z": -2979
+      },
+      {
+        "x": 147680,
+        "y": -58208,
+        "z": -2979
+      },
+      {
+        "x": 147232,
+        "y": -58480,
+        "z": -2979
+      },
+      {
+        "x": 146272,
+        "y": -58176,
+        "z": -2979
+      },
+      {
+        "x": 145696,
+        "y": -57696,
+        "z": -2979
+      },
+      {
+        "x": 145264,
+        "y": -57680,
+        "z": -2979
+      },
+      {
+        "x": 145392,
+        "y": -56960,
+        "z": -2979
+      },
+      {
+        "x": 144752,
+        "y": -56752,
+        "z": -2979
+      },
+      {
+        "x": 144960,
+        "y": -56224,
+        "z": -2979
+      },
+      {
+        "x": 144944,
+        "y": -55392,
+        "z": -2979
+      },
+      {
+        "x": 144496,
+        "y": -55088,
+        "z": -2979
+      }
+    ],
+    "arrivalSource": "mapregion/godard_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -2406,6 +2643,28 @@ export const CITY_NPC_UPDATES = {
     "z": -3464,
     "adapted": false,
     "source": "spawns/Others/22_22.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "goddard:npc:0": {
+    "npcId": 31275,
+    "name": "Tatiana",
+    "city": "goddard",
+    "x": 147966,
+    "y": -55228,
+    "z": -2728,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  "goddard:npc:1": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "goddard",
+    "x": 146144,
+    "y": -57900,
+    "z": -2976,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml",
     "role": "Хранитель склада",
     "service": "warehouse"
   },
@@ -2544,6 +2803,18 @@ export const CITY_NPC_UPDATES = {
     "source": "spawns/Others/22_22.xml",
     "role": "Наставник",
     "service": "trainer"
+  },
+  "goddard:Hilda": {
+    "npcId": 31271,
+    "name": "Hilda",
+    "city": "goddard",
+    "x": 146396,
+    "y": -58696,
+    "z": -2976,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml",
+    "role": "Кузнец",
+    "service": "blacksmith"
   },
   "gludio:instance": {
     "npcId": 30332,
@@ -3334,9 +3605,145 @@ export const CITY_NPC_UPDATES = {
     "z": -2008,
     "adapted": false,
     "source": "spawns/Gracia/GludioAirshipField.xml"
+  },
+  "goddard:gracia-survivor": {
+    "npcId": 32632,
+    "name": "Gracian Survivor",
+    "city": "goddard",
+    "x": 147843,
+    "y": -55146,
+    "z": -2728,
+    "adapted": false,
+    "source": "spawns/Gracia/GludioAirshipField.xml"
   }
 };
 export const CITY_SOURCE_NPCS = [
+  {
+    "id": "goddard:source:31276:148880:-52608:-2736",
+    "npcId": 31276,
+    "name": "Bernhard",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 148880,
+    "y": -52608,
+    "z": -2736,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Castles/Goddard.xml"
+  },
+  {
+    "id": "goddard:source:31277:149008:-52560:-2736",
+    "npcId": 31277,
+    "name": "Felix",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 149008,
+    "y": -52560,
+    "z": -2736,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Castles/Goddard.xml"
+  },
+  {
+    "id": "goddard:source:31278:148736:-52560:-2736",
+    "npcId": 31278,
+    "name": "Bronwyn",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 148736,
+    "y": -52560,
+    "z": -2736,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Castles/Goddard.xml"
+  },
+  {
+    "id": "goddard:source:31279:147712:-52688:-2731",
+    "npcId": 31279,
+    "name": "Gregory",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 147712,
+    "y": -52688,
+    "z": -2731,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Castles/Goddard.xml"
+  },
+  {
+    "id": "goddard:source:31280:148048:-52416:-2736",
+    "npcId": 31280,
+    "name": "Bastian",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 148048,
+    "y": -52416,
+    "z": -2736,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Castles/Goddard.xml"
+  },
+  {
+    "id": "goddard:source:31281:147376:-52416:-2736",
+    "npcId": 31281,
+    "name": "Cerenas",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 147376,
+    "y": -52416,
+    "z": -2736,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Castles/Goddard.xml"
+  },
+  {
+    "id": "goddard:source:31282:146688:-52576:-2736",
+    "npcId": 31282,
+    "name": "Justin",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 146688,
+    "y": -52576,
+    "z": -2736,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Castles/Goddard.xml"
+  },
+  {
+    "id": "goddard:source:31283:146416:-52564:-2736",
+    "npcId": 31283,
+    "name": "Alminas",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 146416,
+    "y": -52564,
+    "z": -2736,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Castles/Goddard.xml"
+  },
+  {
+    "id": "goddard:source:31755:146553:-52608:-2760",
+    "npcId": 31755,
+    "name": "Halaster",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 146553,
+    "y": -52608,
+    "z": -2760,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Castles/Goddard.xml"
+  },
   {
     "id": "gludin:source:32194:-84773:153134:-3160",
     "npcId": 32194,
@@ -3682,6 +4089,62 @@ export const CITY_SOURCE_NPCS = [
     "x": 143936,
     "y": 22752,
     "z": -2120,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "goddard:source:32227:151271:-55684:-2967",
+    "npcId": 32227,
+    "name": "Digler",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 151271,
+    "y": -55684,
+    "z": -2967,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "goddard:source:32228:151280:-55598:-2967",
+    "npcId": 32228,
+    "name": "Medea",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 151280,
+    "y": -55598,
+    "z": -2967,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "goddard:source:32225:151298:-55663:-2967",
+    "npcId": 32225,
+    "name": "Taine",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 151298,
+    "y": -55663,
+    "z": -2967,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "goddard:source:32226:151306:-55618:-2967",
+    "npcId": 32226,
+    "name": "Raula",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 151306,
+    "y": -55618,
+    "z": -2967,
     "service": "trainer",
     "gateway": false,
     "adapted": false,
@@ -6808,6 +7271,356 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "goddard:source:31256:148832:-58960:-2965",
+    "npcId": 31256,
+    "name": "Leon",
+    "role": "Торговец",
+    "city": "goddard",
+    "x": 148832,
+    "y": -58960,
+    "z": -2965,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31257:148975:-58919:-2965",
+    "npcId": 31257,
+    "name": "Veronica",
+    "role": "Торговец",
+    "city": "goddard",
+    "x": 148975,
+    "y": -58919,
+    "z": -2965,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31258:149012:-58894:-2965",
+    "npcId": 31258,
+    "name": "Helmut",
+    "role": "Торговец",
+    "city": "goddard",
+    "x": 149012,
+    "y": -58894,
+    "z": -2965,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31259:149152:-58776:-2961",
+    "npcId": 31259,
+    "name": "Janne",
+    "role": "Торговец",
+    "city": "goddard",
+    "x": 149152,
+    "y": -58776,
+    "z": -2961,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31260:149380:-57590:-2966",
+    "npcId": 31260,
+    "name": "Judith",
+    "role": "Торговец",
+    "city": "goddard",
+    "x": 149380,
+    "y": -57590,
+    "z": -2966,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31261:149232:-57680:-2966",
+    "npcId": 31261,
+    "name": "Renee",
+    "role": "Торговец",
+    "city": "goddard",
+    "x": 149232,
+    "y": -57680,
+    "z": -2966,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31262:149372:-57552:-2966",
+    "npcId": 31262,
+    "name": "Rupert",
+    "role": "Торговец",
+    "city": "goddard",
+    "x": 149372,
+    "y": -57552,
+    "z": -2966,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31263:149312:-57360:-2966",
+    "npcId": 31263,
+    "name": "Liesel",
+    "role": "Торговец",
+    "city": "goddard",
+    "x": 149312,
+    "y": -57360,
+    "z": -2966,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31267:146440:-57500:-2965",
+    "npcId": 31267,
+    "name": "Lietta",
+    "role": "Хранитель склада",
+    "city": "goddard",
+    "x": 146440,
+    "y": -57500,
+    "z": -2965,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31268:146412:-57484:-2965",
+    "npcId": 31268,
+    "name": "Hakon",
+    "role": "Хранитель склада",
+    "city": "goddard",
+    "x": 146412,
+    "y": -57484,
+    "z": -2965,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31269:146528:-57936:-2965",
+    "npcId": 31269,
+    "name": "Mona",
+    "role": "Хранитель склада",
+    "city": "goddard",
+    "x": 146528,
+    "y": -57936,
+    "z": -2965,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31270:146172:-57380:-2965",
+    "npcId": 31270,
+    "name": "Stefano",
+    "role": "Хранитель склада",
+    "city": "goddard",
+    "x": 146172,
+    "y": -57380,
+    "z": -2965,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31272:146432:-58784:-2976",
+    "npcId": 31272,
+    "name": "Noel",
+    "role": "Кузнец",
+    "city": "goddard",
+    "x": 146432,
+    "y": -58784,
+    "z": -2976,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31273:146580:-58752:-2973",
+    "npcId": 31273,
+    "name": "Borodin",
+    "role": "Торговец",
+    "city": "goddard",
+    "x": 146580,
+    "y": -58752,
+    "z": -2973,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31274:146688:-59008:-2972",
+    "npcId": 31274,
+    "name": "Fundin",
+    "role": "Торговец",
+    "city": "goddard",
+    "x": 146688,
+    "y": -59008,
+    "z": -2972,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31285:145080:-54592:-2965",
+    "npcId": 31285,
+    "name": "Samael",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 145080,
+    "y": -54592,
+    "z": -2965,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31286:144808:-54732:-2965",
+    "npcId": 31286,
+    "name": "Drakon",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 144808,
+    "y": -54732,
+    "z": -2965,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31287:145168:-54880:-2965",
+    "npcId": 31287,
+    "name": "Kamilen",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 145168,
+    "y": -54880,
+    "z": -2965,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31288:144204:-55780:-2960",
+    "npcId": 31288,
+    "name": "Aklan",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 144204,
+    "y": -55780,
+    "z": -2960,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31289:144228:-55720:-2960",
+    "npcId": 31289,
+    "name": "Lakan",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 144228,
+    "y": -55720,
+    "z": -2960,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31290:144256:-55824:-2960",
+    "npcId": 31290,
+    "name": "Skahi",
+    "role": "Наставник",
+    "city": "goddard",
+    "x": 144256,
+    "y": -55824,
+    "z": -2960,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:31583:146428:-58880:-2976",
+    "npcId": 31583,
+    "name": "Feynn",
+    "role": "Кузнец",
+    "city": "goddard",
+    "x": 146428,
+    "y": -58880,
+    "z": -2976,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:32881:146731:-58940:-2968",
+    "npcId": 32881,
+    "name": "Denver",
+    "role": "Торговец",
+    "city": "goddard",
+    "x": 146731,
+    "y": -58940,
+    "z": -2968,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:35366:145704:-57104:-2979",
+    "npcId": 35366,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "goddard",
+    "x": 145704,
+    "y": -57104,
+    "z": -2979,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
+  },
+  {
+    "id": "goddard:source:35366:150144:-56597:-2982",
+    "npcId": 35366,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "goddard",
+    "x": 150144,
+    "y": -56597,
+    "z": -2982,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/24_16.xml"
   },
   {
     "id": "aden:source:30837:146787:26255:-2189",
