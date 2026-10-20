@@ -662,5 +662,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "plains-of-dion": {
+    "x": 630,
+    "y": 179184,
+    "z": -3720,
+    "region": "dion",
+    "teleportGold": 1500,
+    "entrySource": {
+      "file": "teleporters/town/30059.xml",
+      "npcId": 30059,
+      "name": "Plains of Dion",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "c958e4a75e6325a995a05e8d2659a8942a2e0ce12509136107a465ce64666433"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30059,
+        "npcName": "Trisha",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 1500,
+        "source": {
+          "file": "teleporters/town/30059.xml",
+          "npcId": 30059,
+          "name": "Plains of Dion",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "c958e4a75e6325a995a05e8d2659a8942a2e0ce12509136107a465ce64666433"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        -4370,
+        174184
+      ],
+      [
+        5630,
+        174184
+      ],
+      [
+        5630,
+        184184
+      ],
+      [
+        -4370,
+        184184
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
