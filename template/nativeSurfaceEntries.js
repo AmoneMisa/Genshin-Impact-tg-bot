@@ -305,5 +305,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "outlaw-forest": {
+    "x": 91539,
+    "y": -12204,
+    "z": -2440,
+    "region": "oren",
+    "teleportGold": 5200,
+    "entrySource": {
+      "file": "teleporters/town/30177.xml",
+      "npcId": 30177,
+      "name": "Outlaw Forest",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "770b5b53e2860719bfc7024d07581748b2946a68fd4aa9d270c6e2175dc05e08"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30177,
+        "npcName": "Valentina",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 5200,
+        "source": {
+          "file": "teleporters/town/30177.xml",
+          "npcId": 30177,
+          "name": "Outlaw Forest",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "770b5b53e2860719bfc7024d07581748b2946a68fd4aa9d270c6e2175dc05e08"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        86539,
+        -17204
+      ],
+      [
+        96539,
+        -17204
+      ],
+      [
+        96539,
+        -7204
+      ],
+      [
+        86539,
+        -7204
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
