@@ -101,5 +101,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "fields-of-massacre": {
+    "x": 183543,
+    "y": -14974,
+    "z": -2776,
+    "region": "aden",
+    "teleportGold": 6500,
+    "entrySource": {
+      "file": "teleporters/town/30848.xml",
+      "npcId": 30848,
+      "name": "Fields of Massacre",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "3457ecb3855741d523d960755b9f2c8a1db3bba15d6d53dd2245d6c7a5f8ac24"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30848,
+        "npcName": "Elisa",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 6500,
+        "source": {
+          "file": "teleporters/town/30848.xml",
+          "npcId": 30848,
+          "name": "Fields of Massacre",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "3457ecb3855741d523d960755b9f2c8a1db3bba15d6d53dd2245d6c7a5f8ac24"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        178543,
+        -19974
+      ],
+      [
+        188543,
+        -19974
+      ],
+      [
+        188543,
+        -9974
+      ],
+      [
+        178543,
+        -9974
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
