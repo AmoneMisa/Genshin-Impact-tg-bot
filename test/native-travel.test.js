@@ -12,6 +12,7 @@ import update from '../functions/game/player/updatePlayerStats.js';
 import routes from '../template/nativeRoutes.js';
 import {quickTravelDestinations} from '../webapp/quick-travel-menu.js';
 import {movementHtml} from '../webapp/atlas-ui.js';
+import {nativeCityAt} from '../functions/game/world/nativeTownGraph.js';
 const NOW=1800000000000;
 test('a noblesse-only teleport stays restricted while its native walking entrance remains visible in the shared Atlas',()=>{
  const s=hero(),dto=worldState(s,NOW);
@@ -133,7 +134,9 @@ test('stopping a native walk keeps its real world point; a new click ignores cli
  assert.deepEqual(s.game.world.nativePosition,point);assert.equal(s.game.world.mode,'native');
  assert.ok(worldAction(s,{action:'native_move',point:{x:point.x,y:point.y+32,z:1e9,floor:999,zone:'pagan-temple'}},NOW+5000).ok);
  assert.equal(s.game.world.walkHome.location,null);assert.notEqual(s.game.world.walkHome.native.path.at(-1).z,1e9);
- finish(s,NOW+6000);assert.equal(s.game.world.mode,'native');assert.equal(s.game.world.location,null);
+ const endpoint={...s.game.world.walkHome.native.path.at(-1)},city=nativeCityAt(endpoint);
+ finish(s,NOW+6000);assert.equal(s.game.world.mode,city?'city':'native');assert.equal(s.game.world.location,null);
+ if(city){assert.equal(s.game.world.city,city.id);assert.ok(Math.abs(city.x+(s.game.world.x-.5)*(city.size||14000)-endpoint.x)<1e-6);assert.equal(s.game.world.z,endpoint.z);}
 });
 
 test('escape scroll stops native walking, a new move interrupts the cast, and a completed cast consumes exactly one scroll',()=>{
@@ -145,7 +148,8 @@ test('escape scroll stops native walking, a new move interrupts the cast, and a 
  advanceWorld(s,NOW+10000);assert.deepEqual(s.game.world.nativePosition,point);assert.equal(s.game.inventory.materials.scroll_escape,2);
  assert.ok(worldAction(s,{action:'native_move',point:{x:point.x,y:point.y+32}},NOW+10000).ok);
  assert.equal(s.game.world.channel,null);finish(s,NOW+11000);assert.equal(s.game.inventory.materials.scroll_escape,2);
- assert.ok(worldAction(s,{action:'escape'},NOW+11000).ok);
+ assert.ok(worldAction(s,{action:'walk_location',location:'forsaken-plains'},NOW+11000).ok);
+ assert.ok(worldAction(s,{action:'escape'},NOW+12000).ok);
  const until=s.game.world.channel.until;advanceWorld(s,until-1);assert.equal(s.game.inventory.materials.scroll_escape,2);
  advanceWorld(s,until);assert.equal(s.game.inventory.materials.scroll_escape,1);assert.equal(s.game.world.mode,'city');
  assert.equal(s.game.world.nativePosition,undefined);assert.equal(s.game.world.walkHome,undefined);

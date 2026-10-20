@@ -89,7 +89,7 @@ try{for(const {width,noCanvas=false} of configurations){
   await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('canvas').click({position:{x:box.width/2+(goal.x-from.x)*box.width/14000,y:box.height/2+(goal.y-from.y)*box.width/14000}})]);await page.waitForTimeout(100);
   assert.ok(calls.some(c=>c.action==='native_move'),'background click submits a native walk');
   assert.equal(s.game.world.walkHome.location,null);
-  finishNext=true;await page.waitForFunction(()=>document.querySelector('.atlas-status')?.textContent.includes('Выберите место на карте'));
+  finishNext=true;await page.waitForFunction(()=>/Выберите место на карте|Вы в /.test(document.querySelector('.atlas-status')?.textContent||''));
  }
  await selectWalk(zoneName(firstId));assert.equal(s.game.world.walkHome.location,firstId);
  finishNext=true;await page.waitForSelector('.hunt-ground');await page.waitForSelector('.atlas-panel',{state:'detached'});assert.equal(s.game.world.location,firstId);

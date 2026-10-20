@@ -23,7 +23,7 @@ try{for(const width of [320,390,1100])for(const city of selected){
  await page.route('**/*',async route=>{
   const u=new URL(route.request().url()).pathname;requests.push(u);
   if(u==='/fixture')return route.fulfill({contentType:'text/html',body:'<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+styles+'<body></body>'});
-  if(u==='/api/world'){if(s.game.world.cityWalk)now+=1000;return route.fulfill({json:dto()});}
+  if(u==='/api/world'){if(s.game.world.cityWalk||s.game.world.walkHome?.native)now+=1000;return route.fulfill({json:dto()});}
   if(u==='/api/boss/epic')return route.fulfill({json:{bosses:[]}});
   if(u==='/api/world/action'){
    const result=worldAction(s,route.request().postDataJSON(),now);return route.fulfill({status:result.ok?200:409,json:{...result,...dto()}});
@@ -56,12 +56,13 @@ try{for(const width of [320,390,1100])for(const city of selected){
   });
  }
  assert.ok(target,city.id+" verified click away from NPC markers");
- const before={x:s.game.world.x,y:s.game.world.y};
+ const position=()=>s.game.world.walkHome?.native?.point||s.game.world.nativePosition||{x:city.x+(s.game.world.x-.5)*actorSize,y:city.y+(s.game.world.y-.5)*actorSize,z:s.game.world.z};
+ const before={...position()};
  const [response]=await Promise.all([page.waitForResponse(r=>r.url().endsWith("/api/world/action")&&r.request().postDataJSON()?.action==="move"),page.locator("canvas").click({position:{x:box.width/2+(target.x-camera.x)*actorSize*box.width/span,y:box.height/2+(target.y-camera.y)*actorSize*box.width/span}})]);
  assert.equal(response.status(),200,city.id+': '+JSON.stringify({reason:(await response.json()).reason,expected:target,actual:response.request().postDataJSON(),box,span}));
- assert.ok(s.game.world.cityWalk,city.id+' canvas click creates a source-checked city journey');
- await page.waitForTimeout(2300);assert.ok(Math.hypot(s.game.world.x-before.x,s.game.world.y-before.y)>0,'the server advances the actual town position');
- assert.equal(s.game.world.mode,'city');assert.ok(Number.isFinite(s.game.world.z));
+ assert.ok(s.game.world.cityWalk||s.game.world.walkHome?.native,city.id+' canvas click creates a source-checked journey');
+ await page.waitForTimeout(2300);assert.ok(Math.hypot(position().x-before.x,position().y-before.y)>0,'the server advances the actual position');
+ assert.ok(['city','road','native'].includes(s.game.world.mode));assert.ok(Number.isFinite(position().z));
  assert.equal(await page.locator('.atlas-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  await page.screenshot({path:path.join(out,`${city.id}-${width}.png`)});
  await page.locator('[data-close]').click();assert.equal(await page.locator('.atlas-overlay').count(),0);assert.deepEqual(errors,[]);
