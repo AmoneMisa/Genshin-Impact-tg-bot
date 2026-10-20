@@ -866,5 +866,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "field-of-whispers": {
+    "x": 82192,
+    "y": 226128,
+    "z": -3664,
+    "region": "heine",
+    "teleportGold": 5900,
+    "entrySource": {
+      "file": "teleporters/town/30899.xml",
+      "npcId": 30899,
+      "name": "Field of Whispers",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "81db9e28c69cdaef33ece38b69b4ec7daeff73b5bd1466e340f4a53a322e4a26"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30899,
+        "npcName": "Flauen",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 5900,
+        "source": {
+          "file": "teleporters/town/30899.xml",
+          "npcId": 30899,
+          "name": "Field of Whispers",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "81db9e28c69cdaef33ece38b69b4ec7daeff73b5bd1466e340f4a53a322e4a26"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        77192,
+        221128
+      ],
+      [
+        87192,
+        221128
+      ],
+      [
+        87192,
+        231128
+      ],
+      [
+        77192,
+        231128
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
