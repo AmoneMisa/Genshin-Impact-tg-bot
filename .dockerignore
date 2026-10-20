@@ -10,6 +10,7 @@ config.js
 *.log
 
 # Not needed to run the bot.
+.tmp
 node_modules
 .git
 .github
