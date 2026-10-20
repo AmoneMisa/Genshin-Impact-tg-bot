@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import ITEMS from '../../template/l2Items.js';
+import {FERRY_TICKETS} from '../../template/ferryTickets.js';
 import MERCHANT from '../../template/merchantData.js';
 import {getCatalog} from '../../functions/game/equipment/catalog.js';
 import {lootInfo} from '../../functions/game/hunt/lootTable.js';
@@ -25,7 +26,7 @@ function add(icon){
 }
 function named(name){return add(byName.get(name.toLowerCase())?.icon);}
 function set(key,icon){const value=add(icon);if(value)materials[key]=value;}
-for(const id of new Set([...Object.keys(ITEMS),...Object.keys(MERCHANT.items)])){
+for(const id of new Set([...Object.keys(ITEMS),...Object.keys(MERCHANT.items),...Object.keys(FERRY_TICKETS)])){
  const row=byId.get(+id);if(!row)continue;
  const value=add(row.icon);if(value){materials['l2_'+id]=value;const info=lootInfo(id);if(info.key!=='l2_'+id)materials[info.key]=value;}
 }

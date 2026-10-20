@@ -1,0 +1,15 @@
+{
+  "original": "icon.etc_ticket_red_i00.png",
+  "sha256": "34fbac4672031c0a6f91bd0bbb5c4efcb5ff9b90ce17725a3195c9a76faf71f9",
+  "items": [
+    7904,
+    7905
+  ],
+  "clientIcon": "icon.etc_ticket_red_i00",
+  "conversion": "nearest, lossless WebP",
+  "sizes": [
+    128,
+    256,
+    512
+  ]
+}

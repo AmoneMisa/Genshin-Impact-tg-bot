@@ -37,6 +37,7 @@ const lines=['# Наземные дороги между городами','',
  '- `TOWN_ORIGIN=goddard TOWN_DESTINATION=rune node scripts/ui/check-native-towns.mjs` — браузерный сценарий северной связи.',
  '- `TOWN_ORIGIN=floran TOWN_DESTINATION=dion TOWN_MARKER=1 node scripts/ui/check-native-towns.mjs` — городской маркер и запасной список.',
  '- `node scripts/ui/report-native-towns.mjs` — этот отчёт.', '',
+ 'Морской переход Глудин — Руна соединяет компоненты через исходный корабль и проверенные подходы к портам; он не считается наземной дорогой. [Транспорт](native-transport.md).', '',
  'Связанные отчёты: [геодата](native-geodata.md), [городская карта](city-navigation.md), [непрерывные боевые участки](continuous-world.md).',''];
 fs.writeFileSync('docs/native-town-roads.md',lines.join('\n'));
 console.log(`${available.length}/${routes.length} verified town roads`);

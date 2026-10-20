@@ -1,4 +1,5 @@
 import {recoveryInfo} from '../../../template/l2RecoveryScrolls.js';
+import {FERRY_TICKETS} from '../../../template/ferryTickets.js';
 // The real High Five drop tables (template/l2Loot.js) mapped onto the game's items. Enchant scrolls, crystals, Life
 // Stones, attribute stones and seal stones become the game's own materials; every other real item - full weapons and
 // armor, pieces, recipes, dyes, crafting goods - is a collectable material `l2_<item id>` named like the real item.
@@ -30,6 +31,7 @@ const ELEMENT_BY_NAME = Object.fromEntries(ELEMENTS.map(element => [element.id, 
 const TIER_BY_NAME = {Stone: 'stone', Crystal: 'crystal', Jewel: 'jewel'};
 
 export function itemRow(id) {
+    if(FERRY_TICKETS[id])return {...FERRY_TICKETS[id]};
     const recovery=recoveryInfo(id);if(recovery)return recovery;
     const row = ITEMS[id];
     if (row) {
@@ -74,7 +76,7 @@ export function lootInfo(itemId, row = null) {
     if (item.etc === 'MATERIAL' && /( Piece| Gemstone)$/.test(name)) return {key, kind: 'piece'};
     if (item.etc === 'MATERIAL') return {key, kind: 'material'};
     if (/Herb /.test(name + ' ') || /Herb$/.test(name)) return {key, kind: 'herb'};
-    if (['POTION', 'SCROLL', 'ELIXIR', 'ARROW'].includes(item.etc)) return {key, kind: 'consumable'};
+    if (['POTION', 'SCROLL', 'ELIXIR', 'ARROW', 'ticket'].includes(item.etc)) return {key, kind: 'consumable'};
     return {key, kind: 'other'};
 }
 

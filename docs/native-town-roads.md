@@ -63,4 +63,6 @@
 - `TOWN_ORIGIN=floran TOWN_DESTINATION=dion TOWN_MARKER=1 node scripts/ui/check-native-towns.mjs` — городской маркер и запасной список.
 - `node scripts/ui/report-native-towns.mjs` — этот отчёт.
 
+Морской переход Глудин — Руна соединяет компоненты через исходный корабль и проверенные подходы к портам; он не считается наземной дорогой. [Транспорт](native-transport.md).
+
 Связанные отчёты: [геодата](native-geodata.md), [городская карта](city-navigation.md), [непрерывные боевые участки](continuous-world.md).
