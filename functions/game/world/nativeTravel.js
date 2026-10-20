@@ -1,6 +1,6 @@
 import routes from '../../../template/nativeRoutes.js';
 import {CITIES} from '../../../template/worldMap.js';
-import {findNativePath} from './nativeNavigation.js';
+import {findNativePath,nativeSegment} from './nativeNavigation.js';
 import {nativeGroundAllowed} from './nativeGround.js';
 import {createNativeJourney} from './nativeJourney.js';
 import {outdoorPoint} from './holdingEntry.js';
@@ -36,6 +36,12 @@ function reconnectNativeTrail(from,to,city){
   }
  }
  candidates.sort((a,b)=>a.score-b.score);
+ // A nearby trail can share XY with an inaccessible layer or the far side of
+ // a cliff. Check bounded cheap straight joins before spending six A* attempts
+ // on those attractive but unreachable candidates.
+ for(const {point,suffix} of candidates.slice(0,64)){
+  if(nativeSegment(from,point,{allowed:nativeGroundAllowed,reversible:true}))return {ok:true,start:worldGeodata.point(from),path:[point,...suffix]};
+ }
  for(const {point,suffix} of candidates.slice(0,6)){
   const prefix=findNativePath(from,point,{allowed:nativeGroundAllowed,maxNodes:1000,stride:2,margin:128,reversible:true});
   if(prefix.ok)return {...prefix,path:[...prefix.path,...suffix]};

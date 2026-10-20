@@ -65,6 +65,27 @@ test('the Floran city-marker walking action uses the same physical journey as th
  assert.ok(worldAction(a,{action:'native_walk_city',city:'dion'},middle+1).ok);assert.deepEqual(a.game.world.walkHome.native.point,point);
  finish(a,middle+1e7);assert.equal(a.game.world.city,'dion');assert.equal(a.game.inventory.gold,1000000);
 });
+
+test('the direct Oren to Aden road replaces the longer town detour without changing money or physical endpoints',()=>{
+ const road=compiled.routes['aden:oren'],link=nativeTownPath('oren','aden');
+ assert.ok(road.available);assert.deepEqual(link.cities,['oren','aden']);
+ assert.ok(link.distance<compiled.routes['hunters:oren'].distance+compiled.routes['aden:hunters'].distance);
+ const s=hero('oren');assert.ok(worldAction(s,{action:'native_walk_city',city:'aden'},NOW).ok);finish(s,NOW+1e7);
+ assert.equal(s.game.world.city,'aden');assert.equal(s.game.world.z,nativeTownHub('aden').z);
+ assert.ok(worldAction(s,{action:'native_walk_city',city:'oren'},NOW+1e7).ok);finish(s,NOW+2e7);
+ assert.equal(s.game.world.city,'oren');assert.equal(s.game.inventory.gold,1000000);
+});
+
+test('a saved physical stop near overlapping trails can rejoin beyond the first unreachable search candidates',()=>{
+ const s=hero('dion');
+ // Recorded by advanceNativeJourney on the original Dion–Giran road. The old
+ // six-candidate rejoin exhausted its budget here despite a valid straight join.
+ const point={x:57074.12618163436,y:143754.8349088458,z:-2824};
+ Object.assign(s.game.world,{mode:'native',nativePosition:point});
+ assert.ok(worldAction(s,{action:'native_walk_city',city:'aden'},NOW).ok);
+ assert.deepEqual(s.game.world.walkHome.native.point,point);finish(s,NOW+1e7);
+ assert.equal(s.game.world.city,'aden');assert.equal(s.game.inventory.gold,1000000);
+});
 test('a city journey crosses intermediate towns without paying or teleporting and resumes from a saved physical stop',()=>{
  let s=hero(),gold=s.game.inventory.gold;
  const dto=worldState(s,NOW);assert.ok(dto.nativeWalkCities.includes('heine'));assert.ok(!dto.nativeWalkCities.includes('dion'));
