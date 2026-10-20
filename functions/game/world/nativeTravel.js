@@ -8,6 +8,7 @@ import {worldGeodata,geoRegionId} from './l2jGeodata.js';
 import {nativeTownPath,nativeTownCities,nativeTownHub,nativeTownEdges,nativeTownSource} from './nativeTownGraph.js';
 import ports from '../../../template/nativePortRoutes.js';
 import islands from '../../../template/nativeIslandRoutes.js';
+import {nativeTrailBack} from './nativeTrail.js';
 
 export const nativeRoute=id=>islands.routes[id]?.available?islands.routes[id]:routes.routes[id]?.available?routes.routes[id]:null;
 export const nativeIsland=session=>session.game.world.mode==='location'?nativeRoute(session.game.world.location)?.island||null:session.game.world.nativeIsland||null;
@@ -17,7 +18,7 @@ export function nativePortRoute(id,stop='vendor'){
  return {...route,path:stop==='vendor'?route.path.slice(0,route.vendorIndex):route.path,to:stop==='vendor'?route.vendor:route.to};
 }
 /** Rejoin an already verified trail locally instead of searching a whole long valley again. */
-function reconnectNativeTrail(from,to,city){
+function reconnectNativeTrail(from,to,city,search=true){
  const candidates=[],destination=to?.city||city;
  for(const route of Object.values(routes.routes)){
   if(!route.available)continue;
@@ -50,11 +51,17 @@ function reconnectNativeTrail(from,to,city){
  for(const {point,suffix} of candidates.slice(0,64)){
   if(nativeSegment(from,point,{allowed:nativeGroundAllowed,reversible:true}))return {ok:true,start:worldGeodata.point(from),path:[point,...suffix]};
  }
- for(const {point,suffix} of candidates.slice(0,6)){
+ for(const {point,suffix} of search?candidates.slice(0,6):[]){
   const prefix=findNativePath(from,point,{allowed:nativeGroundAllowed,maxNodes:1000,stride:2,margin:128,reversible:true});
   if(prefix.ok)return {...prefix,path:[...prefix.path,...suffix]};
  }
  return null;
+}
+function reconnectNativeHistory(world,to,city){
+ const trail=nativeTrailBack(world);if(!trail)return null;
+ // Reuse only a straight, fully checked root join; do not add more A* searches.
+ const link=reconnectNativeTrail(trail.root,to,city,false);if(!link||trail.path.length+link.path.length>512)return null;
+ return {ok:true,start:world.nativePosition,path:[...trail.path,...link.path]};
 }
 export function nativeExit(session){
  const w=session.game.world,f=session.game.hunt?.field,route=nativeRoute(w?.location);
@@ -93,7 +100,7 @@ export function nativeTravel(session,target,now,speed){
   const endpoint=to?.to||nativeTownHub(arrivalCity);
   if(!endpoint)return {ok:false,reason:'location_path_required'};
   const nearby=target?.port&&Math.hypot(w.nativePosition.x-endpoint.x,w.nativePosition.y-endpoint.y)<=8192?findNativePath(w.nativePosition,endpoint,{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true}):null;
-  const plan=(nearby?.ok?nearby:null)||reconnectNativeTrail(w.nativePosition,to,arrivalCity)||findNativePath(w.nativePosition,endpoint,{allowed:nativeGroundAllowed,maxNodes:6000,reversible:true});
+  const plan=(nearby?.ok?nearby:null)||reconnectNativeTrail(w.nativePosition,to,arrivalCity)||reconnectNativeHistory(w,to,arrivalCity)||findNativePath(w.nativePosition,endpoint,{allowed:nativeGroundAllowed,maxNodes:6000,reversible:true});
   if(!plan.ok)return plan;start=plan.start;path=plan.path;
  }else return {ok:false,reason:'location_path_required'};
  const trip=createNativeJourney(start,path,{now,speed,location:to?target.location:null,city:arrivalCity});
@@ -112,6 +119,7 @@ export function nativeFreeWalk(session,point,now,speed){
  const plan=findNativePath(from,{x,y,z:from.z},{allowed:nativeGroundAllowed,maxNodes:6000,reversible:true});
  if(!plan.ok)return plan;
  const trip=createNativeJourney(plan.start,plan.path,{now,speed});
+ if(trip)trip.native.historyStart={x:plan.start.x,y:plan.start.y,z:plan.start.z};
  return trip?{ok:true,trip}:{ok:false,reason:'path_blocked'};
 }
 

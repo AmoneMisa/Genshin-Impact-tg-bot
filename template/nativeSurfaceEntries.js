@@ -254,5 +254,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "sea-of-spores": {
+    "x": 64328,
+    "y": 26803,
+    "z": -3768,
+    "region": "oren",
+    "teleportGold": 2500,
+    "entrySource": {
+      "file": "teleporters/town/30177.xml",
+      "npcId": 30177,
+      "name": "Sea of Spores",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "770b5b53e2860719bfc7024d07581748b2946a68fd4aa9d270c6e2175dc05e08"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30177,
+        "npcName": "Valentina",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 2500,
+        "source": {
+          "file": "teleporters/town/30177.xml",
+          "npcId": 30177,
+          "name": "Sea of Spores",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "770b5b53e2860719bfc7024d07581748b2946a68fd4aa9d270c6e2175dc05e08"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        59328,
+        21803
+      ],
+      [
+        69328,
+        21803
+      ],
+      [
+        69328,
+        31803
+      ],
+      [
+        59328,
+        31803
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };

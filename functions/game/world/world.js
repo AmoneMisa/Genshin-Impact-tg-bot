@@ -26,6 +26,7 @@ import {saveNativeField,restoreNativeField} from './nativeFieldBanks.js';
 import {nativeCityAt} from './nativeTownGraph.js';
 import {airshipJourneyPosition} from './graciaTravel.js';
 import {ferryOptions,buyFerryTicket,boardFerry,advanceFerry,leaveFerry,ferryJourneyPosition,ferryJourneyDto} from './ferryTravel.js';
+import {rememberNativeTrail} from './nativeTrail.js';
 
 export {CITIES,REGIONS,LOCATIONS,CITY_NPCS};
 const PUBLIC_CITIES=CITIES.map(({arrivals,arrivalSource,...city})=>city);
@@ -50,10 +51,10 @@ export function ensureWorld(session,now=Date.now()) {
 export function terrainAt(x,y){const point={x,y};return {location:LOCATIONS.find(l=>pointInPolygon(point,l.polygon))?.id||null,region:REGIONS.find(r=>pointInPolygon(point,r.polygon))?.id||null};}
 const cityTarget=(city,npc)=>({...cityPoint(city,npc),...(Number.isFinite(npc.z)?{z:npc.z}:{})});
 export function cityPoint(city,npc){return {x:.5+(npc.x-city.x)/citySize(city),y:.5+(npc.y-city.y)/citySize(city)};}
-function arriveCity(session,world,now=Date.now()){if(world.mode==='location')saveNativeField(session,now);world.mode='city';world.location=null;world.holding=null;world.instanceId=null;world.entryOrigin=null;delete world.holdingReturn;delete world.walkHome;delete world.nativePosition;delete world.nativeIsland;delete world.cityWalk;delete world.z;world.x=.5;world.y=.5;world.path=[];world.channel=null;world.pending=null;world.readyHolding=null;session.game.hunt&&(session.game.hunt.field=null,session.game.hunt.mob=null);}
+function arriveCity(session,world,now=Date.now()){if(world.mode==='location')saveNativeField(session,now);world.mode='city';world.location=null;world.holding=null;world.instanceId=null;world.entryOrigin=null;delete world.holdingReturn;delete world.walkHome;delete world.nativePosition;delete world.nativeIsland;delete world.nativeTrail;delete world.cityWalk;delete world.z;world.x=.5;world.y=.5;world.path=[];world.channel=null;world.pending=null;world.readyHolding=null;session.game.hunt&&(session.game.hunt.field=null,session.game.hunt.mob=null);}
 function enterPublicField(session,id,{departure,...options}){
     const result=enterHuntField(session,id,options);if(!result.ok)return result;
-    session.game.world.nativeIsland=nativeRoute(id)?.island||null;
+    session.game.world.nativeIsland=nativeRoute(id)?.island||null;delete session.game.world.nativeTrail;
     if(departure)saveNativeField(session,options.now,departure);
     if(nativeRoute(id)){
         if(options.targetMobId){if(session.game.world.nativeFields)delete session.game.world.nativeFields[id];}
@@ -63,6 +64,7 @@ function enterPublicField(session,id,{departure,...options}){
 }
 function stopNativeWalk(w){
     if(w.mode!=='road'||!w.walkHome?.native)return false;
+    rememberNativeTrail(w,w.walkHome);
     w.nativePosition={...w.walkHome.native.point};w.mode='native';w.location=null;w.path=[];delete w.walkHome;return true;
 }
 export function advanceWorld(session,now=Date.now()) {
@@ -80,6 +82,7 @@ export function advanceWorld(session,now=Date.now()) {
                 Object.assign(w,{city:l.region,mode:'location',location:l.id,path:[],pending:null,channel:null});
             }else arriveCity(session,w,now);
         }else if(trip.native&&!trip.city){
+            rememberNativeTrail(w,trip);
             if(trip.port){w.city=trip.portCity||trip.port;w.nativeIsland=trip.island||null;}
             const city=nativeCityAt(trip.native.point);
             if(city){w.city=city.id;arriveCity(session,w,now);Object.assign(w,cityPoint(city,trip.native.point),{z:trip.native.point.z});}
@@ -179,7 +182,7 @@ export function worldAction(session,body,now=Date.now()){
         if(body.action==='ferry_ticket')return buyFerryTicket(session,body.port);
         if(body.action==='ferry_board'){
             const result=boardFerry(session,body.port,now);if(!result.ok)return result;
-            Object.assign(w,{mode:'road',walkHome:result.trip,path:[],pending:null,channel:null,location:null});delete w.nativePosition;delete w.cityWalk;return {ok:true};
+            Object.assign(w,{mode:'road',walkHome:result.trip,path:[],pending:null,channel:null,location:null});delete w.nativePosition;delete w.nativeTrail;delete w.cityWalk;return {ok:true};
         }
         const result=nativeTravel(session,{port:body.port,stop:body.stop},now,getSpeed(session)*l2MoveMultiplier(session,now));if(!result.ok)return result;
         if(w.mode==='location')saveNativeField(session,now);

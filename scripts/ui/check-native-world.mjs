@@ -23,7 +23,7 @@ const root=path.resolve('webapp'),out=path.resolve('.tmp/native-world-ui');fs.mk
 const assets=bundlePageAssets(fs.readFileSync(path.join(root,'index.html'),'utf8'),f=>fs.readFileSync(path.join(root,f.slice(1)),'utf8'));
 const styles=[...assets.html.matchAll(/<(?:link rel="stylesheet"|meta name="game-feature-styles")[^>]+>/g)].map(m=>m[0]).join('');
 const browser=await chromium.launch({headless:true,executablePath:process.env.DESIGN_BROWSER||'C:/Users/kubai/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe'});
-const configurations=[{width:320},{width:390},{width:1100},{width:320,noCanvas:true}];
+const configurations=[{width:320},{width:390},{width:1100},{width:320,noCanvas:true}].filter(c=>!process.env.NATIVE_WIDTH||String(c.width)===process.env.NATIVE_WIDTH);
 try{for(const {width,noCanvas=false} of configurations){
  let now=1800000000000,finishNext=false;
  const s={userId:1,userChatData:{user:{id:1}},game:{stats:{lvl:85,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:first.city,x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
@@ -49,7 +49,7 @@ try{for(const {width,noCanvas=false} of configurations){
   if(u==='/api/world/action'){
    now+=1000;const body=route.request().postDataJSON();calls.push(body);
    if(finishNext&&body.action==='native_stop'&&s.game.world.walkHome?.native){now=s.game.world.walkHome.until+1;finishNext=false;}
-   const result=worldAction(s,body,now);quiet();return route.fulfill({status:result.ok?200:409,json:{...result,...dto()}});
+   const result=worldAction(s,body,now);if(!result.ok&&!(body.action==='native_stop'&&result.reason==='no_field'))console.error(JSON.stringify({body,result,mode:s.game.world.mode,point:s.game.world.nativePosition}));quiet();return route.fulfill({status:result.ok?200:409,json:{...result,...dto()}});
   }
   const bundle=assets.bundles?.find(b=>b.path===u);if(bundle)return route.fulfill({contentType:'text/css',body:bundle.css});
   const file=path.resolve(root,'.'+u);if(!file.startsWith(root+path.sep)||!fs.existsSync(file))return route.fulfill({status:404});
@@ -85,11 +85,11 @@ try{for(const {width,noCanvas=false} of configurations){
  assert.equal(s.game.world.mode,'native');assert.ok(s.game.world.nativePosition);
  if(!noCanvas){
   const from=s.game.world.nativePosition,box=await page.locator('canvas').boundingBox();
-  const candidates=[[0,2200],[2200,0],[-2200,0],[0,-2200],[1800,1800],[-1800,-1800],[0,6000],[0,-6000],[6000,0],[-6000,0],[4800,4800],[-4800,-4800]];
+  const candidates=[[0,2200],[2200,0],[-2200,0],[0,-2200],[1800,1800],[-1800,-1800],[0,6000],[0,-6000],[6000,0],[-6000,0],[4800,4800],[-4800,-4800],...[-6000,-4000,4000,6000].flatMap(x=>[-2200,-1000,1000,2200].map(y=>[x,y]))];
   const npcs=worldState(s,now).npcs.filter(n=>n.city===s.game.world.city);
-  const goal=candidates.map(([dx,dy])=>({x:from.x+dx,y:from.y+dy,z:from.z})).find(p=>npcs.every(n=>Math.hypot(p.x-n.x,p.y-n.y)>1800)&&findNativePath(from,p,{allowed:nativeGroundAllowed,maxNodes:2000,reversible:true}).ok);
+  const goal=candidates.map(([dx,dy])=>({x:from.x+dx,y:from.y+dy,z:from.z})).find(p=>{const x=box.width/2+(p.x-from.x)*box.width/14000,y=box.height/2+(p.y-from.y)*box.width/14000;return x>40&&x<box.width-40&&y>40&&y<box.height-40&&npcs.every(n=>Math.hypot(p.x-n.x,p.y-n.y)>1800)&&findNativePath(from,p,{allowed:nativeGroundAllowed,maxNodes:2000,reversible:true}).ok;});
   assert.ok(goal,'a nearby verified click target exists');
-  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('canvas').click({position:{x:box.width/2+(goal.x-from.x)*box.width/14000,y:box.height/2+(goal.y-from.y)*box.width/14000}})]);await page.waitForTimeout(100);
+  try{await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('canvas').click({position:{x:box.width/2+(goal.x-from.x)*box.width/14000,y:box.height/2+(goal.y-from.y)*box.width/14000}})]);await page.waitForTimeout(100);}catch(error){await page.screenshot({path:path.join(out,`native-click-failure-${width}.png`)});console.error(JSON.stringify({from,goal,calls,errors,status:await page.locator('.atlas-status').textContent(),popup:await page.locator('.atlas-popup').textContent()}));throw error;}
   assert.ok(calls.some(c=>c.action==='native_move'),'background click submits a native walk');
   assert.equal(s.game.world.walkHome.location,null);
   finishNext=true;await page.waitForFunction(()=>/Выберите место на карте|Вы в /.test(document.querySelector('.atlas-status')?.textContent||''));
