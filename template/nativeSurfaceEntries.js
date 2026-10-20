@@ -917,5 +917,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "elven-fields": {
+    "x": 21362,
+    "y": 51122,
+    "z": -3688,
+    "region": "elven-village",
+    "teleportGold": 710,
+    "entrySource": {
+      "file": "teleporters/town/30146.xml",
+      "npcId": 30146,
+      "name": "Elven Forest",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "e07ed2069b16c06cd9df4f790d4f251284b033f7523b5231bf73643a53d11fba"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30146,
+        "npcName": "Mirabel",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 710,
+        "source": {
+          "file": "teleporters/town/30146.xml",
+          "npcId": 30146,
+          "name": "Elven Forest",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "e07ed2069b16c06cd9df4f790d4f251284b033f7523b5231bf73643a53d11fba"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        16362,
+        46122
+      ],
+      [
+        26362,
+        46122
+      ],
+      [
+        26362,
+        56122
+      ],
+      [
+        16362,
+        56122
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
