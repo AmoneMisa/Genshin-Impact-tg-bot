@@ -458,5 +458,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "marsh-zombies": {
+    "x": -21966,
+    "y": 40544,
+    "z": -3192,
+    "region": "dark-elven-village",
+    "teleportGold": 1100,
+    "entrySource": {
+      "file": "teleporters/town/30134.xml",
+      "npcId": 30134,
+      "name": "Swampland",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "4dc2b144e46b6c699a45771e0eeef40cedc9d12ff9b01b4764358278c42e645b"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30134,
+        "npcName": "Jasmine",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 1100,
+        "source": {
+          "file": "teleporters/town/30134.xml",
+          "npcId": 30134,
+          "name": "Swampland",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "4dc2b144e46b6c699a45771e0eeef40cedc9d12ff9b01b4764358278c42e645b"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        -26966,
+        35544
+      ],
+      [
+        -16966,
+        35544
+      ],
+      [
+        -16966,
+        45544
+      ],
+      [
+        -26966,
+        45544
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
