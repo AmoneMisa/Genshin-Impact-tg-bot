@@ -61,6 +61,9 @@ def build(id,title,anchor,region,env,spawns,centres=None,asset=None,notes=None,e
  loc={'id':id,'name':title,'x':x,'y':y,'z':z,'region':region,'continent':'gracia' if x<-131072 else 'aden','polygon':[[x-4000,y-4000],[x+4000,y-4000],[x+4000,y+4000],[x-4000,y+4000]],'levelMin':zone['min'],'levelMax':zone['max'],'teleportGold':fare['count'] if fare['item']==57 else 0,'entryFare':fare,'entrySource':anchor,'floors':len(floors),'mob':{k:mobs[0][k] for k in ['id','name','level']} if mobs else None,'selectionGeometry':'authored-extent','access':entry}
  loc['entryRoutes']=[{'npcId':int(g['npc']),'npcName':N[g['npc']].get('name'),'item':int(g.get('feeId','57')),'fee':int(g.get('feeCount','0')),'type':g['type'],'source':g['file']} for g in gates if g.get('name')==anchor.get('name')]
  row={'zone':zone,'location':loc,'levels':{'version':1,'floors':floors,'mobs':mobs},'scene':{'id':id,'title':title,'category':'hunting','environment':env,'asset':asset or id,'sections':1},'artNotes':notes}
+ # Explicitly reviewed outdoor spaces only; a single floor alone does not make a cave a surface.
+ if id in {d[0] for d in defs} and zone['kind']=='field' and len(floors)==1:
+  row['levels']['source']={'coordinateSpace':'surface','geodataAvailable':False}
  out[id]=row;scenes.append(row['scene']);return row
 for id,title,gate,parent,env,select,notes in defs:
  if gate:anchor=original_gate(gate)

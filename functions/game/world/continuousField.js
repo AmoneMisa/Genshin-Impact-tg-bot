@@ -1,9 +1,9 @@
-import {FIELD_POPULATIONS} from '../../../template/fieldPopulations.js';
+import {LOCATION_LEVELS} from '../../../template/locationLevels.js';
 
 /** Visual cells are authored. Native source bounds remain metadata, never collision/geodata. */
 export function continuousField(zone,layout){
- const model=FIELD_POPULATIONS[zone?.id];
- return Boolean(model?.source.coordinateSpace==='surface'&&!zone.instance&&zone.kind!=='catacomb'&&model.floors.length===1&&layout.rooms.length>1);
+ const model=LOCATION_LEVELS[zone?.id];
+ return Boolean(model?.source?.coordinateSpace==='surface'&&!zone.instance&&zone.kind!=='catacomb'&&model.floors.length===1&&layout.rooms.length>1);
 }
 
 export function fieldStream(zone,layout,current){
