@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { emptyDice, diceAction, diceState, INVITE_TTL, THROW_TTL, RESULT_TTL } from '../miniapp/diceLobby.js';
+import { emptyDice, diceAction, diceState, raiseOptions, INVITE_TTL, THROW_TTL, RESULT_TTL } from '../miniapp/diceLobby.js';
 
 const people = { 1: { name: 'Anna', friends: ['2'], lastSeenAt: 0 }, 2: { name: 'Boris', friends: ['1'], lastSeenAt: 0 }, 3: { name: 'Vera', friends: [], lastSeenAt: 0 } };
 const wallet = { gold: 100_000, luckCoins: 50, goldLock: null };
@@ -58,7 +58,7 @@ test('two won rounds win the match and the winner gets 1.8 stakes', () => {
   assert.equal(owed(data, 3 - winner), 0);
   const view = diceState(data, winner, 2000, { people }).match;
   assert.equal(view.winner, 'me');
-  assert.deepEqual(view.stake.result, { kind: 'won', payout: 9, delta: 4 });
+  assert.deepEqual(view.stake.result, { kind: 'won', payout: 9, delta: 4, paid: 5 });
   diceState(data, winner, 3000, { people });
   assert.equal(owed(data, winner), 9, 'paid once');
 });
@@ -171,4 +171,72 @@ test('a rematch repeats the stake, goes to the same opponent and needs a finishe
   assert.equal(taken.match.id === match.id, false);
   assert.equal(data.matches.length, 2);
   assert.equal(diceState(data, 2, 1000, { people }).match.id, taken.match.id, 'the running match is shown, not the old result');
+});
+
+/** A started staked match with the first round settled (the first seat has a poker, so it wins). */
+function afterFirstRound(stake = { currency: 'gold', amount: 100 }) {
+  const ctx = started(stake);
+  stand(ctx.data, 1, ctx.match); stand(ctx.data, 2, ctx.match);
+  return ctx;
+}
+const paidTotal = match => Object.values(match.stake.paid).reduce((total, value) => total + value, 0);
+
+test('between rounds a player can raise, the opponent calls, and the pot of both goes to the winner', () => {
+  const { data, match } = afterFirstRound();
+  assert.deepEqual(diceState(data, 1, 1000, { people }).match.canRaise, [100, 200]);
+  assert.equal(act(data, 1, { action: 'raise', matchId: match.id, amount: 150 }).ok, false, 'only whole stakes');
+  assert.equal(act(data, 1, { action: 'raise', matchId: match.id, amount: 100 }, { w: { gold: 50 } }).ok, false, 'must be able to pay');
+  const raised = act(data, 1, { action: 'raise', matchId: match.id, amount: 100 });
+  assert.deepEqual(raised.charge, { currency: 'gold', amount: 100 });
+  assert.equal(raised.notify.userId, '2');
+  assert.deepEqual(raised.match.raise, { by: 'me', amount: 100 });
+  assert.equal(diceState(data, 2, 1000, { people }).match.raise.by, 'opponent');
+  assert.equal(act(data, 2, { action: 'ready', matchId: match.id }).ok, false, 'the raise must be answered first');
+  assert.equal(act(data, 1, { action: 'raise', matchId: match.id, amount: 100 }).ok, false, 'one raise at a time');
+  assert.equal(act(data, 1, { action: 'call', matchId: match.id }).ok, false, 'the raiser cannot call their own raise');
+  assert.equal(act(data, 2, { action: 'call', matchId: match.id }, { w: { gold: 10 } }).ok, false);
+  const called = act(data, 2, { action: 'call', matchId: match.id });
+  assert.deepEqual(called.charge, { currency: 'gold', amount: 100 });
+  assert.equal(called.match.phase, 'throw');
+  assert.equal(paidTotal(match), 400);
+  // the second round is also won by the first seat: it takes the whole pot, 90% of 400
+  stand(data, 1, match); stand(data, 2, match);
+  assert.equal(match.state.phase, 'matchOver');
+  assert.equal(owed(data, 1), 360);
+  assert.equal(owed(data, 2), 0);
+  const view = diceState(data, 2, 2000, { people }).match.stake;
+  assert.deepEqual([view.pot, view.prize, view.result.paid, view.result.delta], [400, 360, 200, -200]);
+});
+
+test('a raise that is not called is refunded and the raiser wins the round, also when the opponent is silent', () => {
+  const { data, match } = afterFirstRound();
+  act(data, 2, { action: 'raise', matchId: match.id, amount: 200 });
+  const folded = act(data, 1, { action: 'fold', matchId: match.id });
+  assert.equal(owed(data, 2), 200, 'the raise comes back');
+  assert.equal(match.stake.paid['2'], 100);
+  assert.deepEqual(match.game.wins, [1, 1], 'the folded round goes to the raiser');
+  assert.equal(folded.match.phase, 'throw');
+  assert.equal(folded.match.round, 3);
+  assert.deepEqual(folded.match.event, { kind: 'fold', winner: 'opponent' });
+  assert.equal(diceState(data, 2, 1000, { people }).match.event.winner, 'me');
+  // the first seat raised, the second stays silent: at the deadline the round goes to the raiser, who has a second win
+  const quiet = afterFirstRound();
+  act(quiet.data, 1, { action: 'raise', matchId: quiet.match.id, amount: 100 }, { time: 2000 });
+  diceState(quiet.data, 2, 2000 + RESULT_TTL, { people });
+  assert.equal(quiet.match.state.phase, 'matchOver');
+  assert.equal(owed(quiet.data, 1), 100 + 180, 'the raise back, and 90% of the two base stakes');
+  assert.equal(owed(quiet.data, 2), 0);
+});
+
+test('raises are limited to four stakes in all and need a stake', () => {
+  const stake = paid => ({ currency: 'gold', amount: 100, paid: { 1: paid } });
+  assert.deepEqual(raiseOptions(stake(100), 1), [100, 200]);
+  assert.deepEqual(raiseOptions(stake(300), 1), [100], 'three stakes are in: one more fits, two do not');
+  assert.deepEqual(raiseOptions(stake(400), 1), []);
+  assert.deepEqual(raiseOptions({ currency: 'gold', amount: 8_000_000, paid: { 1: 8_000_000 } }, 1), [], 'never above the limit of the currency');
+  assert.deepEqual(raiseOptions(null, 1), []);
+  const plain = started(null);
+  stand(plain.data, 1, plain.match); stand(plain.data, 2, plain.match);
+  assert.equal(act(plain.data, 1, { action: 'raise', matchId: plain.match.id, amount: 100 }).ok, false);
+  assert.deepEqual(diceState(plain.data, 1, 1000, { people }).match.canRaise, []);
 });

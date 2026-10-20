@@ -63,10 +63,13 @@ function split(pot, ids) {
   return Object.fromEntries(ids.map((id, i) => [id, share + (i < rest ? 1 : 0)]));
 }
 
+/** What each holder has put in: the stake, plus any raises (`paid` is kept by games with raises). */
+export const paidOf = stake => stake.paid || Object.fromEntries(stake.holders.map(id => [id, stake.amount]));
+
 /** Who gets the pot of a finished staked match. */
 function payoutsOf(match) {
-  const { amount, holders } = match.stake, pot = Math.round(amount * holders.length * WIN_SHARE);
-  const refund = () => ({ kind: 'refund', payouts: Object.fromEntries(holders.map(id => [id, amount])) });
+  const { amount, holders } = match.stake, paid = paidOf(match.stake), pot = Math.round(Object.values(paid).reduce((total, value) => total + value, 0) * WIN_SHARE);
+  const refund = () => ({ kind: 'refund', payouts: paid });
   if (!match.table) {
     const winner = match.state.winner;
     return winner === 'player' || winner === 'ai' ? { kind: 'win', payouts: { [match.players[winner === 'player' ? 0 : 1]]: pot } } : refund();
@@ -94,12 +97,13 @@ export function settleStakes(data, now) {
 export function stakeView(match, userId) {
   const stake = match.stake;
   if (!stake) return null;
-  const view = { currency: stake.currency, amount: stake.amount, pot: stake.amount * stake.holders.length, prize: Math.round(stake.amount * stake.holders.length * WIN_SHARE), settled: !!stake.settled };
+  const pot = Object.values(paidOf(stake)).reduce((total, value) => total + value, 0);
+  const view = { currency: stake.currency, amount: stake.amount, pot, prize: Math.round(pot * WIN_SHARE), settled: !!stake.settled };
   if (userId != null && stake.holders.includes(String(userId))) {
     view.you = true;
     if (stake.result) {
-      const payout = stake.result.payouts[String(userId)] || 0;
-      view.result = { kind: stake.result.kind === 'refund' ? 'refund' : payout > 0 ? 'won' : 'lost', payout, delta: payout - stake.amount };
+      const payout = stake.result.payouts[String(userId)] || 0, mine = paidOf(stake)[String(userId)] ?? stake.amount;
+      view.result = { kind: stake.result.kind === 'refund' ? 'refund' : payout > 0 ? 'won' : 'lost', payout, delta: payout - mine, paid: mine };
     }
   }
   return view;

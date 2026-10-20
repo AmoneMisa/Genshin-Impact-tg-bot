@@ -41,7 +41,7 @@ test('a staked duel charges both players, pays the winner the whole pot and noth
   assert.equal(sum(owed(chat, 2)), 9);
   assert.equal(owed(chat, 1).length, 0);
   const view = gwentState(chat, 2, 100_001).match.stake;
-  assert.deepEqual(view.result, { kind: 'won', payout: 9, delta: 4 });
+  assert.deepEqual(view.result, { kind: 'won', payout: 9, delta: 4, paid: 5 });
   assert.equal(gwentState(chat, 1, 100_001).match.stake.result.kind, 'lost');
   act(chat, 2, { action: 'dismiss', matchId: match.id });
   gwentState(chat, 2, 100_002);

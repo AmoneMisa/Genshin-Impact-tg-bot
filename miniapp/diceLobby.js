@@ -1,6 +1,6 @@
 import crypto, { randomUUID } from 'node:crypto';
 import { DICE, REROLLS, ROUNDS_TO_WIN, rollDice, evaluate, compareHands } from '../webapp/dice-poker.js';
-import { cannotPay, closeInvite, parseStake, settleStakes, stakeView } from './gwentStakes.js';
+import { STAKE_CURRENCIES, cannotPay, closeInvite, credit, parseStake, settleStakes, stakeView } from './gwentStakes.js';
 import { presence } from './social.js';
 
 // Dice poker between two players, with an optional stake (see gwentStakes.js: players only, never a house).
@@ -10,6 +10,9 @@ import { presence } from './social.js';
 // A match keeps `state` in the shape the stake code reads (`phase`, `winner`: 'player' for the first seat,
 // 'ai' for the second, 'draw') and the dice game itself in `game`.
 
+/** Between rounds a player may raise by these multiples of the stake; nobody puts in more than this many stakes in all. */
+export const RAISE_STEPS = Object.freeze([1, 2]);
+export const MAX_STAKES = 4;
 export const INVITE_TTL = 15 * 60_000;
 export const THROW_TTL = 90_000;
 export const RESULT_TTL = 45_000;
@@ -32,7 +35,7 @@ function freshGame(rng, round = 1, wins = [0, 0]) {
 
 function startMatch(data, one, two, now, rng, stake) {
   const match = { id: randomUUID(), players: [one.userId, two.userId], names: [one.name, two.name], dismissed: [], revision: 0, startedAt: now, deadline: now + THROW_TTL,
-    stake: stake ? { ...stake, holders: [one.userId, two.userId], settled: false } : null, state: { phase: 'playing', winner: null }, game: freshGame(rng) };
+    stake: stake ? { ...stake, holders: [one.userId, two.userId], paid: { [one.userId]: stake.amount, [two.userId]: stake.amount }, settled: false } : null, state: { phase: 'playing', winner: null }, game: freshGame(rng) };
   data.matches.push(match);
   // A finished match of these players is closed when they start the next one.
   for (const other of data.matches) if (other !== match && other.state.phase === 'matchOver') for (const id of match.players) if (other.players.includes(id) && !other.dismissed.includes(id)) other.dismissed.push(id);
@@ -58,11 +61,32 @@ function settleRound(match, now) {
   game.phase = 'result'; game.ready = [false, false]; match.deadline = now + RESULT_TTL;
 }
 
-function nextRound(match, now, rng) {
+function nextRound(match, now, rng, event = null) {
   const game = match.game;
   match.game = freshGame(rng, game.result?.winner === 'draw' ? game.round : game.round + 1, game.wins);
   match.game.idle = game.idle;
+  if (event) match.game.event = event;
   match.deadline = now + THROW_TTL; match.revision += 1;
+}
+
+/** The raises a player may still make: whole stakes, within the limit of stakes put in. */
+export function raiseOptions(stake, userId) {
+  if (!stake) return [];
+  const put = (stake.paid || {})[String(userId)] ?? stake.amount, max = STAKE_CURRENCIES[stake.currency].max;
+  return RAISE_STEPS.map(step => step * stake.amount).filter(amount => put + amount <= MAX_STAKES * stake.amount && put + amount <= max);
+}
+
+/** The opponent of a raise did not call: the raiser gets the raise back and wins the round that was to be played. */
+function foldRaise(data, match, now, rng) {
+  const { by, amount } = match.game.raise, raiser = match.players[by];
+  match.stake.paid[raiser] -= amount;
+  credit(data, raiser, match.stake, 'refund', now, amount);
+  match.game.wins[by] += 1;
+  match.game.result = { winner: by, hands: match.game.result?.hands || ['', ''], folded: true };
+  match.game.raise = null; match.revision += 1;
+  if (match.game.wins[by] >= ROUNDS_TO_WIN) return finish(match, by === 0 ? 'player' : 'ai', now, 'score');
+  match.game.round += 1; // the round that was given up counts as played
+  nextRound(match, now, rng, { kind: 'fold', winner: by });
 }
 
 function sweep(data, now, rng) {
@@ -76,7 +100,7 @@ function sweep(data, now, rng) {
       game.idle = game.timedOut.every(Boolean) ? game.idle + 1 : 0;
       if (game.idle >= IDLE_ROUNDS) { finish(match, 'draw', now, 'abandoned'); continue; }
       settleRound(match, now);
-    } else if (game.phase === 'result') nextRound(match, now, rng);
+    } else if (game.phase === 'result') { if (game.raise) foldRaise(data, match, now, rng); else nextRound(match, now, rng); }
   }
   data.matches = data.matches.filter(match => !match.endedAt || now - match.endedAt < DONE_TTL);
   data.invites = data.invites.filter(invite => now - invite.createdAt < DONE_TTL);
@@ -103,6 +127,8 @@ export function diceMatchView(match, userId) {
     result: game.result ? { winner: winnerOf(game.result.winner), me: game.result.hands[me], opponent: game.result.hands[you] } : null,
     winner: game.phase === 'over' ? (match.state.winner === 'draw' ? 'draw' : match.state.winner === 'player' ? (me === 0 ? 'me' : 'opponent') : (me === 1 ? 'me' : 'opponent')) : null,
     endReason: match.endKind === 'surrender' ? (match.loser === me ? 'Вы сдались' : 'Соперник сдался') : match.endKind === 'abandoned' ? 'Оба игрока долго не отвечали, ставки возвращены' : '',
+    raise: game.raise ? { by: game.raise.by === me ? 'me' : 'opponent', amount: game.raise.amount } : null, canRaise: !!match.stake && game.phase === 'result' && !game.raise ? raiseOptions(match.stake, userId) : [],
+    event: game.event ? { kind: game.event.kind, winner: game.event.winner === me ? 'me' : 'opponent' } : null,
     stake: stakeView(match, userId) };
 }
 
@@ -169,6 +195,31 @@ export function diceAction(data, userId, body, now = Date.now(), rng = secure, o
     startMatch(data, { userId: invite.from, name: nameOf(people, invite.from, invite.fromName) }, { userId: id, name: nameOf(people, id) }, now, rng, invite.stake);
     charge = invite.stake || null;
     notify = { kind: 'start', userId: invite.from, fromName: nameOf(people, id), inviteId: invite.id };
+  } else if (['raise', 'call', 'fold'].includes(body.action)) {
+    if (!match || match.id !== body.matchId) return fail('Матч не найден');
+    if (match.state.phase !== 'playing') return fail('Матч завершён');
+    if (!match.stake) return fail('В этой игре нет ставки');
+    const seat = match.players.indexOf(id), game = match.game;
+    if (game.phase !== 'result') return fail('Ставку можно менять между раундами');
+    if (body.action === 'raise') {
+      if (game.raise) return fail('Ставка уже повышена');
+      const amount = Number(body.amount);
+      if (!raiseOptions(match.stake, id).includes(amount)) return fail('Такое повышение недоступно');
+      const raise = { currency: match.stake.currency, amount }, broke = cannotPay(raise, options.wallet);
+      if (broke) return fail(broke);
+      match.stake.paid[id] += amount; charge = raise;
+      game.raise = { by: seat, amount }; game.ready = [false, false]; match.deadline = now + RESULT_TTL; match.revision += 1;
+      notify = { kind: 'raise', userId: match.players[1 - seat], fromName: nameOf(people, id), inviteId: null };
+    } else {
+      if (!game.raise || game.raise.by === seat) return fail('Нет повышения, на которое можно ответить');
+      if (body.action === 'call') {
+        const call = { currency: match.stake.currency, amount: game.raise.amount }, broke = cannotPay(call, options.wallet);
+        if (broke) return fail(broke);
+        match.stake.paid[id] += call.amount; charge = call;
+        game.raise = null;
+        nextRound(match, now, rng);
+      } else foldRaise(data, match, now, rng);
+    }
   } else if (['throw', 'stand', 'ready', 'surrender'].includes(body.action)) {
     if (!match || match.id !== body.matchId) return fail('Матч не найден');
     if (match.state.phase !== 'playing') return fail('Матч завершён');
@@ -178,6 +229,7 @@ export function diceAction(data, userId, body, now = Date.now(), rng = secure, o
       finish(match, loser === 0 ? 'ai' : 'player', now, 'surrender');
     } else if (body.action === 'ready') {
       if (game.phase !== 'result') return fail('Раунд ещё не закончен');
+      if (game.raise) return fail('Сначала ответьте на повышение ставки');
       game.ready[seat] = true; match.revision += 1;
       if (game.ready.every(Boolean)) nextRound(match, now, rng);
     } else {

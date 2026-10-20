@@ -88,6 +88,7 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
       <h3>Ставка</h3><label class="dice-field">На что играем<select name="dice-stake">${STAKE_CHOICES.map(([value, label]) => `<option value="${value}" ${value === stakeChoice ? 'selected' : ''}>${label}</option>`).join('')}</select></label>
       ${wallet ? `<p class="dice-hint">У вас: ${stakeText({ currency: 'gold', amount: wallet.gold })} · ${stakeText({ currency: 'luckCoins', amount: wallet.luckCoins })}.</p>` : ''}
       <p class="dice-hint">Ставка списывается, когда вы отправляете приглашение или принимаете чужое. Победитель получает 1,8 ставки: 10% банка уходит из игры. Ничья, отказ и истёкшее приглашение возвращают ставку; сдача — поражение.</p>
+      <p class="dice-hint">Между раундами ставку можно повышать, всего до четырёх ставок. Если повышение не приняли, раунд достаётся тому, кто повысил.</p>
       ${net.outgoing.length ? `<h3>Вы пригласили</h3>${net.outgoing.map(item => invite(item, true)).join('')}` : ''}
       <h3>Друзья</h3>${rows || '<p class="dice-hint">Добавьте друга в разделе друзей, чтобы пригласить его.</p>'}
       <h3>Пригласить по ссылке</h3><div class="dice-actions">${button('Создать ссылку', 'data-create-link')}</div>
@@ -101,6 +102,8 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
     }
     return `<p class="dice-stake">Приз: ${stakeText({ ...stake, amount: stake.prize })}</p>`;
   }
+  /** Whether the player can pay `amount` of the stake's currency (the server decides in the end). */
+  const canPay = (stake, amount) => !wallet || (wallet[stake.currency] ?? 0) >= amount;
   function onlineMatchScreen() {
     const view = net.match;
     const over = view.phase === 'over', result = view.result, inRound = view.phase === 'throw';
@@ -109,17 +112,23 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
       : result ? (result.winner === 'draw' ? 'Ничья: раунд будет сыгран заново.' : result.winner === 'me' ? 'Раунд за вами!' : 'Раунд за соперником.') : '';
     const opponentDice = view.opponentDice || Array(5).fill(null);
     let controls;
-    if (inRound && !view.done) controls = `<div class="dice-actions">${button(`Перебросить · осталось ${left}`, `data-reroll ${busy || left <= 0 || keep.size === 5 ? 'disabled' : ''}`)}${button('Оставить', `data-stand ${busy ? 'disabled' : ''}`, true)}</div><p class="dice-hint">Нажмите на кости, которые хотите оставить.</p>`;
-    else if (inRound) controls = `<p class="dice-hint" role="status">${view.opponentDone ? 'Считаем результат…' : 'Ждём соперника…'}</p>`;
+    const event = inRound && view.event ? `<p class="dice-hint" role="status">${view.event.winner === 'me' ? 'Соперник сбросил: раунд ваш.' : 'Вы сбросили: раунд за соперником.'}</p>` : '';
+    if (inRound && !view.done) controls = `${event}<div class="dice-actions">${button(`Перебросить · осталось ${left}`, `data-reroll ${busy || left <= 0 || keep.size === 5 ? 'disabled' : ''}`)}${button('Оставить', `data-stand ${busy ? 'disabled' : ''}`, true)}</div><p class="dice-hint">Нажмите на кости, которые хотите оставить.</p>`;
+    else if (inRound) controls = `${event}<p class="dice-hint" role="status">${view.opponentDone ? 'Считаем результат…' : 'Ждём соперника…'}</p>`;
+    else if (!over && view.raise?.by === 'opponent') controls = `<p class="dice-verdict" role="status">${esc(view.opponent)} повышает ставку на ${stakeText({ ...view.stake, amount: view.raise.amount })}</p>${stakeLine(view.stake)}
+      <p class="dice-hint">Примите повышение или сбросьте раунд: он засчитается сопернику.</p>
+      <div class="dice-actions">${button(`Принять · +${stakeText({ ...view.stake, amount: view.raise.amount })}`, `data-call ${canPay(view.stake, view.raise.amount) ? '' : 'disabled'}`, true)}${button('Сбросить раунд', 'data-fold')}</div>`;
+    else if (!over && view.raise) controls = `<p class="dice-hint" role="status">Вы повысили ставку на ${stakeText({ ...view.stake, amount: view.raise.amount })}. Ждём ответа соперника…</p>${stakeLine(view.stake)}`;
     else controls = `${verdict ? `<p class="dice-verdict" role="status" data-winner="${over ? view.winner : result.winner}">${verdict}</p>` : ''}${view.endReason ? `<p class="dice-hint">${esc(view.endReason)}</p>` : ''}${stakeLine(view.stake)}
-      <div class="dice-actions">${over ? button('Закрыть', 'data-dismiss-match', true) : button(view.ready ? 'Ждём соперника…' : 'Дальше', `data-ready ${view.ready ? 'disabled' : ''}`, true)}</div>`;
+      <div class="dice-actions">${over ? button('Закрыть', 'data-dismiss-match', true) : button(view.ready ? 'Ждём соперника…' : 'Дальше', `data-ready ${view.ready ? 'disabled' : ''}`, true)}</div>
+      ${!over && view.canRaise?.length ? `<p class="dice-hint">Можно повысить ставку: соперник должен принять или сбросить раунд.</p><div class="dice-actions">${view.canRaise.map(amount => button(`Повысить на ${stakeText({ ...view.stake, amount })}`, `data-raise="${amount}" ${canPay(view.stake, amount) ? '' : 'disabled'}`)).join('')}</div>` : ''}`;
     const offered = over ? net.incoming.find(item => item.rematch && item.from === view.opponentId) : null;
     const asked = over ? net.outgoing.find(item => item.rematch) : null;
     const rematch = !over ? '' : offered ? `<p class="dice-hint" role="status">${esc(view.opponent)} предлагает реванш${offered.stake ? `: ставка ${stakeText(offered.stake)}` : ''}.</p><div class="dice-actions">${button('Принять реванш', `data-accept-invite="${offered.id}"`, true)}${button('Отклонить', `data-decline-invite="${offered.id}"`)}</div>`
       : asked ? `<p class="dice-hint" role="status">Ждём ответа соперника…</p><div class="dice-actions">${button('Отменить реванш', `data-cancel-invite="${asked.id}"`)}</div>`
         : `<div class="dice-actions">${button(view.stake ? `Реванш · ставка ${stakeText(view.stake)}` : 'Реванш', 'data-rematch')}</div>`;
     const surrender = !over ? `<div class="dice-actions">${button(surrenderArmed ? 'Точно сдаться?' : 'Сдаться', 'data-surrender')}</div>` : '';
-    return `${scoreHtml(view.round, view.wins.me, view.wins.opponent)}${over ? '' : stakeLine(view.stake)}
+    return `${scoreHtml(view.round, view.wins.me, view.wins.opponent)}${inRound ? stakeLine(view.stake) : ''}
       <section class="dice-side" aria-label="${esc(view.opponent)}"><h3>${esc(view.opponent)}</h3>${diceRow(opponentDice, { tag: 'a', label: 'Кости соперника' })}<p class="dice-hand">${result ? result.opponent : inRound ? (view.opponentDone ? 'Остановился' : `Бросков: ${view.opponentRolls}`) : ''}</p></section>
       <section class="dice-side" aria-label="Вы"><h3>Вы</h3>${diceRow(view.dice, { mine: true, canKeep: inRound && !view.done && !busy, tag: 'p', label: 'Ваши кости' })}<p class="dice-hand">${evaluate(view.dice).name}</p></section>
       ${noteHtml()}${controls}${rematch}${surrender}${combinations()}`;
@@ -229,6 +238,9 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
     else if (d.acceptInvite) { focusedInvite = null; await send({ action: 'accept_invite', inviteId: d.acceptInvite }); }
     else if (d.declineInvite) { focusedInvite = null; await send({ action: 'decline_invite', inviteId: d.declineInvite }); }
     else if (d.cancelInvite) await send({ action: 'cancel_invite', inviteId: d.cancelInvite });
+    else if (d.raise) await send({ action: 'raise', matchId: net.match.id, amount: Number(d.raise) });
+    else if ('call' in d) await send({ action: 'call', matchId: net.match.id });
+    else if ('fold' in d) await send({ action: 'fold', matchId: net.match.id });
     else if ('ready' in d) await send({ action: 'ready', matchId: net.match.id });
     else if ('dismissMatch' in d) { await send({ action: 'dismiss', matchId: net.match.id }); }
     else if ('surrender' in d) { if (!surrenderArmed) { surrenderArmed = true; render(); } else { surrenderArmed = false; await send({ action: 'surrender', matchId: net.match.id }); } }
