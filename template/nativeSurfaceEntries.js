@@ -509,5 +509,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "turek-orcs": {
+    "x": -89763,
+    "y": 105359,
+    "z": -3576,
+    "region": "gludin",
+    "teleportGold": 1800,
+    "entrySource": {
+      "file": "teleporters/town/30320.xml",
+      "npcId": 30320,
+      "name": "Orc Barracks",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "ec6a8a6c51cf147a8c955a374d45c064c10364a5ad9304e06b8a80988d9ec35b"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30320,
+        "npcName": "Richlin",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 1800,
+        "source": {
+          "file": "teleporters/town/30320.xml",
+          "npcId": 30320,
+          "name": "Orc Barracks",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "ec6a8a6c51cf147a8c955a374d45c064c10364a5ad9304e06b8a80988d9ec35b"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        -94763,
+        100359
+      ],
+      [
+        -84763,
+        100359
+      ],
+      [
+        -84763,
+        110359
+      ],
+      [
+        -94763,
+        110359
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
