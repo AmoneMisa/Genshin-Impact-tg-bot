@@ -1463,6 +1463,166 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/dwarf_town.xml"
+  },
+  "gludio": {
+    "polygon": [
+      [
+        -14960,
+        121148
+      ],
+      [
+        -14875,
+        121120
+      ],
+      [
+        -14717,
+        121106
+      ],
+      [
+        -14394,
+        121109
+      ],
+      [
+        -14242,
+        121104
+      ],
+      [
+        -12659,
+        121098
+      ],
+      [
+        -12025,
+        121767
+      ],
+      [
+        -12024,
+        123944
+      ],
+      [
+        -12277,
+        124668
+      ],
+      [
+        -12648,
+        125573
+      ],
+      [
+        -12879,
+        126199
+      ],
+      [
+        -13855,
+        126470
+      ],
+      [
+        -14484,
+        126463
+      ],
+      [
+        -15236,
+        126178
+      ],
+      [
+        -16126,
+        125356
+      ],
+      [
+        -16531,
+        124493
+      ],
+      [
+        -16537,
+        123850
+      ],
+      [
+        -16492,
+        123330
+      ],
+      [
+        -16194,
+        123160
+      ],
+      [
+        -16057,
+        123101
+      ],
+      [
+        -15327,
+        122741
+      ],
+      [
+        -14958,
+        121150
+      ]
+    ],
+    "minZ": -3200,
+    "maxZ": -2900,
+    "sourceZone": "Gludio Castle Town",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 7680,
+    "arrivals": [
+      {
+        "x": -14288,
+        "y": 122752,
+        "z": -3000
+      },
+      {
+        "x": -14592,
+        "y": 123232,
+        "z": -3000
+      },
+      {
+        "x": -14704,
+        "y": 122032,
+        "z": -3000
+      },
+      {
+        "x": -13904,
+        "y": 123456,
+        "z": -3000
+      },
+      {
+        "x": -15314,
+        "y": 124131,
+        "z": -3000
+      },
+      {
+        "x": -15564,
+        "y": 123896,
+        "z": -3000
+      },
+      {
+        "x": -14279,
+        "y": 124446,
+        "z": -3000
+      },
+      {
+        "x": -14465,
+        "y": 124434,
+        "z": -3000
+      },
+      {
+        "x": -13709,
+        "y": 123563,
+        "z": -3000
+      },
+      {
+        "x": -13513,
+        "y": 123752,
+        "z": -3000
+      },
+      {
+        "x": -14683,
+        "y": 121945,
+        "z": -3000
+      },
+      {
+        "x": -14491,
+        "y": 121915,
+        "z": -3000
+      }
+    ],
+    "arrivalSource": "mapregion/gludio_castle_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -1485,6 +1645,28 @@ export const CITY_NPC_UPDATES = {
     "z": -3464,
     "adapted": false,
     "source": "spawns/Others/22_22.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "gludio:npc:0": {
+    "npcId": 30256,
+    "name": "Bella",
+    "city": "gludio",
+    "x": -12736,
+    "y": 122816,
+    "z": -3114,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  "gludio:npc:1": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "gludio",
+    "x": -13232,
+    "y": 124624,
+    "z": -3120,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml",
     "role": "Хранитель склада",
     "service": "warehouse"
   },
@@ -1521,6 +1703,16 @@ export const CITY_NPC_UPDATES = {
     "source": "spawns/Others/22_22.xml",
     "role": "Наставник",
     "service": "trainer"
+  },
+  "gludio:instance": {
+    "npcId": 30332,
+    "name": "Bathis",
+    "city": "gludio",
+    "x": -13900,
+    "y": 123822,
+    "z": -3112,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
   },
   "talking-island-village:30001": {
     "npcId": 30001,
@@ -2137,6 +2329,48 @@ export const CITY_SOURCE_NPCS = [
     "x": -84697,
     "y": 153134,
     "z": -3160,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "gludio:source:32198:-13565:125562:-3128",
+    "npcId": 32198,
+    "name": "Gobie",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -13565,
+    "y": 125562,
+    "z": -3128,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "gludio:source:32196:-13527:125585:-3128",
+    "npcId": 32196,
+    "name": "Gershwin",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -13527,
+    "y": 125585,
+    "z": -3128,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "gludio:source:32197:-13489:125562:-3128",
+    "npcId": 32197,
+    "name": "Gwain",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -13489,
+    "y": 125562,
+    "z": -3128,
     "service": "trainer",
     "gateway": false,
     "adapted": false,
@@ -2841,6 +3075,440 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Others/18_14.xml"
+  },
+  {
+    "id": "gludio:source:30030:-13269:121884:-2966",
+    "npcId": 30030,
+    "name": "Vivyan",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -13269,
+    "y": 121884,
+    "z": -2966,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30253:-15132:123282:-3107",
+    "npcId": 30253,
+    "name": "Simplon",
+    "role": "Торговец",
+    "city": "gludio",
+    "x": -15132,
+    "y": 123282,
+    "z": -3107,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30254:-14934:124468:-3114",
+    "npcId": 30254,
+    "name": "Harmony",
+    "role": "Торговец",
+    "city": "gludio",
+    "x": -14934,
+    "y": 124468,
+    "z": -3114,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30255:-13132:124988:-3118",
+    "npcId": 30255,
+    "name": "Haprock",
+    "role": "Хранитель склада",
+    "city": "gludio",
+    "x": -13132,
+    "y": 124988,
+    "z": -3118,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30288:-13579:123017:-3103",
+    "npcId": 30288,
+    "name": "Rains",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -13579,
+    "y": 123017,
+    "z": -3103,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30289:-12784:121709:-2952",
+    "npcId": 30289,
+    "name": "Raymond",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -12784,
+    "y": 121709,
+    "z": -2952,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30293:-13487:121541:-2966",
+    "npcId": 30293,
+    "name": "Manuel",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -13487,
+    "y": 121541,
+    "z": -2966,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30294:-14933:124540:-3115",
+    "npcId": 30294,
+    "name": "Varan",
+    "role": "Торговец",
+    "city": "gludio",
+    "x": -14933,
+    "y": 124540,
+    "z": -3115,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30297:-12892:123143:-3102",
+    "npcId": 30297,
+    "name": "Tobias",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -12892,
+    "y": 123143,
+    "z": -3102,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30298:-15349:124763:-3113",
+    "npcId": 30298,
+    "name": "Pinter",
+    "role": "Кузнец",
+    "city": "gludio",
+    "x": -15349,
+    "y": 124763,
+    "z": -3113,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30321:-15238:123282:-3107",
+    "npcId": 30321,
+    "name": "Sydnia",
+    "role": "Торговец",
+    "city": "gludio",
+    "x": -15238,
+    "y": 123282,
+    "z": -3107,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30322:-13049:124737:-3118",
+    "npcId": 30322,
+    "name": "Ballin",
+    "role": "Хранитель склада",
+    "city": "gludio",
+    "x": -13049,
+    "y": 124737,
+    "z": -3118,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30325:-13419:123068:-3104",
+    "npcId": 30325,
+    "name": "Audiberti",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -13419,
+    "y": 123068,
+    "z": -3104,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30326:-13691:123068:-3103",
+    "npcId": 30326,
+    "name": "Leona",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -13691,
+    "y": 123068,
+    "z": -3103,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30327:-13440:122643:-3103",
+    "npcId": 30327,
+    "name": "Sorius",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -13440,
+    "y": 122643,
+    "z": -3103,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30328:-13693:122583:-3103",
+    "npcId": 30328,
+    "name": "Reisa",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -13693,
+    "y": 122583,
+    "z": -3103,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30329:-12791:123259:-3102",
+    "npcId": 30329,
+    "name": "Virgil",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -12791,
+    "y": 123259,
+    "z": -3102,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30330:-12503:123054:-3102",
+    "npcId": 30330,
+    "name": "Sidra",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -12503,
+    "y": 123054,
+    "z": -3102,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30344:-13269:121540:-2966",
+    "npcId": 30344,
+    "name": "Rohmer",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -13269,
+    "y": 121540,
+    "z": -2966,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30345:-13487:121884:-2960",
+    "npcId": 30345,
+    "name": "Ramoniell",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -13487,
+    "y": 121884,
+    "z": -2960,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30503:-13323:124989:-3118",
+    "npcId": 30503,
+    "name": "Rikadio",
+    "role": "Хранитель склада",
+    "city": "gludio",
+    "x": -13323,
+    "y": 124989,
+    "z": -3118,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30504:-15190:124756:-3112",
+    "npcId": 30504,
+    "name": "Mendio",
+    "role": "Кузнец",
+    "city": "gludio",
+    "x": -15190,
+    "y": 124756,
+    "z": -3112,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30505:-12823:124887:-3126",
+    "npcId": 30505,
+    "name": "Drikus",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -12823,
+    "y": 124887,
+    "z": -3126,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30506:-12788:124764:-3126",
+    "npcId": 30506,
+    "name": "Buka",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -12788,
+    "y": 124764,
+    "z": -3126,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:30507:-12788:124976:-3117",
+    "npcId": 30507,
+    "name": "Racoy",
+    "role": "Наставник",
+    "city": "gludio",
+    "x": -12788,
+    "y": 124976,
+    "z": -3117,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:31417:-13728:121632:-2966",
+    "npcId": 31417,
+    "name": "Berynel",
+    "role": "Торговец",
+    "city": "gludio",
+    "x": -13728,
+    "y": 121632,
+    "z": -2966,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:31426:-12823:124848:-3125",
+    "npcId": 31426,
+    "name": "Jaka",
+    "role": "Торговец",
+    "city": "gludio",
+    "x": -12823,
+    "y": 124848,
+    "z": -3125,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:31440:-15440:124592:-3113",
+    "npcId": 31440,
+    "name": "Lanna",
+    "role": "Торговец",
+    "city": "gludio",
+    "x": -15440,
+    "y": 124592,
+    "z": -3113,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:32875:-15162:124616:-3112",
+    "npcId": 32875,
+    "name": "Tahoo",
+    "role": "Торговец",
+    "city": "gludio",
+    "x": -15162,
+    "y": 124616,
+    "z": -3112,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:35103:-15160:124292:-3104",
+    "npcId": 35103,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "gludio",
+    "x": -15160,
+    "y": 124292,
+    "z": -3104,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
+  },
+  {
+    "id": "gludio:source:35103:-12172:122648:-3088",
+    "npcId": 35103,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "gludio",
+    "x": -12172,
+    "y": 122648,
+    "z": -3088,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/19_21.xml"
   },
   {
     "id": "dark-elven-village:source:30143:11283:14226:-4240",
