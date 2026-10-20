@@ -1,22 +1,23 @@
-// Dice poker as played in the first Witcher: five dice with the faces 9, 10, J, Q, K, A, one throw and up to two
-// re-throws of any dice, then the better combination wins the round. Pure rules: no DOM, the random source is injected.
+// Dice poker as played in the first Witcher (https://vedmak.fandom.com/wiki/Покер_на_костях): five dice, one throw of all
+// of them and one re-throw of any dice, then the better combination wins the round. A match is three rounds, two wins take it.
+// Pure rules: no DOM, the random source is injected.
 
-export const FACES = Object.freeze(['9', '10', 'В', 'Д', 'К', 'Т']);
-export const FACE_NAMES = Object.freeze(['девятка', 'десятка', 'валет', 'дама', 'король', 'туз']);
+export const FACES = Object.freeze(['1', '2', '3', '4', '5', '6']);
+export const FACE_NAMES = Object.freeze(['единица', 'двойка', 'тройка', 'четвёрка', 'пятёрка', 'шестёрка']);
 export const DICE = 5;
-export const REROLLS = 2;
-export const ROUNDS_TO_WIN = 3;
+export const REROLLS = 1;
+export const ROUNDS_TO_WIN = 2;
 export const LEVELS = Object.freeze({ easy: 'Простой', hard: 'Сильный' });
 
 /** From the weakest: what the hand is called and how it is built. */
 export const COMBINATIONS = Object.freeze([
-  ['Старшая кость', 'Ничего из списка: решает самая старшая кость'],
+  ['Ничего', 'Пять разных костей без ряда длиннее четырёх'],
   ['Пара', 'Две одинаковые кости'],
   ['Две пары', 'Две разные пары'],
-  ['Тройка', 'Три одинаковые кости'],
-  ['Фулл-хаус', 'Тройка и пара'],
-  ['Малый стрит', 'Девятка, десятка, валет, дама, король'],
-  ['Большой стрит', 'Десятка, валет, дама, король, туз'],
+  ['Сет', 'Три одинаковые кости'],
+  ['Малый стрейт', 'Пять разных костей подряд от 1 до 5'],
+  ['Большой стрейт', 'Пять разных костей подряд от 2 до 6'],
+  ['Фул-хаус', 'Сет и пара'],
   ['Каре', 'Четыре одинаковые кости'],
   ['Покер', 'Пять одинаковых костей'],
 ]);
@@ -27,37 +28,36 @@ export function rollDice(count, rng = Math.random) {
   return Array.from({ length: count }, () => die(rng));
 }
 
-/** The hand: `rank` (index in COMBINATIONS) and `tiebreak`, the values that decide between equal ranks, most important first. */
+/**
+ * The hand: `rank` (index in COMBINATIONS) and `points`, the sum of the dice that make the combination, which decides
+ * between equal ranks. The dice outside the combination do not count; equal ranks with equal points are a draw.
+ */
 export function evaluate(dice) {
   const counts = Array(6).fill(0);
   for (const value of dice) counts[value] += 1;
+  const total = dice.reduce((sum, value) => sum + value + 1, 0);
   const groups = counts.map((count, value) => ({ count, value })).filter(group => group.count).sort((a, b) => b.count - a.count || b.value - a.value);
   const shape = groups.map(group => group.count).join('');
-  const values = groups.map(group => group.value);
-  let rank = 0;
-  if (shape === '5') rank = 8;
-  else if (shape === '41') rank = 7;
-  else if (shape === '32') rank = 4;
-  else if (shape === '311') rank = 3;
-  else if (shape === '221') rank = 2;
-  else if (shape === '2111') rank = 1;
-  else if (counts.slice(0, 5).every(Boolean)) { rank = 5; return { rank, tiebreak: [4], name: COMBINATIONS[rank][0] }; }
-  else if (counts.slice(1).every(Boolean)) { rank = 6; return { rank, tiebreak: [5], name: COMBINATIONS[rank][0] }; }
-  return { rank, tiebreak: values, name: COMBINATIONS[rank][0] };
+  const of = (...picked) => picked.reduce((sum, group) => sum + group.count * (group.value + 1), 0);
+  let rank = 0, points = total;
+  if (shape === '5') { rank = 8; points = of(groups[0]); }
+  else if (shape === '41') { rank = 7; points = of(groups[0]); }
+  else if (shape === '32') { rank = 6; points = total; }
+  else if (shape === '311') { rank = 3; points = of(groups[0]); }
+  else if (shape === '221') { rank = 2; points = of(groups[0], groups[1]); }
+  else if (shape === '2111') { rank = 1; points = of(groups[0]); }
+  else if (counts.slice(0, 5).every(Boolean)) rank = 4;
+  else if (counts.slice(1).every(Boolean)) rank = 5;
+  return { rank, points, name: COMBINATIONS[rank][0] };
 }
 
-/** A positive number when `a` beats `b`, negative when `b` wins, 0 for a tie. */
+/** A positive number when `a` beats `b`, negative when `b` wins, 0 for a draw. */
 export function compareHands(a, b) {
-  if (a.rank !== b.rank) return a.rank - b.rank;
-  for (let i = 0; i < Math.max(a.tiebreak.length, b.tiebreak.length); i += 1) {
-    const difference = (a.tiebreak[i] ?? -1) - (b.tiebreak[i] ?? -1);
-    if (difference) return difference;
-  }
-  return 0;
+  return a.rank - b.rank || a.points - b.points;
 }
 
-/** One number for a hand, so hands can be averaged: the rank first, then the deciding values. */
-const strength = hand => hand.tiebreak.reduce((total, value, i) => total + (value + 1) * 7 ** (4 - i) / 7 ** 5, hand.rank);
+/** One number for a hand, so hands can be averaged: the rank first, then the points. */
+const strength = hand => hand.rank + hand.points / 100;
 
 /** Everything a set of re-thrown dice can land on, with equal weight. */
 function* outcomes(count) {

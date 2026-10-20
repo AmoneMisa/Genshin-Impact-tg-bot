@@ -5,7 +5,7 @@ import { escapeHtml as esc } from './escape-html.js';
 import { STAKE_CHOICES, stakeBodyOf, stakeText } from './stakes.js';
 import { FACES, FACE_NAMES, COMBINATIONS, LEVELS, REROLLS, ROUNDS_TO_WIN, evaluate, newMatch, playerThrow, aiSteps, settleRound, nextRound } from './dice-poker.js';
 
-const RULES = `Кости из «Ведьмака»: у каждого пять костей. Бросьте их, затем до двух раз перебросьте любые, оставив нужные. Побеждает сильнейшая комбинация. Кто первым выиграет ${ROUNDS_TO_WIN} раунда, тот побеждает в матче. Ничья не считается, раунд играется заново.`;
+const RULES = `Кости из «Ведьмака»: у каждого пять костей. Бросьте их, затем один раз перебросьте любые, оставив нужные, или оставьте всё как есть. Побеждает сильнейшая комбинация; если они одинаковые, решает сумма костей комбинации, при равенстве — ничья. Матч идёт до ${ROUNDS_TO_WIN} побед. Ничья не считается, раунд играется заново.`;
 const button = (label, attrs = '', primary = false) => `<button type="button" class="ui-button${primary ? ' primary' : ''}" ${attrs}>${label}</button>`;
 const STEP_MS = 800;
 const POLL_MS = 2500;
@@ -48,7 +48,7 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
   const noteHtml = () => (note ? `<p class="dice-hint" role="status">${esc(note)}</p>` : '');
 
   function startScreen() {
-    return `<p class="dice-lead">Пять костей, три раунда до победы.</p>
+    return `<p class="dice-lead">Пять костей, один переброс, до двух побед.</p>
       <h3>С кем играем?</h3>
       <div class="dice-levels" role="group" aria-label="Соперник">${[['ai', 'Против таверны'], ['online', 'Против игрока']].map(([id, title]) => button(title, `data-mode="${id}" ${id === 'online' && !api ? 'disabled' : ''}`, id === 'ai')).join('')}</div>
       <p class="dice-hint">${api ? 'Против игрока можно играть на ставку: адену или CoL.' : 'Игра против игрока доступна при входе через Telegram.'}</p>${combinations()}`;

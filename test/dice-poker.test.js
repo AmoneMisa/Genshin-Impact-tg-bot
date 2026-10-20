@@ -5,22 +5,26 @@ import { evaluate, compareHands, aiKeep, aiSteps, newMatch, playerThrow, settleR
 const seq = (...faces) => { let i = 0; return () => (faces[i++ % faces.length] + 0.5) / 6; };
 const hand = dice => evaluate(dice);
 
-test('every combination is recognised and ranked from a pair up to poker', () => {
-  const names = [[[0, 1, 2, 3, 5], 'Старшая кость'], [[2, 2, 0, 1, 5], 'Пара'], [[2, 2, 4, 4, 0], 'Две пары'], [[3, 3, 3, 0, 5], 'Тройка'], [[1, 1, 4, 4, 4], 'Фулл-хаус'],
-    [[0, 1, 2, 3, 4], 'Малый стрит'], [[5, 4, 3, 2, 1], 'Большой стрит'], [[5, 5, 5, 5, 0], 'Каре'], [[2, 2, 2, 2, 2], 'Покер']];
+test('every combination is recognised and ranked as in the Witcher: a full house beats the straights, a poker beats all', () => {
+  // faces are 0..5 for the dice showing 1..6
+  const names = [[[0, 2, 3, 4, 5], 'Ничего'], [[2, 2, 0, 1, 5], 'Пара'], [[2, 2, 4, 4, 0], 'Две пары'], [[3, 3, 3, 0, 5], 'Сет'],
+    [[0, 1, 2, 3, 4], 'Малый стрейт'], [[5, 4, 3, 2, 1], 'Большой стрейт'], [[1, 1, 4, 4, 4], 'Фул-хаус'], [[5, 5, 5, 5, 0], 'Каре'], [[2, 2, 2, 2, 2], 'Покер']];
   names.forEach(([dice, name], rank) => { assert.equal(hand(dice).name, name); assert.equal(hand(dice).rank, rank); });
   assert.equal(COMBINATIONS.length, 9);
+  assert.equal(hand([0, 1, 2, 3, 5]).name, 'Ничего', 'four in a row with a gap is nothing');
 });
 
-test('equal combinations are decided by their values, the pair first and the leftover dice after', () => {
-  assert.ok(compareHands(hand([5, 5, 0, 1, 2]), hand([4, 4, 3, 2, 1])) > 0, 'a pair of aces beats a pair of kings');
-  assert.ok(compareHands(hand([3, 3, 5, 1, 0]), hand([3, 3, 4, 2, 0])) > 0, 'the same pair: the higher leftover die decides');
-  assert.ok(compareHands(hand([5, 5, 1, 1, 0]), hand([5, 5, 0, 0, 4])) > 0, 'two pairs: the lower pair decides');
-  assert.ok(compareHands(hand([4, 4, 4, 1, 1]), hand([3, 3, 3, 5, 5])) > 0, 'a full house goes by its three');
+test('equal combinations are decided by the points of the combination; the other dice do not count', () => {
+  assert.ok(compareHands(hand([5, 5, 0, 1, 2]), hand([4, 4, 3, 2, 1])) > 0, 'a pair of sixes beats a pair of fives');
+  assert.equal(compareHands(hand([3, 3, 5, 1, 0]), hand([3, 3, 4, 2, 0])), 0, 'the same pair with other leftovers is a draw');
+  assert.ok(compareHands(hand([5, 5, 1, 1, 0]), hand([5, 5, 0, 0, 4])) > 0, 'two pairs go by their sum');
+  assert.ok(compareHands(hand([4, 4, 4, 1, 1]), hand([3, 3, 3, 5, 5])) < 0, 'a full house is counted by all five dice');
   assert.ok(compareHands(hand([1, 2, 3, 4, 5]), hand([0, 1, 2, 3, 4])) > 0, 'the big straight beats the small one');
+  assert.equal(compareHands(hand([0, 1, 2, 3, 4]), hand([4, 3, 2, 1, 0])), 0, 'equal straights are a draw');
   assert.ok(compareHands(hand([2, 2, 2, 2, 0]), hand([1, 1, 1, 1, 5])) > 0);
-  assert.equal(compareHands(hand([0, 1, 2, 3, 5]), hand([5, 3, 2, 1, 0])), 0, 'the order of dice does not matter');
   assert.ok(compareHands(hand([0, 0, 0, 0, 0]), hand([5, 5, 5, 5, 4])) > 0, 'poker beats four of a kind');
+  assert.ok(compareHands(hand([0, 2, 3, 4, 5]), hand([0, 1, 3, 4, 5])) > 0, 'nothing is counted by all five dice');
+  assert.equal(hand([2, 2, 4, 4, 0]).points, 16, 'two pairs: 3+3+5+5');
 });
 
 test('the dice are fair faces from 0 to 5 and a throw uses every die', () => {
@@ -39,45 +43,43 @@ test('the AI keeps what makes its hand better and stands on a finished hand', ()
   assert.deepEqual(aiKeep([0, 1, 2, 3, 5], 'easy'), [], 'the easy opponent throws everything when nothing repeats');
 });
 
-test('the player throws at most twice, keeping the chosen dice', () => {
-  let match = newMatch(seq(0, 1, 2, 3, 4, 5, 5, 4, 3, 2), 'hard');
+test('the player re-throws once, keeping the chosen dice', () => {
+  const match = newMatch(seq(0, 1, 2, 3, 4, 5, 5, 4, 3, 2), 'hard');
   assert.deepEqual(match.dice.player, [0, 1, 2, 3, 4]);
   const first = playerThrow(match, [0, 1, 2], seq(5, 5));
   assert.deepEqual(first.match.dice.player, [0, 1, 2, 5, 5]);
   assert.equal(first.match.rolls.player, 1);
-  const second = playerThrow(first.match, [0, 1, 2, 3, 4], seq(0));
-  assert.deepEqual(second.match.dice.player, [0, 1, 2, 5, 5]);
-  assert.equal(playerThrow(second.match, [], seq(0)).error, 'Перебросов не осталось');
-  assert.equal(REROLLS, 2);
+  assert.equal(playerThrow(first.match, [], seq(0)).error, 'Перебросов не осталось');
+  assert.equal(REROLLS, 1);
 });
 
-test('the AI throws up to twice and only the dice it did not keep change', () => {
+test('the AI re-throws once and only the dice it did not keep change', () => {
   const match = { ...newMatch(seq(0), 'hard'), dice: { player: [0, 0, 0, 0, 0], ai: [2, 2, 3, 0, 5] } };
   const steps = aiSteps(match, seq(4, 4, 4, 4, 4, 4));
-  assert.ok(steps.length >= 1 && steps.length <= 2);
+  assert.equal(steps.length, 1);
   assert.deepEqual(steps[0].dice.slice(0, 2), [2, 2]);
   assert.deepEqual(aiSteps({ ...match, dice: { ...match.dice, ai: [1, 2, 3, 4, 5] } }), []);
 });
 
-test('a round gives a point to the better hand, a draw is thrown again, three points end the match', () => {
+test('a round gives a point to the better hand, a draw is thrown again, two wins end the match', () => {
   const base = newMatch(seq(0), 'hard');
-  const win = settleRound({ ...base, dice: { player: [5, 5, 1, 2, 3], ai: [0, 1, 2, 3, 5] } });
+  const win = settleRound({ ...base, dice: { player: [5, 5, 1, 2, 3], ai: [0, 2, 3, 4, 5] } });
   assert.equal(win.result.winner, 'player');
   assert.deepEqual(win.wins, { player: 1, ai: 0 });
   assert.equal(win.phase, 'result');
   assert.equal(nextRound(win, seq(0)).match.round, 2);
 
-  const draw = settleRound({ ...base, dice: { player: [0, 1, 2, 3, 5], ai: [5, 3, 2, 1, 0] } });
+  const draw = settleRound({ ...base, dice: { player: [0, 2, 3, 4, 5], ai: [5, 4, 3, 2, 0] } });
   assert.equal(draw.result.winner, 'draw');
   assert.deepEqual(draw.wins, { player: 0, ai: 0 });
   assert.equal(nextRound(draw, seq(0)).match.round, 1, 'a drawn round keeps its number');
   assert.equal(nextRound(base).error, 'Раунд ещё не закончен');
 
   let match = { ...base, wins: { player: ROUNDS_TO_WIN - 1, ai: 1 } };
-  match = settleRound({ ...match, dice: { player: [2, 2, 2, 2, 2], ai: [0, 1, 2, 3, 5] } });
+  match = settleRound({ ...match, dice: { player: [2, 2, 2, 2, 2], ai: [0, 2, 3, 4, 5] } });
   assert.equal(match.phase, 'over');
   assert.equal(match.winner, 'player');
-  const lost = settleRound({ ...base, wins: { player: 0, ai: ROUNDS_TO_WIN - 1 }, dice: { player: [0, 1, 2, 3, 5], ai: [3, 3, 1, 0, 5] } });
+  const lost = settleRound({ ...base, wins: { player: 0, ai: ROUNDS_TO_WIN - 1 }, dice: { player: [0, 2, 3, 4, 5], ai: [3, 3, 1, 0, 5] } });
   assert.equal(lost.winner, 'ai');
   assert.equal(lost.history.at(-1).winner, 'ai');
 });

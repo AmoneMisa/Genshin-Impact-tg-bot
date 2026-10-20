@@ -46,11 +46,11 @@ test('a staked match charges both, hides the dice during the throw and shows the
   assert.equal(after.match.result.opponent, 'Покер');
 });
 
-test('three rounds win the match and the whole pot goes to the winner', () => {
+test('two won rounds win the match and the winner gets 1.8 stakes', () => {
   const { data, match } = started({ currency: 'luckCoins', amount: 5 });
-  for (let round = 1; round <= 3; round += 1) {
+  for (let round = 1; round <= 2; round += 1) {
     stand(data, 1, match); stand(data, 2, match);
-    if (round < 3) { act(data, 1, { action: 'ready', matchId: match.id }); act(data, 2, { action: 'ready', matchId: match.id }); }
+    if (round < 2) { act(data, 1, { action: 'ready', matchId: match.id }); act(data, 2, { action: 'ready', matchId: match.id }); }
   }
   assert.equal(match.state.phase, 'matchOver');
   const winner = match.state.winner === 'player' ? 1 : 2;
@@ -63,15 +63,15 @@ test('three rounds win the match and the whole pot goes to the winner', () => {
   assert.equal(owed(data, winner), 9, 'paid once');
 });
 
-test('the throw follows its own rules: two re-throws, kept dice stay, stale requests are refused', () => {
+test('the throw follows its own rules: one re-throw, kept dice stay, stale requests are refused', () => {
   const { data, match } = started(null, faces([0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 5, 5, 5]));
-  const first = act(data, 1, { action: 'throw', matchId: match.id, round: 1, rolls: 0, keep: [0, 1] });
-  assert.deepEqual(first.match.dice.slice(0, 2), match.game.dice[0].slice(0, 2));
-  assert.equal(first.match.rolls, 1);
-  assert.equal(act(data, 1, { action: 'throw', matchId: match.id, round: 1, rolls: 0, keep: [] }).ok, false, 'a repeated request is refused');
-  const second = act(data, 1, { action: 'throw', matchId: match.id, round: 1, rolls: 1, keep: [0, 1, 2] });
-  assert.equal(second.match.done, true, 'the last throw stands automatically');
-  assert.equal(act(data, 1, { action: 'throw', matchId: match.id, round: 1, rolls: 2, keep: [] }).ok, false);
+  const first = act(data, 1, { action: 'throw', matchId: match.id, round: 1, rolls: 1, keep: [0, 1] });
+  assert.equal(first.ok, false, 'a stale count of throws is refused');
+  const thrown = act(data, 1, { action: 'throw', matchId: match.id, round: 1, rolls: 0, keep: [0, 1] });
+  assert.deepEqual(thrown.match.dice.slice(0, 2), match.game.dice[0].slice(0, 2));
+  assert.equal(thrown.match.rolls, 1);
+  assert.equal(thrown.match.done, true, 'the only re-throw stands automatically');
+  assert.equal(act(data, 1, { action: 'throw', matchId: match.id, round: 1, rolls: 1, keep: [] }).ok, false);
   assert.equal(act(data, 3, { action: 'stand', matchId: match.id, round: 1, rolls: 0 }).ok, false);
 });
 
