@@ -14,6 +14,7 @@ assert ids and all(id in config for id in ids), 'Supply configured source locati
 for id in ids:
     city,name=config[id];keeper=world['towns'][city];source=base/f"teleporters/town/{keeper['npcId']}.xml"
     row=next(n for n in ET.parse(source).findall('.//teleport[@type="NORMAL"]/location') if n.get('name')==name)
+    assert not row.get('castleId'), f"{id}: source castleId={row.get('castleId')} requires destination siege validation; do not publish a partial NORMAL route"
     origin={'file':source.relative_to(base).as_posix(),'npcId':keeper['npcId'],'name':name,'type':'NORMAL','commit':world['source']['commit'],'sha256':hashlib.sha256(source.read_bytes()).hexdigest()}
     entries[id]={**{k:int(row.get(k)) for k in ['x','y','z']},'region':city,'teleportGold':int(row.get('feeCount')),'entrySource':origin,'entryRoutes':[{'npcId':keeper['npcId'],'npcName':keeper['name'],'type':'NORMAL','item':int(row.get('feeId','57')),'fee':int(row.get('feeCount')),'source':origin}]}
     x,y=entries[id]['x'],entries[id]['y']

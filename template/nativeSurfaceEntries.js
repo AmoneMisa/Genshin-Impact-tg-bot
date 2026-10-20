@@ -1019,5 +1019,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "tower-of-insolence": {
+    "x": 114649,
+    "y": 11115,
+    "z": -5120,
+    "region": "aden",
+    "teleportGold": 4200,
+    "entrySource": {
+      "file": "teleporters/town/30848.xml",
+      "npcId": 30848,
+      "name": "Tower of Insolence",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "3457ecb3855741d523d960755b9f2c8a1db3bba15d6d53dd2245d6c7a5f8ac24"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30848,
+        "npcName": "Elisa",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 4200,
+        "source": {
+          "file": "teleporters/town/30848.xml",
+          "npcId": 30848,
+          "name": "Tower of Insolence",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "3457ecb3855741d523d960755b9f2c8a1db3bba15d6d53dd2245d6c7a5f8ac24"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        109649,
+        6115
+      ],
+      [
+        119649,
+        6115
+      ],
+      [
+        119649,
+        16115
+      ],
+      [
+        109649,
+        16115
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
