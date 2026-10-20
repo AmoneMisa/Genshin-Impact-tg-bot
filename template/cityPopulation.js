@@ -1823,6 +1823,204 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/dion_castle_town.xml"
+  },
+  "oren": {
+    "polygon": [
+      [
+        84014,
+        52245
+      ],
+      [
+        84138,
+        54683
+      ],
+      [
+        84143,
+        55029
+      ],
+      [
+        84001,
+        57029
+      ],
+      [
+        81773,
+        57023
+      ],
+      [
+        81795,
+        56237
+      ],
+      [
+        81239,
+        56236
+      ],
+      [
+        81282,
+        56892
+      ],
+      [
+        81187,
+        56904
+      ],
+      [
+        81105,
+        57179
+      ],
+      [
+        79195,
+        57167
+      ],
+      [
+        78986,
+        57076
+      ],
+      [
+        78844,
+        55218
+      ],
+      [
+        78843,
+        54882
+      ],
+      [
+        79148,
+        54560
+      ],
+      [
+        79660,
+        54556
+      ],
+      [
+        79662,
+        53994
+      ],
+      [
+        79002,
+        53990
+      ],
+      [
+        78963,
+        53359
+      ],
+      [
+        78959,
+        53070
+      ],
+      [
+        79027,
+        52125
+      ],
+      [
+        79628,
+        52070
+      ],
+      [
+        80547,
+        52068
+      ],
+      [
+        80835,
+        52116
+      ],
+      [
+        80733,
+        53068
+      ],
+      [
+        81306,
+        53070
+      ],
+      [
+        81369,
+        52310
+      ],
+      [
+        82605,
+        52244
+      ],
+      [
+        84010,
+        52250
+      ]
+    ],
+    "minZ": -2250,
+    "maxZ": -1400,
+    "sourceZone": "Town of Oren",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 8960,
+    "arrivals": [
+      {
+        "x": 80304,
+        "y": 56241,
+        "z": -1500
+      },
+      {
+        "x": 80594,
+        "y": 55837,
+        "z": -1500
+      },
+      {
+        "x": 79933,
+        "y": 55752,
+        "z": -1500
+      },
+      {
+        "x": 80267,
+        "y": 55497,
+        "z": -1500
+      },
+      {
+        "x": 80334,
+        "y": 54400,
+        "z": -1500
+      },
+      {
+        "x": 82445,
+        "y": 56012,
+        "z": -1480
+      },
+      {
+        "x": 82323,
+        "y": 55466,
+        "z": -1480
+      },
+      {
+        "x": 82880,
+        "y": 55390,
+        "z": -1480
+      },
+      {
+        "x": 82638,
+        "y": 53885,
+        "z": -1440
+      },
+      {
+        "x": 82552,
+        "y": 53447,
+        "z": -1440
+      },
+      {
+        "x": 82213,
+        "y": 53964,
+        "z": -1440
+      },
+      {
+        "x": 80054,
+        "y": 53209,
+        "z": -1500
+      },
+      {
+        "x": 79706,
+        "y": 52986,
+        "z": -1500
+      },
+      {
+        "x": 82123,
+        "y": 53535,
+        "z": -1440
+      }
+    ],
+    "arrivalSource": "mapregion/oren_castle_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -1845,6 +2043,28 @@ export const CITY_NPC_UPDATES = {
     "z": -3464,
     "adapted": false,
     "source": "spawns/Others/22_22.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "oren:npc:0": {
+    "npcId": 30177,
+    "name": "Valentina",
+    "city": "oren",
+    "x": 82992,
+    "y": 53171,
+    "z": -1492,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  "oren:npc:1": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "oren",
+    "x": 81792,
+    "y": 55376,
+    "z": -1520,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml",
     "role": "Хранитель склада",
     "service": "warehouse"
   },
@@ -1957,6 +2177,16 @@ export const CITY_NPC_UPDATES = {
     "z": -3080,
     "adapted": false,
     "source": "spawns/Others/20_22.xml"
+  },
+  "oren:instance": {
+    "npcId": 30196,
+    "name": "Mouen",
+    "city": "oren",
+    "x": 81023,
+    "y": 56456,
+    "z": -1552,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
   },
   "talking-island-village:30001": {
     "npcId": 30001,
@@ -2534,6 +2764,16 @@ export const CITY_NPC_UPDATES = {
     "adapted": false,
     "source": "spawns/Gracia/GludioAirshipField.xml"
   },
+  "oren:gracia-survivor": {
+    "npcId": 32632,
+    "name": "Gracian Survivor",
+    "city": "oren",
+    "x": 82832,
+    "y": 53088,
+    "z": -1488,
+    "adapted": false,
+    "source": "spawns/Gracia/GludioAirshipField.xml"
+  },
   "giran:gracia-survivor": {
     "npcId": 32632,
     "name": "Gracian Survivor",
@@ -2723,6 +2963,62 @@ export const CITY_SOURCE_NPCS = [
     "x": 81066,
     "y": 150706,
     "z": -3512,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "oren:source:32207:83658:54421:-1512",
+    "npcId": 32207,
+    "name": "Orkurus",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 83658,
+    "y": 54421,
+    "z": -1512,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "oren:source:32208:83658:54506:-1512",
+    "npcId": 32208,
+    "name": "Rasha",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 83658,
+    "y": 54506,
+    "z": -1512,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "oren:source:32205:83680:54448:-1512",
+    "npcId": 32205,
+    "name": "Aetonic",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 83680,
+    "y": 54448,
+    "z": -1512,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "oren:source:32206:83680:54480:-1512",
+    "npcId": 32206,
+    "name": "Pieche",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 83680,
+    "y": 54480,
+    "z": -1512,
     "service": "trainer",
     "gateway": false,
     "adapted": false,
@@ -4365,6 +4661,454 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Others/21_19.xml"
+  },
+  {
+    "id": "oren:source:30178:79111:53657:-1548",
+    "npcId": 30178,
+    "name": "Zenkin",
+    "role": "Торговец",
+    "city": "oren",
+    "x": 79111,
+    "y": 53657,
+    "z": -1548,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30179:79112:53602:-1548",
+    "npcId": 30179,
+    "name": "Raudia",
+    "role": "Торговец",
+    "city": "oren",
+    "x": 79112,
+    "y": 53602,
+    "z": -1548,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30180:79451:54973:-1541",
+    "npcId": 30180,
+    "name": "Sara",
+    "role": "Торговец",
+    "city": "oren",
+    "x": 79451,
+    "y": 54973,
+    "z": -1541,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30181:79451:54877:-1542",
+    "npcId": 30181,
+    "name": "Galibredo",
+    "role": "Торговец",
+    "city": "oren",
+    "x": 79451,
+    "y": 54877,
+    "z": -1542,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30182:81318:54995:-1508",
+    "npcId": 30182,
+    "name": "Cliff",
+    "role": "Хранитель склада",
+    "city": "oren",
+    "x": 81318,
+    "y": 54995,
+    "z": -1508,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30183:81777:55123:-1506",
+    "npcId": 30183,
+    "name": "Hagger",
+    "role": "Хранитель склада",
+    "city": "oren",
+    "x": 81777,
+    "y": 55123,
+    "z": -1506,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30184:79077:56694:-1510",
+    "npcId": 30184,
+    "name": "Rigol",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 79077,
+    "y": 56694,
+    "z": -1510,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30185:79706:56914:-1510",
+    "npcId": 30185,
+    "name": "Taniac Blackbird",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 79706,
+    "y": 56914,
+    "z": -1510,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30186:79448:57053:-1510",
+    "npcId": 30186,
+    "name": "Bhan",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 79448,
+    "y": 57053,
+    "z": -1510,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30187:79183:56947:-1510",
+    "npcId": 30187,
+    "name": "Klaus Blackbird",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 79183,
+    "y": 56947,
+    "z": -1510,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30188:83469:53215:-1454",
+    "npcId": 30188,
+    "name": "Vadin",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 83469,
+    "y": 53215,
+    "z": -1454,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30189:83469:53398:-1454",
+    "npcId": 30189,
+    "name": "Rovia",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 83469,
+    "y": 53398,
+    "z": -1454,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30190:83785:53398:-1454",
+    "npcId": 30190,
+    "name": "Phanovia",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 83785,
+    "y": 53398,
+    "z": -1454,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30191:83634:52927:-1443",
+    "npcId": 30191,
+    "name": "Hollint",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 83634,
+    "y": 52927,
+    "z": -1443,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30192:83477:54912:-1509",
+    "npcId": 30192,
+    "name": "Darya",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 83477,
+    "y": 54912,
+    "z": -1509,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30194:82930:54911:-1509",
+    "npcId": 30194,
+    "name": "Gideon",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 82930,
+    "y": 54911,
+    "z": -1509,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30195:83201:55005:-1508",
+    "npcId": 30195,
+    "name": "Brecson",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 83201,
+    "y": 55005,
+    "z": -1508,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30676:81655:54736:-1504",
+    "npcId": 30676,
+    "name": "Croop",
+    "role": "Хранитель склада",
+    "city": "oren",
+    "x": 81655,
+    "y": 54736,
+    "z": -1504,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30677:83741:55410:-1508",
+    "npcId": 30677,
+    "name": "Flutter",
+    "role": "Кузнец",
+    "city": "oren",
+    "x": 83741,
+    "y": 55410,
+    "z": -1508,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30678:83684:55631:-1509",
+    "npcId": 30678,
+    "name": "Helton",
+    "role": "Кузнец",
+    "city": "oren",
+    "x": 83684,
+    "y": 55631,
+    "z": -1509,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30679:79213:56423:-1510",
+    "npcId": 30679,
+    "name": "Roameria",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 79213,
+    "y": 56423,
+    "z": -1510,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30680:83785:53215:-1454",
+    "npcId": 30680,
+    "name": "Egnos",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 83785,
+    "y": 53215,
+    "z": -1454,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30681:83760:56096:-1523",
+    "npcId": 30681,
+    "name": "Karia",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 83760,
+    "y": 56096,
+    "z": -1523,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30682:83712:56000:-1523",
+    "npcId": 30682,
+    "name": "Pekiron",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 83712,
+    "y": 56000,
+    "z": -1523,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:30683:83676:56144:-1520",
+    "npcId": 30683,
+    "name": "Daunt",
+    "role": "Наставник",
+    "city": "oren",
+    "x": 83676,
+    "y": 56144,
+    "z": -1520,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:31422:83568:53856:-1455",
+    "npcId": 31422,
+    "name": "Migel",
+    "role": "Торговец",
+    "city": "oren",
+    "x": 83568,
+    "y": 53856,
+    "z": -1455,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:31430:83759:56143:-1523",
+    "npcId": 31430,
+    "name": "Donai",
+    "role": "Торговец",
+    "city": "oren",
+    "x": 83759,
+    "y": 56143,
+    "z": -1523,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:31437:83616:55392:-1510",
+    "npcId": 31437,
+    "name": "Luka",
+    "role": "Торговец",
+    "city": "oren",
+    "x": 83616,
+    "y": 55392,
+    "z": -1510,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:31444:83568:55696:-1510",
+    "npcId": 31444,
+    "name": "Cona",
+    "role": "Торговец",
+    "city": "oren",
+    "x": 83568,
+    "y": 55696,
+    "z": -1510,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:32879:83754:55548:-1512",
+    "npcId": 32879,
+    "name": "Drawin",
+    "role": "Торговец",
+    "city": "oren",
+    "x": 83754,
+    "y": 55548,
+    "z": -1512,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:35229:80091:53464:-1558",
+    "npcId": 35229,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "oren",
+    "x": 80091,
+    "y": 53464,
+    "z": -1558,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
+  },
+  {
+    "id": "oren:source:35229:82682:55280:-1523",
+    "npcId": 35229,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "oren",
+    "x": 82682,
+    "y": 55280,
+    "z": -1523,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/22_19.xml"
   },
   {
     "id": "giran:source:30081:80518:147922:-3506",
