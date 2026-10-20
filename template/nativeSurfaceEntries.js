@@ -1121,5 +1121,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "forge-of-the-gods": {
+    "x": 169018,
+    "y": -116303,
+    "z": -2432,
+    "region": "goddard",
+    "teleportGold": 10000,
+    "entrySource": {
+      "file": "teleporters/town/31275.xml",
+      "npcId": 31275,
+      "name": "Entrance to the Forge of the Gods",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "812a374e2a26cd653f9139c2e5835d84f486d585d40b80045e4a6980f413a8d2"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 31275,
+        "npcName": "Tatiana",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 10000,
+        "source": {
+          "file": "teleporters/town/31275.xml",
+          "npcId": 31275,
+          "name": "Entrance to the Forge of the Gods",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "812a374e2a26cd653f9139c2e5835d84f486d585d40b80045e4a6980f413a8d2"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        164018,
+        -121303
+      ],
+      [
+        174018,
+        -121303
+      ],
+      [
+        174018,
+        -111303
+      ],
+      [
+        164018,
+        -111303
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };

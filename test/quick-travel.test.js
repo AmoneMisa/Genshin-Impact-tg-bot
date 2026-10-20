@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {quickTravel,quickTravelPrice,quickTravelBlock,worldState,CITIES,LOCATIONS,ensureWorld} from '../functions/game/world/world.js';
+import {quickTravel,quickTravelPrice,quickTravelBlock,quickCityGold,worldState,CITIES,LOCATIONS,ensureWorld} from '../functions/game/world/world.js';
 import holdings from '../template/worldHoldings.js';
 import changeClass from '../functions/game/player/changePlayerGameClass.js';import updateStats from '../functions/game/player/updatePlayerStats.js';
 const NOW=Date.now();
@@ -16,8 +16,9 @@ test('quick hunting travel resets the previous field and charges only after succ
  const h=hero(),location=LOCATIONS.find(l=>!l.instance&&l.id==='elven-fields'),gold=h.game.inventory.gold;
  assert.ok(location);assert.equal(quickTravel(h,{location:location.id},NOW).ok,true);
  assert.equal(h.game.world.location,location.id);assert.ok(h.game.hunt.field);assert.equal(h.game.inventory.gold,gold-quickTravelPrice(location));
- const town=CITIES.find(c=>c.id!==h.game.world.city);for(const m of h.game.hunt.field.mobs){m.aggro=false;}
- assert.equal(quickTravel(h,{city:town.id},NOW).ok,true);assert.equal(h.game.hunt.field,null);
+ for(const m of h.game.hunt.field.mobs){m.aggro=false;}
+ const town=CITIES.find(c=>c.id!==h.game.world.city&&quickCityGold(h,c,NOW)!==null);assert.ok(town,'use an original route from the source village');
+ const returned=quickTravel(h,{city:town.id},NOW);assert.equal(returned.ok,true,returned.reason);assert.equal(h.game.hunt.field,null);
 });
 test('dead, combat and siege restrictions cannot be bypassed and never charge',()=>{
  const checks=[h=>h.game.gameClass.stats.hp=0,h=>h.game.stats.inFightTimer=NOW+10000,h=>h.game.world.mode='siege',h=>h.game.world.mode='stronghold',h=>h.game.hunt={field:{mobs:[{aggro:true,currentHp:100}]}}];
