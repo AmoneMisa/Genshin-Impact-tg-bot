@@ -3211,6 +3211,101 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/town_of_schuttgart.xml"
+  },
+  "floran": {
+    "polygon": [
+      [
+        16529,
+        170516
+      ],
+      [
+        16645,
+        170141
+      ],
+      [
+        16747,
+        169833
+      ],
+      [
+        16770,
+        169677
+      ],
+      [
+        16822,
+        169464
+      ],
+      [
+        16858,
+        169431
+      ],
+      [
+        17457,
+        169398
+      ],
+      [
+        17939,
+        169475
+      ],
+      [
+        18109,
+        169528
+      ],
+      [
+        18435,
+        169666
+      ],
+      [
+        18628,
+        169781
+      ],
+      [
+        18641,
+        169828
+      ],
+      [
+        18531,
+        170204
+      ],
+      [
+        18473,
+        170530
+      ],
+      [
+        18452,
+        170686
+      ],
+      [
+        18394,
+        170900
+      ],
+      [
+        18361,
+        170937
+      ],
+      [
+        17771,
+        170962
+      ],
+      [
+        17220,
+        170888
+      ],
+      [
+        16897,
+        170757
+      ],
+      [
+        16543,
+        170561
+      ]
+    ],
+    "minZ": -3600,
+    "maxZ": -3400,
+    "sourceZone": "Floran Village",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 4096,
+    "arrivals": [],
+    "arrivalSource": "mapregion/floran_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -3553,6 +3648,42 @@ export const CITY_NPC_UPDATES = {
     "z": -800,
     "adapted": false,
     "source": "spawns/Others/21_16.xml"
+  },
+  "floran:30078": {
+    "npcId": 30078,
+    "name": "Pano",
+    "city": "floran",
+    "x": 16970,
+    "y": 170391,
+    "z": -3496,
+    "adapted": false,
+    "source": "spawns/Others/20_23.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "floran:30079": {
+    "npcId": 30079,
+    "name": "Barder",
+    "city": "floran",
+    "x": 17836,
+    "y": 169853,
+    "z": -3494,
+    "adapted": false,
+    "source": "spawns/Others/20_23.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "floran:31773": {
+    "npcId": 31773,
+    "name": "Sonin",
+    "city": "floran",
+    "x": 17788,
+    "y": 169842,
+    "z": -3496,
+    "adapted": false,
+    "source": "spawns/Others/20_23.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
   },
   "hunters:30230": {
     "npcId": 30230,
