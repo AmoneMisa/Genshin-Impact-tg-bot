@@ -44,7 +44,7 @@ export function nativeTravel(session,target,now,speed){
   if(w.city!==to.city)return {ok:false,reason:'location_path_required'};
   const point=outdoorPoint(session),town=nativeWorld.towns[w.city];
   if(!point||!town)return {ok:false,reason:'geodata_missing'};
-  const prefix=findNativePath({...point,z:Number.isFinite(w.z)?w.z:town.z},to.from,{allowed:nativeGroundAllowed,maxNodes:3000,stride:2,reversible:true});
+  const prefix=findNativePath({...point,z:Number.isFinite(w.z)?w.z:town.z},to.from,{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true,heuristicWeight:2});
   if(!prefix.ok)return prefix;
   start=prefix.start;path=[...prefix.path,...to.path];
  }else if(w.mode==='location'&&from?.returnPath&&(to?.city===from.city||arrivalCity===from.city)){

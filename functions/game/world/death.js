@@ -6,6 +6,7 @@ import getMaxHp from '../player/getters/getMaxHp.js';
 import getMaxMp from '../player/getters/getMaxMp.js';
 import getMaxCp from '../player/getters/getMaxCp.js';
 import {CITIES} from '../../../template/worldMap.js';
+import {ensureCityOrigin} from './cityNavigation.js';
 
 export function markWorldDeath(session,now=Date.now()){
  const w=session.game.world;if(!w||session.game.gameClass?.stats?.hp>0)return;
@@ -32,6 +33,8 @@ export function respawnWorld(session,destination,clan,records=[],now=Date.now())
  const spawnY=h?(h.kind==='hall'?0.9:0.95):0.5;
  Object.assign(w,{mode:h?(h.kind==='hall'?'hall':'stronghold'):'city',city:h?.region||w.city,location:null,holding:h?.id||null,instanceId:null,x:.5,y:spawnY,path:[],moveAt:now,pending:null,channel:null,readyHolding:null});
  delete w.death;delete w.died;delete w.walkHome;delete w.holdingReturn;delete w.entryOrigin;
+ delete w.cityWalk;delete w.nativePosition;delete w.z;
+ if(!h)ensureCityOrigin(w,CITIES.find(c=>c.id===w.city));
  if(session.game.hunt){session.game.hunt.field=null;session.game.hunt.mob=null;session.game.hunt.playerDebuffs=[];}
  if(destination==='city')restoreRevivalVitals(session,{town:true});
  else {stats.hp=Math.max(1,Math.floor(getMaxHp(session)*.5));stats.mp=Math.max(0,Math.floor(getMaxMp(session)*.5));stats.cp=Math.max(0,Math.floor(getMaxCp(session)*.5));}

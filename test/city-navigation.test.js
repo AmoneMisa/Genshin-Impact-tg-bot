@@ -5,13 +5,41 @@ import source from '../template/nativeWorld.js';
 import {worldGeodata} from '../functions/game/world/l2jGeodata.js';
 import {nativeStep,nativeSegment} from '../functions/game/world/nativeNavigation.js';
 import {nativeGroundAllowed} from '../functions/game/world/nativeGround.js';
-import {findCityPath,advanceCityPath,cityNavigationStatus} from '../functions/game/world/cityNavigation.js';
-import {worldAction,worldState} from '../functions/game/world/world.js';
+import {findCityPath,advanceCityPath,cityNavigationStatus,ensureCityOrigin} from '../functions/game/world/cityNavigation.js';
+import {worldAction,worldState,advanceWorld,ensureWorld} from '../functions/game/world/world.js';
+import {CITY_GEOMETRY,CITY_SOURCE_NPCS} from '../template/cityPopulation.js';
 import change from '../functions/game/player/changePlayerGameClass.js';
 import update from '../functions/game/player/updatePlayerStats.js';
 import {atlasHtml} from '../webapp/atlas-ui.js';
 const NOW=1800000000000,size=c=>c.size||14000,local=(c,p)=>({x:.5+(p.x-c.x)/size(c),y:.5+(p.y-c.y)/size(c),z:p.z});
 const giran=CITIES.find(c=>c.id==='giran');
+test('all towns have reachable original residents and source volumes preserve correct NPC city membership',()=>{
+ assert.equal(Object.keys(CITY_GEOMETRY).length,19);
+ assert.equal(new Set(CITY_SOURCE_NPCS.map(n=>[n.npcId,n.x,n.y,n.z].join(':'))).size,CITY_SOURCE_NPCS.length);
+ assert.equal(CITY_NPCS.find(n=>n.name==='Ranspo').city,'dion');
+ assert.ok(CITY_NPCS.some(n=>n.city==='giran'&&n.name==='Galladucci'&&n.npcId===30097));
+ for(const city of CITIES){
+  const s={userId:1,game:{stats:{lvl:85},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:city.id,x:.5,y:.5,path:[],moveAt:NOW,locks:{}}}};
+  change(s,'humanFighter');update(s);ensureWorld(s,NOW);
+  const w=s.game.world,origin={x:city.x+(w.x-.5)*size(city),y:city.y+(w.y-.5)*size(city)};
+  const residents=CITY_NPCS.filter(n=>n.city===city.id&&Number.isFinite(n.z)).sort((a,b)=>Math.hypot(a.x-origin.x,a.y-origin.y)-Math.hypot(b.x-origin.x,b.y-origin.y));
+  assert.ok(residents.length,city.id+' residents');
+  const reachable=residents.slice(0,12).find(n=>worldAction(s,{action:'approach_npc',npc:n.id},NOW).ok);
+  assert.ok(reachable,city.id+' reachable local NPC');advanceWorld(s,NOW+1000000);
+  const p=local(city,reachable);assert.ok(Math.hypot(w.x-p.x,w.y-p.y)*size(city)<=180,city.id+' original NPC arrival');
+  assert.equal(s.game.inventory.gold,1000000);
+  assert.ok(worldState(s,NOW+1000000).cities.every(c=>!('arrivals' in c)),'source arrival lists stay on the server');
+ }
+});
+test('old unspecified town centres use an original arrival once while saved positions and active paths are retained',()=>{
+ for(const city of CITIES.filter(c=>c.arrivals?.length)){
+  const actor={mode:'city',x:.5,y:.5,path:[]};ensureCityOrigin(actor,city);
+  const point={x:city.x+(actor.x-.5)*size(city),y:city.y+(actor.y-.5)*size(city)};
+  assert.ok(city.arrivals.some(p=>Math.hypot(p.x-point.x,p.y-point.y)<1e-6),city.id+' original arrival');
+  const saved=structuredClone(actor);ensureCityOrigin(actor,city);assert.deepEqual(actor,saved);
+  const walking={mode:'city',x:.5,y:.5,path:[{x:.6,y:.5}]};ensureCityOrigin(walking,city);assert.equal(walking.x,.5);assert.equal(walking.z,undefined);
+ }
+});
 test('every catalogue town has original ground data and accepts a verified local ground step',()=>{
  for(const city of CITIES){
   assert.ok(cityNavigationStatus(city),city.id);

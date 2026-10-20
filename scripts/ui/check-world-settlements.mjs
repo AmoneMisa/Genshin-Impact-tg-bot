@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
-import {worldState,worldAction,advanceWorld} from '../../functions/game/world/world.js';
+import {worldState,worldAction,advanceWorld,CITIES} from '../../functions/game/world/world.js';
 import {SETTLEMENTS,SETTLEMENT_NPCS} from '../../template/worldSettlements.js';
 import holdings from '../../template/worldHoldings.js';
 import {arriveHoldingEntrance} from '../../functions/game/world/holdingEntry.js';
@@ -42,8 +42,8 @@ try{for(const width of [320,390,1100]){
   assert.equal(await page.locator('.atlas-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  }
  await page.waitForTimeout(200);assert.ok([...loaded].some(u=>/\/l2\/.*\.webp/.test(u)));
- const city=SETTLEMENTS.find(c=>c.id==='kamael-village'),npc=SETTLEMENT_NPCS.find(n=>n.city===city.id),box=await page.locator('canvas').boundingBox();
- await page.locator('canvas').click({position:{x:box.width/2+(npc.x-city.x)*box.width/city.size,y:box.height/2+(npc.y-city.y)*box.width/city.size}});
+ const city=CITIES.find(c=>c.id==='kamael-village'),npc=SETTLEMENT_NPCS.find(n=>n.city===city.id),box=await page.locator('canvas').boundingBox();
+ await page.locator('canvas').click({position:{x:box.width/2+(npc.x-city.x)*box.width/(city.mapSize||city.size),y:box.height/2+(npc.y-city.y)*box.width/(city.mapSize||city.size)}});
  if(await page.locator('[data-group]').count())await page.locator('[data-group]').first().click();
  assert.equal(await page.locator('[data-approach]').count(),1);await page.keyboard.press('Escape');
  assert.equal(await page.locator('.atlas-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);

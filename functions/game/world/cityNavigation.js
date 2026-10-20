@@ -8,8 +8,18 @@ import {createNativeJourney,advanceNativeJourney} from './nativeJourney.js';
 const size=city=>city.size||14000;
 const world=(city,p,z)=>({x:city.x+(p.x-.5)*size(city),y:city.y+(p.y-.5)*size(city),z});
 const local=(city,p)=>({x:.5+(p.x-city.x)/size(city),y:.5+(p.y-city.y)/size(city),z:p.z});
+/** Replace only the old unspecified centre spawn; never relocate a saved physical position. */
+export function ensureCityOrigin(actor,city){
+ if(!city||actor.mode!=='city'||Number.isFinite(actor.z)||actor.x!==.5||actor.y!==.5||actor.path?.length||actor.pending)return;
+ const gate=nativeWorld.towns[city.id];
+ const score=p=>gate?Math.hypot(p.x-gate.x,p.y-gate.y,p.z-gate.z):0;
+ for(const source of [...(city.arrivals||[])].sort((a,b)=>score(a)-score(b))){
+  const point=worldGeodata.point(source);
+  if(point?.nswe&&nativeGroundAllowed(point)){Object.assign(actor,local(city,point));return;}
+ }
+}
 function sourceHeight(city){
- return nativeWorld.towns[city.id]?.z??city.z??CITY_NPCS.find(n=>n.city===city.id&&Number.isFinite(n.z))?.z;
+ return city.z??nativeWorld.towns[city.id]?.z??CITY_NPCS.find(n=>n.city===city.id&&Number.isFinite(n.z))?.z;
 }
 /** Map tiles, NPCs and collisions share original world coordinates; no artwork-derived walls. */
 export function findCityPath(actor,city,target){

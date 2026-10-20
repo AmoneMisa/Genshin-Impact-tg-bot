@@ -1,4 +1,6 @@
 export default {
+ 'Наставник':'Ustoz',
+ 'Проводник':'Yo‘l boshlovchi',
  'Телепорт недоступен':'Teleport mavjud emas',
  'Местность':'Atrof',
  'Выберите место на карте, чтобы идти дальше.':'Yo‘lni davom ettirish uchun xaritadan joy tanlang.',
