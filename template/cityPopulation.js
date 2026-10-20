@@ -422,6 +422,256 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/darkelf_town.xml"
+  },
+  "talking-island-village": {
+    "polygon": [
+      [
+        -83739,
+        245733
+      ],
+      [
+        -84049,
+        246087
+      ],
+      [
+        -84289,
+        246258
+      ],
+      [
+        -84556,
+        246243
+      ],
+      [
+        -84984,
+        245820
+      ],
+      [
+        -85336,
+        245426
+      ],
+      [
+        -85684,
+        245099
+      ],
+      [
+        -85969,
+        244770
+      ],
+      [
+        -86400,
+        244292
+      ],
+      [
+        -86664,
+        243997
+      ],
+      [
+        -86940,
+        243631
+      ],
+      [
+        -87517,
+        243034
+      ],
+      [
+        -87650,
+        242799
+      ],
+      [
+        -87613,
+        242572
+      ],
+      [
+        -87348,
+        242246
+      ],
+      [
+        -86956,
+        241942
+      ],
+      [
+        -86656,
+        241684
+      ],
+      [
+        -86343,
+        241365
+      ],
+      [
+        -85829,
+        240966
+      ],
+      [
+        -85544,
+        240765
+      ],
+      [
+        -85193,
+        240440
+      ],
+      [
+        -84865,
+        240185
+      ],
+      [
+        -84594,
+        239866
+      ],
+      [
+        -84284,
+        239666
+      ],
+      [
+        -84002,
+        239734
+      ],
+      [
+        -83822,
+        239922
+      ],
+      [
+        -83640,
+        240190
+      ],
+      [
+        -83295,
+        240492
+      ],
+      [
+        -82990,
+        240878
+      ],
+      [
+        -82635,
+        241208
+      ],
+      [
+        -82234,
+        241698
+      ],
+      [
+        -82027,
+        241985
+      ],
+      [
+        -81684,
+        242328
+      ],
+      [
+        -81421,
+        242741
+      ],
+      [
+        -81113,
+        243073
+      ],
+      [
+        -81011,
+        243228
+      ],
+      [
+        -81029,
+        243496
+      ],
+      [
+        -81340,
+        243797
+      ],
+      [
+        -81691,
+        244028
+      ],
+      [
+        -82292,
+        244585
+      ],
+      [
+        -82787,
+        244999
+      ],
+      [
+        -83726,
+        245721
+      ]
+    ],
+    "minZ": -3800,
+    "maxZ": -3700,
+    "sourceZone": "Talking Island",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 11008,
+    "arrivals": [
+      {
+        "x": -83990,
+        "y": 243336,
+        "z": -3700
+      },
+      {
+        "x": -83964,
+        "y": 242680,
+        "z": -3700
+      },
+      {
+        "x": -84512,
+        "y": 242679,
+        "z": -3700
+      },
+      {
+        "x": -84623,
+        "y": 243193,
+        "z": -3700
+      },
+      {
+        "x": -83742,
+        "y": 242214,
+        "z": -3700
+      },
+      {
+        "x": -83537,
+        "y": 242537,
+        "z": -3700
+      },
+      {
+        "x": -83700,
+        "y": 242896,
+        "z": -3700
+      },
+      {
+        "x": -83646,
+        "y": 243397,
+        "z": -3700
+      },
+      {
+        "x": -83808,
+        "y": 243637,
+        "z": -3700
+      },
+      {
+        "x": -84903,
+        "y": 243489,
+        "z": -3700
+      },
+      {
+        "x": -84852,
+        "y": 243174,
+        "z": -3700
+      },
+      {
+        "x": -84892,
+        "y": 242479,
+        "z": -3700
+      },
+      {
+        "x": -84756,
+        "y": 242155,
+        "z": -3700
+      },
+      {
+        "x": -83761,
+        "y": 243620,
+        "z": -3700
+      }
+    ],
+    "arrivalSource": "mapregion/talking_island_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -458,6 +708,136 @@ export const CITY_NPC_UPDATES = {
     "source": "spawns/Others/22_22.xml",
     "role": "Наставник",
     "service": "trainer"
+  },
+  "talking-island-village:30001": {
+    "npcId": 30001,
+    "name": "Lector",
+    "city": "talking-island-village",
+    "x": -86385,
+    "y": 243267,
+    "z": -3717,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "talking-island-village:30002": {
+    "npcId": 30002,
+    "name": "Jackson",
+    "city": "talking-island-village",
+    "x": -86733,
+    "y": 242918,
+    "z": -3720,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "talking-island-village:30003": {
+    "npcId": 30003,
+    "name": "Silvia",
+    "city": "talking-island-village",
+    "x": -83789,
+    "y": 240799,
+    "z": -3717,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "talking-island-village:30004": {
+    "npcId": 30004,
+    "name": "Katerina",
+    "city": "talking-island-village",
+    "x": -84204,
+    "y": 240403,
+    "z": -3720,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "talking-island-village:30005": {
+    "npcId": 30005,
+    "name": "Wilford",
+    "city": "talking-island-village",
+    "x": -81512,
+    "y": 243424,
+    "z": -3712,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "talking-island-village:30006": {
+    "npcId": 30006,
+    "name": "Roxxy",
+    "city": "talking-island-village",
+    "x": -84108,
+    "y": 244604,
+    "z": -3728,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml"
+  },
+  "talking-island-village:30054": {
+    "npcId": 30054,
+    "name": "Rant",
+    "city": "talking-island-village",
+    "x": -81895,
+    "y": 243917,
+    "z": -3712,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "talking-island-village:30055": {
+    "npcId": 30055,
+    "name": "Rolfe",
+    "city": "talking-island-village",
+    "x": -81840,
+    "y": 243534,
+    "z": -3712,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "talking-island-village:31413": {
+    "npcId": 31413,
+    "name": "Antonio",
+    "city": "talking-island-village",
+    "x": -85312,
+    "y": 244752,
+    "z": -3725,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml",
+    "role": "Торговец",
+    "service": "merchant"
+  },
+  "talking-island-village:32478": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "talking-island-village",
+    "x": -81920,
+    "y": 243360,
+    "z": -3728,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
+  "talking-island-village:35103": {
+    "npcId": 35103,
+    "name": "Manor Manager",
+    "city": "talking-island-village",
+    "x": -83536,
+    "y": 243280,
+    "z": -3728,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml",
+    "role": "Торговец",
+    "service": "merchant"
   },
   "dark-elven-village:30134": {
     "npcId": 30134,
@@ -644,6 +1024,132 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "talking-island-village:source:30026:-83326:242964:-3720",
+    "npcId": 30026,
+    "name": "Bitz",
+    "role": "Наставник",
+    "city": "talking-island-village",
+    "x": -83326,
+    "y": 242964,
+    "z": -3720,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml"
+  },
+  {
+    "id": "talking-island-village:source:30027:-83020:242553:-3720",
+    "npcId": 30027,
+    "name": "Gwinter",
+    "role": "Наставник",
+    "city": "talking-island-village",
+    "x": -83020,
+    "y": 242553,
+    "z": -3720,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml"
+  },
+  {
+    "id": "talking-island-village:source:30028:-82809:242751:-3720",
+    "npcId": 30028,
+    "name": "Pintage",
+    "role": "Наставник",
+    "city": "talking-island-village",
+    "x": -82809,
+    "y": 242751,
+    "z": -3720,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml"
+  },
+  {
+    "id": "talking-island-village:source:30029:-83175:243065:-3720",
+    "npcId": 30029,
+    "name": "Minia",
+    "role": "Наставник",
+    "city": "talking-island-village",
+    "x": -83175,
+    "y": 243065,
+    "z": -3720,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml"
+  },
+  {
+    "id": "talking-island-village:source:30031:-84516:245449:-3712",
+    "npcId": 30031,
+    "name": "Biotin",
+    "role": "Наставник",
+    "city": "talking-island-village",
+    "x": -84516,
+    "y": 245449,
+    "z": -3712,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml"
+  },
+  {
+    "id": "talking-island-village:source:30032:-84981:244764:-3720",
+    "npcId": 30032,
+    "name": "Yohanes",
+    "role": "Наставник",
+    "city": "talking-island-village",
+    "x": -84981,
+    "y": 244764,
+    "z": -3720,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml"
+  },
+  {
+    "id": "talking-island-village:source:30033:-84729:245001:-3720",
+    "npcId": 30033,
+    "name": "Baulro",
+    "role": "Наставник",
+    "city": "talking-island-village",
+    "x": -84729,
+    "y": 245001,
+    "z": -3720,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml"
+  },
+  {
+    "id": "talking-island-village:source:30035:-84965:245222:-3720",
+    "npcId": 30035,
+    "name": "Harrys",
+    "role": "Наставник",
+    "city": "talking-island-village",
+    "x": -84965,
+    "y": 245222,
+    "z": -3720,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml"
+  },
+  {
+    "id": "talking-island-village:source:30036:-85186:245001:-3720",
+    "npcId": 30036,
+    "name": "Petron",
+    "role": "Наставник",
+    "city": "talking-island-village",
+    "x": -85186,
+    "y": 245001,
+    "z": -3720,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/17_25.xml"
   },
   {
     "id": "dark-elven-village:source:30143:11283:14226:-4240",
