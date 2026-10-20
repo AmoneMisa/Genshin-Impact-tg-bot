@@ -2707,6 +2707,319 @@ export const CITY_GEOMETRY = {
       }
     ],
     "arrivalSource": "mapregion/rune_town.xml"
+  },
+  "heine": {
+    "polygon": [
+      [
+        111391,
+        216329
+      ],
+      [
+        106872,
+        216579
+      ],
+      [
+        106693,
+        217371
+      ],
+      [
+        106612,
+        217923
+      ],
+      [
+        106612,
+        218409
+      ],
+      [
+        106435,
+        221617
+      ],
+      [
+        106435,
+        222250
+      ],
+      [
+        106563,
+        222851
+      ],
+      [
+        108183,
+        223150
+      ],
+      [
+        108916,
+        223150
+      ],
+      [
+        110264,
+        222975
+      ],
+      [
+        110253,
+        223651
+      ],
+      [
+        110185,
+        223669
+      ],
+      [
+        110095,
+        223756
+      ],
+      [
+        110056,
+        223864
+      ],
+      [
+        109790,
+        223883
+      ],
+      [
+        109703,
+        223966
+      ],
+      [
+        109705,
+        224197
+      ],
+      [
+        109882,
+        224363
+      ],
+      [
+        109884,
+        225522
+      ],
+      [
+        110764,
+        225507
+      ],
+      [
+        110767,
+        225985
+      ],
+      [
+        112002,
+        225992
+      ],
+      [
+        112005,
+        225510
+      ],
+      [
+        112891,
+        225520
+      ],
+      [
+        112886,
+        224389
+      ],
+      [
+        113068,
+        224198
+      ],
+      [
+        113072,
+        223967
+      ],
+      [
+        112983,
+        223887
+      ],
+      [
+        112704,
+        223864
+      ],
+      [
+        112676,
+        223758
+      ],
+      [
+        112592,
+        223669
+      ],
+      [
+        112520,
+        223654
+      ],
+      [
+        112506,
+        222975
+      ],
+      [
+        113745,
+        223440
+      ],
+      [
+        115249,
+        223440
+      ],
+      [
+        115249,
+        223653
+      ],
+      [
+        115356,
+        223653
+      ],
+      [
+        115356,
+        223322
+      ],
+      [
+        115392,
+        222838
+      ],
+      [
+        115393,
+        221433
+      ],
+      [
+        115980,
+        220372
+      ],
+      [
+        116055,
+        219529
+      ],
+      [
+        116055,
+        219029
+      ],
+      [
+        116220,
+        218649
+      ],
+      [
+        116219,
+        218388
+      ],
+      [
+        116041,
+        218380
+      ],
+      [
+        116043,
+        217586
+      ],
+      [
+        115310,
+        217610
+      ],
+      [
+        114755,
+        217086
+      ],
+      [
+        114434,
+        217051
+      ],
+      [
+        114417,
+        216838
+      ],
+      [
+        114182,
+        216838
+      ],
+      [
+        114161,
+        216957
+      ],
+      [
+        113280,
+        216962
+      ],
+      [
+        111885,
+        216801
+      ],
+      [
+        111808,
+        216566
+      ],
+      [
+        111631,
+        216386
+      ],
+      [
+        111393,
+        216322
+      ]
+    ],
+    "minZ": -3800,
+    "maxZ": -3400,
+    "sourceZone": "Heine",
+    "boundarySource": "zones/custom_town.xml",
+    "mapSize": 14000,
+    "arrivals": [
+      {
+        "x": 107568,
+        "y": 218256,
+        "z": -3624
+      },
+      {
+        "x": 107920,
+        "y": 218240,
+        "z": -3624
+      },
+      {
+        "x": 107808,
+        "y": 217856,
+        "z": -3624
+      },
+      {
+        "x": 108032,
+        "y": 218048,
+        "z": -3624
+      },
+      {
+        "x": 107552,
+        "y": 218000,
+        "z": -3624
+      },
+      {
+        "x": 110912,
+        "y": 219584,
+        "z": -3624
+      },
+      {
+        "x": 110768,
+        "y": 219824,
+        "z": -3624
+      },
+      {
+        "x": 110688,
+        "y": 220576,
+        "z": -3624
+      },
+      {
+        "x": 110896,
+        "y": 220768,
+        "z": -3624
+      },
+      {
+        "x": 111856,
+        "y": 220752,
+        "z": -3624
+      },
+      {
+        "x": 112112,
+        "y": 220576,
+        "z": -3624
+      },
+      {
+        "x": 112064,
+        "y": 219792,
+        "z": -3624
+      },
+      {
+        "x": 111888,
+        "y": 219584,
+        "z": -3624
+      }
+    ],
+    "arrivalSource": "mapregion/heiness_town.xml"
   }
 };
 export const CITY_NPC_UPDATES = {
@@ -2886,6 +3199,28 @@ export const CITY_NPC_UPDATES = {
     "role": "Хранитель склада",
     "service": "warehouse"
   },
+  "heine:npc:0": {
+    "npcId": 30899,
+    "name": "Flauen",
+    "city": "heine",
+    "x": 111386,
+    "y": 219413,
+    "z": -3536,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  "heine:npc:1": {
+    "npcId": 32478,
+    "name": "Dimensional Merchant",
+    "city": "heine",
+    "x": 109952,
+    "y": 220608,
+    "z": -3472,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml",
+    "role": "Хранитель склада",
+    "service": "warehouse"
+  },
   "aden:Ferris": {
     "npcId": 30847,
     "name": "Ferris",
@@ -2965,6 +3300,16 @@ export const CITY_NPC_UPDATES = {
     "z": -3080,
     "adapted": false,
     "source": "spawns/Others/20_22.xml"
+  },
+  "heine:instance": {
+    "npcId": 30916,
+    "name": "Gosta",
+    "city": "heine",
+    "x": 108384,
+    "y": 221563,
+    "z": -3592,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
   },
   "oren:instance": {
     "npcId": 30196,
@@ -3746,6 +4091,16 @@ export const CITY_NPC_UPDATES = {
     "adapted": false,
     "source": "spawns/Gracia/GludioAirshipField.xml"
   },
+  "heine:gracia-survivor": {
+    "npcId": 32632,
+    "name": "Gracian Survivor",
+    "city": "heine",
+    "x": 111129,
+    "y": 219189,
+    "z": -3536,
+    "adapted": false,
+    "source": "spawns/Gracia/GludioAirshipField.xml"
+  },
   "aden:gracia-survivor": {
     "npcId": 32632,
     "name": "Gracian Survivor",
@@ -4183,6 +4538,62 @@ export const CITY_SOURCE_NPCS = [
     "x": 83680,
     "y": 54480,
     "z": -1512,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "heine:source:32211:113343:218497:-3615",
+    "npcId": 32211,
+    "name": "Jueno",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 113343,
+    "y": 218497,
+    "z": -3615,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "heine:source:32209:113367:218528:-3615",
+    "npcId": 32209,
+    "name": "Ferdinand",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 113367,
+    "y": 218528,
+    "z": -3615,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "heine:source:32210:113407:218530:-3615",
+    "npcId": 32210,
+    "name": "Eddy",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 113407,
+    "y": 218530,
+    "z": -3615,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Kamael/KamaelGuild.xml"
+  },
+  {
+    "id": "heine:source:32212:113434:218498:-3615",
+    "npcId": 32212,
+    "name": "Rishtar",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 113434,
+    "y": 218498,
+    "z": -3615,
     "service": "trainer",
     "gateway": false,
     "adapted": false,
@@ -8009,6 +8420,454 @@ export const CITY_SOURCE_NPCS = [
     "gateway": false,
     "adapted": false,
     "source": "spawns/Others/23_20.xml"
+  },
+  {
+    "id": "heine:source:30890:115799:217684:-3580",
+    "npcId": 30890,
+    "name": "Espen",
+    "role": "Торговец",
+    "city": "heine",
+    "x": 115799,
+    "y": 217684,
+    "z": -3580,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30891:115957:217807:-3582",
+    "npcId": 30891,
+    "name": "Verona",
+    "role": "Торговец",
+    "city": "heine",
+    "x": 115957,
+    "y": 217807,
+    "z": -3582,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30892:107082:216673:-3595",
+    "npcId": 30892,
+    "name": "Enverun",
+    "role": "Торговец",
+    "city": "heine",
+    "x": 107082,
+    "y": 216673,
+    "z": -3595,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30893:107141:216674:-3595",
+    "npcId": 30893,
+    "name": "Payel",
+    "role": "Торговец",
+    "city": "heine",
+    "x": 107141,
+    "y": 216674,
+    "z": -3595,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30894:109627:220168:-3520",
+    "npcId": 30894,
+    "name": "Natools",
+    "role": "Хранитель склада",
+    "city": "heine",
+    "x": 109627,
+    "y": 220168,
+    "z": -3520,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30895:109623:220091:-3520",
+    "npcId": 30895,
+    "name": "Kluck",
+    "role": "Хранитель склада",
+    "city": "heine",
+    "x": 109623,
+    "y": 220091,
+    "z": -3520,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30896:109625:220238:-3520",
+    "npcId": 30896,
+    "name": "Mia",
+    "role": "Хранитель склада",
+    "city": "heine",
+    "x": 109625,
+    "y": 220238,
+    "z": -3520,
+    "service": "warehouse",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30897:108003:218963:-3656",
+    "npcId": 30897,
+    "name": "Roman",
+    "role": "Кузнец",
+    "city": "heine",
+    "x": 108003,
+    "y": 218963,
+    "z": -3656,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30898:107763:218725:-3659",
+    "npcId": 30898,
+    "name": "Morning",
+    "role": "Кузнец",
+    "city": "heine",
+    "x": 107763,
+    "y": 218725,
+    "z": -3659,
+    "service": "blacksmith",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30900:113739:218423:-3626",
+    "npcId": 30900,
+    "name": "Marcus",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 113739,
+    "y": 218423,
+    "z": -3626,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30901:113967:218584:-3626",
+    "npcId": 30901,
+    "name": "Arti",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 113967,
+    "y": 218584,
+    "z": -3626,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30902:114373:218268:-3626",
+    "npcId": 30902,
+    "name": "Karuna",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 114373,
+    "y": 218268,
+    "z": -3626,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30903:114251:219489:-3626",
+    "npcId": 30903,
+    "name": "Traus",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 114251,
+    "y": 219489,
+    "z": -3626,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30904:114205:219156:-3626",
+    "npcId": 30904,
+    "name": "Naiel",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 114205,
+    "y": 219156,
+    "z": -3626,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30905:111385:216821:-3458",
+    "npcId": 30905,
+    "name": "Squillari",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 111385,
+    "y": 216821,
+    "z": -3458,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30906:111226:216994:-3458",
+    "npcId": 30906,
+    "name": "Ranton",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 111226,
+    "y": 216994,
+    "z": -3458,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30907:111221:217236:-3458",
+    "npcId": 30907,
+    "name": "Minevia",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 111221,
+    "y": 217236,
+    "z": -3458,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30908:111548:217133:-3458",
+    "npcId": 30908,
+    "name": "Tanios",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 111548,
+    "y": 217133,
+    "z": -3458,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30909:111549:217381:-3458",
+    "npcId": 30909,
+    "name": "Anabel",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 111549,
+    "y": 217381,
+    "z": -3458,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30910:115904:219919:-3627",
+    "npcId": 30910,
+    "name": "Xairakin",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 115904,
+    "y": 219919,
+    "z": -3627,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30911:115618:219666:-3627",
+    "npcId": 30911,
+    "name": "Brikus",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 115618,
+    "y": 219666,
+    "z": -3627,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30912:115614:220280:-3627",
+    "npcId": 30912,
+    "name": "Xenovia",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 115614,
+    "y": 220280,
+    "z": -3627,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30913:108683:218942:-3674",
+    "npcId": 30913,
+    "name": "Tushku",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 108683,
+    "y": 218942,
+    "z": -3674,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30914:108656:219056:-3676",
+    "npcId": 30914,
+    "name": "Sorbo",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 108656,
+    "y": 219056,
+    "z": -3676,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30915:108652:218856:-3676",
+    "npcId": 30915,
+    "name": "Takina",
+    "role": "Наставник",
+    "city": "heine",
+    "x": 108652,
+    "y": 218856,
+    "z": -3676,
+    "service": "trainer",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:30924:112050:225462:-3627",
+    "npcId": 30924,
+    "name": "Nedy",
+    "role": "Торговец",
+    "city": "heine",
+    "x": 112050,
+    "y": 225462,
+    "z": -3627,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:31421:111277:218009:-3458",
+    "npcId": 31421,
+    "name": "Ratriya",
+    "role": "Торговец",
+    "city": "heine",
+    "x": 111277,
+    "y": 218009,
+    "z": -3458,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:31429:108684:218986:-3676",
+    "npcId": 31429,
+    "name": "Shitara",
+    "role": "Торговец",
+    "city": "heine",
+    "x": 108684,
+    "y": 218986,
+    "z": -3676,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:31443:108165:218729:-3657",
+    "npcId": 31443,
+    "name": "Raban",
+    "role": "Торговец",
+    "city": "heine",
+    "x": 108165,
+    "y": 218729,
+    "z": -3657,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:32878:107832:218971:-3656",
+    "npcId": 32878,
+    "name": "Sparky",
+    "role": "Торговец",
+    "city": "heine",
+    "x": 107832,
+    "y": 218971,
+    "z": -3656,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:35319:107372:217848:-3675",
+    "npcId": 35319,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "heine",
+    "x": 107372,
+    "y": 217848,
+    "z": -3675,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
+  },
+  {
+    "id": "heine:source:35319:115527:218850:-3664",
+    "npcId": 35319,
+    "name": "Manor Manager",
+    "role": "Торговец",
+    "city": "heine",
+    "x": 115527,
+    "y": 218850,
+    "z": -3664,
+    "service": "merchant",
+    "gateway": false,
+    "adapted": false,
+    "source": "spawns/Others/23_24.xml"
   },
   {
     "id": "goddard:source:31256:148832:-58960:-2965",
