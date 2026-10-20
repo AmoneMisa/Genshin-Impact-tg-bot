@@ -51,7 +51,8 @@ try{for(const width of [320,390,1100]){
  await page.screenshot({path:path.join(out,'settlements-'+width+'.png')});await page.locator('[data-close]').click();
  arriveHoldingEntrance(s,h,now);assert.equal(hallAction(s,clan,h,record,{action:'hall_enter'},now).ok,true);
  await page.evaluate(()=>window.openAtlas());await page.waitForTimeout(200);
- await page.locator('[data-interior-objects]').click();await page.locator('[data-room-node]').first().click();await page.locator('[data-approach]').click();
+ await page.locator('[data-interior-objects]').click();await page.locator('[data-room-node]').first().click();
+ await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='hall_move'),page.locator('[data-approach]').click()]);
  assert.ok(s.game.world.path.length);
  await page.locator('[data-interior-objects]').click();await page.locator('[data-room-exit]').click();await page.locator('[data-door-approach]').click();
  await page.locator('[data-interior-objects]').click();await page.locator('[data-room-exit]').click();await page.locator('[data-door-leave]').click();

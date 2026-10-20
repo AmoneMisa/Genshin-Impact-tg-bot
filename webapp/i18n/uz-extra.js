@@ -1,4 +1,5 @@
 import character from './uz-character.js';
+import nativeWorld from './uz-native-world.js';
 import customSets from './uz-custom-sets.js';
 import classTree from './uz-class-tree.js';
 import scryde from './uz-scryde.js';
@@ -24,6 +25,7 @@ import gwentLobby from './uz-gwent-lobby.js';
 // Phrases translated by hand after the catalog was built.
 // A value may keep Cyrillic on purpose (the language picker names both languages).
 export default {
+  ...nativeWorld,
   ...itemAdmin,
   ...gameUi,
   ...exploration,

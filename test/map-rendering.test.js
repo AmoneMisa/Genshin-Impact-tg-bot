@@ -17,3 +17,12 @@ test('a dialog heading escapes data from NPC and location names instead of creat
  assert.ok(heading.includes('id="title&quot; onmouseover=&quot;bad"'));
  assert.equal(dialogHeading('Death',{dismissible:false}).includes('data-dismiss'),false);
 });
+
+test('native movement preview uses world units, respects a zero speed and never mutates authority',()=>{
+ const actor={x:.5,y:.5,runSpeed:100,worldPoint:{x:10000,y:20000,z:-1000},worldPath:[{x:10100,y:20000,z:-1000},{x:10100,y:20200,z:-992}]};
+ const before=JSON.stringify(actor);
+ assert.deepEqual(displayedPosition(actor,1500).worldPoint,{x:10100,y:20050,z:-1000});
+ assert.deepEqual(displayedPosition({...actor,runSpeed:0},1500).worldPoint,actor.worldPoint);
+ assert.deepEqual(displayedPosition(actor,60000).worldPoint,actor.worldPath.at(-1));
+ assert.equal(JSON.stringify(actor),before);
+});

@@ -1,0 +1,12 @@
+export default {
+ 'Выберите место на карте, чтобы идти дальше.':'Yo‘lni davom ettirish uchun xaritadan joy tanlang.',
+ 'Выход · выбрать путь в Атласе':'Chiqish · Atlasda yo‘lni tanlash',
+ 'Идти пешком через':'Piyoda yo‘l:',
+ 'Не удалось найти наземный проход. Выберите точку ближе.':'Piyoda o‘tish yo‘li topilmadi. Yaqinroq nuqtani tanlang.',
+ 'Остановиться':'To‘xtash',
+ 'Пешком через':'Piyoda yo‘l:',
+ 'Подойдите к выходу из локации':'Hududdan chiqish joyiga yaqinlashing',
+ 'Путь изменился. Остановитесь и выберите маршрут заново.':'Yo‘l o‘zgardi. To‘xtang va yo‘nalishni qayta tanlang.',
+ 'Путь перекрыт. Остановитесь и выберите другой маршрут.':'Yo‘l yopiq. To‘xtang va boshqa yo‘nalishni tanlang.',
+ 'Эта часть пути пока недоступна.':'Yo‘lning bu qismi hozircha yopiq.',
+};

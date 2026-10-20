@@ -413,6 +413,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     const actions=document.createElement('div');actions.className='ui-action-stack';
     if(field.phase){const phase=document.createElement('p');phase.textContent=field.phase.locked?'Хеллбаунд ещё закрыт. Освобождение острова не началось.':`Этап освобождения: ${field.phase.stage}`;dialog.append(phase);}
     actions.innerHTML=(field.links||[]).map((l,i)=>`<button type="button" class="ui-button" data-link-choice="${i}" ${l.room!==field.room.id?'disabled':''}>${escapeHtml(l.title)}${l.near?'':' · подойти'}</button>`).join('');
+    if(field.nativeExit)actions.innerHTML+=`<button type="button" class="ui-button" data-native-exit ${pending||field.nativeExit.room!==field.room.id||field.nativeExit.floor!==field.floor?'disabled':''}>${field.nativeExit.near?'Выход · выбрать путь в Атласе':'Подойти к выходу'}</button>`;
     if(field.seed&&field.floor===1){
       const assemblyModes=field.seed.modes.filter(m=>m.commandChannel);
       actions.innerHTML+=field.seed.modes.filter(m=>!m.commandChannel).map(m=>`<p>${escapeHtml(m.title)} · ${m.partyMin===m.partyMax?m.partyMin:m.partyMin+'–'+m.partyMax} игроков · ${m.minLevel}–${m.maxLevel} ур.</p>`).join('');
@@ -423,6 +424,11 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     document.body.append(dialog);dialog.showModal();
     dialog.addEventListener('close',()=>dialog.remove(),{once:true});dialog.querySelector('[data-dismiss]').onclick=()=>dialog.close();
     dialog.addEventListener('click',async event=>{
+      if(event.target.closest('[data-native-exit]')){
+        dialog.close();
+        if(field.nativeExit.near)await start();else{await run('/api/hunt/move',{point:field.nativeExit.point});render();}
+        return;
+      }
       const seedButton=event.target.closest('[data-seed-create],[data-seed-join],[data-seed-quest]'),linkButton=event.target.closest('[data-link-choice]');
       if(seedButton){
         const seedMode=dialog.querySelector('[data-seed-mode]')?.value,assembly=dialog.querySelector('[data-seed-code]')?.value;

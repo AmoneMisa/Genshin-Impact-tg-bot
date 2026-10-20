@@ -13,8 +13,8 @@ export function drawPortraitMarker(ctx,{x,y,r=24,image=null,label='',sub='',glyp
 }
 
 /** Predict only along the authoritative path between server updates. */
-export function displayedPosition(actor,elapsedMs,{speed=actor.runSpeed||100,size=2000}={}){
- const point={x:actor.x,y:actor.y};let step=Math.max(0,elapsedMs)/1000*Math.max(0,speed)/size;
- for(const node of actor.path||[]){const distance=Math.hypot(node.x-point.x,node.y-point.y);if(distance<=step){point.x=node.x;point.y=node.y;step-=distance;}else{if(distance>0){point.x+=(node.x-point.x)*step/distance;point.y+=(node.y-point.y)*step/distance;}break;}}
- return point;
+export function displayedPosition(actor,elapsedMs,{speed=actor.runSpeed??100,size=2000}={}){
+ const native=Boolean(actor.worldPoint),point=native?{...actor.worldPoint}:{x:actor.x,y:actor.y};let step=Math.max(0,elapsedMs)/1000*Math.max(0,speed)/(native?1:size);
+ for(const node of (native?actor.worldPath:actor.path)||[]){const distance=Math.hypot(node.x-point.x,node.y-point.y);if(distance<=step){point.x=node.x;point.y=node.y;if(native)point.z=node.z;step-=distance;}else{if(distance>0){point.x+=(node.x-point.x)*step/distance;point.y+=(node.y-point.y)*step/distance;}break;}}
+ return native?{worldPoint:point}:point;
 }

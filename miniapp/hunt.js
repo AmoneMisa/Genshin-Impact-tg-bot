@@ -13,6 +13,8 @@ import { huntDropPreview, LOOT_KINDS } from '../functions/game/hunt/huntRewards.
 import { getZone, getMobDef } from '../functions/game/hunt/huntMobs.js';
 import { roomLayout, roomById, adjacent, groundHeight } from '../functions/game/hunt/huntRooms.js';
 import {locationRaids,levelTransitions,locationLevel} from '../functions/game/hunt/locationLevels.js';
+import {nativeExit} from '../functions/game/world/nativeTravel.js';
+import {nativeJourneyDto} from '../functions/game/world/nativeJourney.js';
 import {shipDto} from '../functions/game/world/zakenShip.js';
 import {fieldPvpStatus,fieldPvpSkillBlock} from '../functions/game/hunt/fieldPvpState.js';
 import {memberName} from './social.js';
@@ -81,7 +83,7 @@ export async function getHuntState(session, now = Date.now(), peers = []) {
     return {
         // true when mob swings were applied: the session has to be saved
         changed: swings.length > 0 || suppliesChanged,
-        now,lastLoot:hunt.lastLoot||null,world:{mode:game.world?.mode,channel:game.world?.channel,walkHome:game.world?.walkHome,death:game.world?.death||null},
+        now,lastLoot:hunt.lastLoot||null,world:{mode:game.world?.mode,channel:game.world?.channel,walkHome:nativeJourneyDto(game.world?.walkHome),death:game.world?.death||null},
         resurrections:reviveEntries(session,now).filter(s=>s.level>0),
         soulCrystals:soulCrystalState(session),
         zones: getZones().map(zone => zoneDto(zone, level)),
@@ -144,6 +146,7 @@ function fieldDto(hunt, now, session) {
         exits:layout.map?layout.rooms.filter(r=>adjacent(current,r)).map(r=>({id:r.id,name:visited.has(r.id)?r.name:'Не исследовано',
             side:r.col>current.col?'east':r.col<current.col?'west':r.row>current.row?'south':'north'})):[],
         title:level?.title||zone?.title,level:levelTransitions(zone.id,field),sceneKey:`${hunt.zone}:${current.id}${level?':floor-'+(field.floor||1):current.sceneVariant?':area-'+current.sceneVariant:''}`,environment:current.environment,layoutSource:current.layoutSource,
+        nativeExit:nativeExit(session),
         phase:zone.id==='hellbound'?{stage:hellboundStage(session),locked:hellboundStage(session)===0}:null,
         room: {id: current.id, name: current.name, landmark:stream?null:level?(layout.map?'Зал '+(current.row*layout.cols+current.col+1):null):current.landmark||null, big: current.big, cap: capacity(current), height: groundHeight(capacity(current))},
         map: layout.map ? {

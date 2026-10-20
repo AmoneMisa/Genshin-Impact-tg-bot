@@ -19,6 +19,9 @@ import {SEED_MODES} from '../../../template/seedInstances.js';
 import {seedModeAt,seedAdmission,seedFloorBlock,seedAssemblyAction} from './seedInstances.js';
 import {getMaterialCount} from '../player/materials.js';
 import {regionAccessBlock,spendRegionFare,regionLinks} from './regionAccess.js';
+import {nativeRoute,nativeTravel,nativeFreeWalk,nativeWalkOptions,nativeWalkCities,nativeWorldPoint} from './nativeTravel.js';
+import {advanceNativeJourney,nativeJourneyDto,nativeJourneyPosition} from './nativeJourney.js';
+import {saveNativeField,restoreNativeField} from './nativeFieldBanks.js';
 
 export {CITIES,REGIONS,LOCATIONS,CITY_NPCS};
 export const CITY_SIZE=14000;
@@ -36,13 +39,19 @@ function arriveCity(session,world){world.mode='city';world.location=null;world.h
 export function advanceWorld(session,now=Date.now()) {
     const w=ensureWorld(session,now);
     if(!alive(session)){markWorldDeath(session,now);return w;}
-    if(w.mode==='road'&&w.walkHome?.until<=now){
+    let nativeDone=false;
+    if(w.mode==='road'&&w.walkHome?.native)nativeDone=advanceNativeJourney(w.walkHome,now,l2ActionBlock(session,{move:true},now)?0:getSpeed(session)*l2MoveMultiplier(session,now));
+    if(w.mode==='road'&&(w.walkHome?.native?nativeDone:w.walkHome?.until<=now)){
         const trip=w.walkHome;
         if(trip.holding){const h=holdings.find(h=>h.id===trip.holding);if(h)arriveHoldingEntrance(session,h,now);}
         else if(trip.location){
             const l=LOCATIONS.find(l=>l.id===trip.location);
-            if(l&&!regionAccessBlock(session,l,{walking:true,now})&&enterHuntField(session,l.id,{now}).ok)Object.assign(w,{city:l.region,mode:'location',location:l.id,path:[],pending:null,channel:null});else arriveCity(session,w);
-        }else {if(trip.city)w.city=trip.city;arriveCity(session,w);if(trip.arrivalPoint){Object.assign(w,cityPoint(cityOf(w),trip.arrivalPoint));w.z=trip.arrivalPoint.z;}}
+            if(l&&!regionAccessBlock(session,l,{walking:true,now})&&enterHuntField(session,l.id,{now}).ok){
+                if(trip.native)restoreNativeField(session,l.id,now);
+                Object.assign(w,{city:l.region,mode:'location',location:l.id,path:[],pending:null,channel:null});
+            }else arriveCity(session,w);
+        }else if(trip.native&&!trip.city){Object.assign(w,{mode:'native',location:null,nativePosition:{...trip.native.point},path:[],pending:null,channel:null});}
+        else {if(trip.city)w.city=trip.city;arriveCity(session,w);if(trip.native){Object.assign(w,cityPoint(cityOf(w),trip.native.point));w.z=trip.native.point.z;}if(trip.arrivalPoint){Object.assign(w,cityPoint(cityOf(w),trip.arrivalPoint));w.z=trip.arrivalPoint.z;}}
         delete w.walkHome;
     }
     if(w.died){delete w.died;delete w.death;}
@@ -91,7 +100,7 @@ export function quickTravelBlock(session,now=Date.now()){
     if(!alive(session)||session.game.respawnTime>now)return 'dead';
     if(['siege','stronghold'].includes(w.mode))return 'quick_travel_siege';
     const location=LOCATIONS.find(l=>l.id===w.location),city=cityOf(w);
-    const point=outdoorPoint(session)||location;
+    const point=nativeWorldPoint(session)||outdoorPoint(session)||location;
     if(point&&siegePoint(point))return 'quick_travel_siege';
     if(session.game.stats?.inFightTimer>now||hunt?.field?.mobs?.some(m=>m.aggro&&m.currentHp>0)||(!hunt?.field&&hunt?.mob?.currentHp>0))return 'quick_travel_combat';
     return l2ActionBlock(session,{move:true},now)||null;
@@ -129,6 +138,25 @@ export function worldAction(session,body,now=Date.now()){
     if(body.action==='quick_travel')return quickTravel(session,body,now);
     const w=advanceWorld(session,now);
     if(!alive(session))return {ok:false,reason:'dead'};
+    if(body.action==='native_stop'){
+        if(w.mode!=='road'||!w.walkHome?.native)return {ok:false,reason:'no_field'};
+        w.nativePosition={...w.walkHome.native.point};w.mode='native';w.location=null;w.path=[];delete w.walkHome;return {ok:true};
+    }
+    if(body.action==='native_move'){
+        const denied=quickTravelBlock(session,now);if(denied)return {ok:false,reason:denied};
+        const result=nativeFreeWalk(session,body.point,now,getSpeed(session)*l2MoveMultiplier(session,now));
+        if(!result.ok)return result;
+        Object.assign(w,{mode:'road',location:null,walkHome:result.trip,path:[],pending:null,channel:null});delete w.nativePosition;return {ok:true};
+    }
+    if(body.action==='native_walk_city'){
+        const denied=quickTravelBlock(session,now);if(denied)return {ok:false,reason:denied};
+        const city=CITIES.find(c=>c.id===body.city);if(!city)return {ok:false,reason:'unknown_zone'};
+        const result=nativeTravel(session,{city:city.id},now,getSpeed(session)*l2MoveMultiplier(session,now));
+        if(!result.ok)return result;
+        if(w.mode==='location')saveNativeField(session,now);
+        if(session.game.hunt){session.game.hunt.field=null;session.game.hunt.mob=null;}
+        Object.assign(w,{mode:'road',walkHome:result.trip,path:[],pending:null,channel:null});delete w.nativePosition;return {ok:true};
+    }
     if(body.action==='approach_npc'){
         const target=CITY_NPCS.find(n=>n.id===body.npc);
         if(!target)return {ok:false,reason:'unknown_npc'};
@@ -156,6 +184,14 @@ export function worldAction(session,body,now=Date.now()){
     }
     if(body.action==='walk_location'){
         const location=LOCATIONS.find(l=>l.id===body.location),city=cityOf(w);
+        if(location&&nativeRoute(location.id)&&['city','location','native'].includes(w.mode)){
+            const denied=quickTravelBlock(session,now)||regionAccessBlock(session,location,{walking:true,now});if(denied)return {ok:false,reason:denied};
+            const result=nativeTravel(session,{location:location.id},now,getSpeed(session)*l2MoveMultiplier(session,now));
+            if(!result.ok)return result;
+            if(w.mode==='location')saveNativeField(session,now);
+            if(session.game.hunt){session.game.hunt.field=null;session.game.hunt.mob=null;}
+            Object.assign(w,{mode:'road',walkHome:result.trip,path:[],pending:null,channel:null});delete w.nativePosition;return {ok:true};
+        }
         if(!location?.entrySource||location.continent==='gracia'||location.access?.kind==='linked'||location.instance||w.mode!=='city'||![city.id,city.parentRegion].includes(location.region))return {ok:false,reason:'location_path_required'};
         const denied=quickTravelBlock(session,now)||regionAccessBlock(session,location,{walking:true,now});if(denied)return {ok:false,reason:denied};
         const start=outdoorPoint(session),duration=Math.max(1000,Math.hypot(start.x-location.x,start.y-location.y)/Math.max(1,getSpeed(session))*1000);
@@ -205,6 +241,9 @@ export function worldAction(session,body,now=Date.now()){
         return {ok:true};
     }
     if(body.action==='walk_exit'){
+        if(w.mode==='native')return worldAction(session,{action:'native_walk_city',city:w.city},now);
+        const native=nativeRoute(w.location);
+        if(w.mode==='location'&&native?.returnPath)return worldAction(session,{action:'native_walk_city',city:native.city},now);
         if(['hall','stronghold','siege'].includes(w.mode))return leaveHolding(session,holdings.find(h=>h.id===w.holding),{now});
         if(w.mode==='entrance'){
             const from=outdoorPoint(session),city=cityOf(w);w.walkHome={until:now+Math.max(1000,Math.hypot(from.x-city.x,from.y-city.y)/Math.max(1,getSpeed(session))*1000)};w.mode='road';w.holding=null;w.readyHolding=null;w.path=[];return {ok:true};
@@ -389,5 +428,6 @@ export function bindWorldInstances(chat,now=Date.now()) {
 export function worldState(session,now=Date.now()){
     const w=advanceWorld(session,now);
     const {mode,city,location,x,y,path,moveAt,pending,channel,walkHome,holding,instanceId,readyHolding,boss,bossPosition,bossRoom}=w;
-    return {now,locationTravel:Object.fromEntries(LOCATIONS.map(l=>[l.id,locationTravelQuote(session,l,CITY_NPCS.find(n=>n.city===w.city&&n.gateway),now)])),cityTravel:Object.fromEntries(CITIES.map(c=>[c.id,townTravelQuote(session,c.id,now)])),questTargets:questTargets(session,LOCATIONS),quickTravel:{multiplier:QUICK_TRAVEL_MULTIPLIER,blocked:quickTravelBlock(session,now),cities:CITIES.flatMap(c=>{const gold=quickCityGold(session,c,now);return gold===null?[]:[{id:c.id,gold}];}),locations:LOCATIONS.filter(l=>!l.instance&&!siegePoint(l)&&!regionAccessBlock(session,l,{now})).map(l=>({id:l.id,gold:teleportPrice(session,quickTravelPrice(l),now)}))},death:w.death?{...w.death}:null,player:{hallRoom:w.hallRoom,areaSize:mode==='city'?citySize(cityOf(w)):ENTRANCE_SIZE,entryOrigin:mode==='entrance'?w.entryOrigin:null,userId:String(session.userId),mode,city,location,x,y,path,moveAt,pending,channel,walkHome,holding,instanceId,readyHolding,runSpeed:getSpeed(session)*l2MoveMultiplier(session,now),boss,bossPosition,bossRoom,hp:session.game.gameClass?.stats?.hp,level:session.game.stats?.lvl},cities:CITIES,regions:REGIONS,locations:LOCATIONS,npcs:CITY_NPCS,gold:session.game.inventory.gold,scrolls:session.game.inventory.materials?.scroll_escape||0};
+    const nativePosition=mode==='road'?nativeJourneyPosition(walkHome):mode==='native'?{worldPoint:w.nativePosition,worldPath:[]}:null;
+    return {now,nativeWalk:nativeWalkOptions(session),nativeWalkCities:nativeWalkCities(),locationTravel:Object.fromEntries(LOCATIONS.map(l=>[l.id,locationTravelQuote(session,l,CITY_NPCS.find(n=>n.city===w.city&&n.gateway),now)])),cityTravel:Object.fromEntries(CITIES.map(c=>[c.id,townTravelQuote(session,c.id,now)])),questTargets:questTargets(session,LOCATIONS),quickTravel:{multiplier:QUICK_TRAVEL_MULTIPLIER,blocked:quickTravelBlock(session,now),cities:CITIES.flatMap(c=>{const gold=quickCityGold(session,c,now);return gold===null?[]:[{id:c.id,gold}];}),locations:LOCATIONS.filter(l=>!l.instance&&!siegePoint(l)&&!regionAccessBlock(session,l,{now})).map(l=>({id:l.id,gold:teleportPrice(session,quickTravelPrice(l),now)}))},death:w.death?{...w.death}:null,player:{hallRoom:w.hallRoom,areaSize:mode==='city'?citySize(cityOf(w)):ENTRANCE_SIZE,entryOrigin:mode==='entrance'?w.entryOrigin:null,userId:String(session.userId),mode,city,location,x,y,path,moveAt,pending,channel,walkHome:nativeJourneyDto(walkHome),holding,instanceId,readyHolding,...nativePosition,runSpeed:walkHome?.native&&l2ActionBlock(session,{move:true},now)?0:getSpeed(session)*l2MoveMultiplier(session,now),boss,bossPosition,bossRoom,hp:session.game.gameClass?.stats?.hp,level:session.game.stats?.lvl},cities:CITIES,regions:REGIONS,locations:LOCATIONS,npcs:CITY_NPCS,gold:session.game.inventory.gold,scrolls:session.game.inventory.materials?.scroll_escape||0};
 }
