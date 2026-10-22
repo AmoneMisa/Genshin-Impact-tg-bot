@@ -28,6 +28,7 @@ try{for(const {width,noCanvas=false} of configurations){
  let now=1800000000000,finishNext=false;
  const s={userId:1,userChatData:{user:{id:1}},game:{stats:{lvl:85,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:first.city,x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
  const chat={game:{},members:[s]};s.ownerDocument=()=>chat;change(s,'humanFighter');update(s);
+ if(process.env.NATIVE_NOBLE)s.game.isNoble=true;
  if(process.env.NATIVE_QUEST_WALK){s.game.soulCrystalQuest={startedAt:now};s.game.soulCrystal={stage:0};}
  const questName=process.env.NATIVE_QUEST_WALK?worldState(s,now).questTargets.find(q=>q.location===firstId)?.name:null;
  if(process.env.NATIVE_QUEST_WALK)assert.ok(questName,'the source zone has an actual active Soul Crystal objective');

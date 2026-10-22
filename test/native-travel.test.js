@@ -34,6 +34,16 @@ function hero(){
  change(s,'humanFighter');update(s);return s;
 }
 function quiet(field){for(const m of [field,...Object.values(field.rooms||{})].flatMap(r=>r.mobs||[]))Object.assign(m,{aggressive:false,aggro:false,aggroRange:0,nextAttackAt:NOW+1e12});}
+test('Imperial Tomb keeps its original noblesse-only teleport and never starts an unverified walk',()=>{
+ const s=hero();s.game.world.city='goddard';const gold=s.game.inventory.gold;
+ assert.equal(worldState(s,NOW).locationTravel['imperial-tomb'],null);
+ assert.equal(worldAction(s,{action:'quick_travel',location:'imperial-tomb'},NOW).reason,'noblesse_required');
+ assert.equal(s.game.inventory.gold,gold);assert.equal(s.game.world.mode,'city');
+ s.game.isNoble=true;
+ assert.equal(worldState(s,NOW).locationTravel['imperial-tomb'].gold,1000);
+ assert.equal(worldAction(s,{action:'walk_location',location:'imperial-tomb'},NOW).reason,'location_path_required');
+ assert.equal(s.game.world.walkHome,undefined);assert.equal(s.game.inventory.gold,gold);
+});
 function finish(s,now){const trip=s.game.world.walkHome;assert.ok(trip.native);advanceWorld(s,now);assert.equal(s.game.world.walkHome,undefined);}
 test('unconfirmed source approaches never advertise or start a native walk',()=>{
  for(const [id,route] of Object.entries(routes.routes).filter(([,r])=>!r.available)){
