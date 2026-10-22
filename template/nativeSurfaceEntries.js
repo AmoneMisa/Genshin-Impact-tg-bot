@@ -1380,5 +1380,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "stakato-nest": {
+    "x": 89513,
+    "y": -44800,
+    "z": -2136,
+    "region": "rune",
+    "teleportGold": 9100,
+    "entrySource": {
+      "file": "teleporters/town/31320.xml",
+      "npcId": 31320,
+      "name": "Stakato Nest",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "188bc55efcd72b8e655f4fa22ecc6b91a704f5cb4915f89856af1eb880f53c98"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 31320,
+        "npcName": "Ilyana",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 9100,
+        "source": {
+          "file": "teleporters/town/31320.xml",
+          "npcId": 31320,
+          "name": "Stakato Nest",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "188bc55efcd72b8e655f4fa22ecc6b91a704f5cb4915f89856af1eb880f53c98"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        84513,
+        -49800
+      ],
+      [
+        94513,
+        -49800
+      ],
+      [
+        94513,
+        -39800
+      ],
+      [
+        84513,
+        -39800
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };

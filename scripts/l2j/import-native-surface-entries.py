@@ -6,6 +6,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
 config={"garden-of-eva":("heine","Garden of Eva"),"talking-island":("talking-island-village","Talking Island, Northern Territory"),'giants-cave': ('aden', "Entrance to The Giant's Cave"),
+ 'stakato-nest': ('rune', 'Stakato Nest'),
  'monastery-of-silence': ('goddard', 'Monastery of Silence'),
  'forge-of-the-gods': ('goddard', 'Entrance to the Forge of the Gods'),
  'cruma-tower': ('dion', 'Cruma Tower'),
