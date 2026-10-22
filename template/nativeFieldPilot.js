@@ -242,6 +242,36 @@ export default {
     ]
   },
   "fields": {
+    "dark-forest": {
+      "city": "dark-elven-village",
+      "fixedCount": 171,
+      "territoryCount": 387,
+      "npcIds": [
+        "20003",
+        "20004",
+        "20005",
+        "20007",
+        "20021",
+        "20034",
+        "20038",
+        "20043",
+        "20321",
+        "20328",
+        "20380",
+        "20385",
+        "20386",
+        "20387",
+        "20388",
+        "20400",
+        "20418",
+        "20456",
+        "20529",
+        "20532",
+        "20536"
+      ],
+      "count": 558,
+      "unportedMinionTemplates": []
+    },
     "elven-fields": {
       "city": "elven-village",
       "fixedCount": 0,
@@ -701,6 +731,9 @@ export default {
       "stats/npcs/22000-22099.xml": "99c9046f0c240f8de7fd4ed5737b65db17b8ee049aa6a496d09ce60be506e624",
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
+      "spawns/DarkElfTerritory/DarkElfStarting.xml": "25150d25ce60182390d35319d285859424c0efd486533390dc15fcc682d937e2",
+      "spawns/Others/18_20.xml": "ba7a4304d86eab26aa136e82212e9deb54401531e367a574bcf07293ce584dae",
+      "teleporters/town/30134.xml": "4dc2b144e46b6c699a45771e0eeef40cedc9d12ff9b01b4764358278c42e645b",
       "spawns/ElvenTerritory/ElvenStarting.xml": "19dcb4170064636df9fc07e051071705d62856209419041df4df3beafb9c5d13",
       "spawns/TalkingIsland/TalkingIslandMonsters.xml": "dd4cbd23e9b3943f0b3592bc8b1241b17f0302d2ea01af4a5393b0bac7fcebb5",
       "spawns/Gludin/TurekOrcs.xml": "128048da6e9f0a1e1c5eb2fed4e3e3733a120b907b1f23440d7266fde567e5bc",
@@ -715,7 +748,6 @@ export default {
       "spawns/Others/19_20.xml": "9288973c393d4b37001bb9ed71607be55d02f3714bf3255c2cda98a9384c63b0",
       "spawns/Others/19_21.xml": "0b741792bcfb83f84599477b7bac623cc6ff0dc520024ad83f821a0b8cc1d9ed",
       "spawns/Others/19_19.xml": "f0ad24acfc3936aef08bfd68fc4ea444e99749ccdaf32e19fd934626c86287e3",
-      "teleporters/town/30134.xml": "4dc2b144e46b6c699a45771e0eeef40cedc9d12ff9b01b4764358278c42e645b",
       "spawns/Innadril/FieldOfWhispers.xml": "784edfcf4a0b3017e3684bb98f863363807baf13ea6df21fc406a0136b824686",
       "spawns/Dion/CrumaMarshlands.xml": "9eb722a945992899d143d0a3fd7a2206fb977f6dd2388927ee516e3d9a360d7f",
       "spawns/Dion/PlainsOfDion.xml": "647003afc6a92cc16577b3ceb2980b1433dfa61bc68a38c4cbd9311b5e086ad4"
@@ -752,9 +784,25 @@ export default {
       "runSpeed": 150.0,
       "attackRange": 40.0
     },
+    "20003": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20004": {
+      "runSpeed": 80.0,
+      "attackRange": 40.0
+    },
+    "20005": {
+      "runSpeed": 80.0,
+      "attackRange": 40.0
+    },
     "20006": {
       "runSpeed": 110.0,
       "attackRange": 1100.0
+    },
+    "20007": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
     },
     "20009": {
       "runSpeed": 110.0,
@@ -784,12 +832,24 @@ export default {
       "runSpeed": 15.0,
       "attackRange": 40.0
     },
+    "20021": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
     "20025": {
       "runSpeed": 100.0,
       "attackRange": 40.0
     },
+    "20034": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
     "20036": {
       "runSpeed": 60.0,
+      "attackRange": 40.0
+    },
+    "20038": {
+      "runSpeed": 140.0,
       "attackRange": 40.0
     },
     "20039": {
@@ -984,11 +1044,19 @@ export default {
       "runSpeed": 130.0,
       "attackRange": 40.0
     },
+    "20321": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
     "20325": {
       "runSpeed": 110.0,
       "attackRange": 40.0
     },
     "20326": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20328": {
       "runSpeed": 110.0,
       "attackRange": 40.0
     },
@@ -1008,8 +1076,36 @@ export default {
       "runSpeed": 23.0,
       "attackRange": 40.0
     },
+    "20380": {
+      "runSpeed": 23.0,
+      "attackRange": 40.0
+    },
+    "20385": {
+      "runSpeed": 110.0,
+      "attackRange": 1100.0
+    },
+    "20386": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20387": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20388": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
     "20392": {
       "runSpeed": 80.0,
+      "attackRange": 40.0
+    },
+    "20400": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20418": {
+      "runSpeed": 120.0,
       "attackRange": 40.0
     },
     "20432": {
@@ -1021,6 +1117,10 @@ export default {
       "attackRange": 40.0
     },
     "20442": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20456": {
       "runSpeed": 110.0,
       "attackRange": 40.0
     },
@@ -1100,11 +1200,23 @@ export default {
       "runSpeed": 110.0,
       "attackRange": 40.0
     },
+    "20529": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
     "20530": {
       "runSpeed": 110.0,
       "attackRange": 40.0
     },
+    "20532": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
     "20534": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20536": {
       "runSpeed": 110.0,
       "attackRange": 40.0
     },
