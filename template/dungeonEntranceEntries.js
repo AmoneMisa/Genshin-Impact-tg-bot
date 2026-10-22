@@ -493,5 +493,55 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "necropolis-devotion": {
+    "x": -52784,
+    "y": 79104,
+    "z": -4739,
+    "region": "gludio",
+    "regionAssociation": "nearest-source-town",
+    "dungeonEntranceSource": {
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "files": {
+        "stats/npcs/31000-31099.xml": "58bdaf574082c0446388154252e6cfdaceaa4a228d95aac6255f810fb5f39b3f",
+        "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
+        "spawns/Others/18_20.xml": "ba7a4304d86eab26aa136e82212e9deb54401531e367a574bcf07293ce584dae"
+      },
+      "npcId": 31099,
+      "role": 0,
+      "interiorNpcId": 31107,
+      "signNumber": 1,
+      "insideDestination": {
+        "x": -52126,
+        "y": 79113,
+        "z": -4737
+      },
+      "returnDestination": {
+        "x": -52610,
+        "y": 79112,
+        "z": -4768
+      },
+      "nativeGroundApproach": null,
+      "teleportTariff": null
+    },
+    "polygon": [
+      [
+        -53284,
+        78604
+      ],
+      [
+        -52284,
+        78604
+      ],
+      [
+        -52284,
+        79604
+      ],
+      [
+        -53284,
+        79604
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
