@@ -1278,5 +1278,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "talking-island": {
+    "x": -106696,
+    "y": 214691,
+    "z": -3424,
+    "region": "talking-island-village",
+    "teleportGold": 1000,
+    "entrySource": {
+      "file": "teleporters/town/30006.xml",
+      "npcId": 30006,
+      "name": "Talking Island, Northern Territory",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "e7b0acbf9c534d57d8ef60404b945eeaeb4205bbcee97fc65af3fe29c6b5f253"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30006,
+        "npcName": "Roxxy",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 1000,
+        "source": {
+          "file": "teleporters/town/30006.xml",
+          "npcId": 30006,
+          "name": "Talking Island, Northern Territory",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "e7b0acbf9c534d57d8ef60404b945eeaeb4205bbcee97fc65af3fe29c6b5f253"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        -111696,
+        209691
+      ],
+      [
+        -101696,
+        209691
+      ],
+      [
+        -101696,
+        219691
+      ],
+      [
+        -111696,
+        219691
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
