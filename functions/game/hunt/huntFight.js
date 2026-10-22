@@ -40,7 +40,7 @@ import {syncResidentRooms,neighborhood,battleField,battleWalls,battleActor,remov
 import getSpeed from '../player/getters/getSpeed.js';
 import {BASIC_ATTACK, hostileSkill, skillSpatial, weaponSpatial, needsTarget, inSkillReach, spatialTargets, spatialDistance,clearLine} from './huntSpatial.js';
 import {skillCombatType} from '../player/combatType.js';
-import {syncNativePopulation,moveNativeActor,advanceNativeActor,placeNativeActor,stopNativeActor} from '../world/nativeFieldSpace.js';
+import {syncNativePopulation,moveNativeActor,advanceNativeActor,placeNativeActor,placeNativeSpawn,stopNativeActor} from '../world/nativeFieldSpace.js';
 
 // A mob that was not attacked for this long loses interest and leaves.
 export const IDLE_MS = 2 * 60 * 1000;
@@ -410,7 +410,7 @@ function populateRoom(session, zone, room, {now, random, count = room.cap, prefi
         if(placement)Object.assign(mob,{sourceRoom:room.id,sourceSlot:placement.slot,sourceRandomGroup:placement.randomGroup,sourceNativeRespawn:Boolean(locationLevels(zone.id)?.population),sourcePosition:placement.coordinateSource==='point'?{x:placement.x,y:placement.y,z:placement.z}:null,sourceTerritory:placement.polygon?.length?{polygon:placement.polygon,minZ:placement.minZ,maxZ:placement.maxZ}:null,sourceRespawnMs:placement.respawnMs,sourceRespawnRandomMs:placement.respawnRandomMs});
         const actor={...mob, instanceId: `${prefix}:${index}`, ai: AI_ROLES[index % AI_ROLES.length],
             aggro: false, ...nearestOpenPoint(slot,room.walls), buffs: []};
-        if(session.game.hunt?.field?.native){placeNativeActor(actor,actor.sourcePosition);actor.ai=null;}
+        if(session.game.hunt?.field?.native){placeNativeSpawn(actor,random);actor.ai=null;}
         return actor;
     });
 }
@@ -433,7 +433,7 @@ function settleRespawns(session, hunt, now, random) {
         const [fresh] = populateRoom(session, zone, room, {now, random, count: 1,sourceSlot:entry.sourceSlot??null, prefix: `${now}:${room.id}:r${field.seq}`});
         if(!fresh)continue;
         // a new monster appears somewhere in the upper part of the area
-        if(field.native){if(!placeNativeActor(fresh,fresh.sourcePosition))continue;fresh.ai=null;}
+        if(field.native){if(!placeNativeActor(fresh,fresh.sourcePosition)){field.native.missing[room.id+':'+entry.sourceSlot]='source_ground_unavailable';continue;}fresh.ai=null;}
         else {fresh.x = .12 + random() * .76;fresh.y = .12 + random() * .43;Object.assign(fresh,nearestOpenPoint(fresh,room.walls));fresh.ai = AI_ROLES[Math.floor(random() * AI_ROLES.length)];}
         bucket.push(fresh);
     }

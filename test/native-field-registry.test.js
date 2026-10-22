@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {worldAction,advanceWorld,worldState} from '../functions/game/world/world.js';
 import {nativeFieldBuckets,nativeActorPoint,placeNativeActor} from '../functions/game/world/nativeFieldSpace.js';
+import {sampleNativeTerritory} from '../functions/game/world/nativeSpawnTerritory.js';
+import {pointInPolygon} from '../functions/game/world/navigation.js';
 import {LOCATION_LEVELS} from '../template/locationLevels.js';
 import registry from '../template/nativeFieldPilot.js';
 import routes from '../template/nativeRoutes.js';
@@ -25,11 +27,12 @@ function hero(zone){
  const chat={game:{},members:[s]};s.ownerDocument=()=>chat;change(s,'humanFighter');update(s);return s;
 }
 for(const [zone,meta]of Object.entries(registry.fields)){
- test(`${zone}: original fixed ground spawns, bounded DTO, saved ownership and physical city return`,()=>{
+ test(`${zone}: source ground spawns, bounded DTO, saved ownership and physical city return`,()=>{
   const slots=LOCATION_LEVELS[zone].floors[0].rooms.flatMap(r=>r.spawns||[]);
   assert.equal(slots.reduce((n,s)=>n+s.count,0),meta.count);
-  for(const slot of slots){const actor={};assert.equal(placeNativeActor(actor,slot),true,`${zone} ${slot.id} ${slot.x},${slot.y},${slot.z}`);
-   const point=nativeActorPoint(actor);assert.equal(point.x,slot.x);assert.equal(point.y,slot.y);assert.ok(Math.abs(point.z-slot.z)<300);
+  for(const slot of slots){const actor={},position=slot.coordinateSource==='point'?slot:sampleNativeTerritory(slot);assert.ok(position);assert.equal(placeNativeActor(actor,position),true,`${zone} ${slot.id} ${slot.x},${slot.y},${slot.z}`);
+   const point=nativeActorPoint(actor);if(slot.coordinateSource==='point'){assert.equal(point.x,slot.x);assert.equal(point.y,slot.y);assert.ok(Math.abs(point.z-slot.z)<300);}
+   else {assert.ok(pointInPolygon(point,slot.polygon));assert.ok(point.z>=slot.minZ&&point.z<=slot.maxZ);}
    assert.ok(registry.actors[slot.id].runSpeed>0);assert.ok(registry.actors[slot.id].attackRange>0);
   }
   let s=hero(zone);assert.equal(worldAction(s,{action:'walk_location',location:zone},START).ok,true);

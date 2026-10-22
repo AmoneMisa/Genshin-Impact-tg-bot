@@ -6,18 +6,19 @@ import {nativeGroundAllowed} from './nativeGround.js';
 import {findNativePath,nativeSegment} from './nativeNavigation.js';
 import {createNativeJourney,advanceNativeJourney} from './nativeJourney.js';
 import {rememberNativeTrail} from './nativeTrail.js';
+import {nativeSpawnDistance,sampleNativeTerritory} from './nativeSpawnTerritory.js';
 
 // A residency budget, not a monster aggression/leash range. Public DTOs are capped separately.
 export const NATIVE_FIELD_RADIUS=8192;
 export const nativeFieldSupported=id=>Object.hasOwn(pilot.fields,id);
-const sourceSpawns=Object.fromEntries(Object.keys(pilot.fields).map(id=>[id,LOCATION_LEVELS[id].floors[0].rooms.flatMap(r=>r.spawns||[]).filter(s=>s.coordinateSource==='point')]));
+const sourceSpawns=Object.fromEntries(Object.keys(pilot.fields).map(id=>[id,LOCATION_LEVELS[id].floors[0].rooms.flatMap(r=>r.spawns||[])]));
 const allSourceSpawns=Object.values(sourceSpawns).flat();
-export const nativeFieldNear=(point,id)=>Boolean(point&&(id?sourceSpawns[id]||[]:allSourceSpawns).some(s=>Math.hypot(s.x-point.x,s.y-point.y)<=NATIVE_FIELD_RADIUS));
+export const nativeFieldNear=(point,id)=>Boolean(point&&(id?sourceSpawns[id]||[]:allSourceSpawns).some(s=>nativeSpawnDistance(point,s)<=NATIVE_FIELD_RADIUS));
 export function nativeFieldZone(point,preferred=null){
  if(preferred)return nativeFieldNear(point,preferred)?preferred:null;
  if(!point)return null;
  let zone=null,distance=NATIVE_FIELD_RADIUS;
- for(const [id,spawns] of Object.entries(sourceSpawns))for(const spawn of spawns){const next=Math.hypot(spawn.x-point.x,spawn.y-point.y);if(next<=distance){zone=id;distance=next;}}
+ for(const [id,spawns] of Object.entries(sourceSpawns))for(const spawn of spawns){const next=nativeSpawnDistance(point,spawn);if(next<=distance){zone=id;distance=next;}}
  return zone;
 }
 export const nativeFieldCity=id=>pilot.fields[id]?.city||null;
@@ -39,19 +40,26 @@ export function placeNativeActor(actor,source){
  Object.assign(actor,{x:source.x/ROOM_SIZE,y:source.y/ROOM_SIZE,native:{z:point.z},path:[]});
  return true;
 }
+export function placeNativeSpawn(actor,random=Math.random){
+ if(!actor.sourcePosition&&actor.sourceTerritory){
+  const position=sampleNativeTerritory(actor.sourceTerritory,{random});if(!position)return false;
+  actor.sourcePosition=position;actor.sourcePlacement='territory';
+ }
+ return placeNativeActor(actor,actor.sourcePosition);
+}
 export function activateNativeField(hunt,point,now){
  const f=hunt?.field;if(!nativeFieldSupported(hunt?.zone)||!f)return false;
  if(!f.native){
   f.native={version:1,z:point.z,loaded:{},missing:{}};
   for(const bank of nativeFieldBuckets(f))bank.mobs=(bank.mobs||[]).filter(m=>{
    const key=m.sourceRoom+':'+m.sourceSlot;
-   if(!placeNativeActor(m,m.sourcePosition)){f.native.missing[key]='source_ground_unavailable';return false;}
+   if(!placeNativeSpawn(m)){f.native.missing[key]='source_ground_unavailable';return false;}
    m.ai=null;f.native.loaded[key]=true;return true;
   });
  }
  Object.assign(f,{x:point.x/ROOM_SIZE,y:point.y/ROOM_SIZE,path:[],walls:[],moveAt:now,seenAt:now});
  f.native.z=point.z;delete f.native.journey;delete f.native.nativeTrail;
- const nearest=LOCATION_LEVELS[hunt.zone].floors[0].rooms.flatMap(r=>(r.spawns||[]).filter(s=>s.coordinateSource==='point').map(s=>({room:r.id,distance:Math.hypot(s.x-point.x,s.y-point.y)}))).sort((a,b)=>a.distance-b.distance)[0];
+ const nearest=LOCATION_LEVELS[hunt.zone].floors[0].rooms.flatMap(r=>(r.spawns||[]).map(s=>({room:r.id,distance:nativeSpawnDistance(point,s)}))).sort((a,b)=>a.distance-b.distance)[0];
  if(nearest&&nearest.room!==f.room){
   f.rooms[f.room]={mobs:f.mobs};f.mobs=f.rooms[nearest.room]?.mobs||[];delete f.rooms[nearest.room];f.room=nearest.room;
  }
@@ -66,12 +74,11 @@ export function syncNativePopulation(hunt,layout,now,populate){
   for(const source of room.spawns||[])for(let i=0;i<source.count;i++,slot++){
    const key=room.id+':'+slot;
    if(f.native.loaded[key]||f.native.missing[key]||pending.has(key))continue;
-   if(source.coordinateSource!=='point'){f.native.missing[key]='source_position_unavailable';continue;}
-   if(Math.hypot(source.x-f.x*ROOM_SIZE,source.y-f.y*ROOM_SIZE)>NATIVE_FIELD_RADIUS)continue;
+   if(nativeSpawnDistance({x:f.x*ROOM_SIZE,y:f.y*ROOM_SIZE},source)>NATIVE_FIELD_RADIUS)continue;
    const bank=room.id===f.room?f:(f.rooms[room.id]||={mobs:[]});
    f.seq=(f.seq||0)+1;
    const [mob]=populate(room,slot,`${now}:native:${f.seq}`);
-   if(!mob||!placeNativeActor(mob,source)){f.native.missing[key]='source_ground_unavailable';continue;}
+   if(!mob?.native){f.native.missing[key]='source_ground_unavailable';continue;}
    f.native.loaded[key]=true;bank.mobs.push(mob);
   }
  }

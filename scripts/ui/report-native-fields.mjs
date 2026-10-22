@@ -4,20 +4,22 @@ import registry from '../../template/nativeFieldPilot.js';
 import {LOCATION_LEVELS} from '../../template/locationLevels.js';
 import {LOCATIONS,CITIES} from '../../template/worldMap.js';
 import {WORLD_EXTENSION} from '../../template/worldExtension.js';
+import {sampleNativeTerritory} from '../../functions/game/world/nativeSpawnTerritory.js';
 import {placeNativeActor} from '../../functions/game/world/nativeFieldSpace.js';
-const entries=Object.entries(registry.fields),total=entries.reduce((n,[,m])=>n+m.count,0);
+const entries=Object.entries(registry.fields),total=entries.reduce((n,[,m])=>n+m.count,0),fixed=entries.reduce((n,[,m])=>n+m.fixedCount,0);
+let seed=42;const random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
 const rows=entries.map(([id,m])=>{
- const slots=LOCATION_LEVELS[id].floors[0].rooms.flatMap(r=>r.spawns||[]),valid=slots.filter(s=>placeNativeActor({},s));
+ const slots=LOCATION_LEVELS[id].floors[0].rooms.flatMap(r=>r.spawns||[]),valid=slots.filter(s=>s.coordinateSource==='point'?placeNativeActor({},s):Boolean(sampleNativeTerritory(s,{random})));
  assert.equal(valid.length,slots.length,`${id}: missing original ground spawn`);
  assert.equal(slots.reduce((n,s)=>n+s.count,0),m.count);
- return `| ${WORLD_EXTENSION.find(r=>r.zone.id===id)?.zone.title||LOCATIONS.find(l=>l.id===id)?.name||id} | ${CITIES.find(c=>c.id===m.city)?.name||m.city} | ${m.count} | ${m.npcIds.join(', ')} | ${valid.length}/${slots.length} | ${m.unportedMinionTemplates?.length?'Есть; ещё не перенесены':'—'} |`;
+ return `| ${WORLD_EXTENSION.find(r=>r.zone.id===id)?.zone.title||LOCATIONS.find(l=>l.id===id)?.name||id} | ${CITIES.find(c=>c.id===m.city)?.name||m.city} | ${m.fixedCount} + ${m.territoryCount} | ${m.npcIds.join(', ')} | ${valid.length}/${slots.length} | ${m.unportedMinionTemplates?.length?'Есть; ещё не перенесены':'—'} |`;
 });
 fs.writeFileSync('docs/native-field-registry.md',[
  '# Исходное население в мировом Атласе','',
- `Подключено **${entries.length}** наземных участков, **${total}** фиксированных позиций. Каждая строка использует исходные XY, проверенный слой геодаты и отдельное сохраняемое население. Список относится к мировому бою, а не ко всем зонам каталога.`, '',
- '| Участок | Городский маршрут | Позиций | Исходные NPC | Проверены по геодате | Динамические миньоны |','| --- | --- | ---: | --- | --- | --- |',...rows,'',
- 'Реестр: `template/nativeFieldPilot.js`. Скорости бега и дальности обычных атак импортируются из закреплённых XML High Five; SHA-256 каждого файла сохраняется. Источники каждой позиции и возрождения находятся в `template/locationLevels.js`. Произвольные точки вместо исходных не создаются. Коррекция высоты наземного спавна следует исходному `Spawn.java`: строго меньше 300 единиц.', '',
+ `Подключено **${entries.length}** наземных участков, **${total}** мест исходного населения: **${fixed}** фиксированных позиций и **${total-fixed}** мест в исходных полигонах. Фиксированные XY сохраняются; для полигонов точку выбирает сервер по правилу H5 с проверкой геодаты. Население каждого участка сохраняется отдельно. Список относится к мировому бою, а не ко всем зонам каталога.`, '',
+ '| Участок | Городский маршрут | Фиксированные + в полигонах | Исходные NPC | Проверены записи размещения | Динамические миньоны |','| --- | --- | ---: | --- | --- | --- |',...rows,'',
+ 'Реестр: `template/nativeFieldPilot.js`. Скорости бега и дальности обычных атак импортируются из закреплённых XML High Five; SHA-256 каждого файла сохраняется. Источники каждой позиции и возрождения находятся в `template/locationLevels.js`. Центры полигонов не используются как точки появления. Исходные ZoneNPoly и NpcSpawnTerritory с MIT-уведомлениями сохранены в `art-source/geodata/spawns`; `node scripts/l2j/check-spawn-territory-java.mjs` сравнивает предложения с неизменёнными Java-классами. При возрождении точка в полигоне выбирается заново. Непроверенные резервные точки, вода и чужие владения не допускаются; неудачный ограниченный поиск не создаёт NPC. Коррекция высоты наземного спавна следует исходному `Spawn.java`: строго меньше 300 единиц.', '',
  '`node --test test/native-field-registry.test.js` проверяет каждую зарегистрированную зону: исходные позиции, границу DTO, отсутствие дубликатов, сохранение/загрузку, пеший возврат в город и возвращение с прежними HP и instanceId. `NATIVE_PILOT_ZONE=<id> node scripts/ui/check-native-field-pilot.mjs` проверяет бой, добычу, ходьбу и возврат на 320/390/1100 px, без Canvas и без изображений.', '',
  'Отчёт воспроизводится: `node scripts/ui/report-native-fields.mjs`. Его успешное построение подтверждает исходные позиции, но не заменяет серверные и браузерные проверки. Динамические миньоны сохраняются в `npcMinionTemplates` с исходными группами и весами, но ещё не создаются; количество фиксированных позиций их не включает. Полная видимость GeoEngine, специальные умения исходного AI, мировое PvP и общий банк NPC для всех игроков остаются отдельными этапами. Подробнее: [мировая охота и ограничения](native-field-pilot.md), [готовность остальных зон](native-field-readiness.md).',''
 ].join('\n'));
-console.log(`${entries.length} native combat fields; ${total} verified fixed ground positions`);
+console.log(`${entries.length} native combat fields; ${total} verified source population slots`);
