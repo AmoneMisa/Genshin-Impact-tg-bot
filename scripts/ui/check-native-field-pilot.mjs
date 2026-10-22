@@ -65,7 +65,16 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  await page.locator('[data-quick-go]').filter({hasText:zoneName}).click();assert.equal(await page.locator('[data-native-walk]').isEnabled(),true);
  await page.locator('[data-native-walk]').click();assert.equal(s.game.world.mode,'road');now+=Math.floor((s.game.world.walkHome.until-now)*.9);
  await page.locator('.atlas-combat:not([hidden])').waitFor();
- assert.ok(s.game.hunt.field.native.journey?.native.remaining>0,'native population streams before the road endpoint');finishRoad=true;
+ assert.ok(s.game.hunt.field.native.journey?.native.remaining>0,'native population streams before the road endpoint');
+ if(process.env.NATIVE_RESUME){
+  await page.locator('[data-movement]').click();await page.locator('[data-native-stop]').click();
+  const stopped=worldState(s,now).nativeField.point;assert.equal(s.game.hunt.field.native.journey,undefined);
+  await page.locator('[data-movement]').click();await page.getByRole('combobox',{name:'Разделы телепорта',exact:true}).click();await page.getByRole('option',{name:'Охота',exact:true}).click();
+  await page.locator('[data-quick-go]').filter({hasText:zoneName}).click();assert.equal(await page.locator('[data-native-walk]').isEnabled(),true);
+  await page.locator('[data-native-walk]').click();assert.equal(s.game.world.mode,'location');assert.ok(s.game.hunt.field.native.journey);
+  assert.deepEqual(worldState(s,now).nativeField.point,stopped);assert.equal(await page.locator('.hunt-overlay').count(),0);
+ }
+ finishRoad=true;
  await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.nativeField?.point.x===endpoint.x);
  await page.waitForTimeout(100);
  assert.equal(s.game.world.mode,'location');assert.equal(s.game.world.location,zone);assert.equal(s.game.inventory.gold,1e6);

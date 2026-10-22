@@ -226,11 +226,11 @@ export function worldAction(session,body,now=Date.now()){
         Object.assign(w,{mode:'road',walkHome:result.trip,path:[],pending:null,channel:null,location:null});delete w.nativePosition;delete w.cityWalk;return {ok:true};
     }
     if(body.action==='native_stop'){
-        if(nativeFieldPoint(session)&&session.game.hunt.field.native.journey){stopHuntAction(session.game.hunt.field,now);return {ok:true};}
+        if(nativeFieldPoint(session)&&session.game.hunt.field.native.journey){rememberNativeResume(w,session.game.hunt.field.native.journey);stopHuntAction(session.game.hunt.field,now);return {ok:true};}
         return stopNativeWalk(w)?{ok:true}:{ok:false,reason:'no_field'};
     }
     if(body.action==='native_move'){
-        if(nativeFieldPoint(session))return moveHuntField(session,{x:Number(body.point?.x)/ROOM_SIZE,y:Number(body.point?.y)/ROOM_SIZE},now);
+        if(nativeFieldPoint(session)){delete w.nativeResume;return moveHuntField(session,{x:Number(body.point?.x)/ROOM_SIZE,y:Number(body.point?.y)/ROOM_SIZE},now);}
         const denied=quickTravelBlock(session,now);if(denied)return {ok:false,reason:denied};
         const result=nativeFreeWalk(session,body.point,now,getSpeed(session)*l2MoveMultiplier(session,now));
         if(!result.ok)return result;
@@ -279,6 +279,9 @@ export function worldAction(session,body,now=Date.now()){
             const denied=quickTravelBlock(session,now)||regionAccessBlock(session,location,{walking:true,now});if(denied)return {ok:false,reason:denied};
             const result=nativeTravel(session,{location:location.id},now,getSpeed(session)*l2MoveMultiplier(session,now));
             if(!result.ok)return result;
+            if(nativeFieldPoint(session)&&w.location===location.id){
+                const field=session.game.hunt.field;stopHuntAction(field,now);field.native.journey=result.trip;field.seenAt=now;w.channel=null;return {ok:true};
+            }
             if(w.mode==='location')saveNativeField(session,now);
             if(session.game.hunt){session.game.hunt.field=null;session.game.hunt.mob=null;}
             Object.assign(w,{mode:'road',walkHome:result.trip,path:[],pending:null,channel:null});delete w.nativePosition;return {ok:true};

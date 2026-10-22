@@ -143,7 +143,7 @@ export async function openWorldMap(options){
         const blocked=state.quickTravel?.blocked;
         if(travelError)popup.insertAdjacentHTML('beforeend','<p role="alert">'+esc(travelError)+'</p>');
         popup.insertAdjacentHTML('beforeend',movementHtml(state,{tab:travelTab,section:travelSection,level:travelLevel,selected:travelSelection,blocked:blocked?(errors[blocked]||'Телепорт сейчас недоступен.'):null,busy}));
-        if(state.player.worldPoint&&state.player.mode==='road'&&!isTransport()){
+        if(state.player.worldPoint&&(state.player.mode==='road'||state.nativeField&&state.player.worldPath?.length)&&!isTransport()){
             popup.insertAdjacentHTML('beforeend','<button type="button" class="ui-button" data-native-stop>Остановиться</button>');
             popup.querySelector('[data-native-stop]').onclick=()=>act({action:'native_stop'});
         }

@@ -76,10 +76,11 @@ export function nativeExit(session){
 export function nativeTravel(session,target,now,speed){
  const w=session.game.world,to=target?.port?nativePortRoute(target.port,target.stop):target?.location&&nativeRoute(target.location),from=w.mode==='location'&&nativeRoute(w.location);
  let start,path,arrivalCity=target?.city||null;
- if(target?.location&&target.location===w.location&&w.mode==='location')return {ok:false,reason:'location_path_required'};
  const island=to?.island||from?.island||nativeIsland(session);
  if(island&&(to?.island!==island||arrivalCity))return {ok:false,reason:'location_path_required'};
- const resumed=resumeNativeJourney(w,target,now,speed);if(resumed){delete w.nativeResume;return {ok:true,trip:resumed};}
+ const point=nativeFieldPoint(session),resumeWorld=point?{...w,mode:'native',nativePosition:point}:w;
+ const resumed=resumeNativeJourney(resumeWorld,target,now,speed);if(resumed){delete w.nativeResume;return {ok:true,trip:resumed};}
+ if(target?.location&&target.location===w.location&&w.mode==='location')return {ok:false,reason:'location_path_required'};
  if(island){
   if(to?.island!==island||arrivalCity)return {ok:false,reason:'location_path_required'};
   if(w.mode==='location'&&from?.island===island){
@@ -142,7 +143,7 @@ export function nativeWalkOptions(session){
  return Object.fromEntries(Object.entries({...routes.routes,...islands.routes}).filter(([,r])=>r.available).map(([id,r])=>{
   if(island||r.island)return [id,{enabled:Boolean(w.mode==='native'&&island===r.island),viaCity:null,exitRequired:w.mode==='location'&&!exit?.near}];
   const origin=w.mode==='location'?exit?.city:w.city,link=origin&&nativeTownPath(origin,r.city);
-  return [id,{enabled:w.mode==='city'?Boolean(link):w.mode==='location'?Boolean(exit&&link&&id!==w.location):w.mode==='native',viaCity:null,exitRequired:w.mode==='location'&&!exit?.near}];
+  return [id,{enabled:w.mode==='city'?Boolean(link):w.mode==='location'?Boolean(exit&&link&&(id!==w.location||nativeFieldPoint(session)&&w.nativeResume?.target?.location===id)):w.mode==='native',viaCity:null,exitRequired:w.mode==='location'&&!exit?.near}];
  }));
 }
 export function nativeWalkCities(session){
