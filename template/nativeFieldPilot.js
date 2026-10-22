@@ -33,6 +33,16 @@ export default {
         "20433"
       ],
       "count": 375
+    },
+    "crypts-of-disgrace": {
+      "city": "schuttgart",
+      "npcIds": [
+        "22703",
+        "22704",
+        "22705",
+        "22706"
+      ],
+      "count": 222
     }
   },
   "source": {
@@ -41,7 +51,8 @@ export default {
       "stats/npcs/20100-20199.xml": "a7b767114afe96a425a3aa66ee0ed28a810d26bcec1f81c4408d3cc11e91a275",
       "stats/npcs/20300-20399.xml": "6065fef3bfb2b647175a1dd3a896d60f12aa054cd9593e037c7798b0c40f1f57",
       "stats/npcs/20400-20499.xml": "802cae19b54fe18d0c39fa1b8db2a727546b3a10c16c16269711ec285a91ea2e",
-      "stats/npcs/20600-20699.xml": "a39a79946ab71daea2d4492ef334a9e3f4cd5d3560e7c484cae39d9d4b9b6997"
+      "stats/npcs/20600-20699.xml": "a39a79946ab71daea2d4492ef334a9e3f4cd5d3560e7c484cae39d9d4b9b6997",
+      "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff"
     },
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
   },
@@ -109,6 +120,22 @@ export default {
     },
     "20645": {
       "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "22703": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "22704": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22705": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22706": {
+      "runSpeed": 190.0,
       "attackRange": 40.0
     }
   }

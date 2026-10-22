@@ -26,7 +26,7 @@ const browser=await chromium.launch({headless:true,executablePath:'C:/Users/kuba
 const cases=[{width:320},{width:390},{width:1100},{width:320,noCanvas:true},{width:320,noImages:true}].filter(c=>!process.env.NATIVE_WIDTH||String(c.width)===process.env.NATIVE_WIDTH);
 try{for(const {width,noCanvas=false,noImages=false} of cases){
  let now=1800000000000,finishRoad=false;
- const s={userId:1,userChatData:{user:{id:1,first_name:'Test'}},game:{stats:{lvl:Math.max(...LOCATION_LEVELS[zone].mobs.map(m=>m.level))+4,currentExp:0},inventory:{gold:1e6,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city,x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
+ const s={userId:1,userChatData:{user:{id:1,first_name:'Test'}},game:{stats:{lvl:Math.min(85,Math.max(...LOCATION_LEVELS[zone].mobs.map(m=>m.level))+4),currentExp:0},inventory:{gold:1e6,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city,x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
  const chat={game:{},members:[s]};s.ownerDocument=()=>chat;change(s,'humanFighter');update(s);
  const quiet=()=>{const f=s.game.hunt?.field;if(f)for(const bank of nativeFieldBuckets(f))for(const mob of bank.mobs){mob.aggressive=false;mob.nextAttackAt=now+1e9;}};
  const dto=()=>{const trip=s.game.world.walkHome||s.game.hunt?.field?.native?.journey;if(finishRoad&&trip?.native){now=trip.until+1;finishRoad=false;}advanceWorld(s,now);quiet();return {world:{...worldState(s,now),holdings:[],corpses:[]}};};
@@ -88,14 +88,21 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  assert.equal(await page.locator('.atlas-combat .ui-combat-supply[data-supply="hp"]').isDisabled(),true);await page.locator('.atlas-combat summary').click();
  // Combat and world polling share the same saved actors, even when movement is requested again.
  const before=worldState(s,now).player.worldPoint;
- if(noCanvas){await page.locator('[data-native-step="east"]').click();assert.ok(s.game.hunt.field.native.journey);now+=2000;}
+ if(noCanvas){
+  const direction=[['east',200,0],['west',-200,0],['south',0,200],['north',0,-200]].find(([,x,y])=>findNativePath(before,{x:before.x+x,y:before.y+y,z:before.z},{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true}).ok);assert.ok(direction);
+  await page.locator(`[data-native-step="${direction[0]}"]`).click();assert.ok(s.game.hunt.field.native.journey);now+=2000;
+ }
  else {
   const box=await page.locator('canvas').boundingBox(),actors=worldState(s,now).nativeField.actors;
-  const goal=[2000,3000,4000,5000].flatMap(n=>[[n,0],[-n,0],[0,n],[0,-n],[n,n],[-n,-n],[n,-n],[-n,n]]).map(([x,y])=>({x:before.x+x,y:before.y+y,z:before.z})).find(p=>{
+  const candidates=[2000,3000,4000,5000].flatMap(n=>[[n,0],[-n,0],[0,n],[0,-n],[n,n],[-n,-n],[n,-n],[-n,n]]).map(([x,y])=>({x:before.x+x,y:before.y+y,z:before.z})).filter(p=>{
    const x=box.width/2+(p.x-before.x)*box.width/14000,y=box.height/2+(p.y-before.y)*box.width/14000;
-   return x>30&&x<box.width-30&&y>30&&y<box.height-30&&actors.slice(0,8).every(a=>Math.hypot(a.x-p.x,a.y-p.y)*box.width/14000>30)&&findNativePath(before,p,{allowed:nativeGroundAllowed,maxNodes:6000,reversible:true}).ok;
+   return x>30&&x<box.width-30&&y>30&&y<box.height-30&&actors.slice(0,8).every(a=>Math.hypot(a.x-p.x,a.y-p.y)*box.width/14000>30);
   });
-  assert.ok(goal);await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('canvas').click({position:{x:box.width/2+(goal.x-before.x)*box.width/14000,y:box.height/2+(goal.y-before.y)*box.width/14000}})]);now+=3000;
+  let goal;for(const candidate of candidates){
+   const visible=await page.locator('canvas').evaluate((n,p)=>document.elementFromPoint(p.x,p.y)===n,{x:box.x+box.width/2+(candidate.x-before.x)*box.width/14000,y:box.y+box.height/2+(candidate.y-before.y)*box.width/14000});
+   if(visible&&findNativePath(before,candidate,{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true}).ok){goal=candidate;break;}
+  }
+  assert.ok(goal);const [moveResponse]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('canvas').click({position:{x:box.width/2+(goal.x-before.x)*box.width/14000,y:box.height/2+(goal.y-before.y)*box.width/14000}})]);assert.equal(moveResponse.status(),200,JSON.stringify(await moveResponse.json()));now+=3000;
  }
  await page.waitForTimeout(2100);assert.equal(s.game.hunt.kills,1);assert.equal(await page.locator('.hunt-overlay').count(),0);
  const after=worldState(s,now).player.worldPoint;assert.ok(Math.hypot(after.x-before.x,after.y-before.y)>0);
