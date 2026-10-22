@@ -233,6 +233,20 @@ export default {
         "22092",
         "22096"
       ]
+    },
+    "plains-of-the-lizardmen": {
+      "city": "oren",
+      "npcIds": [
+        "22768",
+        "22769",
+        "22770",
+        "22771",
+        "22772",
+        "22773",
+        "22774"
+      ],
+      "count": 311,
+      "unportedMinionTemplates": []
     }
   },
   "source": {
@@ -432,6 +446,34 @@ export default {
     },
     "22706": {
       "runSpeed": 190.0,
+      "attackRange": 40.0
+    },
+    "22768": {
+      "runSpeed": 140.0,
+      "attackRange": 80.0
+    },
+    "22769": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "22770": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "22771": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22772": {
+      "runSpeed": 120.0,
+      "attackRange": 1100.0
+    },
+    "22773": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "22774": {
+      "runSpeed": 150.0,
       "attackRange": 40.0
     }
   }

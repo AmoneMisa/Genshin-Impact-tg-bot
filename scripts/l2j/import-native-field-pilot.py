@@ -7,7 +7,15 @@ import subprocess
 from pathlib import Path
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
-fields={'vuku-lands':{'city':'gludio'},'angel-waterfall':{'city':'aden'},'marsh-zombies':{'city':'dark-elven-village'},'crypts-of-disgrace':{'city':'schuttgart'},'den-of-evil':{'city':'schuttgart'},'frozen-labyrinth':{'city':'schuttgart'}}
+fields={
+    'vuku-lands': {'city': 'gludio'},
+    'angel-waterfall': {'city': 'aden'},
+    'marsh-zombies': {'city': 'dark-elven-village'},
+    'crypts-of-disgrace': {'city': 'schuttgart'},
+    'den-of-evil': {'city': 'schuttgart'},
+    'frozen-labyrinth': {'city': 'schuttgart'},
+    'plains-of-the-lizardmen': {'city': 'oren'},
+}
 catalog=json.loads(subprocess.check_output(['node','--input-type=module','-e',
     'import {LOCATION_LEVELS} from "./template/locationLevels.js";console.log(JSON.stringify(Object.fromEntries('+json.dumps(list(fields))+'.map(id=>[id,LOCATION_LEVELS[id]]))))'],encoding='utf-8'))
 ids=set()
