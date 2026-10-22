@@ -172,6 +172,23 @@ export default {
     ]
   },
   "fields": {
+    "sea-of-spores": {
+      "city": "oren",
+      "fixedCount": 0,
+      "territoryCount": 206,
+      "npcIds": [
+        "20555",
+        "20556",
+        "20557",
+        "20558",
+        "20559",
+        "20560",
+        "20561",
+        "20562"
+      ],
+      "count": 206,
+      "unportedMinionTemplates": []
+    },
     "timak-outpost": {
       "city": "oren",
       "fixedCount": 0,
@@ -435,6 +452,7 @@ export default {
       "stats/npcs/22000-22099.xml": "99c9046f0c240f8de7fd4ed5737b65db17b8ee049aa6a496d09ce60be506e624",
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
+      "spawns/Oren/SeaOfSpores.xml": "76d8e1fd2622c17912b7a02d7ce1a4ef5d2943d79dad4f752c53115a28df983e",
       "spawns/Oren/TimakOutpost.xml": "be1285abe04e42f15758b8a89182afa1956eebc3c4485c1653e16caaee3fdd47",
       "spawns/Dion/BeeHive.xml": "57bd5bd8e71eb06360e7689f1f7f2ba3b699e76758cfb8aea63556aad8347807",
       "spawns/Giran/BrekasStronghold.xml": "a09e2a58d22af9386e7e7b7eb85b8d90056d17d65761ddb3d12161c803a3588f",
@@ -636,6 +654,38 @@ export default {
     },
     "20433": {
       "runSpeed": 80.0,
+      "attackRange": 40.0
+    },
+    "20555": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20556": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20557": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20558": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20559": {
+      "runSpeed": 23.0,
+      "attackRange": 40.0
+    },
+    "20560": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20561": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20562": {
+      "runSpeed": 15.0,
       "attackRange": 40.0
     },
     "20583": {
