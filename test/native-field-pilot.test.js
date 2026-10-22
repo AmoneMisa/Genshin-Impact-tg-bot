@@ -39,6 +39,14 @@ test('native combat movement ignores client height and keeps one budget through 
  assert.equal(s.game.world.location,'vuku-lands');assert.equal(s.game.hunt.field.floor,1);
  assert.ok(Math.hypot(a.x-before.x,a.y-before.y)<=80);
 });
+test('an attack already in reach stops the saved native walk instead of continuing underneath combat',()=>{
+ const s=hero(),now=arrive(s);quiet(s,now);const f=s.game.hunt.field;
+ const mob=battleField(s.game.hunt).mobs.find(m=>Math.hypot(m.x-f.x,m.y-f.y)<.001);assert.ok(mob);
+ assert.equal(selectHuntTarget(s,mob.instanceId,now).ok,true);const point=nativeActorPoint(f);
+ assert.equal(worldAction(s,{action:'native_move',point:{x:point.x+80,y:point.y}},now).ok,true);assert.ok(f.native.journey);
+ assert.equal(setHuntAttack(s,true,now).ok,true);assert.equal(f.native.journey,undefined);
+ advanceHunt(s,now+500);assert.deepEqual(nativeActorPoint(f),point);
+});
 test('the road streams native actors before arrival and retains the same remaining journey',()=>{
  const s=hero();assert.equal(worldAction(s,{action:'walk_location',location:'vuku-lands'},START).ok,true);
  const trip=s.game.world.walkHome;let previous=trip.native.point,distance=0,entry=null;

@@ -296,6 +296,7 @@ export function setHuntAttack(session,enabled,now=Date.now()) {
     delete field.pendingRoom;
     delete field.crossing;
     delete field.action;field.path=[];
+    if(field.native)stopNativeActor(field);
     field.seenAt=now;hunt.lastActionAt=now;
     field.autoAttack={targetId:hunt.mob.instanceId,nextAt:Math.max(now,number(field.nextAttackAt))};
     if(session.game.world)session.game.world.channel=null;
@@ -319,6 +320,7 @@ function advanceHuntAction(session,now,random=Math.random) {
         return [];
     }
     field.path=[];
+    if(field.native)stopNativeActor(field);
     delete field.crossing;
     delete (field.action||field.autoAttack).approach;
     if(l2ActionBlock(session,{attack:hostileSkill(skill),magic:skillCombatType(skill,session.game.gameClass)==='magic'},now)){
