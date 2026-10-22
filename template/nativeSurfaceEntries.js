@@ -1329,5 +1329,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "garden-of-eva": {
+    "x": 84413,
+    "y": 234334,
+    "z": -3656,
+    "region": "heine",
+    "teleportGold": 2400,
+    "entrySource": {
+      "file": "teleporters/town/30899.xml",
+      "npcId": 30899,
+      "name": "Garden of Eva",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "81db9e28c69cdaef33ece38b69b4ec7daeff73b5bd1466e340f4a53a322e4a26"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30899,
+        "npcName": "Flauen",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 2400,
+        "source": {
+          "file": "teleporters/town/30899.xml",
+          "npcId": 30899,
+          "name": "Garden of Eva",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "81db9e28c69cdaef33ece38b69b4ec7daeff73b5bd1466e340f4a53a322e4a26"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        79413,
+        229334
+      ],
+      [
+        89413,
+        229334
+      ],
+      [
+        89413,
+        239334
+      ],
+      [
+        79413,
+        239334
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
