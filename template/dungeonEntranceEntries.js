@@ -592,5 +592,54 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "necropolis-saints": {
+    "x": 171936,
+    "y": -17600,
+    "z": -4899,
+    "region": "goddard",
+    "regionAssociation": "nearest-source-town",
+    "dungeonEntranceSource": {
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "files": {
+        "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
+        "spawns/Others/25_17.xml": "bd4c0e4d3135212c3da2faf6b32db255bdd79f4065cb12346a48958acde869f5"
+      },
+      "npcId": 31101,
+      "role": 0,
+      "interiorNpcId": 31109,
+      "signNumber": 1,
+      "insideDestination": {
+        "x": 172351,
+        "y": -17600,
+        "z": -4928
+      },
+      "returnDestination": {
+        "x": 172031,
+        "y": -17600,
+        "z": -4928
+      },
+      "nativeGroundApproach": null,
+      "teleportTariff": null
+    },
+    "polygon": [
+      [
+        171436,
+        -18100
+      ],
+      [
+        172436,
+        -18100
+      ],
+      [
+        172436,
+        -17100
+      ],
+      [
+        171436,
+        -17100
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
