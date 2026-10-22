@@ -9,9 +9,12 @@ import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';
 import {meetNativePath,nativeMeetingSeeds} from './meet-native-path.mjs';
 
 const viaOnly=process.argv.includes('--via-fields-only'),reverseOnly=process.argv.includes('--reverse-only'),meetingOnly=process.argv.includes('--meeting-only');
+const meetingWeightArg=process.argv.find(v=>v.startsWith('--meeting-weight='));
+const meetingWeight=meetingWeightArg?Number(meetingWeightArg.split('=')[1]):2;
+if(!Number.isInteger(meetingWeight)||meetingWeight<1||meetingWeight>4)throw new Error('Meeting weight must be an integer from 1 to 4');
 if([viaOnly,reverseOnly,meetingOnly].filter(Boolean).length>1)throw new Error('Choose one search phase');
 const rebuild=process.argv.includes('--rebuild');
-const selected=process.argv.slice(2).filter(v=>!['--via-fields-only','--reverse-only','--meeting-only','--rebuild'].includes(v)),file='template/nativeTownRoutes.js';
+const selected=process.argv.slice(2).filter(v=>!v.startsWith('--meeting-weight=')&&!['--via-fields-only','--reverse-only','--meeting-only','--rebuild'].includes(v)),file='template/nativeTownRoutes.js';
 // Import work can retain its neighbouring regions; the live server cache stays at four.
 const geo=new L2jGeodata({capacity:32});
 const previous=fs.existsSync(file)?(await import(new URL('../../template/nativeTownRoutes.js',import.meta.url))).default:null;
@@ -48,8 +51,8 @@ for(const [fromCity,toCity] of TOWN_LINKS){
   const seeds=city=>nativeMeetingSeeds(city,geo.point(TOWN_ANCHORS[city]),knownRoads,fieldRoutes.routes);
   const a=seeds(fromCity),b=seeds(toCity);
   for(const [stride,maxNodes,refine] of [[8,240000,false],[8,240000,true],[8,480000,true],[4,240000,false]]){
-   plan=meetNativePath(from,to,{geo,allowed:nativeGroundAllowed,stride,refine,maxNodes,margin:2048,heuristicWeight:2,fromSeeds:a,toSeeds:b});
-   attempts.push({method:'meeting',seedScope:'connected-component',stride,refine,maxNodes,heuristicWeight:2,margin:2048,fromSeeds:a.map(r=>r.id),toSeeds:b.map(r=>r.id),visited:plan.visited,reason:plan.reason||null});
+   plan=meetNativePath(from,to,{geo,allowed:nativeGroundAllowed,stride,refine,maxNodes,margin:2048,heuristicWeight:meetingWeight,fromSeeds:a,toSeeds:b});
+   attempts.push({method:'meeting',seedScope:'connected-component',stride,refine,maxNodes,heuristicWeight:meetingWeight,margin:2048,fromSeeds:a.map(r=>r.id),toSeeds:b.map(r=>r.id),visited:plan.visited,reason:plan.reason||null});
    console.log(id,'meeting',stride,plan.ok,plan.reason||'',plan.visited);if(plan.ok)break;
   }
  }
