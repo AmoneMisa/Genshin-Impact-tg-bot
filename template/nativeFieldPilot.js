@@ -147,6 +147,21 @@ export default {
     ]
   },
   "fields": {
+    "brekas-stronghold": {
+      "city": "giran",
+      "fixedCount": 0,
+      "territoryCount": 107,
+      "npcIds": [
+        "20199",
+        "20267",
+        "20268",
+        "20269",
+        "20270",
+        "20271"
+      ],
+      "count": 107,
+      "unportedMinionTemplates": []
+    },
     "vuku-lands": {
       "city": "gludio",
       "fixedCount": 75,
@@ -357,6 +372,7 @@ export default {
       "stats/npcs/22000-22099.xml": "99c9046f0c240f8de7fd4ed5737b65db17b8ee049aa6a496d09ce60be506e624",
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
+      "spawns/Giran/BrekasStronghold.xml": "a09e2a58d22af9386e7e7b7eb85b8d90056d17d65761ddb3d12161c803a3588f",
       "spawns/Others/19_20.xml": "9288973c393d4b37001bb9ed71607be55d02f3714bf3255c2cda98a9384c63b0",
       "spawns/Others/19_21.xml": "0b741792bcfb83f84599477b7bac623cc6ff0dc520024ad83f821a0b8cc1d9ed",
       "spawns/Others/19_19.xml": "f0ad24acfc3936aef08bfd68fc4ea444e99749ccdaf32e19fd934626c86287e3",
@@ -449,6 +465,10 @@ export default {
       "runSpeed": 140.0,
       "attackRange": 1100.0
     },
+    "20199": {
+      "runSpeed": 131.0,
+      "attackRange": 40.0
+    },
     "20205": {
       "runSpeed": 110.0,
       "attackRange": 40.0
@@ -519,6 +539,26 @@ export default {
     },
     "20266": {
       "runSpeed": 159.0,
+      "attackRange": 40.0
+    },
+    "20267": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "20268": {
+      "runSpeed": 130.0,
+      "attackRange": 1100.0
+    },
+    "20269": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "20270": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20271": {
+      "runSpeed": 120.0,
       "attackRange": 40.0
     },
     "20379": {
