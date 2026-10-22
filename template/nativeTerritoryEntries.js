@@ -83,5 +83,73 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "plains-of-glory": {
+    "x": 139312,
+    "y": 31184,
+    "z": -3368,
+    "region": "aden",
+    "teleportGold": null,
+    "entryRoutes": [],
+    "access": {
+      "kind": "walk-only"
+    },
+    "entrySource": {
+      "type": "TERRITORY_BOUNDARY",
+      "coordinateSource": "territory-node",
+      "originalEntrance": null,
+      "file": "spawns/Aden/PlainsOfGlory.xml",
+      "sha256": "f5034ee510412480b8d00e8288a1c684519986a86b294cd9ebf4f5e105cb7fcf",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "zone": "aden25_2418_16",
+      "vertex": 1,
+      "npcIds": [
+        20681,
+        20682,
+        20683
+      ],
+      "polygon": [
+        [
+          134756,
+          30792
+        ],
+        [
+          139312,
+          31184
+        ],
+        [
+          139468,
+          32476
+        ],
+        [
+          134856,
+          32420
+        ]
+      ],
+      "minZ": -3924,
+      "maxZ": -3124,
+      "heightSource": "l2j-geodata",
+      "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
+      "selectionRule": "nearest-source-vertex-with-confirmed-ground-path"
+    },
+    "polygon": [
+      [
+        134312,
+        26184
+      ],
+      [
+        144312,
+        26184
+      ],
+      [
+        144312,
+        36184
+      ],
+      [
+        134312,
+        36184
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
