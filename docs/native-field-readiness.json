@@ -1,0 +1,610 @@
+{
+  "sourceCommit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+  "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
+  "zoneCount": 39,
+  "nativeFieldCount": 9,
+  "zones": [
+    {
+      "id": "talking-island",
+      "name": "Окрестности Острова Говорящих",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 442,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "elven-fields",
+      "name": "Эльфийские луга",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 861,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "dark-forest",
+      "name": "Тёмный лес",
+      "route": true,
+      "fixed": 171,
+      "validFixed": 171,
+      "areas": 387,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "marsh-zombies",
+      "name": "Топи зомби",
+      "route": true,
+      "fixed": 375,
+      "validFixed": 375,
+      "areas": 0,
+      "unknown": 0,
+      "state": "Мировой бой подключён"
+    },
+    {
+      "id": "vuku-lands",
+      "name": "Земли орков Вуку",
+      "route": true,
+      "fixed": 75,
+      "validFixed": 75,
+      "areas": 0,
+      "unknown": 0,
+      "state": "Мировой бой подключён"
+    },
+    {
+      "id": "turek-orcs",
+      "name": "Лагерь орков Турек",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 276,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "plains-of-dion",
+      "name": "Равнины Диона",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 268,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "cruma-marshlands",
+      "name": "Болота Крумы",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 414,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "brekas-stronghold",
+      "name": "Крепость Брека",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 107,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "bee-hive",
+      "name": "Улей",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 369,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "alligator-beach",
+      "name": "Берег Аллигаторов",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 141,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "timak-outpost",
+      "name": "Застава Тимак",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 266,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "sea-of-spores",
+      "name": "Море Спор",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 206,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "plains-of-glory",
+      "name": "Равнины Славы",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 173,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "enchanted-valley",
+      "name": "Зачарованная долина",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 383,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "outlaw-forest",
+      "name": "Лес Изгоев",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 255,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "cemetery",
+      "name": "Кладбище Адена",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 392,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "angel-waterfall",
+      "name": "Водопад Ангелов",
+      "route": true,
+      "fixed": 49,
+      "validFixed": 49,
+      "areas": 0,
+      "unknown": 0,
+      "state": "Мировой бой подключён"
+    },
+    {
+      "id": "forsaken-plains",
+      "name": "Забытые равнины",
+      "route": true,
+      "fixed": 132,
+      "validFixed": 128,
+      "areas": 125,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "frozen-labyrinth",
+      "name": "Ледяной лабиринт",
+      "route": true,
+      "fixed": 283,
+      "validFixed": 283,
+      "areas": 0,
+      "unknown": 0,
+      "state": "Мировой бой подключён"
+    },
+    {
+      "id": "fields-of-massacre",
+      "name": "Поля Резни",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 460,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "valley-of-saints",
+      "name": "Долина Святых",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 311,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "swamp-of-screams",
+      "name": "Болото Криков",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 490,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "blazing-swamp",
+      "name": "Пылающее болото",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 385,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "wall-of-argos",
+      "name": "Стена Аргоса",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 321,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "hot-springs",
+      "name": "Горячие источники",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 175,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "silent-valley",
+      "name": "Тихая долина",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 200,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "ketra-outpost",
+      "name": "Застава орков Кетра",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 393,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "varka-outpost",
+      "name": "Лагерь силеносов Варка",
+      "route": true,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 275,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "primeval-isle",
+      "name": "Первобытный остров",
+      "route": false,
+      "fixed": 0,
+      "validFixed": 0,
+      "areas": 710,
+      "unknown": 0,
+      "state": "Нет подтверждённого наземного подхода"
+    },
+    {
+      "id": "hellbound",
+      "name": "Хеллбаунд",
+      "route": false,
+      "fixed": 457,
+      "validFixed": 456,
+      "areas": 0,
+      "unknown": 0,
+      "state": "Нет подтверждённого наземного подхода"
+    },
+    {
+      "id": "dragon-valley",
+      "name": "Долина Драконов",
+      "route": true,
+      "fixed": 504,
+      "validFixed": 504,
+      "areas": 39,
+      "unknown": 0,
+      "state": "Нужен мировой спавн в исходных областях"
+    },
+    {
+      "id": "den-of-evil",
+      "name": "Логово Зла",
+      "route": true,
+      "fixed": 237,
+      "validFixed": 237,
+      "areas": 0,
+      "unknown": 0,
+      "state": "Мировой бой подключён"
+    },
+    {
+      "id": "crypts-of-disgrace",
+      "name": "Склепы Позора",
+      "route": true,
+      "fixed": 222,
+      "validFixed": 222,
+      "areas": 0,
+      "unknown": 0,
+      "state": "Мировой бой подключён"
+    },
+    {
+      "id": "plains-of-the-lizardmen",
+      "name": "Равнины Ящеров",
+      "route": true,
+      "fixed": 311,
+      "validFixed": 311,
+      "areas": 0,
+      "unknown": 0,
+      "state": "Мировой бой подключён"
+    },
+    {
+      "id": "field-of-silence",
+      "name": "Поле Безмолвия",
+      "route": true,
+      "fixed": 514,
+      "validFixed": 512,
+      "areas": 0,
+      "unknown": 0,
+      "state": "Есть неподтверждённые наземные спавны"
+    },
+    {
+      "id": "sel-mahums",
+      "name": "Лагерь Сел Махум",
+      "route": true,
+      "fixed": 868,
+      "validFixed": 864,
+      "areas": 0,
+      "unknown": 0,
+      "state": "Есть неподтверждённые наземные спавны"
+    },
+    {
+      "id": "field-of-whispers",
+      "name": "Поле Шёпота",
+      "route": true,
+      "fixed": 594,
+      "validFixed": 594,
+      "areas": 0,
+      "unknown": 0,
+      "state": "Мировой бой подключён"
+    },
+    {
+      "id": "beast-farm",
+      "name": "Ферма зверей",
+      "route": true,
+      "fixed": 355,
+      "validFixed": 355,
+      "areas": 0,
+      "unknown": 0,
+      "state": "Мировой бой подключён"
+    }
+  ],
+  "blocked": [
+    {
+      "zone": "forsaken-plains",
+      "npcId": "21017",
+      "source": {
+        "x": 166634,
+        "y": 34096,
+        "z": -4044
+      },
+      "sourceFile": "spawns/Others/25_19.xml",
+      "ground": {
+        "x": 166634,
+        "y": 34096,
+        "z": -3376,
+        "nswe": 7
+      },
+      "issues": [
+        "spawn_height_gap"
+      ]
+    },
+    {
+      "zone": "forsaken-plains",
+      "npcId": "20679",
+      "source": {
+        "x": 165042,
+        "y": 44228,
+        "z": -3860
+      },
+      "sourceFile": "spawns/Others/25_19.xml",
+      "ground": {
+        "x": 165042,
+        "y": 44228,
+        "z": -3544,
+        "nswe": 15
+      },
+      "issues": [
+        "spawn_height_gap"
+      ]
+    },
+    {
+      "zone": "forsaken-plains",
+      "npcId": "21018",
+      "source": {
+        "x": 165713,
+        "y": 50008,
+        "z": -4216
+      },
+      "sourceFile": "spawns/Others/25_19.xml",
+      "ground": {
+        "x": 165713,
+        "y": 50008,
+        "z": -3808,
+        "nswe": 15
+      },
+      "issues": [
+        "spawn_height_gap"
+      ]
+    },
+    {
+      "zone": "forsaken-plains",
+      "npcId": "21020",
+      "source": {
+        "x": 186579,
+        "y": 37084,
+        "z": -4059
+      },
+      "sourceFile": "spawns/Others/25_19.xml",
+      "ground": {
+        "x": 186579,
+        "y": 37084,
+        "z": -4152,
+        "nswe": 15
+      },
+      "issues": [
+        "holding_region_required"
+      ]
+    },
+    {
+      "zone": "hellbound",
+      "npcId": "22320",
+      "source": {
+        "x": -10315,
+        "y": 237442,
+        "z": -3850
+      },
+      "sourceFile": "scripts/ai/areas/Hellbound/hellboundSpawns.xml",
+      "ground": {
+        "x": -10315,
+        "y": 237442,
+        "z": -3144,
+        "nswe": 15
+      },
+      "issues": [
+        "spawn_height_gap",
+        "swimming_required"
+      ]
+    },
+    {
+      "zone": "field-of-silence",
+      "npcId": "22651",
+      "source": {
+        "x": 75897,
+        "y": 189168,
+        "z": -3448
+      },
+      "sourceFile": "spawns/Innadril/FieldOfSilence.xml",
+      "ground": {
+        "x": 75897,
+        "y": 189168,
+        "z": -3448,
+        "nswe": 7
+      },
+      "issues": [
+        "holding_region_required"
+      ]
+    },
+    {
+      "zone": "field-of-silence",
+      "npcId": "22651",
+      "source": {
+        "x": 78995,
+        "y": 190581,
+        "z": -3784
+      },
+      "sourceFile": "spawns/Innadril/FieldOfSilence.xml",
+      "ground": {
+        "x": 78995,
+        "y": 190581,
+        "z": -3784,
+        "nswe": 15
+      },
+      "issues": [
+        "swimming_required"
+      ]
+    },
+    {
+      "zone": "sel-mahums",
+      "npcId": "22788",
+      "source": {
+        "x": 78990,
+        "y": 62250,
+        "z": -3335
+      },
+      "sourceFile": "spawns/Oren/SelMahums.xml",
+      "ground": {
+        "x": 78990,
+        "y": 62250,
+        "z": -3648,
+        "nswe": 15
+      },
+      "issues": [
+        "spawn_height_gap"
+      ]
+    },
+    {
+      "zone": "sel-mahums",
+      "npcId": "22787",
+      "source": {
+        "x": 84698,
+        "y": 61874,
+        "z": -3148
+      },
+      "sourceFile": "spawns/Oren/SelMahums.xml",
+      "ground": {
+        "x": 84698,
+        "y": 61874,
+        "z": -3448,
+        "nswe": 15
+      },
+      "issues": [
+        "spawn_height_gap"
+      ]
+    },
+    {
+      "zone": "sel-mahums",
+      "npcId": "22786",
+      "source": {
+        "x": 86075,
+        "y": 67510,
+        "z": -3375
+      },
+      "sourceFile": "spawns/Oren/SelMahums.xml",
+      "ground": {
+        "x": 86075,
+        "y": 67510,
+        "z": -3072,
+        "nswe": 15
+      },
+      "issues": [
+        "spawn_height_gap"
+      ]
+    },
+    {
+      "zone": "sel-mahums",
+      "npcId": "22787",
+      "source": {
+        "x": 82730,
+        "y": 69303,
+        "z": -3576
+      },
+      "sourceFile": "spawns/Oren/SelMahums.xml",
+      "ground": {
+        "x": 82730,
+        "y": 69303,
+        "z": -3120,
+        "nswe": 15
+      },
+      "issues": [
+        "spawn_height_gap"
+      ]
+    }
+  ]
+}
