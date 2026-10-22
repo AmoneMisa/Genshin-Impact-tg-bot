@@ -293,5 +293,55 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "necropolis-sacrifice": {
+    "x": -41568,
+    "y": 209344,
+    "z": -5085,
+    "region": "talking-island-village",
+    "regionAssociation": "nearest-source-town",
+    "dungeonEntranceSource": {
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "files": {
+        "stats/npcs/31000-31099.xml": "58bdaf574082c0446388154252e6cfdaceaa4a228d95aac6255f810fb5f39b3f",
+        "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
+        "spawns/Others/18_24.xml": "4dbb41e0833c9597f4c78abe00adeca0990dbb927240b6aed3dfc4a7f76a88c4"
+      },
+      "npcId": 31095,
+      "role": 0,
+      "interiorNpcId": 31103,
+      "signNumber": 1,
+      "insideDestination": {
+        "x": -41567,
+        "y": 209828,
+        "z": -5112
+      },
+      "returnDestination": {
+        "x": -41567,
+        "y": 209463,
+        "z": -5114
+      },
+      "nativeGroundApproach": null,
+      "teleportTariff": null
+    },
+    "polygon": [
+      [
+        -42068,
+        208844
+      ],
+      [
+        -41068,
+        208844
+      ],
+      [
+        -41068,
+        209844
+      ],
+      [
+        -42068,
+        209844
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
