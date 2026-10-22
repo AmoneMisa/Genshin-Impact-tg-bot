@@ -343,5 +343,55 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "necropolis-pilgrims": {
+    "x": 45248,
+    "y": 124352,
+    "z": -5411,
+    "region": "dion",
+    "regionAssociation": "nearest-source-town",
+    "dungeonEntranceSource": {
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "files": {
+        "stats/npcs/31000-31099.xml": "58bdaf574082c0446388154252e6cfdaceaa4a228d95aac6255f810fb5f39b3f",
+        "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
+        "spawns/Others/21_21.xml": "9c6e622796ad3e070162b247138fa7f4a5187db78421c6627e1df20ee0c05374"
+      },
+      "npcId": 31096,
+      "role": 0,
+      "interiorNpcId": 31104,
+      "signNumber": 1,
+      "insideDestination": {
+        "x": 45249,
+        "y": 123848,
+        "z": -5438
+      },
+      "returnDestination": {
+        "x": 45248,
+        "y": 124223,
+        "z": -5440
+      },
+      "nativeGroundApproach": null,
+      "teleportTariff": null
+    },
+    "polygon": [
+      [
+        44748,
+        123852
+      ],
+      [
+        45748,
+        123852
+      ],
+      [
+        45748,
+        124852
+      ],
+      [
+        44748,
+        124852
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
