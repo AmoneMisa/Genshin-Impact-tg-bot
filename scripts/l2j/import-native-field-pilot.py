@@ -18,6 +18,7 @@ fields={
     'field-of-whispers': {'city': 'heine'},
     'beast-farm': {'city': 'rune'},
     'cruma-marshlands': {'city': 'dion'},
+    'plains-of-dion': {'city': 'dion'},
 }
 catalog=json.loads(subprocess.check_output(['node','--input-type=module','-e',
     'import {LOCATION_LEVELS} from "./template/locationLevels.js";console.log(JSON.stringify(Object.fromEntries('+json.dumps(list(fields))+'.map(id=>[id,LOCATION_LEVELS[id]]))))'],encoding='utf-8'))

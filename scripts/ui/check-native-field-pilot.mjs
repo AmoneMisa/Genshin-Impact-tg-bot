@@ -118,8 +118,9 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  assert.equal(await page.locator('.atlas-combat').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  await page.screenshot({path:path.join(out,`native-field-${width}${noCanvas?'-no-canvas':noImages?'-no-images':''}.png`)});
  for(const bank of nativeFieldBuckets(s.game.hunt.field))for(const m of bank.mobs)m.aggro=false;
+ await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.quickTravel.blocked===null);await page.waitForTimeout(100);
  await page.locator('[data-movement]').click();await page.getByRole('combobox',{name:'Разделы телепорта',exact:true}).click();await page.getByRole('option',{name:'Города',exact:true}).click();
- await page.getByRole('button',{name:cityName,exact:true}).click();await page.locator('[data-native-city]').click();assert.equal(s.game.world.mode,'road');finishRoad=true;
+ await page.getByRole('button',{name:cityName,exact:true}).click();assert.equal(await page.locator('[data-native-city]').isEnabled(),true,JSON.stringify({mode:s.game.world.mode,zone:s.game.world.location,blocked:worldState(s,now).quickTravel.blocked,cities:worldState(s,now).nativeWalkCities}));await page.locator('[data-native-city]').click();assert.equal(s.game.world.mode,'road');finishRoad=true;
  await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.player.mode==='city');
  assert.equal(await page.locator('.atlas-combat').isHidden(),true);assert.equal(s.game.world.mode,'city');assert.ok(s.game.world.nativeFields[zone]);
  assert.equal(await page.evaluate(()=>window.originalAtlas===document.querySelector('.atlas-panel')),true);

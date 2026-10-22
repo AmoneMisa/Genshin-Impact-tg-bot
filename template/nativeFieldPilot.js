@@ -322,6 +322,26 @@ export default {
       ],
       "count": 414,
       "unportedMinionTemplates": []
+    },
+    "plains-of-dion": {
+      "city": "dion",
+      "fixedCount": 0,
+      "territoryCount": 268,
+      "npcIds": [
+        "20068",
+        "20168",
+        "20190",
+        "20205",
+        "20206",
+        "20250",
+        "20251",
+        "20252",
+        "20253",
+        "20254",
+        "20266"
+      ],
+      "count": 268,
+      "unportedMinionTemplates": []
     }
   },
   "source": {
@@ -342,7 +362,8 @@ export default {
       "spawns/Others/19_19.xml": "f0ad24acfc3936aef08bfd68fc4ea444e99749ccdaf32e19fd934626c86287e3",
       "teleporters/town/30134.xml": "4dc2b144e46b6c699a45771e0eeef40cedc9d12ff9b01b4764358278c42e645b",
       "spawns/Innadril/FieldOfWhispers.xml": "784edfcf4a0b3017e3684bb98f863363807baf13ea6df21fc406a0136b824686",
-      "spawns/Dion/CrumaMarshlands.xml": "9eb722a945992899d143d0a3fd7a2206fb977f6dd2388927ee516e3d9a360d7f"
+      "spawns/Dion/CrumaMarshlands.xml": "9eb722a945992899d143d0a3fd7a2206fb977f6dd2388927ee516e3d9a360d7f",
+      "spawns/Dion/PlainsOfDion.xml": "647003afc6a92cc16577b3ceb2980b1433dfa61bc68a38c4cbd9311b5e086ad4"
     },
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
   },
@@ -408,11 +429,31 @@ export default {
       "runSpeed": 120.0,
       "attackRange": 40.0
     },
+    "20068": {
+      "runSpeed": 159.0,
+      "attackRange": 40.0
+    },
     "20105": {
       "runSpeed": 100.0,
       "attackRange": 40.0
     },
     "20157": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "20168": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20190": {
+      "runSpeed": 140.0,
+      "attackRange": 1100.0
+    },
+    "20205": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20206": {
       "runSpeed": 120.0,
       "attackRange": 40.0
     },
@@ -454,6 +495,30 @@ export default {
     },
     "20234": {
       "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20250": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "20251": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "20252": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "20253": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "20254": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "20266": {
+      "runSpeed": 159.0,
       "attackRange": 40.0
     },
     "20379": {
