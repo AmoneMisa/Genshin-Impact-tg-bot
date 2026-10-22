@@ -2,7 +2,7 @@ import routes from '../../../template/nativeRoutes.js';
 import {CITIES} from '../../../template/worldMap.js';
 import {findNativePath,nativeSegment} from './nativeNavigation.js';
 import {nativeGroundAllowed} from './nativeGround.js';
-import {createNativeJourney} from './nativeJourney.js';
+import {createNativeJourney,pruneNativeLoops} from './nativeJourney.js';
 import {outdoorPoint} from './holdingEntry.js';
 import {worldGeodata,geoRegionId} from './l2jGeodata.js';
 import {nativeTownPath,nativeTownCities,nativeTownHub,nativeTownEdges,nativeTownSource} from './nativeTownGraph.js';
@@ -105,7 +105,7 @@ export function nativeTravel(session,target,now,speed){
   const plan=(nearby?.ok?nearby:null)||reconnectNativeTrail(w.nativePosition,to,arrivalCity)||reconnectNativeHistory(w,to,arrivalCity)||findNativePath(w.nativePosition,endpoint,{allowed:nativeGroundAllowed,maxNodes:6000,reversible:true});
   if(!plan.ok)return plan;start=plan.start;path=plan.path;
  }else return {ok:false,reason:'location_path_required'};
- const trip=createNativeJourney(start,path,{now,speed,location:to?target.location:null,city:arrivalCity});
+ const trip=createNativeJourney(start,pruneNativeLoops(start,path),{now,speed,location:to?target.location:null,city:arrivalCity});
  if(trip){trip.native.target={location:target?.location||null,city:target?.city||null,port:target?.port||null,stop:target?.stop||'vendor'};delete w.nativeResume;}
  if(trip&&target?.port){trip.port=target.port;trip.portCity=to.city;}
  if(trip&&island)trip.island=island;
@@ -132,8 +132,7 @@ export function nativeWalkOptions(session){
  return Object.fromEntries(Object.entries({...routes.routes,...islands.routes}).filter(([,r])=>r.available).map(([id,r])=>{
   if(island||r.island)return [id,{enabled:Boolean(w.mode==='native'&&island===r.island),viaCity:null,exitRequired:w.mode==='location'&&!exit?.near}];
   const origin=w.mode==='location'?exit?.city:w.city,link=origin&&nativeTownPath(origin,r.city);
-  const via=(w.mode==='location'||w.mode==='city'&&origin!==r.city)&&link?link.cities.map(id=>CITIES.find(c=>c.id===id)?.name||id).join(' → '):null;
-  return [id,{enabled:w.mode==='city'?Boolean(link):w.mode==='location'?Boolean(exit&&link&&id!==w.location):w.mode==='native',viaCity:via,exitRequired:w.mode==='location'&&!exit?.near}];
+  return [id,{enabled:w.mode==='city'?Boolean(link):w.mode==='location'?Boolean(exit&&link&&id!==w.location):w.mode==='native',viaCity:null,exitRequired:w.mode==='location'&&!exit?.near}];
  }));
 }
 export function nativeWalkCities(session){

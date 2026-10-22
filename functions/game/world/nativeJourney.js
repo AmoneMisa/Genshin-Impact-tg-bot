@@ -4,6 +4,18 @@ import {nativeGroundAllowed} from './nativeGround.js';
 import {worldGeodata} from './l2jGeodata.js';
 
 export const nativeDistance=(a,b)=>Math.hypot(b.x-a.x,b.y-a.y);
+/** Joined roads can retrace a shared branch. Remove only exact XYZ loops. */
+export function pruneNativeLoops(from,path){
+ if(![from,...path].every(p=>[p?.x,p?.y,p?.z].every(Number.isFinite)))return path;
+ const key=p=>`${p.x},${p.y},${p.z}`,points=[from],indices=new Map([[key(from),0]]);
+ for(const point of path){
+  const id=key(point),at=indices.get(id);
+  if(at!==undefined){while(points.length>at+1)indices.delete(key(points.pop()));}
+  else{indices.set(id,points.length);points.push(point);}
+ }
+ // Preserve a zero-distance arrival at an entrance already reached on foot.
+ return points.length>1?points.slice(1):path.length?[path.at(-1)]:[];
+}
 export function createNativeJourney(from,path,{now,speed,location=null,city=null}={}){
  if(!path.length||path.length>512||![from,...path].every(p=>[p?.x,p?.y,p?.z].every(Number.isFinite)))return null;
  let point=from,distance=0;
