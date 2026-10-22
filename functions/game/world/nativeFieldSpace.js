@@ -14,7 +14,7 @@ const sourceSpawns=Object.fromEntries(Object.keys(pilot.fields).map(id=>[id,LOCA
 const allSourceSpawns=Object.values(sourceSpawns).flat();
 export const nativeFieldNear=(point,id)=>Boolean(point&&(id?sourceSpawns[id]||[]:allSourceSpawns).some(s=>Math.hypot(s.x-point.x,s.y-point.y)<=NATIVE_FIELD_RADIUS));
 export function nativeFieldZone(point,preferred=null){
- if(preferred&&nativeFieldNear(point,preferred))return preferred;
+ if(preferred)return nativeFieldNear(point,preferred)?preferred:null;
  if(!point)return null;
  let zone=null,distance=NATIVE_FIELD_RADIUS;
  for(const [id,spawns] of Object.entries(sourceSpawns))for(const spawn of spawns){const next=Math.hypot(spawn.x-point.x,spawn.y-point.y);if(next<=distance){zone=id;distance=next;}}

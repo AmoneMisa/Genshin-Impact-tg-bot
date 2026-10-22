@@ -33,7 +33,13 @@ for(const [zone,meta]of Object.entries(registry.fields)){
    assert.ok(registry.actors[slot.id].runSpeed>0);assert.ok(registry.actors[slot.id].attackRange>0);
   }
   let s=hero(zone);assert.equal(worldAction(s,{action:'walk_location',location:zone},START).ok,true);
-  const arrival=s.game.world.walkHome.until+1;advanceWorld(s,arrival);quiet(s,arrival);
+  const arrival=s.game.world.walkHome.until+1;
+  for(let step=1;step<20;step++){
+   const tick=START+Math.floor((arrival-START)*step/20);advanceWorld(s,tick);quiet(s,tick);
+   if(s.game.hunt?.field?.native)assert.equal(s.game.hunt.zone,zone,'a published route must keep its intended field');
+   if(step===10)s=JSON.parse(JSON.stringify(s));
+  }
+  advanceWorld(s,arrival);quiet(s,arrival);
   const dto=worldState(s,arrival);assert.equal(dto.nativeField.zone,zone);for(const key of ['x','y','z'])assert.equal(dto.nativeField.point[key],routes.routes[zone].to[key]);
   assert.ok(dto.nativeField.actors.length>0&&dto.nativeField.actors.length<=48);
   const mobs=actors(s),keys=mobs.map(m=>m.sourceRoom+':'+m.sourceSlot);assert.equal(new Set(keys).size,keys.length);

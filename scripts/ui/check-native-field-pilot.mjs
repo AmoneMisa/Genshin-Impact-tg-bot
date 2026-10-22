@@ -94,9 +94,9 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  }
  else {
   const box=await page.locator('canvas').boundingBox(),actors=worldState(s,now).nativeField.actors;
-  const candidates=[2000,3000,4000,5000].flatMap(n=>[[n,0],[-n,0],[0,n],[0,-n],[n,n],[-n,-n],[n,-n],[-n,n]]).map(([x,y])=>({x:before.x+x,y:before.y+y,z:before.z})).filter(p=>{
+  const candidates=[600,1000,1500,2000,3000,4000,5000].flatMap(n=>[[n,0],[-n,0],[0,n],[0,-n],[n,n],[-n,-n],[n,-n],[-n,n]]).map(([x,y])=>({x:before.x+x,y:before.y+y,z:before.z})).filter(p=>{
    const x=box.width/2+(p.x-before.x)*box.width/14000,y=box.height/2+(p.y-before.y)*box.width/14000;
-   return x>30&&x<box.width-30&&y>30&&y<box.height-30&&actors.slice(0,8).every(a=>Math.hypot(a.x-p.x,a.y-p.y)*box.width/14000>30);
+   return x>30&&x<box.width-30&&y>30&&y<box.height-30&&actors.slice(0,box.width<700?8:16).every(a=>Math.hypot(a.x-p.x,a.y-p.y)*box.width/14000>30);
   });
   let goal;for(const candidate of candidates){
    const visible=await page.locator('canvas').evaluate((n,p)=>document.elementFromPoint(p.x,p.y)===n,{x:box.x+box.width/2+(candidate.x-before.x)*box.width/14000,y:box.y+box.height/2+(candidate.y-before.y)*box.width/14000});
