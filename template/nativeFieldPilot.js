@@ -246,6 +246,51 @@ export default {
         ]
       }
     ],
+    "21343": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "21344",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "21345": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "21346",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "21347": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "21348",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "21349",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
     "21512": [
       {
         "name": "Privates",
@@ -447,6 +492,41 @@ export default {
     ]
   },
   "fields": {
+    "ketra-outpost": {
+      "city": "goddard",
+      "fixedCount": 0,
+      "territoryCount": 393,
+      "npcIds": [
+        "21324",
+        "21325",
+        "21326",
+        "21327",
+        "21328",
+        "21329",
+        "21330",
+        "21331",
+        "21332",
+        "21333",
+        "21334",
+        "21335",
+        "21336",
+        "21337",
+        "21338",
+        "21339",
+        "21340",
+        "21341",
+        "21342",
+        "21343",
+        "21345",
+        "21347"
+      ],
+      "count": 393,
+      "unportedMinionTemplates": [
+        "21343",
+        "21345",
+        "21347"
+      ]
+    },
     "wall-of-argos": {
       "city": "goddard",
       "fixedCount": 0,
@@ -1115,6 +1195,7 @@ export default {
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Goddard/KetraOrcOutpost.xml": "5323860f03a61278f7e5bdc03867099d1d341456f61ab1dfafbda797e71fcd87",
       "spawns/Goddard/WallOfArgos.xml": "600365836f4597f04998eee9852af7a5ea1deb411ab102eb9790cae887cdeb4f",
       "spawns/Goddard/HotSprings.xml": "c2502e417ff6a670676450aacf59cefeaa90a7507c67c1a19c488bc08561ec40",
       "spawns/Rune/SwampOfScreams.xml": "53add3fb1f224add967590b28e4290326d43e42e6a6f0d6ad7b442e7bfeec6e3",
@@ -2143,6 +2224,94 @@ export default {
     },
     "21323": {
       "runSpeed": 165.0,
+      "attackRange": 40.0
+    },
+    "21324": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21325": {
+      "runSpeed": 185.0,
+      "attackRange": 40.0
+    },
+    "21326": {
+      "runSpeed": 190.0,
+      "attackRange": 40.0
+    },
+    "21327": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21328": {
+      "runSpeed": 175.0,
+      "attackRange": 1100.0
+    },
+    "21329": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "21330": {
+      "runSpeed": 165.0,
+      "attackRange": 40.0
+    },
+    "21331": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21332": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21333": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "21334": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "21335": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21336": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21337": {
+      "runSpeed": 165.0,
+      "attackRange": 40.0
+    },
+    "21338": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "21339": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21340": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21341": {
+      "runSpeed": 190.0,
+      "attackRange": 40.0
+    },
+    "21342": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "21343": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21345": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21347": {
+      "runSpeed": 175.0,
       "attackRange": 40.0
     },
     "21508": {
