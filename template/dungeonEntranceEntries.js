@@ -244,5 +244,54 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "catacomb-forbidden-path": {
+    "x": 113552,
+    "y": 84544,
+    "z": -6544,
+    "region": "hunters",
+    "regionAssociation": "nearest-source-town",
+    "dungeonEntranceSource": {
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "files": {
+        "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
+        "spawns/Others/23_20.xml": "f5fd6c10741dc1f24ecdf2d624f8f285d80cb3253639ccb2092da9b8dc9d7fbd"
+      },
+      "npcId": 31119,
+      "role": 0,
+      "interiorNpcId": 31125,
+      "signNumber": 2,
+      "insideDestination": {
+        "x": 12780,
+        "y": -248482,
+        "z": -9606
+      },
+      "returnDestination": {
+        "x": 113649,
+        "y": 84546,
+        "z": -6568
+      },
+      "nativeGroundApproach": null,
+      "teleportTariff": null
+    },
+    "polygon": [
+      [
+        113052,
+        84044
+      ],
+      [
+        114052,
+        84044
+      ],
+      [
+        114052,
+        85044
+      ],
+      [
+        113052,
+        85044
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
