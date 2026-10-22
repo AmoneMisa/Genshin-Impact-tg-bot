@@ -10,24 +10,54 @@ export default {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
         "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
-        "spawns/Others/21_22.xml": "cb1d05232002539a7d902bc39cebcf6f639107feca372f6740d366f7987d7426"
+        "spawns/Others/21_22.xml": "cb1d05232002539a7d902bc39cebcf6f639107feca372f6740d366f7987d7426",
+        "teleporters/dungeon/31114.xml": "d6135c9e337f3a08876558e3b529154a0892efad58137a086b5ae665e4e4dbb6",
+        "html/teleporter/31114.htm": "7704d018ce6e38f80949d6939972d65bb2a49b01e3c8a8cd2a2d7598a2955a56",
+        "teleporters/dungeon/31120.xml": "d6a0ba65195f3d60bd2a94b2674060f23c22ed4e1db7773804f8cb46438568ee",
+        "html/teleporter/31120.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
       },
       "npcId": 31114,
       "role": 0,
       "interiorNpcId": 31120,
       "signNumber": 2,
       "insideDestination": {
-        "x": -53113,
-        "y": -250277,
-        "z": -7934
+        "x": -53174,
+        "y": -250275,
+        "z": -7911
       },
       "returnDestination": {
-        "x": 42710,
-        "y": 143930,
-        "z": -5406
+        "x": 42514,
+        "y": 143917,
+        "z": -5385
+      },
+      "legacyParameterDestinations": {
+        "inside": {
+          "x": -53113,
+          "y": -250277,
+          "z": -7934
+        },
+        "return": {
+          "x": 42710,
+          "y": 143930,
+          "z": -5406
+        }
+      },
+      "destinationSource": "OTHER teleport table, HTML command index 0",
+      "coreFiles": {
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
       },
       "nativeGroundApproach": null,
-      "teleportTariff": null
+      "teleportTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "returnTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "seal": "gnosis",
+      "sevenSignsStateAvailable": false
     },
     "polygon": [
       [
@@ -59,24 +89,54 @@ export default {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
         "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
-        "spawns/Others/21_23.xml": "7b40f748a5e5d4e458fc84a0c68eb5335ddd5a7f6786f27ca349ea472555af91"
+        "spawns/Others/21_23.xml": "7b40f748a5e5d4e458fc84a0c68eb5335ddd5a7f6786f27ca349ea472555af91",
+        "teleporters/dungeon/31115.xml": "18d3d7b1fe45e92ea2597eb34c34e1394ffbf4baa97c547ecd3058fef0b2f12b",
+        "html/teleporter/31115.htm": "7704d018ce6e38f80949d6939972d65bb2a49b01e3c8a8cd2a2d7598a2955a56",
+        "teleporters/dungeon/31121.xml": "90304f08b17ee80dfd97c170c50000045ad6708227af8af3ae4b1562ab6b6488",
+        "html/teleporter/31121.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
       },
       "npcId": 31115,
       "role": 0,
       "interiorNpcId": 31121,
       "signNumber": 2,
       "insideDestination": {
-        "x": 46262,
-        "y": 170303,
-        "z": -5006
+        "x": 46217,
+        "y": 170290,
+        "z": -4983
       },
       "returnDestination": {
-        "x": 45913,
-        "y": 170306,
-        "z": -5008
+        "x": 45770,
+        "y": 170299,
+        "z": -4985
+      },
+      "legacyParameterDestinations": {
+        "inside": {
+          "x": 46262,
+          "y": 170303,
+          "z": -5006
+        },
+        "return": {
+          "x": 45913,
+          "y": 170306,
+          "z": -5008
+        }
+      },
+      "destinationSource": "OTHER teleport table, HTML command index 0",
+      "coreFiles": {
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
       },
       "nativeGroundApproach": null,
-      "teleportTariff": null
+      "teleportTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "returnTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "seal": "gnosis",
+      "sevenSignsStateAvailable": false
     },
     "polygon": [
       [
@@ -108,24 +168,54 @@ export default {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
         "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
-        "spawns/Others/22_20.xml": "0f2c6b761515b59ddae09dbadf873e5a9158600b63d7d68806de746850b0e135"
+        "spawns/Others/22_20.xml": "0f2c6b761515b59ddae09dbadf873e5a9158600b63d7d68806de746850b0e135",
+        "teleporters/dungeon/31116.xml": "8f3e557b0036dba94ff2841de71d19a300cb6984895388a19d751baa8e5dd21f",
+        "html/teleporter/31116.htm": "7704d018ce6e38f80949d6939972d65bb2a49b01e3c8a8cd2a2d7598a2955a56",
+        "teleporters/dungeon/31122.xml": "e97be49364593573ef543c8404b75776406ae7c12c996df799d27c6ebe7517b9",
+        "html/teleporter/31122.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
       },
       "npcId": 31116,
       "role": 0,
       "interiorNpcId": 31122,
       "signNumber": 2,
       "insideDestination": {
-        "x": -20470,
-        "y": -250784,
-        "z": -8190
+        "x": -20230,
+        "y": -250780,
+        "z": -8168
       },
       "returnDestination": {
-        "x": 77147,
-        "y": 78400,
-        "z": -5152
+        "x": 77225,
+        "y": 78362,
+        "z": -5119
+      },
+      "legacyParameterDestinations": {
+        "inside": {
+          "x": -20470,
+          "y": -250784,
+          "z": -8190
+        },
+        "return": {
+          "x": 77147,
+          "y": 78400,
+          "z": -5152
+        }
+      },
+      "destinationSource": "OTHER teleport table, HTML command index 0",
+      "coreFiles": {
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
       },
       "nativeGroundApproach": null,
-      "teleportTariff": null
+      "teleportTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "returnTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "seal": "gnosis",
+      "sevenSignsStateAvailable": false
     },
     "polygon": [
       [
@@ -157,24 +247,54 @@ export default {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
         "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
-        "spawns/Others/24_20.xml": "120af1a0077ed82ad185b1e72e7d272b893c2f5d5f96ad55cc6c918e5ccf3faa"
+        "spawns/Others/24_20.xml": "120af1a0077ed82ad185b1e72e7d272b893c2f5d5f96ad55cc6c918e5ccf3faa",
+        "teleporters/dungeon/31117.xml": "3ec009e9ee24e3665e87c09e1ac5c570e9120b4d41832436a961001113d75871",
+        "html/teleporter/31117.htm": "7704d018ce6e38f80949d6939972d65bb2a49b01e3c8a8cd2a2d7598a2955a56",
+        "teleporters/dungeon/31123.xml": "e636d8462996fd996b97385367077faaf60a4cc008dbf71e7bd3f589c3172ff6",
+        "html/teleporter/31123.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
       },
       "npcId": 31117,
       "role": 0,
       "interiorNpcId": 31123,
       "signNumber": 2,
       "insideDestination": {
-        "x": 140499,
-        "y": 79679,
-        "z": -5454
+        "x": 140404,
+        "y": 79678,
+        "z": -5431
       },
       "returnDestination": {
-        "x": 140130,
-        "y": 79681,
-        "z": -5456
+        "x": 139965,
+        "y": 79678,
+        "z": -5433
+      },
+      "legacyParameterDestinations": {
+        "inside": {
+          "x": 140499,
+          "y": 79679,
+          "z": -5454
+        },
+        "return": {
+          "x": 140130,
+          "y": 79681,
+          "z": -5456
+        }
+      },
+      "destinationSource": "OTHER teleport table, HTML command index 0",
+      "coreFiles": {
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
       },
       "nativeGroundApproach": null,
-      "teleportTariff": null
+      "teleportTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "returnTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "seal": "gnosis",
+      "sevenSignsStateAvailable": false
     },
     "polygon": [
       [
@@ -206,24 +326,54 @@ export default {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
         "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
-        "spawns/Others/19_18.xml": "7e9ef04a3a97537b0a39940d1a17a9cfd36aa4b94d57029e3f8319c45d1c62cd"
+        "spawns/Others/19_18.xml": "7e9ef04a3a97537b0a39940d1a17a9cfd36aa4b94d57029e3f8319c45d1c62cd",
+        "teleporters/dungeon/31118.xml": "f278f23b5ecd69db74db4fac45e32f7455d82decce6a562c16221ac258fbb830",
+        "html/teleporter/31118.htm": "7704d018ce6e38f80949d6939972d65bb2a49b01e3c8a8cd2a2d7598a2955a56",
+        "teleporters/dungeon/31124.xml": "fef978eb92b8896e7d655cec8cf9e1ca139f7386683c4c19f5ade3267a13870e",
+        "html/teleporter/31124.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
       },
       "npcId": 31118,
       "role": 0,
       "interiorNpcId": 31124,
       "signNumber": 2,
       "insideDestination": {
-        "x": -19392,
-        "y": 13500,
-        "z": -4926
+        "x": -19500,
+        "y": 13508,
+        "z": -4905
       },
       "returnDestination": {
-        "x": -19737,
-        "y": 13540,
-        "z": -4928
+        "x": -19931,
+        "y": 13502,
+        "z": -4905
+      },
+      "legacyParameterDestinations": {
+        "inside": {
+          "x": -19392,
+          "y": 13500,
+          "z": -4926
+        },
+        "return": {
+          "x": -19737,
+          "y": 13540,
+          "z": -4928
+        }
+      },
+      "destinationSource": "OTHER teleport table, HTML command index 0",
+      "coreFiles": {
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
       },
       "nativeGroundApproach": null,
-      "teleportTariff": null
+      "teleportTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "returnTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "seal": "gnosis",
+      "sevenSignsStateAvailable": false
     },
     "polygon": [
       [
@@ -255,24 +405,54 @@ export default {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
         "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
-        "spawns/Others/23_20.xml": "f5fd6c10741dc1f24ecdf2d624f8f285d80cb3253639ccb2092da9b8dc9d7fbd"
+        "spawns/Others/23_20.xml": "f5fd6c10741dc1f24ecdf2d624f8f285d80cb3253639ccb2092da9b8dc9d7fbd",
+        "teleporters/dungeon/31119.xml": "3cc53341e7f2cd83a255f711c9752a784c4068726781736bd27d09065062c13e",
+        "html/teleporter/31119.htm": "7704d018ce6e38f80949d6939972d65bb2a49b01e3c8a8cd2a2d7598a2955a56",
+        "teleporters/dungeon/31125.xml": "77d88341709c00ab83e45622e019cc9e7f5ec77474d75b69337e4a526048df8c",
+        "html/teleporter/31125.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
       },
       "npcId": 31119,
       "role": 0,
       "interiorNpcId": 31125,
       "signNumber": 2,
       "insideDestination": {
-        "x": 12780,
-        "y": -248482,
-        "z": -9606
+        "x": 12521,
+        "y": -248481,
+        "z": -9585
       },
       "returnDestination": {
-        "x": 113649,
-        "y": 84546,
-        "z": -6568
+        "x": 113429,
+        "y": 84540,
+        "z": -6545
+      },
+      "legacyParameterDestinations": {
+        "inside": {
+          "x": 12780,
+          "y": -248482,
+          "z": -9606
+        },
+        "return": {
+          "x": 113649,
+          "y": 84546,
+          "z": -6568
+        }
+      },
+      "destinationSource": "OTHER teleport table, HTML command index 0",
+      "coreFiles": {
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
       },
       "nativeGroundApproach": null,
-      "teleportTariff": null
+      "teleportTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "returnTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "seal": "gnosis",
+      "sevenSignsStateAvailable": false
     },
     "polygon": [
       [
@@ -305,24 +485,54 @@ export default {
       "files": {
         "stats/npcs/31000-31099.xml": "58bdaf574082c0446388154252e6cfdaceaa4a228d95aac6255f810fb5f39b3f",
         "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
-        "spawns/Others/18_24.xml": "4dbb41e0833c9597f4c78abe00adeca0990dbb927240b6aed3dfc4a7f76a88c4"
+        "spawns/Others/18_24.xml": "4dbb41e0833c9597f4c78abe00adeca0990dbb927240b6aed3dfc4a7f76a88c4",
+        "teleporters/dungeon/31095.xml": "49ca022ddccb038053fb959a2b8af49b2846c59d43d33b9425e40d1783de1345",
+        "html/teleporter/31095.htm": "ef599b93a44eafe79ee5451b3f489d2f468bad6e49b3ef18b3087bd70d81ffb4",
+        "teleporters/dungeon/31103.xml": "91c8ce9bba547a843fb980607686a2da88627c386bb95f59804fdc3f70b9d60b",
+        "html/teleporter/31103.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
       },
       "npcId": 31095,
       "role": 0,
       "interiorNpcId": 31103,
       "signNumber": 1,
       "insideDestination": {
-        "x": -41567,
-        "y": 209828,
-        "z": -5112
+        "x": -41570,
+        "y": 209785,
+        "z": -5089
       },
       "returnDestination": {
         "x": -41567,
-        "y": 209463,
-        "z": -5114
+        "y": 209292,
+        "z": -5091
+      },
+      "legacyParameterDestinations": {
+        "inside": {
+          "x": -41567,
+          "y": 209828,
+          "z": -5112
+        },
+        "return": {
+          "x": -41567,
+          "y": 209463,
+          "z": -5114
+        }
+      },
+      "destinationSource": "OTHER teleport table, HTML command index 0",
+      "coreFiles": {
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
       },
       "nativeGroundApproach": null,
-      "teleportTariff": null
+      "teleportTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "returnTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "seal": "avarice",
+      "sevenSignsStateAvailable": false
     },
     "polygon": [
       [
@@ -355,24 +565,54 @@ export default {
       "files": {
         "stats/npcs/31000-31099.xml": "58bdaf574082c0446388154252e6cfdaceaa4a228d95aac6255f810fb5f39b3f",
         "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
-        "spawns/Others/21_21.xml": "9c6e622796ad3e070162b247138fa7f4a5187db78421c6627e1df20ee0c05374"
+        "spawns/Others/21_21.xml": "9c6e622796ad3e070162b247138fa7f4a5187db78421c6627e1df20ee0c05374",
+        "teleporters/dungeon/31096.xml": "b489ede983ccbc5415f19dbd54821c059dfb1c6e482cb6853b346fba4e7084ef",
+        "html/teleporter/31096.htm": "ef599b93a44eafe79ee5451b3f489d2f468bad6e49b3ef18b3087bd70d81ffb4",
+        "teleporters/dungeon/31104.xml": "060c4dd0d0f1e88193c668cf79acce90300e5fcb62281ada9f5e7b8173d78434",
+        "html/teleporter/31104.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
       },
       "npcId": 31096,
       "role": 0,
       "interiorNpcId": 31104,
       "signNumber": 1,
       "insideDestination": {
-        "x": 45249,
-        "y": 123848,
-        "z": -5438
+        "x": 45251,
+        "y": 123890,
+        "z": -5415
       },
       "returnDestination": {
-        "x": 45248,
-        "y": 124223,
-        "z": -5440
+        "x": 45250,
+        "y": 124366,
+        "z": -5417
+      },
+      "legacyParameterDestinations": {
+        "inside": {
+          "x": 45249,
+          "y": 123848,
+          "z": -5438
+        },
+        "return": {
+          "x": 45248,
+          "y": 124223,
+          "z": -5440
+        }
+      },
+      "destinationSource": "OTHER teleport table, HTML command index 0",
+      "coreFiles": {
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
       },
       "nativeGroundApproach": null,
-      "teleportTariff": null
+      "teleportTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "returnTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "seal": "avarice",
+      "sevenSignsStateAvailable": false
     },
     "polygon": [
       [
@@ -405,24 +645,54 @@ export default {
       "files": {
         "stats/npcs/31000-31099.xml": "58bdaf574082c0446388154252e6cfdaceaa4a228d95aac6255f810fb5f39b3f",
         "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
-        "spawns/Others/23_23.xml": "bce4a4862c29adea296a47ed9f86e03ade31dd001ef7980f7b4049705b2d264f"
+        "spawns/Others/23_23.xml": "bce4a4862c29adea296a47ed9f86e03ade31dd001ef7980f7b4049705b2d264f",
+        "teleporters/dungeon/31097.xml": "5dfe1ed8ced669af736f7e0beb8dd48208340a3919afb9ac0c1bc2fc936ad582",
+        "html/teleporter/31097.htm": "ef599b93a44eafe79ee5451b3f489d2f468bad6e49b3ef18b3087bd70d81ffb4",
+        "teleporters/dungeon/31105.xml": "2d599297fa13e204b7b4843d8d03d687869ffcb44872eca136faaae3332d3c02",
+        "html/teleporter/31105.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
       },
       "npcId": 31097,
       "role": 0,
       "interiorNpcId": 31105,
       "signNumber": 1,
       "insideDestination": {
-        "x": 111287,
-        "y": 174018,
-        "z": -5464
+        "x": 111273,
+        "y": 174015,
+        "z": -5417
       },
       "returnDestination": {
-        "x": 110966,
-        "y": 174015,
-        "z": -5466
+        "x": 110818,
+        "y": 174010,
+        "z": -5443
+      },
+      "legacyParameterDestinations": {
+        "inside": {
+          "x": 111287,
+          "y": 174018,
+          "z": -5464
+        },
+        "return": {
+          "x": 110966,
+          "y": 174015,
+          "z": -5466
+        }
+      },
+      "destinationSource": "OTHER teleport table, HTML command index 0",
+      "coreFiles": {
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
       },
       "nativeGroundApproach": null,
-      "teleportTariff": null
+      "teleportTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "returnTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "seal": "avarice",
+      "sevenSignsStateAvailable": false
     },
     "polygon": [
       [
@@ -455,24 +725,54 @@ export default {
       "files": {
         "stats/npcs/31000-31099.xml": "58bdaf574082c0446388154252e6cfdaceaa4a228d95aac6255f810fb5f39b3f",
         "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
-        "spawns/Others/19_20.xml": "9288973c393d4b37001bb9ed71607be55d02f3714bf3255c2cda98a9384c63b0"
+        "spawns/Others/19_20.xml": "9288973c393d4b37001bb9ed71607be55d02f3714bf3255c2cda98a9384c63b0",
+        "teleporters/dungeon/31098.xml": "4ec81da12d43f96bef0f62aa8e3a3548f81267f75a76ff4a66db415a1fae8be2",
+        "html/teleporter/31098.htm": "ef599b93a44eafe79ee5451b3f489d2f468bad6e49b3ef18b3087bd70d81ffb4",
+        "teleporters/dungeon/31106.xml": "dcaa6c414e93e9e30ec3eacca8e0a980294a680b32604c7edff3fff52eb08a91",
+        "html/teleporter/31106.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
       },
       "npcId": 31098,
       "role": 0,
       "interiorNpcId": 31106,
       "signNumber": 1,
       "insideDestination": {
-        "x": -21666,
-        "y": 77376,
-        "z": -5198
+        "x": -21726,
+        "y": 77385,
+        "z": -5177
       },
       "returnDestination": {
-        "x": -22076,
-        "y": 77375,
-        "z": -5200
+        "x": -22197,
+        "y": 77369,
+        "z": -5177
+      },
+      "legacyParameterDestinations": {
+        "inside": {
+          "x": -21666,
+          "y": 77376,
+          "z": -5198
+        },
+        "return": {
+          "x": -22076,
+          "y": 77375,
+          "z": -5200
+        }
+      },
+      "destinationSource": "OTHER teleport table, HTML command index 0",
+      "coreFiles": {
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
       },
       "nativeGroundApproach": null,
-      "teleportTariff": null
+      "teleportTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "returnTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "seal": "avarice",
+      "sevenSignsStateAvailable": false
     },
     "polygon": [
       [
@@ -505,24 +805,54 @@ export default {
       "files": {
         "stats/npcs/31000-31099.xml": "58bdaf574082c0446388154252e6cfdaceaa4a228d95aac6255f810fb5f39b3f",
         "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
-        "spawns/Others/18_20.xml": "ba7a4304d86eab26aa136e82212e9deb54401531e367a574bcf07293ce584dae"
+        "spawns/Others/18_20.xml": "ba7a4304d86eab26aa136e82212e9deb54401531e367a574bcf07293ce584dae",
+        "teleporters/dungeon/31099.xml": "bf802eaa590d4adfab18f6fab4f45ddf34f587606567848ce34a82b567d703e1",
+        "html/teleporter/31099.htm": "ef599b93a44eafe79ee5451b3f489d2f468bad6e49b3ef18b3087bd70d81ffb4",
+        "teleporters/dungeon/31107.xml": "e28e399d9f681669b8558290c28cc6c4b3eaf3681d3a157f007776a11b5cd67c",
+        "html/teleporter/31107.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
       },
       "npcId": 31099,
       "role": 0,
       "interiorNpcId": 31107,
       "signNumber": 1,
       "insideDestination": {
-        "x": -52126,
-        "y": 79113,
-        "z": -4737
+        "x": -52254,
+        "y": 79103,
+        "z": -4743
       },
       "returnDestination": {
-        "x": -52610,
-        "y": 79112,
-        "z": -4768
+        "x": -52716,
+        "y": 79106,
+        "z": -4745
+      },
+      "legacyParameterDestinations": {
+        "inside": {
+          "x": -52126,
+          "y": 79113,
+          "z": -4737
+        },
+        "return": {
+          "x": -52610,
+          "y": 79112,
+          "z": -4768
+        }
+      },
+      "destinationSource": "OTHER teleport table, HTML command index 0",
+      "coreFiles": {
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
       },
       "nativeGroundApproach": null,
-      "teleportTariff": null
+      "teleportTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "returnTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "seal": "avarice",
+      "sevenSignsStateAvailable": false
     },
     "polygon": [
       [
@@ -554,24 +884,54 @@ export default {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
         "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
-        "spawns/Others/23_22.xml": "0f9cfa3e19fa3fbf18d698283456df4a0070daeb8b322543ba335417ea6c3fe6"
+        "spawns/Others/23_22.xml": "0f9cfa3e19fa3fbf18d698283456df4a0070daeb8b322543ba335417ea6c3fe6",
+        "teleporters/dungeon/31100.xml": "e0bec2c7c3e4096f1f49d83749d362ee6488e3949e719d66a2c1f7011247ab3b",
+        "html/teleporter/31100.htm": "ef599b93a44eafe79ee5451b3f489d2f468bad6e49b3ef18b3087bd70d81ffb4",
+        "teleporters/dungeon/31108.xml": "3b7300a14a1c5b03848ee6a1933d616883662ccec67316453046232fcc7f1ac5",
+        "html/teleporter/31108.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
       },
       "npcId": 31100,
       "role": 0,
       "interiorNpcId": 31108,
       "signNumber": 1,
       "insideDestination": {
-        "x": 118333,
+        "x": 118308,
         "y": 132800,
-        "z": -4856
+        "z": -4833
       },
       "returnDestination": {
-        "x": 117980,
-        "y": 132800,
-        "z": -4858
+        "x": 117793,
+        "y": 132810,
+        "z": -4835
+      },
+      "legacyParameterDestinations": {
+        "inside": {
+          "x": 118333,
+          "y": 132800,
+          "z": -4856
+        },
+        "return": {
+          "x": 117980,
+          "y": 132800,
+          "z": -4858
+        }
+      },
+      "destinationSource": "OTHER teleport table, HTML command index 0",
+      "coreFiles": {
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
       },
       "nativeGroundApproach": null,
-      "teleportTariff": null
+      "teleportTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "returnTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "seal": "avarice",
+      "sevenSignsStateAvailable": false
     },
     "polygon": [
       [
@@ -603,24 +963,54 @@ export default {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
         "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
-        "spawns/Others/25_17.xml": "bd4c0e4d3135212c3da2faf6b32db255bdd79f4065cb12346a48958acde869f5"
+        "spawns/Others/25_17.xml": "bd4c0e4d3135212c3da2faf6b32db255bdd79f4065cb12346a48958acde869f5",
+        "teleporters/dungeon/31101.xml": "ee4a31d826337367523b79ccca0e366a6ee980528fff64a8cd340dccd7ab46d3",
+        "html/teleporter/31101.htm": "ef599b93a44eafe79ee5451b3f489d2f468bad6e49b3ef18b3087bd70d81ffb4",
+        "teleporters/dungeon/31109.xml": "b0662dc923f7740e220112f92912d84366e7f42cfe4e59af6f58dc425799b895",
+        "html/teleporter/31109.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
       },
       "npcId": 31101,
       "role": 0,
       "interiorNpcId": 31109,
       "signNumber": 1,
       "insideDestination": {
-        "x": 172351,
-        "y": -17600,
-        "z": -4928
+        "x": 172251,
+        "y": -17605,
+        "z": -4903
       },
       "returnDestination": {
-        "x": 172031,
-        "y": -17600,
-        "z": -4928
+        "x": 171902,
+        "y": -17595,
+        "z": -4905
+      },
+      "legacyParameterDestinations": {
+        "inside": {
+          "x": 172351,
+          "y": -17600,
+          "z": -4928
+        },
+        "return": {
+          "x": 172031,
+          "y": -17600,
+          "z": -4928
+        }
+      },
+      "destinationSource": "OTHER teleport table, HTML command index 0",
+      "coreFiles": {
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
       },
       "nativeGroundApproach": null,
-      "teleportTariff": null
+      "teleportTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "returnTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "seal": "avarice",
+      "sevenSignsStateAvailable": false
     },
     "polygon": [
       [
@@ -652,24 +1042,54 @@ export default {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
         "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
-        "spawns/Others/22_24.xml": "6642af364019bf2592d5fadb4b121b673d312585ba3be9f732d31db38aa65e29"
+        "spawns/Others/22_24.xml": "6642af364019bf2592d5fadb4b121b673d312585ba3be9f732d31db38aa65e29",
+        "teleporters/dungeon/31102.xml": "d63adafe83d2ce531511165b24dc554cfb64cacc1ce626ca1b8b50a665ac7921",
+        "html/teleporter/31102.htm": "ef599b93a44eafe79ee5451b3f489d2f468bad6e49b3ef18b3087bd70d81ffb4",
+        "teleporters/dungeon/31110.xml": "6d2fe9f3e7c18515702bf02e2f6e5ea051ef1bc11e4e5dd0f278e053c155b801",
+        "html/teleporter/31110.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
       },
       "npcId": 31102,
       "role": 0,
       "interiorNpcId": 31110,
       "signNumber": 1,
       "insideDestination": {
-        "x": 83146,
-        "y": 209217,
-        "z": -5466
+        "x": 83000,
+        "y": 209213,
+        "z": -5443
       },
       "returnDestination": {
-        "x": 82700,
-        "y": 209200,
-        "z": -5432
+        "x": 82608,
+        "y": 209225,
+        "z": -5443
+      },
+      "legacyParameterDestinations": {
+        "inside": {
+          "x": 83146,
+          "y": 209217,
+          "z": -5466
+        },
+        "return": {
+          "x": 82700,
+          "y": 209200,
+          "z": -5432
+        }
+      },
+      "destinationSource": "OTHER teleport table, HTML command index 0",
+      "coreFiles": {
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
       },
       "nativeGroundApproach": null,
-      "teleportTariff": null
+      "teleportTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "returnTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "seal": "avarice",
+      "sevenSignsStateAvailable": false
     },
     "polygon": [
       [
