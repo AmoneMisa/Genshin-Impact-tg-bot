@@ -11,6 +11,7 @@ import islands from '../../../template/nativeIslandRoutes.js';
 import {nativeTrailBack,resumeNativeJourney} from './nativeTrail.js';
 
 export const nativeRoute=id=>islands.routes[id]?.available?islands.routes[id]:routes.routes[id]?.available?routes.routes[id]:null;
+export const nativeApproachKnown=id=>Object.hasOwn(routes.routes,id)||Object.hasOwn(islands.routes,id);
 export const nativeIsland=session=>session.game.world.mode==='location'?nativeRoute(session.game.world.location)?.island||null:session.game.world.nativeIsland||null;
 export const nativeIslandPort=session=>Object.values(islands.routes).find(r=>r.island===nativeIsland(session))?.isolatedPort||null;
 export function nativePortRoute(id,stop='vendor'){

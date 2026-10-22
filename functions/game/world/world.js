@@ -21,7 +21,7 @@ import {SEED_MODES} from '../../../template/seedInstances.js';
 import {seedModeAt,seedAdmission,seedFloorBlock,seedAssemblyAction} from './seedInstances.js';
 import {getMaterialCount} from '../player/materials.js';
 import {regionAccessBlock,spendRegionFare,regionLinks} from './regionAccess.js';
-import {nativeRoute,nativeTravel,nativeFreeWalk,nativeWalkOptions,nativeWalkCities,nativeWorldPoint,nativeIsland,nativeIslandPort} from './nativeTravel.js';
+import {nativeRoute,nativeApproachKnown,nativeTravel,nativeFreeWalk,nativeWalkOptions,nativeWalkCities,nativeWorldPoint,nativeIsland,nativeIslandPort} from './nativeTravel.js';
 import {advanceNativeJourney,nativeJourneyDto,nativeJourneyPosition} from './nativeJourney.js';
 import {saveNativeField,restoreNativeField} from './nativeFieldBanks.js';
 import {nativeCityAt} from './nativeTownGraph.js';
@@ -249,7 +249,7 @@ export function worldAction(session,body,now=Date.now()){
             if(session.game.hunt){session.game.hunt.field=null;session.game.hunt.mob=null;}
             Object.assign(w,{mode:'road',walkHome:result.trip,path:[],pending:null,channel:null});delete w.nativePosition;return {ok:true};
         }
-        if(!location?.entrySource||location.continent==='gracia'||location.access?.kind==='linked'||location.instance||w.mode!=='city'||![city.id,city.parentRegion].includes(location.region))return {ok:false,reason:'location_path_required'};
+        if(nativeApproachKnown(location?.id)||!location?.entrySource||location.continent==='gracia'||location.access?.kind==='linked'||location.instance||w.mode!=='city'||![city.id,city.parentRegion].includes(location.region))return {ok:false,reason:'location_path_required'};
         const denied=quickTravelBlock(session,now)||regionAccessBlock(session,location,{walking:true,now});if(denied)return {ok:false,reason:denied};
         const start=outdoorPoint(session),duration=Math.max(1000,Math.hypot(start.x-location.x,start.y-location.y)/Math.max(1,getSpeed(session))*1000);
         w.mode='road';w.path=[];w.pending=null;w.channel=null;w.walkHome={until:now+duration,location:location.id,kind:'walk',routeGeometry:'adapted-direct-distance'};return {ok:true};

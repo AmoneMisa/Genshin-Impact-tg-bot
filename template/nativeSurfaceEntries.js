@@ -1431,5 +1431,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "antharas-lair": {
+    "x": 131557,
+    "y": 114509,
+    "z": -3712,
+    "region": "hunters",
+    "teleportGold": 7000,
+    "entrySource": {
+      "file": "teleporters/town/30233.xml",
+      "npcId": 30233,
+      "name": "Antharas's Lair",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "7be363bd9d543d91f6da4dc11fdcf99b255b9bcb6a54a4752782ed6977b4fcb0"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30233,
+        "npcName": "Esmeralda",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 7000,
+        "source": {
+          "file": "teleporters/town/30233.xml",
+          "npcId": 30233,
+          "name": "Antharas's Lair",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "7be363bd9d543d91f6da4dc11fdcf99b255b9bcb6a54a4752782ed6977b4fcb0"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        126557,
+        109509
+      ],
+      [
+        136557,
+        109509
+      ],
+      [
+        136557,
+        119509
+      ],
+      [
+        126557,
+        119509
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };

@@ -11622,6 +11622,83 @@ export default {
           "reason": null
         }
       ]
+    },
+    "antharas-lair": {
+      "city": "hunters",
+      "available": false,
+      "to": {
+        "x": 131557,
+        "y": 114509,
+        "z": -3712
+      },
+      "sourceEntry": {
+        "file": "teleporters/town/30233.xml",
+        "npcId": 30233,
+        "name": "Antharas's Lair",
+        "type": "NORMAL",
+        "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+        "sha256": "7be363bd9d543d91f6da4dc11fdcf99b255b9bcb6a54a4752782ed6977b4fcb0"
+      },
+      "reason": "geodata_search_limit",
+      "attempts": [
+        {
+          "stride": 8,
+          "maxNodes": 30000,
+          "heuristicWeight": 1,
+          "margin": 256,
+          "visited": 1349,
+          "reason": "path_blocked"
+        },
+        {
+          "direction": "reverse",
+          "stride": 8,
+          "maxNodes": 30000,
+          "heuristicWeight": 2,
+          "margin": 1024,
+          "visited": 30000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "stride": 4,
+          "maxNodes": 30000,
+          "heuristicWeight": 1,
+          "margin": 256,
+          "visited": 5803,
+          "reason": "path_blocked"
+        },
+        {
+          "stride": 2,
+          "maxNodes": 50000,
+          "heuristicWeight": 1,
+          "margin": 256,
+          "visited": 23135,
+          "reason": "path_blocked"
+        },
+        {
+          "stride": 1,
+          "maxNodes": 60000,
+          "heuristicWeight": 1,
+          "margin": 256,
+          "visited": 60000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "stride": 8,
+          "maxNodes": 120000,
+          "heuristicWeight": 2,
+          "margin": 1024,
+          "visited": 120000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "stride": 4,
+          "maxNodes": 120000,
+          "heuristicWeight": 2,
+          "margin": 1024,
+          "visited": 120000,
+          "reason": "geodata_search_limit"
+        }
+      ]
     }
   }
 };
