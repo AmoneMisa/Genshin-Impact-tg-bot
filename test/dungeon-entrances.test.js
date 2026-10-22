@@ -15,3 +15,8 @@ test('Heretics is placed beside Dion and not at the northern interior coordinate
  const entry=entries['catacomb-heretic'];assert.deepEqual([entry.x,entry.y,entry.z],[42608,143952,-5379]);assert.equal(entry.region,'dion');assert.equal(entry.dungeonEntranceSource.npcId,31114);assert.equal(entry.dungeonEntranceSource.interiorNpcId,31120);
  assert.deepEqual(entry.dungeonEntranceSource.insideDestination,{x:-53113,y:-250277,z:-7934});
 });
+test('mainland Sacrifice entrance is grouped with Gludin across no island shortcut',()=>{
+ const entry=entries['necropolis-sacrifice'];assert.equal(entry.region,'gludin');
+ assert.equal(entry.regionAssociation,'nearest-source-mainland-town');
+ assert.deepEqual([entry.x,entry.y,entry.z],[-41568,209344,-5085]);
+});

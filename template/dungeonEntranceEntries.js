@@ -5,7 +5,7 @@ export default {
     "y": 143952,
     "z": -5379,
     "region": "dion",
-    "regionAssociation": "nearest-source-town",
+    "regionAssociation": "nearest-source-mainland-town",
     "dungeonEntranceSource": {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
@@ -54,7 +54,7 @@ export default {
     "y": 170304,
     "z": -4979,
     "region": "dion",
-    "regionAssociation": "nearest-source-town",
+    "regionAssociation": "nearest-source-mainland-town",
     "dungeonEntranceSource": {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
@@ -103,7 +103,7 @@ export default {
     "y": 78400,
     "z": -5123,
     "region": "oren",
-    "regionAssociation": "nearest-source-town",
+    "regionAssociation": "nearest-source-mainland-town",
     "dungeonEntranceSource": {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
@@ -152,7 +152,7 @@ export default {
     "y": 79680,
     "z": -5427,
     "region": "hunters",
-    "regionAssociation": "nearest-source-town",
+    "regionAssociation": "nearest-source-mainland-town",
     "dungeonEntranceSource": {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
@@ -201,7 +201,7 @@ export default {
     "y": 13504,
     "z": -4899,
     "region": "dark-elven-village",
-    "regionAssociation": "nearest-source-town",
+    "regionAssociation": "nearest-source-mainland-town",
     "dungeonEntranceSource": {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
@@ -250,7 +250,7 @@ export default {
     "y": 84544,
     "z": -6544,
     "region": "hunters",
-    "regionAssociation": "nearest-source-town",
+    "regionAssociation": "nearest-source-mainland-town",
     "dungeonEntranceSource": {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
@@ -298,8 +298,8 @@ export default {
     "x": -41568,
     "y": 209344,
     "z": -5085,
-    "region": "talking-island-village",
-    "regionAssociation": "nearest-source-town",
+    "region": "gludin",
+    "regionAssociation": "nearest-source-mainland-town",
     "dungeonEntranceSource": {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
@@ -349,7 +349,7 @@ export default {
     "y": 124352,
     "z": -5411,
     "region": "dion",
-    "regionAssociation": "nearest-source-town",
+    "regionAssociation": "nearest-source-mainland-town",
     "dungeonEntranceSource": {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
@@ -399,7 +399,7 @@ export default {
     "y": 174016,
     "z": -5437,
     "region": "giran",
-    "regionAssociation": "nearest-source-town",
+    "regionAssociation": "nearest-source-mainland-town",
     "dungeonEntranceSource": {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
@@ -449,7 +449,7 @@ export default {
     "y": 77376,
     "z": -5171,
     "region": "gludio",
-    "regionAssociation": "nearest-source-town",
+    "regionAssociation": "nearest-source-mainland-town",
     "dungeonEntranceSource": {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
@@ -499,7 +499,7 @@ export default {
     "y": 79104,
     "z": -4739,
     "region": "gludio",
-    "regionAssociation": "nearest-source-town",
+    "regionAssociation": "nearest-source-mainland-town",
     "dungeonEntranceSource": {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
@@ -549,7 +549,7 @@ export default {
     "y": 132800,
     "z": -4829,
     "region": "giran",
-    "regionAssociation": "nearest-source-town",
+    "regionAssociation": "nearest-source-mainland-town",
     "dungeonEntranceSource": {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
@@ -598,7 +598,7 @@ export default {
     "y": -17600,
     "z": -4899,
     "region": "goddard",
-    "regionAssociation": "nearest-source-town",
+    "regionAssociation": "nearest-source-mainland-town",
     "dungeonEntranceSource": {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {
@@ -647,7 +647,7 @@ export default {
     "y": 209216,
     "z": -5437,
     "region": "heine",
-    "regionAssociation": "nearest-source-town",
+    "regionAssociation": "nearest-source-mainland-town",
     "dungeonEntranceSource": {
       "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
       "files": {

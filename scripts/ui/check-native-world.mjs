@@ -84,6 +84,7 @@ try{for(const {width,noCanvas=false} of configurations){
   const row=page.locator('[data-quick-go]').filter({hasText:place.name});assert.ok((await row.innerText()).includes(CITIES.find(c=>c.id===place.region).name));await row.click();
   assert.equal(await page.locator('[data-native-walk]').count(),0,'an outside marker alone must not publish an unverified dungeon walk');
   assert.equal(await page.locator('.atlas-popup').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
+  await page.locator('.atlas-popup [data-dismiss]').click();
  }
  await selectWalk(zoneName(firstId));assert.equal(s.game.world.mode,'road');assert.ok(s.game.world.walkHome.native);
  assert.equal(await page.locator('[data-mode="city"]').textContent(),'Местность');
