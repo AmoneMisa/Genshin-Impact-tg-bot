@@ -247,6 +247,21 @@ export default {
       ],
       "count": 311,
       "unportedMinionTemplates": []
+    },
+    "field-of-whispers": {
+      "city": "heine",
+      "npcIds": [
+        "22650",
+        "22651",
+        "22652",
+        "22653",
+        "22654",
+        "22655",
+        "22658",
+        "22659"
+      ],
+      "count": 594,
+      "unportedMinionTemplates": []
     }
   },
   "source": {
@@ -386,6 +401,38 @@ export default {
     },
     "22098": {
       "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22650": {
+      "runSpeed": 185.0,
+      "attackRange": 40.0
+    },
+    "22651": {
+      "runSpeed": 185.0,
+      "attackRange": 40.0
+    },
+    "22652": {
+      "runSpeed": 185.0,
+      "attackRange": 40.0
+    },
+    "22653": {
+      "runSpeed": 185.0,
+      "attackRange": 40.0
+    },
+    "22654": {
+      "runSpeed": 250.0,
+      "attackRange": 40.0
+    },
+    "22655": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "22658": {
+      "runSpeed": 185.0,
+      "attackRange": 40.0
+    },
+    "22659": {
+      "runSpeed": 185.0,
       "attackRange": 40.0
     },
     "22691": {
