@@ -242,6 +242,36 @@ export default {
     ]
   },
   "fields": {
+    "talking-island": {
+      "city": "talking-island-village",
+      "fixedCount": 0,
+      "territoryCount": 442,
+      "npcIds": [
+        "20006",
+        "20016",
+        "20093",
+        "20096",
+        "20098",
+        "20101",
+        "20103",
+        "20106",
+        "20108",
+        "20120",
+        "20121",
+        "20130",
+        "20131",
+        "20132",
+        "20326",
+        "20342",
+        "20343",
+        "20432",
+        "20442",
+        "20481",
+        "20544"
+      ],
+      "count": 442,
+      "unportedMinionTemplates": []
+    },
     "turek-orcs": {
       "city": "gludin",
       "fixedCount": 0,
@@ -642,6 +672,7 @@ export default {
       "stats/npcs/22000-22099.xml": "99c9046f0c240f8de7fd4ed5737b65db17b8ee049aa6a496d09ce60be506e624",
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
+      "spawns/TalkingIsland/TalkingIslandMonsters.xml": "dd4cbd23e9b3943f0b3592bc8b1241b17f0302d2ea01af4a5393b0bac7fcebb5",
       "spawns/Gludin/TurekOrcs.xml": "128048da6e9f0a1e1c5eb2fed4e3e3733a120b907b1f23440d7266fde567e5bc",
       "spawns/Rune/ValleyOfSaints.xml": "9bc9c71fa81c43e28fc44e37d5660f873d51349ce50ed288f52a383c98034614",
       "spawns/Aden/Cemetery.xml": "c08ae4e693131861e2bc7a68726ec0827cb22e5683ac8d665c97f8b43a1bcf16",
@@ -691,6 +722,10 @@ export default {
       "runSpeed": 150.0,
       "attackRange": 40.0
     },
+    "20006": {
+      "runSpeed": 110.0,
+      "attackRange": 1100.0
+    },
     "20009": {
       "runSpeed": 110.0,
       "attackRange": 40.0
@@ -701,6 +736,10 @@ export default {
     },
     "20015": {
       "runSpeed": 15.0,
+      "attackRange": 40.0
+    },
+    "20016": {
+      "runSpeed": 23.0,
       "attackRange": 40.0
     },
     "20020": {
@@ -727,8 +766,56 @@ export default {
       "runSpeed": 159.0,
       "attackRange": 40.0
     },
+    "20093": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20096": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20098": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20101": {
+      "runSpeed": 23.0,
+      "attackRange": 40.0
+    },
+    "20103": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
     "20105": {
       "runSpeed": 100.0,
+      "attackRange": 40.0
+    },
+    "20106": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "20108": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "20120": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20121": {
+      "runSpeed": 100.0,
+      "attackRange": 40.0
+    },
+    "20130": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20131": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20132": {
+      "runSpeed": 120.0,
       "attackRange": 40.0
     },
     "20157": {
@@ -847,6 +934,18 @@ export default {
       "runSpeed": 120.0,
       "attackRange": 40.0
     },
+    "20326": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20342": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "20343": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
     "20379": {
       "runSpeed": 23.0,
       "attackRange": 40.0
@@ -855,8 +954,20 @@ export default {
       "runSpeed": 80.0,
       "attackRange": 40.0
     },
+    "20432": {
+      "runSpeed": 80.0,
+      "attackRange": 40.0
+    },
     "20433": {
       "runSpeed": 80.0,
+      "attackRange": 40.0
+    },
+    "20442": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20481": {
+      "runSpeed": 110.0,
       "attackRange": 40.0
     },
     "20494": {
@@ -889,6 +1000,10 @@ export default {
     },
     "20501": {
       "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "20544": {
+      "runSpeed": 110.0,
       "attackRange": 40.0
     },
     "20546": {
