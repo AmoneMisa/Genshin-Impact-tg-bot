@@ -1,9 +1,11 @@
 // H5 source snapshot: Mobius 9fb01cb20513e55190cdde8d91e41be2c0914f84.
-// Uses original NPC stats/spawns and the project's existing shared teleport tariff.
+// Population and outside entrances are generated separately; never flatten worldMap.js.
 import fs from 'node:fs';
 import path from 'node:path';
-import cats from '../../template/catacombsTemplate.js';
-import {CITIES,REGIONS,LOCATIONS,CITY_NPCS} from '../../template/worldMap.js';
+import {execFileSync} from 'node:child_process';
+import entranceEntries from '../../template/dungeonEntranceEntries.js';
+const importEntrances=()=>execFileSync(process.execPath,['scripts/l2j/import-dungeon-entrances.mjs',...Object.keys(entranceEntries)],{stdio:'inherit'});
+if(process.argv.includes('--entrances-only')){importEntrances();process.exit(0);}
 const root=path.resolve('.tmp/world-source/spawns'),npcRoot=path.resolve('.tmp/hf-npcs');
 const attr=s=>Object.fromEntries([...s.matchAll(/([\w]+)="([^"]*)"/g)].map(m=>[m[1],m[2]]));
 const npcs=new Map();
@@ -29,8 +31,5 @@ function mob(id){const n=npcs.get(id),b=n?.body;if(!b)return null;const tag=name
 }
 const added=defs.map(([file,key,title,gk])=>{const xml=fs.readFileSync(path.join(root,'Catacombs',file+'.xml'),'utf8'),ids=new Map();for(const m of xml.matchAll(/<npc id="(\d+)"/g))ids.set(m[1],(ids.get(m[1])||0)+1);const mobs=[...ids].sort((a,b)=>b[1]-a[1]).map(([id])=>mob(id)).filter(Boolean).slice(0,8).sort((a,b)=>a.level-b.level);if(mobs.length<3||!points.has(String(gk)))throw Error('Missing source '+file);return {id:'necropolis-'+key,title,kind:'catacomb',dungeonType:'necropolis',min:mobs[0].level,max:mobs.at(-1).level,level:mobs[mobs.length>>1].level,mobs,entrance:points.get(String(gk)),sourceFile:file+'.xml'};});
 fs.writeFileSync('template/necropolisesTemplate.js','// Original H5 NPC/spawn data; encounter scaling follows the existing hunting engine.\nexport default '+JSON.stringify(added,null,2)+';\n');
-const locations=LOCATIONS.filter(l=>!l.id.startsWith('necropolis-'));
-for(const z of added){const {x,y}=z.entrance,region=[...CITIES].sort((a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y))[0].id;locations.push({id:z.id,name:z.title,x,y,region,polygon:[[x-500,y-500],[x+500,y-500],[x+500,y+500],[x-500,y+500]],levelMin:z.min,levelMax:z.max,teleportGold:20000,floors:1,dungeonType:'necropolis',mob:{id:z.mobs[0].id,name:z.mobs[0].name,level:z.mobs[0].level}});}
-for(const [i,z] of cats.entries()){const l=locations.find(l=>l.id===z.id),p=points.get(String(31120+i));if(l&&p){Object.assign(l,p,{dungeonType:'catacomb',polygon:[[p.x-500,p.y-500],[p.x+500,p.y-500],[p.x+500,p.y+500],[p.x-500,p.y+500]]});l.region=[...CITIES].sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0].id;}}
-fs.writeFileSync('template/worldMap.js','// Original H5 entrance coordinates; selection polygons and teleport tariffs are project policy.\n'+Object.entries({CITIES,REGIONS,LOCATIONS:locations,CITY_NPCS}).map(([k,v])=>'export const '+k+'='+JSON.stringify(v)+';').join('\n')+'\n');
-console.log('Imported 8 necropolises; linked 14 Seven Signs entrances.');
+importEntrances();
+console.log('Imported 8 necropolis populations and 14 outside Seven Signs entrances without rewriting the Atlas.');

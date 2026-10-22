@@ -27,4 +27,6 @@
 
 Источник: Mobius High Five `9fb01cb20513e55190cdde8d91e41be2c0914f84`. Воспроизведение: `node scripts/l2j/import-dungeon-entrances.mjs ID`, `node scripts/ui/report-dungeon-entrances.mjs`.
 
+Старый `import-necropolises.mjs` теперь передаёт импорт входов этому генератору и не перезаписывает worldMap.js. Режим `node scripts/l2j/import-necropolises.mjs --entrances-only` обновляет все 14 входов без повторного импорта населения. Проверено повторное выполнение: исходный модуль Атласа и сгенерированные входы остаются неизменными.
+
 Проверки: `node --test test/dungeon-entrances.test.js`; `DUNGEON_MAP_CHECK=catacomb-heretic node scripts/ui/check-native-world.mjs` — правильный регион в общем списке Атласа, отсутствие выдуманного пешего входа, 320/390/1100 px и 320 px без Canvas.
