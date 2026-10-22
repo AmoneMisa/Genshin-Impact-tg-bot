@@ -25,7 +25,9 @@ export function placeNativeActor(actor,source){
  if(!source||!['x','y','z'].every(k=>Number.isFinite(source[k])))return false;
  const point=worldGeodata.point(source);
  // Preserve the source XY; an unavailable layer must never become a guessed spawn.
- if(!point?.nswe||Math.abs(point.z-source.z)>40||!nativeGroundAllowed(point))return false;
+ // Spawn.java corrects grounded, non-water monsters only when |geoZ-sourceZ| < 300.
+ // The 40-unit movement step limit is a different rule.
+ if(!point?.nswe||Math.abs(point.z-source.z)>=pilot.groundSpawnHeight.maxCorrectionExclusive||!nativeGroundAllowed(source)||!nativeGroundAllowed(point))return false;
  Object.assign(actor,{x:source.x/ROOM_SIZE,y:source.y/ROOM_SIZE,native:{z:point.z},path:[]});
  return true;
 }

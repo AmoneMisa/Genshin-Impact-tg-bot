@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {worldAction,advanceWorld,worldState} from '../functions/game/world/world.js';
 import {advanceHunt,selectHuntTarget,setHuntAttack} from '../functions/game/hunt/huntFight.js';
 import {battleField} from '../functions/game/hunt/huntNeighborhood.js';
-import {nativeFieldBuckets,nativeActorPoint,nativeFieldNear} from '../functions/game/world/nativeFieldSpace.js';
+import {nativeFieldBuckets,nativeActorPoint,nativeFieldNear,placeNativeActor} from '../functions/game/world/nativeFieldSpace.js';
 import {nativeCityAt} from '../functions/game/world/nativeTownGraph.js';
 import {nativeTrailBack} from '../functions/game/world/nativeTrail.js';
 import routes from '../template/nativeRoutes.js';
@@ -98,4 +98,11 @@ test('walking into the native field keeps the physical trail from outside its co
  const dto=worldState(s,START);assert.equal(dto.player.mode,'location');
  const f=s.game.hunt.field,back=nativeTrailBack({nativePosition:nativeActorPoint(f),nativeTrail:f.native.nativeTrail});
  assert.ok(back);assert.deepEqual(back.root,xyz(r.path.at(-2)));
+});
+test('ground monster spawn height follows the original Spawn.java threshold rather than a walking step',()=>{
+ const source={x:161746,y:83536,z:-2864},actor={};
+ assert.equal(placeNativeActor(actor,source),true);assert.equal(nativeActorPoint(actor).z,-2704);
+ assert.deepEqual(source,{x:161746,y:83536,z:-2864});
+ assert.equal(placeNativeActor({}, {...source,z:-3004}),false,'exactly 300 units is not corrected');
+ assert.equal(pilot.groundSpawnHeight.maxCorrectionExclusive,300);assert.match(pilot.groundSpawnHeight.sha256,/^[a-f0-9]{64}$/);
 });

@@ -7,6 +7,11 @@ export default {
     "sha256": "0a724ea2409c42bc532882ac61c9bd19adc2ae60120ee297c3727c29b71fff58",
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
   },
+  "groundSpawnHeight": {
+    "maxCorrectionExclusive": 300,
+    "file": "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/spawns/Spawn.java",
+    "sha256": "42307eac0dd6bb2661e9b069d39a0fad67c62a466bf0ab520cac6a39fbd0b045"
+  },
   "actors": {
     "20009": {
       "runSpeed": 110.0,
