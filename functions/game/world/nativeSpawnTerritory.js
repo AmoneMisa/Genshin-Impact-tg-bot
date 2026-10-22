@@ -35,7 +35,7 @@ export function sampleNativeTerritory(territory,{random=Math.random,geo=worldGeo
   }
   if(!p)return null;
   const ground=geo.point(p);
-  if(!ground?.nswe||ground.z<territory.minZ||ground.z>territory.maxZ||!allowed(ground))continue;
+  if(!ground?.nswe||ground.z>territory.maxZ||!allowed(ground))continue;
   if(territory.bannedTerritories?.some(b=>ground.z>=b.minZ&&ground.z<=b.maxZ&&pointInPolygon(ground,b.polygon)))continue;
   return {x:p.x,y:p.y,z:ground.z};
  }

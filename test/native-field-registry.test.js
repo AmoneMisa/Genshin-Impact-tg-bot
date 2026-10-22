@@ -32,7 +32,7 @@ for(const [zone,meta]of Object.entries(registry.fields)){
   assert.equal(slots.reduce((n,s)=>n+s.count,0),meta.count);
   for(const slot of slots){const actor={},position=slot.coordinateSource==='point'?slot:sampleNativeTerritory(nativeTerritorySource(zone,slot));assert.ok(position);assert.equal(placeNativeActor(actor,position),true,`${zone} ${slot.id} ${slot.x},${slot.y},${slot.z}`);
    const point=nativeActorPoint(actor);if(slot.coordinateSource==='point'){assert.equal(point.x,slot.x);assert.equal(point.y,slot.y);assert.ok(Math.abs(point.z-slot.z)<300);}
-   else {assert.ok(pointInPolygon(point,slot.polygon));assert.ok(point.z>=slot.minZ&&point.z<=slot.maxZ);}
+   else {assert.ok(pointInPolygon(point,slot.polygon));assert.ok(point.z<=slot.maxZ);}
    assert.ok(registry.actors[slot.id].runSpeed>0);assert.ok(registry.actors[slot.id].attackRange>0);
   }
   let s=hero(zone);assert.equal(worldAction(s,{action:'walk_location',location:zone},START).ok,true);

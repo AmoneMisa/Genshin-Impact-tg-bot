@@ -19,7 +19,7 @@ test('territory sampling keeps source integer XY and selects the layer at the H5
  const slots=LOCATION_LEVELS['cruma-marshlands'].floors[0].rooms.flatMap(r=>r.spawns),random=rng();let count=0;
  for(const source of slots)for(let i=0;i<source.count;i++){
   const p=sampleNativeTerritory(source,{random});assert.ok(p);assert.ok(Number.isInteger(p.x)&&Number.isInteger(p.y));
-  assert.ok(pointInPolygon(p,source.polygon));assert.ok(p.z>=source.minZ&&p.z<=source.maxZ);assert.ok(nativeGroundAllowed(p));
+  assert.ok(pointInPolygon(p,source.polygon));assert.ok(p.z<=source.maxZ);assert.ok(nativeGroundAllowed(p));
   assert.equal(p.z,worldGeodata.point({...p,z:Math.trunc((source.minZ+source.maxZ)/2)}).z);count++;
  }
  assert.equal(count,414);
@@ -32,7 +32,7 @@ test('exhausted polygon, water, excluded territory and height searches never fal
  assert.equal(calls,2002);
  assert.equal(sampleNativeTerritory(square,{random:()=>.5,geo,allowed:()=>false}),null);
  assert.equal(sampleNativeTerritory(square,{random:()=>.5,geo:{point:p=>({...p,z:104,nswe:15})}}),null);
- assert.equal(sampleNativeTerritory(square,{random:()=>.5,geo:{point:p=>({...p,z:-104,nswe:15})}}),null);
+ assert.deepEqual(sampleNativeTerritory(square,{random:()=>.5,geo:{point:p=>({...p,z:-104,nswe:15})},allowed:()=>true}),{x:5,y:5,z:-104});
  assert.equal(sampleNativeTerritory({...square,bannedTerritories:[square]},{random:()=>.5,geo,allowed:()=>true}),null);
 });
 test('the original Valley of Saints exclusion is imported and applied to real geodata proposals',()=>{

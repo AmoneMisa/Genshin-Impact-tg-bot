@@ -23,6 +23,8 @@ execFileSync(process.env.JAVAC||'javac',['-d',out,...files],{stdio:'pipe',timeou
 const fixtures=[];
 for(const id of Object.keys(policy.fields))for(const t of LOCATION_LEVELS[id].floors[0].rooms.flatMap(r=>r.spawns||[]).filter(s=>s.coordinateSource!=='point'))for(let seed=1;seed<=8;seed++)fixtures.push({t:nativeTerritorySource(id,t),seed,height:Math.trunc((t.minZ+t.maxZ)/2)});
 for(let seed=1;seed<=80;seed++)fixtures.push({t:{polygon:[[-10,-20],[10,-20],[10,20],[-10,20]],minZ:-101,maxZ:100,bannedTerritories:seed%2?[{polygon:[[-10,-20],[0,-20],[0,20],[-10,20]],minZ:-101,maxZ:100}]:[]},seed,height:0});
+// H5 uses the midpoint to choose a geodata layer, but only caps its upper Z.
+for(let seed=1;seed<=40;seed++)fixtures.push({t:{polygon:[[-10,-20],[10,-20],[10,20],[-10,20]],minZ:-101,maxZ:100},seed,height:-104});
 const encode=t=>[t.polygon.length,t.minZ,t.maxZ,...t.polygon.flat()].join(' ');
 const input=[fixtures.length,...fixtures.map(({t,seed,height})=>[seed,height,encode(t),t.bannedTerritories?.length||0,...(t.bannedTerritories||[]).map(encode)].join(' '))].join('\n');
 const result=execFileSync(process.env.JAVA||'java',['-Xmx128m','-cp',out,'SpawnTerritoryProbe'],{input,encoding:'utf8',timeout:60000}).trim().split(/\r?\n/);
@@ -33,4 +35,4 @@ for(const [i,{t,seed,height}]of fixtures.entries()){
  const actual=sampleNativeTerritory(t,{random,geo:{point:p=>(hint=p.z,{...p,z:height,nswe:15})},allowed:()=>true});
  assert.ok(actual);assert.equal(result[i],[actual.x,actual.y,actual.z,hint].join(','),`fixture ${i} seed ${seed}`);
 }
-console.log(`PASS ${fixtures.length} spawn proposals against unmodified H5 ZoneNPoly/NpcSpawnTerritory, including excluded polygons and odd negative Z ranges`);
+console.log(`PASS ${fixtures.length} spawn proposals against unmodified H5 ZoneNPoly/NpcSpawnTerritory, including excluded polygons, odd negative Z ranges and layers below minZ`);
