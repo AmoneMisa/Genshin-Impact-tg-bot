@@ -242,6 +242,35 @@ export default {
     ]
   },
   "fields": {
+    "elven-fields": {
+      "city": "elven-village",
+      "fixedCount": 0,
+      "territoryCount": 861,
+      "npcIds": [
+        "20013",
+        "20019",
+        "20036",
+        "20044",
+        "20308",
+        "20325",
+        "20336",
+        "20460",
+        "20466",
+        "20468",
+        "20469",
+        "20470",
+        "20471",
+        "20472",
+        "20473",
+        "20509",
+        "20525",
+        "20530",
+        "20534",
+        "20537"
+      ],
+      "count": 861,
+      "unportedMinionTemplates": []
+    },
     "talking-island": {
       "city": "talking-island-village",
       "fixedCount": 0,
@@ -672,6 +701,7 @@ export default {
       "stats/npcs/22000-22099.xml": "99c9046f0c240f8de7fd4ed5737b65db17b8ee049aa6a496d09ce60be506e624",
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
+      "spawns/ElvenTerritory/ElvenStarting.xml": "19dcb4170064636df9fc07e051071705d62856209419041df4df3beafb9c5d13",
       "spawns/TalkingIsland/TalkingIslandMonsters.xml": "dd4cbd23e9b3943f0b3592bc8b1241b17f0302d2ea01af4a5393b0bac7fcebb5",
       "spawns/Gludin/TurekOrcs.xml": "128048da6e9f0a1e1c5eb2fed4e3e3733a120b907b1f23440d7266fde567e5bc",
       "spawns/Rune/ValleyOfSaints.xml": "9bc9c71fa81c43e28fc44e37d5660f873d51349ce50ed288f52a383c98034614",
@@ -734,12 +764,20 @@ export default {
       "runSpeed": 110.0,
       "attackRange": 1100.0
     },
+    "20013": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
     "20015": {
       "runSpeed": 15.0,
       "attackRange": 40.0
     },
     "20016": {
       "runSpeed": 23.0,
+      "attackRange": 40.0
+    },
+    "20019": {
+      "runSpeed": 110.0,
       "attackRange": 40.0
     },
     "20020": {
@@ -750,12 +788,20 @@ export default {
       "runSpeed": 100.0,
       "attackRange": 40.0
     },
+    "20036": {
+      "runSpeed": 60.0,
+      "attackRange": 40.0
+    },
     "20039": {
       "runSpeed": 120.0,
       "attackRange": 40.0
     },
     "20043": {
       "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "20044": {
+      "runSpeed": 60.0,
       "attackRange": 40.0
     },
     "20049": {
@@ -934,7 +980,19 @@ export default {
       "runSpeed": 120.0,
       "attackRange": 40.0
     },
+    "20308": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "20325": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
     "20326": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20336": {
       "runSpeed": 110.0,
       "attackRange": 40.0
     },
@@ -963,6 +1021,38 @@ export default {
       "attackRange": 40.0
     },
     "20442": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20460": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "20466": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "20468": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20469": {
+      "runSpeed": 110.0,
+      "attackRange": 1100.0
+    },
+    "20470": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20471": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20472": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20473": {
       "runSpeed": 110.0,
       "attackRange": 40.0
     },
@@ -1000,6 +1090,26 @@ export default {
     },
     "20501": {
       "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "20509": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20525": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20530": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20534": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20537": {
+      "runSpeed": 110.0,
       "attackRange": 40.0
     },
     "20544": {
