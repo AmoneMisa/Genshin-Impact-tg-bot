@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import entries from '../../template/nativeSurfaceEntries.js';
 import spawnEntries from '../../template/nativeSpawnEntries.js';
+import territoryEntries from '../../template/nativeTerritoryEntries.js';
 import routes from '../../template/nativeRoutes.js';
 import {LOCATIONS,CITIES} from '../../template/worldMap.js';
 const lines=['# Дополнительные наземные входы High Five','',
@@ -13,6 +14,11 @@ const lines=['# Дополнительные наземные входы High Fi
  '| Локация | Город | Исходный NPC и XYZ | Файл | Длина пути |','| --- | --- | --- | --- | ---: |',
  ...Object.entries(spawnEntries).map(([id,e])=>`| ${LOCATIONS.find(l=>l.id===id)?.name||id} | ${CITIES.find(c=>c.id===e.region)?.name||e.region} | ${e.entrySource.npcId}: ${e.x}, ${e.y}, ${e.z} | ${e.entrySource.file} | ${routes.routes[id]?.available?Math.round(routes.routes[id].distance):'не подтверждён'} |`),'',
  'Импорт таких точек: `python scripts/l2j/import-native-spawn-entries.py ID`, затем тот же `build-native-routes.mjs ID`. Источники с тарифом и без тарифа не дублируются.','',
+ '## Подходы к границам исходных территорий','',
+ 'Именованного входа и фиксированной позиции NPC здесь нет: `originalEntrance=null`. XY взяты из конкретной вершины исходного контура спавна, Z — из оригинальной геодаты. Допускается только единственный слой в исходном интервале minZ/maxZ; разные слои не усредняются. Из четырёх ближайших подходящих вершин выбирается первая с подтверждённым двусторонним путём. Это производный пеший подход к границе, а не оригинальная точка телепорта или позиция монстра. Телепорты закрыты, неизвестная цена не подставляется.','',
+ '| Локация | Город | Вершина XY / высота геодаты | Исходная территория |','| --- | --- | --- | --- |',
+ ...Object.entries(territoryEntries).map(([id,e])=>`| ${LOCATIONS.find(l=>l.id===id)?.name||id} | ${CITIES.find(c=>c.id===e.region)?.name||e.region} | ${e.x}, ${e.y} / ${e.z} | ${e.entrySource.file}, ${e.entrySource.zone}, вершина ${e.entrySource.vertex} |`),'',
+ 'Воспроизведение: `node scripts/l2j/import-native-territory-entries.mjs ID`, затем `node scripts/l2j/build-native-routes.mjs ID`. Если слой неоднозначен или путь не подтверждён, запись не создаётся.','',
  'При соединении опубликованных дорог сервер удаляет петли только по полному совпадению XYZ. Разные высоты моста и пещеры не объединяются; новые отрезки через препятствия не создаются. Оставшийся путь проходит обычную проверку геодаты и сохраняется в пределах 512 точек. Между Монастырём и Ледяным лабиринтом используется общая ветка без возвращения к хранителям Годдарда и Шутгарта. Остановка, вход с уже достигнутой точки и сохранение NPC проверены отдельно.','',
  'Активные квестовые цели остаются в общем списке «Квестовые монстры» при наличии пешего пути, даже без доступного телепорта. «Дойти пешком» ведёт к исходному входу локации; оно не создаёт выбранного монстра и не обходит условия этажей. Цели берутся из активных заданий персонажа. Проверка: `NATIVE_QUEST_WALK=1 NATIVE_FIRST_ZONE=fields-of-massacre NATIVE_SECOND_ZONE=tower-of-insolence node scripts/ui/check-native-world.mjs`, четыре режима, включая отсутствие Canvas.','',
  'Добавление: `python scripts/l2j/import-native-surface-entries.py ID`, затем `node scripts/l2j/build-native-routes.mjs ID`. Публиковать источник вместе с маршрутом следует только после успешной проверки прохода. Бюджеты поиска игровых действий при этом не увеличиваются.','',

@@ -4,6 +4,7 @@ import nativeWorld from '../../template/nativeWorld.js';
 import {WORLD_EXTENSION} from '../../template/worldExtension.js';
 import surfaceEntries from '../../template/nativeSurfaceEntries.js';
 import spawnEntries from '../../template/nativeSpawnEntries.js';
+import territoryEntries from '../../template/nativeTerritoryEntries.js';
 import {LOCATIONS} from '../../template/worldMap.js';
 import {worldGeodata} from '../../functions/game/world/l2jGeodata.js';
 import {findNativePath,nativeSegment} from '../../functions/game/world/nativeNavigation.js';
@@ -12,7 +13,7 @@ import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';
 const ids=process.argv.slice(2),routes={},file='template/nativeRoutes.js';
 const previous=fs.existsSync(file)?(await import(new URL('../../template/nativeRoutes.js',import.meta.url))).default:null;
 const barriersSha256=createHash('sha256').update(fs.readFileSync('template/nativeWorld.js')).digest('hex');
-const candidates=[...WORLD_EXTENSION.filter(r=>r.levels.source?.coordinateSpace==='surface').map(r=>r.location),...LOCATIONS.filter(l=>surfaceEntries[l.id]||spawnEntries[l.id])];
+const candidates=[...WORLD_EXTENSION.filter(r=>r.levels.source?.coordinateSpace==='surface').map(r=>r.location),...LOCATIONS.filter(l=>surfaceEntries[l.id]||spawnEntries[l.id]||territoryEntries[l.id])];
 for(const target of candidates){
  if(ids.length&&!ids.includes(target.id))continue;
  const from=nativeWorld.towns[target.region],to={x:target.x,y:target.y,z:target.z};

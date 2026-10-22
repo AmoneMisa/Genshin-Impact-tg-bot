@@ -1,5 +1,6 @@
 import SURFACE_ENTRIES from '../template/nativeSurfaceEntries.js';
 import SPAWN_ENTRIES from '../template/nativeSpawnEntries.js';
+import TERRITORY_ENTRIES from '../template/nativeTerritoryEntries.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {worldAction,worldState,advanceWorld} from '../functions/game/world/world.js';
@@ -43,7 +44,7 @@ test('unconfirmed source approaches never advertise or start a native walk',()=>
  }
 });
 test('all published native city and return links verify every original cell in both directions',()=>{
- const available=Object.values(routes.routes).filter(r=>r.available);assert.equal(available.length,11+Object.keys(SURFACE_ENTRIES).length+Object.keys(SPAWN_ENTRIES).length);
+ const available=Object.values(routes.routes).filter(r=>r.available);assert.equal(available.length,11+Object.keys(SURFACE_ENTRIES).length+Object.keys(SPAWN_ENTRIES).length+Object.keys(TERRITORY_ENTRIES).length);
  for(const route of available){
   let point=route.from;
   for(const next of route.path){assert.ok(nativeSegment(point,next,{allowed:nativeGroundAllowed,reversible:true}));point=next;}

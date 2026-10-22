@@ -10075,6 +10075,177 @@ export default {
           "reason": null
         }
       ]
+    },
+    "timak-outpost": {
+      "city": "oren",
+      "available": true,
+      "from": {
+        "x": 82992,
+        "y": 53171,
+        "z": -1488
+      },
+      "to": {
+        "x": 76536,
+        "y": 58652,
+        "z": -2856
+      },
+      "sourceTown": {
+        "npcId": 30177,
+        "name": "Valentina",
+        "x": 82992,
+        "y": 53171,
+        "z": -1492,
+        "file": "spawns/Others/22_19.xml"
+      },
+      "sourceEntry": {
+        "type": "TERRITORY_BOUNDARY",
+        "coordinateSource": "territory-node",
+        "originalEntrance": null,
+        "file": "spawns/Oren/TimakOutpost.xml",
+        "sha256": "be1285abe04e42f15758b8a89182afa1956eebc3c4485c1653e16caaee3fdd47",
+        "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+        "zone": "oren28_2219_13",
+        "vertex": 0,
+        "npcIds": [
+          20585,
+          20586,
+          20587
+        ],
+        "polygon": [
+          [
+            76536,
+            58652
+          ],
+          [
+            77064,
+            59460
+          ],
+          [
+            75100,
+            62072
+          ],
+          [
+            74236,
+            62288
+          ],
+          [
+            72740,
+            61092
+          ],
+          [
+            72744,
+            59672
+          ],
+          [
+            74284,
+            57804
+          ],
+          [
+            75388,
+            58080
+          ]
+        ],
+        "minZ": -3188,
+        "maxZ": -2688,
+        "heightSource": "l2j-geodata",
+        "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
+        "selectionRule": "nearest-source-vertex-with-confirmed-ground-path"
+      },
+      "distance": 11809.27316832167,
+      "path": [
+        {
+          "x": 81976,
+          "y": 55608,
+          "z": -1520
+        },
+        {
+          "x": 81592,
+          "y": 55992,
+          "z": -1520
+        },
+        {
+          "x": 81336,
+          "y": 57272,
+          "z": -1736
+        },
+        {
+          "x": 80952,
+          "y": 58424,
+          "z": -1872
+        },
+        {
+          "x": 80312,
+          "y": 59192,
+          "z": -2024
+        },
+        {
+          "x": 78264,
+          "y": 60600,
+          "z": -2672
+        },
+        {
+          "x": 77624,
+          "y": 60088,
+          "z": -2904
+        },
+        {
+          "x": 76536,
+          "y": 58652,
+          "z": -2856
+        }
+      ],
+      "returnPath": [
+        {
+          "x": 77624,
+          "y": 60088,
+          "z": -2904
+        },
+        {
+          "x": 78264,
+          "y": 60600,
+          "z": -2672
+        },
+        {
+          "x": 80312,
+          "y": 59192,
+          "z": -2024
+        },
+        {
+          "x": 80952,
+          "y": 58424,
+          "z": -1872
+        },
+        {
+          "x": 81336,
+          "y": 57272,
+          "z": -1736
+        },
+        {
+          "x": 81592,
+          "y": 55992,
+          "z": -1520
+        },
+        {
+          "x": 81976,
+          "y": 55608,
+          "z": -1520
+        },
+        {
+          "x": 82992,
+          "y": 53171,
+          "z": -1488
+        }
+      ],
+      "attempts": [
+        {
+          "stride": 8,
+          "maxNodes": 30000,
+          "heuristicWeight": 1,
+          "margin": 256,
+          "visited": 1328,
+          "reason": null
+        }
+      ]
     }
   }
 };

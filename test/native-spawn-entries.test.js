@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import entries from '../template/nativeSpawnEntries.js';
+import territoryEntries from '../template/nativeTerritoryEntries.js';
 import tariffs from '../template/nativeSurfaceEntries.js';
 import routes from '../template/nativeRoutes.js';
 import {LOCATIONS,CITY_NPCS,worldState,worldAction,quickTravel} from '../functions/game/world/world.js';
@@ -9,13 +10,21 @@ import {quickTravelDestinations} from '../webapp/quick-travel-menu.js';
 import {movementHtml} from '../webapp/atlas-ui.js';
 import change from '../functions/game/player/changePlayerGameClass.js';
 import update from '../functions/game/player/updatePlayerStats.js';
+import {worldGeodata} from '../functions/game/world/l2jGeodata.js';
 const NOW=1800000000000;
 function hero(city){const s={userId:1,game:{stats:{lvl:85},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city,x:.5,y:.5,path:[],moveAt:NOW,locks:{}}}};change(s,'humanFighter');update(s);return s;}
-for(const [id,entry] of Object.entries(entries)){
+for(const [id,entry] of Object.entries({...entries,...territoryEntries})){
  test(`spawn point ${id} keeps its original NPC provenance and does not claim a tariff`,()=>{
   const place=LOCATIONS.find(l=>l.id===id),route=routes.routes[id];assert.equal(tariffs[id],undefined);
   assert.deepEqual([place.x,place.y,place.z],[entry.x,entry.y,entry.z]);assert.equal(place.teleportGold,null);assert.deepEqual(place.entryRoutes,[]);assert.equal(place.access.kind,'walk-only');
-  assert.equal(entry.entrySource.coordinateSource,'point');assert.equal(entry.entrySource.type,'NPC_SPAWN');assert.ok(Number.isInteger(entry.entrySource.npcId));assert.match(entry.entrySource.sha256,/^[a-f0-9]{64}$/);
+  const source=entry.entrySource;assert.match(source.sha256,/^[a-f0-9]{64}$/);assert.ok(!entries[id]||!territoryEntries[id]);
+  if(source.type==='NPC_SPAWN'){assert.equal(source.coordinateSource,'point');assert.ok(Number.isInteger(source.npcId));}
+  else{
+   assert.equal(source.type,'TERRITORY_BOUNDARY');assert.equal(source.coordinateSource,'territory-node');assert.equal(source.originalEntrance,null);assert.equal(source.heightSource,'l2j-geodata');assert.equal(source.geodataCommit,worldGeodata.manifest.commit);
+   assert.deepEqual([entry.x,entry.y],source.polygon[source.vertex]);assert.ok(entry.z>=source.minZ&&entry.z<=source.maxZ);
+   assert.equal(worldGeodata.point({x:entry.x,y:entry.y,z:source.minZ}).z,entry.z);assert.equal(worldGeodata.point({x:entry.x,y:entry.y,z:source.maxZ}).z,entry.z);
+   assert.ok(source.npcIds.length&&source.npcIds.every(Number.isInteger));
+  }
   assert.equal(route.available,true);assert.deepEqual(route.sourceEntry,entry.entrySource);assert.ok(route.returnPath&&route.path.length<=512);
  });
  test(`spawn point ${id} is visible in the shared Atlas with teleport disabled and walking available`,()=>{
