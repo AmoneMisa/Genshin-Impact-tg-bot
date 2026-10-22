@@ -15,6 +15,12 @@ import {LOCATIONS} from '../../template/worldMap.js';
 import {WORLD_EXTENSION} from '../../template/worldExtension.js';
 import compiled from '../../template/nativeRoutes.js';
 const firstId=process.env.NATIVE_FIRST_ZONE||'forsaken-plains',secondId=process.env.NATIVE_SECOND_ZONE||'silent-valley';
+const {nativeFieldSupported}=await import('../../functions/game/world/nativeFieldSpace.js');
+if(nativeFieldSupported(firstId)){
+ process.env.NATIVE_PILOT_ZONE=firstId;
+ console.log('Native combat zone: checking its city/field/return scenario in the shared Atlas');
+ await import('./check-native-field-pilot.mjs');process.exit(0);
+}
 const first=compiled.routes[firstId],second=compiled.routes[secondId];
 assert.ok(first?.available&&second?.available&&Boolean(nativeTownPath(first.city,second.city)),'two native routes must have a verified town connection');
 const zoneName=id=>WORLD_EXTENSION.find(r=>r.zone.id===id)?.zone.title||LOCATIONS.find(l=>l.id===id)?.name||id;

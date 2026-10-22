@@ -135,7 +135,9 @@ test('Anghel has an ordinary walking route without a noblesse token, and origina
  Object.assign(s.game.world,{city:'aden',x:.5,y:.5});const gold=s.game.inventory.gold;
  assert.equal(regionAccessBlock(s,location),'noblesse_required');
  assert.equal(worldAction(s,{action:'walk_location',location:location.id},NOW).ok,true);
- const until=s.game.world.walkHome.until;advanceWorld(s,until-1);assert.equal(s.game.world.mode,'road');advanceWorld(s,until);
+ const trip=s.game.world.walkHome,until=trip.until;advanceWorld(s,until-1);
+ assert.equal(s.game.world.mode,'location');assert.equal(s.game.hunt.field.native.journey,trip);
+ assert.ok(trip.native.remaining>0);advanceWorld(s,until);
  assert.equal(s.game.world.mode,'location');assert.equal(s.game.world.location,location.id);assert.equal(s.game.inventory.gold,gold);
  const valley=WORLD_EXTENSION.find(r=>r.zone.id==='dragon-valley').location;
  const route=valley.entryRoutes.find(r=>r.type==='NORMAL');assert.ok(route);

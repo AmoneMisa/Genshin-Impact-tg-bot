@@ -9,10 +9,18 @@ import {rememberNativeTrail} from './nativeTrail.js';
 
 // A residency budget, not a monster aggression/leash range. Public DTOs are capped separately.
 export const NATIVE_FIELD_RADIUS=8192;
-export const nativeFieldSupported=id=>id===pilot.zone;
-const pilotSpawns=LOCATION_LEVELS[pilot.zone].floors[0].rooms.flatMap(r=>r.spawns||[]).filter(s=>s.coordinateSource==='point');
-export const nativeFieldNear=point=>Boolean(point&&pilotSpawns.some(s=>Math.hypot(s.x-point.x,s.y-point.y)<=NATIVE_FIELD_RADIUS));
-export const nativeFieldZone=()=>pilot.zone;
+export const nativeFieldSupported=id=>Object.hasOwn(pilot.fields,id);
+const sourceSpawns=Object.fromEntries(Object.keys(pilot.fields).map(id=>[id,LOCATION_LEVELS[id].floors[0].rooms.flatMap(r=>r.spawns||[]).filter(s=>s.coordinateSource==='point')]));
+const allSourceSpawns=Object.values(sourceSpawns).flat();
+export const nativeFieldNear=(point,id)=>Boolean(point&&(id?sourceSpawns[id]||[]:allSourceSpawns).some(s=>Math.hypot(s.x-point.x,s.y-point.y)<=NATIVE_FIELD_RADIUS));
+export function nativeFieldZone(point,preferred=null){
+ if(preferred&&nativeFieldNear(point,preferred))return preferred;
+ if(!point)return null;
+ let zone=null,distance=NATIVE_FIELD_RADIUS;
+ for(const [id,spawns] of Object.entries(sourceSpawns))for(const spawn of spawns){const next=Math.hypot(spawn.x-point.x,spawn.y-point.y);if(next<=distance){zone=id;distance=next;}}
+ return zone;
+}
+export const nativeFieldCity=id=>pilot.fields[id]?.city||null;
 const worldAxis=value=>{const n=value*ROOM_SIZE,integer=Math.round(n);return Math.abs(n-integer)<1e-8?integer:n;};
 export const nativeActorPoint=actor=>actor?.native&&({x:worldAxis(actor.x),y:worldAxis(actor.y),z:actor.native.z});
 export const nativeFieldPoint=session=>session.game.world?.mode==='location'?nativeActorPoint(session.game.hunt?.field):null;

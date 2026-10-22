@@ -11,15 +11,21 @@ import {findNativePath} from '../../functions/game/world/nativeNavigation.js';
 import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';
 import change from '../../functions/game/player/changePlayerGameClass.js';
 import update from '../../functions/game/player/updatePlayerStats.js';
+import routes from '../../template/nativeRoutes.js';
+import pilot from '../../template/nativeFieldPilot.js';
+import {LOCATIONS} from '../../template/worldMap.js';
+import {WORLD_EXTENSION} from '../../template/worldExtension.js';
+const zone=process.env.NATIVE_PILOT_ZONE||'vuku-lands',city=pilot.fields[zone].city;
+const zoneName=WORLD_EXTENSION.find(r=>r.zone.id===zone)?.zone.title||LOCATIONS.find(l=>l.id===zone)?.name||zone,cityName={gludio:'Глудио',aden:'Аден'}[city],endpoint=routes.routes[zone].to;
 const {chromium}=createRequire('C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json')('playwright');
-const root=path.resolve('webapp'),out=path.resolve('.tmp/native-field-pilot-ui');fs.mkdirSync(out,{recursive:true});
+const root=path.resolve('webapp'),out=path.resolve('.tmp/native-field-pilot-ui',zone);fs.mkdirSync(out,{recursive:true});
 const assets=bundlePageAssets(fs.readFileSync(path.join(root,'index.html'),'utf8'),f=>fs.readFileSync(path.join(root,f.slice(1)),'utf8'));
 const styles=[...assets.html.matchAll(/<(?:link rel="stylesheet"|meta name="game-feature-styles")[^>]+>/g)].map(m=>m[0]).join('');
 const browser=await chromium.launch({headless:true,executablePath:'C:/Users/kubai/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe'});
 const cases=[{width:320},{width:390},{width:1100},{width:320,noCanvas:true},{width:320,noImages:true}].filter(c=>!process.env.NATIVE_WIDTH||String(c.width)===process.env.NATIVE_WIDTH);
 try{for(const {width,noCanvas=false,noImages=false} of cases){
  let now=1800000000000,finishRoad=false;
- const s={userId:1,userChatData:{user:{id:1,first_name:'Test'}},game:{stats:{lvl:25,currentExp:0},inventory:{gold:1e6,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:'gludio',x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
+ const s={userId:1,userChatData:{user:{id:1,first_name:'Test'}},game:{stats:{lvl:zone==='vuku-lands'?25:58,currentExp:0},inventory:{gold:1e6,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city,x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
  const chat={game:{},members:[s]};s.ownerDocument=()=>chat;change(s,'humanFighter');update(s);
  const quiet=()=>{const f=s.game.hunt?.field;if(f)for(const bank of nativeFieldBuckets(f))for(const mob of bank.mobs){mob.aggressive=false;mob.nextAttackAt=now+1e9;}};
  const dto=()=>{const trip=s.game.world.walkHome||s.game.hunt?.field?.native?.journey;if(finishRoad&&trip?.native){now=trip.until+1;finishRoad=false;}advanceWorld(s,now);quiet();return {world:{...worldState(s,now),holdings:[],corpses:[]}};};
@@ -39,6 +45,7 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
   if(u.startsWith('/api/hunt/')){
    now+=100;const body=route.request().postDataJSON();calls.push({action:u,...body});
    const result=u.endsWith('/target')?selectHuntTarget(s,body.targetId,now):u.endsWith('/attack')?setHuntAttack(s,body.enabled,now):useHuntSkill(s,body.skillIndex,{now,random:()=>.99});
+   if(u.endsWith('/attack')&&body.enabled){for(let i=0;i<60&&!s.game.hunt.kills;i++){now+=2000;quiet();await getHuntState(s,now);}assert.ok(s.game.hunt.kills,JSON.stringify({point:nativeActorPoint(s.game.hunt.field),target:s.game.hunt.field.target,order:s.game.hunt.field.autoAttack,log:s.game.hunt.log.slice(-3),journey:s.game.hunt.field.native.journey?.native}));}
    quiet();return route.fulfill({status:result.ok?200:409,json:{...result,hunt:await getHuntState(s,now)}});
   }
   const bundle=assets.bundles?.find(b=>b.path===u);if(bundle)return route.fulfill({contentType:'text/css',body:bundle.css});
@@ -54,17 +61,17 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
   await(await import('/world-map.js')).openWorldMap({api,statusElement});window.originalAtlas=document.querySelector('.atlas-panel');window.originalCanvas=document.querySelector('canvas');
  });
  await page.locator('[data-movement]').click();await page.getByRole('combobox',{name:'Разделы телепорта',exact:true}).click();await page.getByRole('option',{name:'Охота',exact:true}).click();
- await page.locator('[data-quick-go]').filter({hasText:'Земли орков Вуку'}).click();assert.equal(await page.locator('[data-native-walk]').isEnabled(),true);
+ await page.locator('[data-quick-go]').filter({hasText:zoneName}).click();assert.equal(await page.locator('[data-native-walk]').isEnabled(),true);
  await page.locator('[data-native-walk]').click();assert.equal(s.game.world.mode,'road');now+=Math.floor((s.game.world.walkHome.until-now)*.9);
  await page.locator('.atlas-combat:not([hidden])').waitFor();
  assert.ok(s.game.hunt.field.native.journey?.native.remaining>0,'native population streams before the road endpoint');finishRoad=true;
- await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.nativeField?.point.x===-12420);
+ await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.nativeField?.point.x===endpoint.x);
  await page.waitForTimeout(100);
- assert.equal(s.game.world.mode,'location');assert.equal(s.game.world.location,'vuku-lands');assert.equal(s.game.inventory.gold,1e6);
+ assert.equal(s.game.world.mode,'location');assert.equal(s.game.world.location,zone);assert.equal(s.game.inventory.gold,1e6);
  assert.equal(await page.locator('.hunt-overlay').count(),0);assert.equal(await page.evaluate(()=>window.originalAtlas===document.querySelector('.atlas-panel')&&window.originalCanvas===document.querySelector('canvas')),true);
  assert.equal(await page.locator('.atlas-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
- const initial=worldState(s,now).nativeField,atPlayer=initial.actors.find(m=>Math.hypot(m.x-initial.point.x,m.y-initial.point.y)<2);assert.ok(atPlayer);
- if(!noCanvas){const box=await page.locator('canvas').boundingBox();await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/hunt/target')),page.locator('canvas').click({position:{x:box.width/2,y:box.height/2}})]);}
+ const initial=worldState(s,now).nativeField,atPlayer=[...initial.actors].sort((a,b)=>Math.hypot(a.x-initial.point.x,a.y-initial.point.y)-Math.hypot(b.x-initial.point.x,b.y-initial.point.y)).find(m=>findNativePath(initial.point,{x:m.x,y:m.y,z:initial.point.z},{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true}).ok);assert.ok(atPlayer);
+ if(!noCanvas&&zone==='vuku-lands'){const box=await page.locator('canvas').boundingBox();await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/hunt/target')),page.locator('canvas').click({position:{x:box.width/2,y:box.height/2}})]);}
  else {const index=await page.locator('[data-native-target]').evaluate((n,id)=>[...n.options].findIndex(o=>o.value===id),atPlayer.instanceId);assert.ok(index>=0);await page.getByRole('combobox',{name:'Цель рядом',exact:true}).click();await page.getByRole('option').nth(index).click();await page.waitForTimeout(100);}
  assert.ok(calls.some(c=>c.action==='/api/hunt/target'));
  const victim=nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.instanceId===s.game.hunt.field.target);victim.currentHp=1;
@@ -95,12 +102,12 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  await page.screenshot({path:path.join(out,`native-field-${width}${noCanvas?'-no-canvas':noImages?'-no-images':''}.png`)});
  for(const bank of nativeFieldBuckets(s.game.hunt.field))for(const m of bank.mobs)m.aggro=false;
  await page.locator('[data-movement]').click();await page.getByRole('combobox',{name:'Разделы телепорта',exact:true}).click();await page.getByRole('option',{name:'Города',exact:true}).click();
- await page.getByRole('button',{name:'Глудио',exact:true}).click();await page.locator('[data-native-city]').click();assert.equal(s.game.world.mode,'road');finishRoad=true;
+ await page.getByRole('button',{name:cityName,exact:true}).click();await page.locator('[data-native-city]').click();assert.equal(s.game.world.mode,'road');finishRoad=true;
  await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.player.mode==='city');
- assert.equal(await page.locator('.atlas-combat').isHidden(),true);assert.equal(s.game.world.mode,'city');assert.ok(s.game.world.nativeFields['vuku-lands']);
+ assert.equal(await page.locator('.atlas-combat').isHidden(),true);assert.equal(s.game.world.mode,'city');assert.ok(s.game.world.nativeFields[zone]);
  assert.equal(await page.evaluate(()=>window.originalAtlas===document.querySelector('.atlas-panel')),true);
  await page.locator('[data-close]').click();assert.equal(await page.locator('.atlas-panel').count(),0);assert.equal(await page.locator('[inert],dialog[open]').count(),0);
  assert.deepEqual(errors,[]);assert.equal(requests.some(p=>p.endsWith('.gz')||p.includes('l2j-geodata')),false);
  const requestsAtClose=requests.length;await page.waitForTimeout(2200);assert.equal(requests.length,requestsAtClose,'closing stops world and combat requests');
- await page.close();console.log(`PASS native field ${width}${noCanvas?' no Canvas':noImages?' no images':''}: same Atlas/canvas, original actors, combat/reward, walking, city return, focus and cleanup`);
+ await page.close();console.log(`PASS native field ${zone} ${width}${noCanvas?' no Canvas':noImages?' no images':''}: same Atlas/canvas, original actors, combat/reward, walking, city return, focus and cleanup`);
 }}finally{await browser.close();}

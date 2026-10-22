@@ -28,7 +28,7 @@ import {nativeCityAt} from './nativeTownGraph.js';
 import {airshipJourneyPosition} from './graciaTravel.js';
 import {ferryOptions,buyFerryTicket,boardFerry,advanceFerry,leaveFerry,ferryJourneyPosition,ferryJourneyDto} from './ferryTravel.js';
 import {rememberNativeTrail,rememberNativeResume} from './nativeTrail.js';
-import {activateNativeField,nativeFieldPoint,nativeFieldDto,nativeFieldNear,nativeFieldZone} from './nativeFieldSpace.js';
+import {activateNativeField,nativeFieldPoint,nativeFieldDto,nativeFieldNear,nativeFieldZone,nativeFieldCity,nativeFieldSupported} from './nativeFieldSpace.js';
 import {ROOM_SIZE} from './navigation.js';
 
 export {CITIES,REGIONS,LOCATIONS,CITY_NPCS};
@@ -81,13 +81,14 @@ export function advanceWorld(session,now=Date.now()) {
     if(w.mode==='road'&&w.walkHome?.native)nativeDone=advanceNativeJourney(w.walkHome,now,l2ActionBlock(session,{move:true},now)?0:getSpeed(session)*l2MoveMultiplier(session,now));
     // Stream the pilot's source population as the walking camera approaches it.
     // Carry the very same remaining journey: entering the field grants no movement.
-    if(w.mode==='road'&&!nativeDone&&w.walkHome?.native&&!w.walkHome.city&&!w.walkHome.port&&(!w.walkHome.location||w.walkHome.location===nativeFieldZone())){
+    if(w.mode==='road'&&!nativeDone&&w.walkHome?.native&&!w.walkHome.city&&!w.walkHome.port&&(!w.walkHome.location||nativeFieldSupported(w.walkHome.location))){
         const trip=w.walkHome,point=trip.native.point,trail=w.nativeTrail;
-        if(nativeFieldNear(point)&&!nativeCityAt(point)&&!regionAccessBlock(session,LOCATIONS.find(l=>l.id===nativeFieldZone()),{walking:true,now})&&enterPublicField(session,nativeFieldZone(),{now}).ok){
+        const zone=nativeFieldZone(point,trip.location);
+        if(zone&&!nativeCityAt(point)&&!regionAccessBlock(session,LOCATIONS.find(l=>l.id===zone),{walking:true,now})&&enterPublicField(session,zone,{now}).ok){
             activateNativeField(session.game.hunt,point,now);
             if(trail)session.game.hunt.field.native.nativeTrail=trail;
             session.game.hunt.field.native.journey=trip;
-            Object.assign(w,{city:'gludio',mode:'location',location:nativeFieldZone(),path:[],pending:null,channel:null});delete w.walkHome;
+            Object.assign(w,{city:nativeFieldCity(zone),mode:'location',location:zone,path:[],pending:null,channel:null});delete w.walkHome;
         }
     }
     if(w.mode==='road'&&(w.walkHome?.native?nativeDone:w.walkHome?.until<=now)){
@@ -109,9 +110,9 @@ export function advanceWorld(session,now=Date.now()) {
         delete w.walkHome;
     }
     if(w.mode==='native'&&nativeFieldNear(w.nativePosition)&&!nativeCityAt(w.nativePosition)){
-        const point=w.nativePosition,trail=w.nativeTrail;
-        if(!regionAccessBlock(session,LOCATIONS.find(l=>l.id===nativeFieldZone()),{walking:true,now})&&enterPublicField(session,nativeFieldZone(),{now}).ok){
-            activateNativeField(session.game.hunt,point,now);if(trail)session.game.hunt.field.native.nativeTrail=trail;Object.assign(w,{mode:'location',location:nativeFieldZone(),city:'gludio'});delete w.nativePosition;
+        const point=w.nativePosition,trail=w.nativeTrail,zone=nativeFieldZone(point);
+        if(zone&&!regionAccessBlock(session,LOCATIONS.find(l=>l.id===zone),{walking:true,now})&&enterPublicField(session,zone,{now}).ok){
+            activateNativeField(session.game.hunt,point,now);if(trail)session.game.hunt.field.native.nativeTrail=trail;Object.assign(w,{mode:'location',location:zone,city:nativeFieldCity(zone)});delete w.nativePosition;
         }
     }
     if(w.died){delete w.died;delete w.death;}
@@ -119,7 +120,7 @@ export function advanceWorld(session,now=Date.now()) {
     if(nativeFieldPoint(session)){
         const point=nativeFieldPoint(session),city=nativeCityAt(point);
         if(city){w.city=city.id;arriveCity(session,w,now);Object.assign(w,cityPoint(city,point),{z:point.z});}
-        else if(!nativeFieldNear(point)){
+        else if(!nativeFieldNear(point,session.game.hunt.zone)){
             const native=session.game.hunt.field.native,trip=native.journey;
             if(native.nativeTrail)w.nativeTrail=native.nativeTrail;
             saveNativeField(session,now);session.game.hunt.field=null;session.game.hunt.mob=null;

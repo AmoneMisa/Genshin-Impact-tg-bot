@@ -8,6 +8,7 @@ import {nativeCityAt} from '../functions/game/world/nativeTownGraph.js';
 import {nativeTrailBack} from '../functions/game/world/nativeTrail.js';
 import routes from '../template/nativeRoutes.js';
 import pilot from '../template/nativeFieldPilot.js';
+import {LOCATION_LEVELS} from '../template/locationLevels.js';
 import change from '../functions/game/player/changePlayerGameClass.js';
 import update from '../functions/game/player/updatePlayerStats.js';
 const START=1800000000000;
@@ -105,4 +106,30 @@ test('ground monster spawn height follows the original Spawn.java threshold rath
  assert.deepEqual(source,{x:161746,y:83536,z:-2864});
  assert.equal(placeNativeActor({}, {...source,z:-3004}),false,'exactly 300 units is not corrected');
  assert.equal(pilot.groundSpawnHeight.maxCorrectionExclusive,300);assert.match(pilot.groundSpawnHeight.sha256,/^[a-f0-9]{64}$/);
+});
+test('Angel Waterfall walks from Aden into native combat while its noblesse teleport remains restricted',()=>{
+ const s=hero();s.game.stats.lvl=58;s.game.world.city='aden';update(s);
+ assert.equal(worldAction(s,{action:'quick_travel',location:'angel-waterfall'},START).reason,'noblesse_required');
+ assert.equal(worldAction(s,{action:'walk_location',location:'angel-waterfall'},START).ok,true);
+ const now=s.game.world.walkHome.until+1;advanceWorld(s,now);quiet(s,now);
+ const dto=worldState(s,now),f=s.game.hunt.field;
+ assert.equal(dto.nativeField.zone,'angel-waterfall');assert.equal(s.game.world.city,'aden');
+ assert.deepEqual(dto.nativeField.point,routes.routes['angel-waterfall'].to);
+ assert.ok(dto.nativeField.actors.length>0);assert.equal(s.game.inventory.gold,1000000);
+ const mob=battleField(s.game.hunt).mobs[0];mob.currentHp=Math.floor(mob.hp/2);const saved={id:mob.instanceId,hp:mob.currentHp};
+ assert.equal(worldAction(s,{action:'native_walk_city',city:'aden'},now).ok,true);
+ const back=s.game.world.walkHome.until+1;advanceWorld(s,back);assert.equal(s.game.world.mode,'city');
+ assert.equal(worldAction(s,{action:'walk_location',location:'angel-waterfall'},back+1).ok,true);
+ const again=s.game.world.walkHome.until+1;advanceWorld(s,again);
+ const restored=battleField(s.game.hunt).mobs.find(m=>m.instanceId===saved.id);assert.ok(restored);assert.equal(restored.currentHp,saved.hp);
+ assert.equal(nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).filter(m=>m.instanceId===saved.id).length,1);
+ assert.equal(s.game.world.nativeFields['vuku-lands'],undefined);
+});
+test('all 49 Angel Waterfall fixed spawns retain original XY and valid H5 spawn heights',()=>{
+ const slots=LOCATION_LEVELS['angel-waterfall'].floors[0].rooms.flatMap(r=>r.spawns);
+ assert.equal(slots.length,49);assert.equal(pilot.fields['angel-waterfall'].count,49);
+ for(const source of slots){const actor={};assert.equal(placeNativeActor(actor,source),true);const p=nativeActorPoint(actor);
+  assert.equal(p.x,source.x);assert.equal(p.y,source.y);assert.ok(Math.abs(p.z-source.z)<300);
+  assert.deepEqual(pilot.actors[source.id],{runSpeed:174,attackRange:40});
+ }
 });
