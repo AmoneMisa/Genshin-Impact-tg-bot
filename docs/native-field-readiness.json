@@ -2,7 +2,7 @@
   "sourceCommit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
   "zoneCount": 39,
-  "nativeFieldCount": 29,
+  "nativeFieldCount": 30,
   "zones": [
     {
       "id": "talking-island",
@@ -112,7 +112,7 @@
       "validFixed": 0,
       "areas": 141,
       "unknown": 0,
-      "state": "Нужен мировой спавн в исходных областях"
+      "state": "Ограниченный поиск наземных точек не прошёл проверку"
     },
     {
       "id": "timak-outpost",
@@ -192,7 +192,7 @@
       "validFixed": 128,
       "areas": 125,
       "unknown": 0,
-      "state": "Нужен мировой спавн в исходных областях"
+      "state": "Есть неподтверждённые наземные спавны"
     },
     {
       "id": "frozen-labyrinth",
@@ -252,7 +252,7 @@
       "validFixed": 0,
       "areas": 321,
       "unknown": 0,
-      "state": "Нужен мировой спавн в исходных областях"
+      "state": "Проверка и перенос исходного населения"
     },
     {
       "id": "hot-springs",
@@ -262,7 +262,7 @@
       "validFixed": 0,
       "areas": 175,
       "unknown": 0,
-      "state": "Нужен мировой спавн в исходных областях"
+      "state": "Мировой бой подключён"
     },
     {
       "id": "silent-valley",
@@ -282,7 +282,7 @@
       "validFixed": 0,
       "areas": 393,
       "unknown": 0,
-      "state": "Нужен мировой спавн в исходных областях"
+      "state": "Проверка и перенос исходного населения"
     },
     {
       "id": "varka-outpost",
@@ -292,7 +292,7 @@
       "validFixed": 0,
       "areas": 275,
       "unknown": 0,
-      "state": "Нужен мировой спавн в исходных областях"
+      "state": "Проверка и перенос исходного населения"
     },
     {
       "id": "primeval-isle",
@@ -302,7 +302,7 @@
       "validFixed": 0,
       "areas": 710,
       "unknown": 0,
-      "state": "Нет подтверждённого наземного подхода"
+      "state": "Нужен отдельный островной или сценарный вход"
     },
     {
       "id": "hellbound",
@@ -312,7 +312,7 @@
       "validFixed": 456,
       "areas": 0,
       "unknown": 0,
-      "state": "Нет подтверждённого наземного подхода"
+      "state": "Нужен отдельный островной или сценарный вход"
     },
     {
       "id": "dragon-valley",
@@ -605,6 +605,38 @@
       "issues": [
         "spawn_height_gap"
       ]
+    }
+  ],
+  "blockedAreas": [
+    {
+      "zone": "alligator-beach",
+      "npcId": "20314",
+      "count": 3,
+      "sourceFile": "spawns/Innadril/AlligatorBeach.xml",
+      "sourceGroup": "innadril01_qm2324_01",
+      "polygon": [
+        [
+          106252,
+          197068
+        ],
+        [
+          106452,
+          197068
+        ],
+        [
+          106452,
+          197268
+        ],
+        [
+          106252,
+          197268
+        ]
+      ],
+      "minZ": -4236,
+      "maxZ": -4036,
+      "rejected": {
+        "swimming_required": 100
+      }
     }
   ]
 }
