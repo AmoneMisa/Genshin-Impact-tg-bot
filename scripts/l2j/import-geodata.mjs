@@ -3,6 +3,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {gzipSync} from 'node:zlib';
 import {WORLD_EXTENSION} from '../../template/worldExtension.js';
+import {LOCATION_LEVELS} from '../../template/locationLevels.js';
 import {CITIES,CITY_NPCS} from '../../template/worldMap.js';
 import {TOWN_LINKS,TOWN_ANCHORS,TOWN_DETOUR_REGIONS} from './native-town-targets.mjs';
 
@@ -11,7 +12,10 @@ export const GEO_COMMIT='378672ee9bffa47b37956911040fc7d5b1a7258e';
 const base='https://gitlab.com/api/v4/projects/l2j%2Fl2j-geodata/repository';
 const folder=path.resolve('data/l2j-geodata');fs.mkdirSync(folder,{recursive:true});
 const args=process.argv.slice(2);
-const requested=args.filter(s=>!['--surface-routes','--cities','--town-routes'].includes(s)).flatMap(s=>s.split(','));
+const requested=args.filter(s=>!['--surface-routes','--cities','--town-routes','--native-fixed-spawns'].includes(s)).flatMap(s=>s.split(','));
+if(args.includes('--native-fixed-spawns'))for(const model of Object.values(LOCATION_LEVELS).filter(m=>m.source?.coordinateSpace==='surface')){
+ for(const point of model.floors.flatMap(f=>f.rooms.flatMap(r=>r.spawns||[])).filter(s=>s.coordinateSource==='point'))requested.push(`${Math.floor(point.x/32768)+20}_${Math.floor(point.y/32768)+18}`);
+}
 if(args.includes('--town-routes'))requested.push(...TOWN_DETOUR_REGIONS);
 if(args.includes('--town-routes'))for(const [a,b] of TOWN_LINKS){
  const from=TOWN_ANCHORS[a],to=TOWN_ANCHORS[b];
