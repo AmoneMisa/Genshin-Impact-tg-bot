@@ -67,6 +67,25 @@ export default {
         ]
       }
     ],
+    "20974": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "20976",
+            "count": "3",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "20975",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
     "21541": [
       {
         "name": "Privates",
@@ -242,6 +261,29 @@ export default {
     ]
   },
   "fields": {
+    "fields-of-massacre": {
+      "city": "aden",
+      "fixedCount": 0,
+      "territoryCount": 460,
+      "npcIds": [
+        "20674",
+        "20974",
+        "21001",
+        "21002",
+        "21003",
+        "21004",
+        "21005",
+        "21006",
+        "21007",
+        "21008",
+        "21009",
+        "21010"
+      ],
+      "count": 460,
+      "unportedMinionTemplates": [
+        "20974"
+      ]
+    },
     "dragon-valley": {
       "city": "giran",
       "fixedCount": 504,
@@ -791,6 +833,7 @@ export default {
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Aden/FieldsOfMassacre.xml": "68738c3da0a09afb3586e310b132dc5b736b2bf6526b2b50bc4d48325cff132d",
       "spawns/DarkElfTerritory/DarkElfStarting.xml": "25150d25ce60182390d35319d285859424c0efd486533390dc15fcc682d937e2",
       "spawns/Others/18_20.xml": "ba7a4304d86eab26aa136e82212e9deb54401531e367a574bcf07293ce584dae",
       "teleporters/town/30134.xml": "4dc2b144e46b6c699a45771e0eeef40cedc9d12ff9b01b4764358278c42e645b",
@@ -1476,6 +1519,10 @@ export default {
       "runSpeed": 174.0,
       "attackRange": 40.0
     },
+    "20674": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
     "20675": {
       "runSpeed": 174.0,
       "attackRange": 40.0
@@ -1580,6 +1627,10 @@ export default {
       "runSpeed": 180.0,
       "attackRange": 40.0
     },
+    "20974": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
     "20996": {
       "runSpeed": 15.0,
       "attackRange": 40.0
@@ -1597,6 +1648,46 @@ export default {
       "attackRange": 40.0
     },
     "21000": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21001": {
+      "runSpeed": 174.0,
+      "attackRange": 1100.0
+    },
+    "21002": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21003": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21004": {
+      "runSpeed": 174.0,
+      "attackRange": 80.0
+    },
+    "21005": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21006": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21007": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21008": {
+      "runSpeed": 174.0,
+      "attackRange": 1100.0
+    },
+    "21009": {
+      "runSpeed": 174.0,
+      "attackRange": 80.0
+    },
+    "21010": {
       "runSpeed": 174.0,
       "attackRange": 40.0
     },
