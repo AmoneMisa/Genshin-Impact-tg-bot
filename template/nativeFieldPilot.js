@@ -242,6 +242,24 @@ export default {
     ]
   },
   "fields": {
+    "turek-orcs": {
+      "city": "gludin",
+      "fixedCount": 0,
+      "territoryCount": 276,
+      "npcIds": [
+        "20494",
+        "20495",
+        "20496",
+        "20497",
+        "20498",
+        "20499",
+        "20500",
+        "20501",
+        "20546"
+      ],
+      "count": 276,
+      "unportedMinionTemplates": []
+    },
     "valley-of-saints": {
       "city": "rune",
       "fixedCount": 0,
@@ -624,6 +642,7 @@ export default {
       "stats/npcs/22000-22099.xml": "99c9046f0c240f8de7fd4ed5737b65db17b8ee049aa6a496d09ce60be506e624",
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
+      "spawns/Gludin/TurekOrcs.xml": "128048da6e9f0a1e1c5eb2fed4e3e3733a120b907b1f23440d7266fde567e5bc",
       "spawns/Rune/ValleyOfSaints.xml": "9bc9c71fa81c43e28fc44e37d5660f873d51349ce50ed288f52a383c98034614",
       "spawns/Aden/Cemetery.xml": "c08ae4e693131861e2bc7a68726ec0827cb22e5683ac8d665c97f8b43a1bcf16",
       "spawns/Oren/OutlawForest.xml": "ee758cc2076640bcd5dbee5aa47de2a3365fa951f55eb1d0cd5ba56eef4d0753",
@@ -838,6 +857,42 @@ export default {
     },
     "20433": {
       "runSpeed": 80.0,
+      "attackRange": 40.0
+    },
+    "20494": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20495": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "20496": {
+      "runSpeed": 110.0,
+      "attackRange": 1100.0
+    },
+    "20497": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20498": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20499": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20500": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20501": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "20546": {
+      "runSpeed": 120.0,
       "attackRange": 40.0
     },
     "20555": {
