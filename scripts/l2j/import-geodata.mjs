@@ -12,7 +12,14 @@ export const GEO_COMMIT='378672ee9bffa47b37956911040fc7d5b1a7258e';
 const base='https://gitlab.com/api/v4/projects/l2j%2Fl2j-geodata/repository';
 const folder=path.resolve('data/l2j-geodata');fs.mkdirSync(folder,{recursive:true});
 const args=process.argv.slice(2);
-const requested=args.filter(s=>!['--surface-routes','--cities','--town-routes','--native-fixed-spawns'].includes(s)).flatMap(s=>s.split(','));
+const requested=args.filter(s=>!['--surface-routes','--cities','--town-routes','--native-fixed-spawns','--native-spawn-territories'].includes(s)).flatMap(s=>s.split(','));
+if(args.includes('--native-spawn-territories'))for(const model of Object.values(LOCATION_LEVELS).filter(m=>m.source?.coordinateSpace==='surface')){
+ for(const spawn of model.floors.flatMap(f=>f.rooms.flatMap(r=>r.spawns||[])).filter(s=>s.coordinateSource!=='point'&&s.polygon?.length>=3)){
+  const xs=spawn.polygon.map(p=>p[0]),ys=spawn.polygon.map(p=>p[1]);
+  for(let x=Math.floor(Math.min(...xs)/32768);x<=Math.floor(Math.max(...xs)/32768);x++)
+   for(let y=Math.floor(Math.min(...ys)/32768);y<=Math.floor(Math.max(...ys)/32768);y++)requested.push(`${x+20}_${y+18}`);
+ }
+}
 if(args.includes('--native-fixed-spawns'))for(const model of Object.values(LOCATION_LEVELS).filter(m=>m.source?.coordinateSpace==='surface')){
  for(const point of model.floors.flatMap(f=>f.rooms.flatMap(r=>r.spawns||[])).filter(s=>s.coordinateSource==='point'))requested.push(`${Math.floor(point.x/32768)+20}_${Math.floor(point.y/32768)+18}`);
 }

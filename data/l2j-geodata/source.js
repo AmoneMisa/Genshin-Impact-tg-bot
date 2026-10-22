@@ -29,6 +29,14 @@ export default {
       "compressedSha256": "d5b3663c21bbe3f11d79dcf421653fc2ceb1d0935ea89b0a630f967a3ddf8345",
       "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/16_19.l2j"
     },
+    "16_21": {
+      "file": "16_21.l2j.gz",
+      "bytes": 1553598,
+      "sha256": "e90eefc16bc781e784d489adc7fee4f470dfbb41ff65769bb64e3733d079f5fe",
+      "compressedBytes": 204882,
+      "compressedSha256": "bbf63c96865b4be94a6f0fb90c1626ae0248b29de319efa5fdc970b27f46a878",
+      "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/16_21.l2j"
+    },
     "16_24": {
       "file": "16_24.l2j.gz",
       "bytes": 3620686,
@@ -36,6 +44,14 @@ export default {
       "compressedBytes": 533846,
       "compressedSha256": "a3e6f49a775b3ce7b368b7b10f3baf73541be86c3673d992bfae14e3587d444c",
       "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/16_24.l2j"
+    },
+    "16_25": {
+      "file": "16_25.l2j.gz",
+      "bytes": 5236070,
+      "sha256": "6a1a951a48ff9f221eedb8804d0af77bf81c8397a764f6413d5bd1a4dd2c7f83",
+      "compressedBytes": 834200,
+      "compressedSha256": "b729f4b54eb1693aac2d483688ab1329404518af2fa824289bb351754ffc5546",
+      "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/16_25.l2j"
     },
     "17_21": {
       "file": "17_21.l2j.gz",
@@ -188,6 +204,14 @@ export default {
       "compressedBytes": 1026267,
       "compressedSha256": "b644a14b73b6c31aa31cf6bae56f89d4dedb9a476241ebb1a99a6e30f557edd2",
       "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/20_19.l2j"
+    },
+    "20_20": {
+      "file": "20_20.l2j.gz",
+      "bytes": 8654186,
+      "sha256": "c390e34c4a7b35aa4485534fd1f5193afebf1e5ca1364dcf0066d532df6f3f3f",
+      "compressedBytes": 1766243,
+      "compressedSha256": "4d2db71f91deb785afc348fc333ce640fff91d9ac1985ccd253fbc764951996d",
+      "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/20_20.l2j"
     },
     "20_21": {
       "file": "20_21.l2j.gz",
