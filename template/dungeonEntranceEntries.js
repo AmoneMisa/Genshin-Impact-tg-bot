@@ -195,5 +195,54 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "catacomb-dark-omens": {
+    "x": -19888,
+    "y": 13504,
+    "z": -4899,
+    "region": "dark-elven-village",
+    "regionAssociation": "nearest-source-town",
+    "dungeonEntranceSource": {
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "files": {
+        "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
+        "spawns/Others/19_18.xml": "7e9ef04a3a97537b0a39940d1a17a9cfd36aa4b94d57029e3f8319c45d1c62cd"
+      },
+      "npcId": 31118,
+      "role": 0,
+      "interiorNpcId": 31124,
+      "signNumber": 2,
+      "insideDestination": {
+        "x": -19392,
+        "y": 13500,
+        "z": -4926
+      },
+      "returnDestination": {
+        "x": -19737,
+        "y": 13540,
+        "z": -4928
+      },
+      "nativeGroundApproach": null,
+      "teleportTariff": null
+    },
+    "polygon": [
+      [
+        -20388,
+        13004
+      ],
+      [
+        -19388,
+        13004
+      ],
+      [
+        -19388,
+        14004
+      ],
+      [
+        -20388,
+        14004
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
