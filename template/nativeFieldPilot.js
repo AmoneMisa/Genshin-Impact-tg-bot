@@ -242,6 +242,24 @@ export default {
     ]
   },
   "fields": {
+    "silent-valley": {
+      "city": "aden",
+      "fixedCount": 0,
+      "territoryCount": 200,
+      "npcIds": [
+        "20965",
+        "20966",
+        "20967",
+        "20968",
+        "20969",
+        "20970",
+        "20971",
+        "20972",
+        "20973"
+      ],
+      "count": 200,
+      "unportedMinionTemplates": []
+    },
     "dark-forest": {
       "city": "dark-elven-village",
       "fixedCount": 171,
@@ -1438,6 +1456,42 @@ export default {
     },
     "20935": {
       "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20965": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "20966": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "20967": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "20968": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "20969": {
+      "runSpeed": 180.0,
+      "attackRange": 1100.0
+    },
+    "20970": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "20971": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "20972": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "20973": {
+      "runSpeed": 180.0,
       "attackRange": 40.0
     },
     "20996": {
