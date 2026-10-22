@@ -233,6 +233,19 @@ export default {
         ]
       }
     ],
+    "21312": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "21313",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
     "21512": [
       {
         "name": "Privates",
@@ -434,6 +447,36 @@ export default {
     ]
   },
   "fields": {
+    "wall-of-argos": {
+      "city": "goddard",
+      "fixedCount": 0,
+      "territoryCount": 321,
+      "npcIds": [
+        "21294",
+        "21295",
+        "21296",
+        "21297",
+        "21298",
+        "21299",
+        "21300",
+        "21301",
+        "21302",
+        "21303",
+        "21304",
+        "21305",
+        "21306",
+        "21307",
+        "21308",
+        "21309",
+        "21310",
+        "21311",
+        "21312"
+      ],
+      "count": 321,
+      "unportedMinionTemplates": [
+        "21312"
+      ]
+    },
     "hot-springs": {
       "city": "goddard",
       "fixedCount": 0,
@@ -1072,6 +1115,7 @@ export default {
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Goddard/WallOfArgos.xml": "600365836f4597f04998eee9852af7a5ea1deb411ab102eb9790cae887cdeb4f",
       "spawns/Goddard/HotSprings.xml": "c2502e417ff6a670676450aacf59cefeaa90a7507c67c1a19c488bc08561ec40",
       "spawns/Rune/SwampOfScreams.xml": "53add3fb1f224add967590b28e4290326d43e42e6a6f0d6ad7b442e7bfeec6e3",
       "spawns/Aden/BlazingSwamp.xml": "448c98626ee8a35c5d26341a0996d84d08eaf15359f3ee38c970d9b0dd838d8b",
@@ -1983,6 +2027,82 @@ export default {
     },
     "21261": {
       "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "21294": {
+      "runSpeed": 185.0,
+      "attackRange": 40.0
+    },
+    "21295": {
+      "runSpeed": 165.0,
+      "attackRange": 40.0
+    },
+    "21296": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "21297": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "21298": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "21299": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "21300": {
+      "runSpeed": 155.0,
+      "attackRange": 40.0
+    },
+    "21301": {
+      "runSpeed": 195.0,
+      "attackRange": 40.0
+    },
+    "21302": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "21303": {
+      "runSpeed": 185.0,
+      "attackRange": 40.0
+    },
+    "21304": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "21305": {
+      "runSpeed": 165.0,
+      "attackRange": 40.0
+    },
+    "21306": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "21307": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "21308": {
+      "runSpeed": 190.0,
+      "attackRange": 40.0
+    },
+    "21309": {
+      "runSpeed": 190.0,
+      "attackRange": 40.0
+    },
+    "21310": {
+      "runSpeed": 155.0,
+      "attackRange": 40.0
+    },
+    "21311": {
+      "runSpeed": 155.0,
+      "attackRange": 40.0
+    },
+    "21312": {
+      "runSpeed": 160.0,
       "attackRange": 40.0
     },
     "21314": {
