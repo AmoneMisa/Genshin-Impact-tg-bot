@@ -291,6 +291,51 @@ export default {
         ]
       }
     ],
+    "21369": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "21370",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "21371": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "21372",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "21373": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "21374",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "21375",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
     "21512": [
       {
         "name": "Privates",
@@ -492,6 +537,41 @@ export default {
     ]
   },
   "fields": {
+    "varka-outpost": {
+      "city": "goddard",
+      "fixedCount": 0,
+      "territoryCount": 275,
+      "npcIds": [
+        "21350",
+        "21351",
+        "21352",
+        "21353",
+        "21354",
+        "21355",
+        "21356",
+        "21357",
+        "21358",
+        "21359",
+        "21360",
+        "21361",
+        "21362",
+        "21363",
+        "21364",
+        "21365",
+        "21366",
+        "21367",
+        "21368",
+        "21369",
+        "21371",
+        "21373"
+      ],
+      "count": 275,
+      "unportedMinionTemplates": [
+        "21369",
+        "21371",
+        "21373"
+      ]
+    },
     "ketra-outpost": {
       "city": "goddard",
       "fixedCount": 0,
@@ -1195,6 +1275,7 @@ export default {
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Goddard/VarkaSlenosOutpost.xml": "d21b21092a5eff89e7d1960db16c825438bb110230104382b86a99e67b0b1629",
       "spawns/Goddard/KetraOrcOutpost.xml": "5323860f03a61278f7e5bdc03867099d1d341456f61ab1dfafbda797e71fcd87",
       "spawns/Goddard/WallOfArgos.xml": "600365836f4597f04998eee9852af7a5ea1deb411ab102eb9790cae887cdeb4f",
       "spawns/Goddard/HotSprings.xml": "c2502e417ff6a670676450aacf59cefeaa90a7507c67c1a19c488bc08561ec40",
@@ -2312,6 +2393,94 @@ export default {
     },
     "21347": {
       "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21350": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21351": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21352": {
+      "runSpeed": 185.0,
+      "attackRange": 40.0
+    },
+    "21353": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21354": {
+      "runSpeed": 175.0,
+      "attackRange": 1100.0
+    },
+    "21355": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "21356": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "21357": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "21358": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21359": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "21360": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "21361": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21362": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21363": {
+      "runSpeed": 165.0,
+      "attackRange": 40.0
+    },
+    "21364": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "21365": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21366": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21367": {
+      "runSpeed": 185.0,
+      "attackRange": 40.0
+    },
+    "21368": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "21369": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21371": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "21373": {
+      "runSpeed": 150.0,
       "attackRange": 40.0
     },
     "21508": {
