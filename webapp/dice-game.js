@@ -25,7 +25,7 @@ export function openDiceGame({ api = null, haptic = () => {}, initialInvite = nu
   let net = { friends: [], incoming: [], outgoing: [], invitation: null, match: null }, wallet = null, stakeChoice = '', pollTimer = null, requestId = 0;
   const timers = new Set();
   /** The dice rattle in the hand and knock on the table. */
-  const rattle = () => { sfx('diceShake'); later(() => sfx('diceLand'), 450); };
+  const rattle = () => { sfx('diceShake'); later(() => sfx('diceLand'), 700); };
   /** How a round or the whole match ended, for the player (`won`: true, false or null for a draw). */
   const endSound = (won, over) => sfx(over ? (won ? 'matchWin' : 'matchLose') : won === null ? 'draw' : won ? 'roundWin' : 'roundLose');
   const later = (fn, ms) => { const id = setTimeout(() => { timers.delete(id); if (!closed) fn(); }, ms); timers.add(id); };

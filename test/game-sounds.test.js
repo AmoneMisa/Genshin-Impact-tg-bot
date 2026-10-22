@@ -20,3 +20,14 @@ test('the sport sounds a throw can schedule are all there', () => {
   assert.ok(names.length >= 15);
   for (const name of names) assert.ok(effects.has(name), name);
 });
+
+test('every recorded game sound has its file and the licence files are kept', async () => {
+  const { existsSync } = await import('node:fs');
+  const list = audio.match(/const GAME_FILES = new Set\(\[([^\]]*)\]\)/)[1].match(/'(\w+)'/g).map(name => name.slice(1, -1));
+  assert.ok(list.length >= 19);
+  for (const name of list) {
+    assert.ok(existsSync(new URL(`../webapp/audio/games/${name}.ogg`, import.meta.url)), `${name}.ogg is missing`);
+    assert.ok(effects.has(name) || clientFiles.has(name), `${name} has no synthesised fallback`);
+  }
+  for (const file of ['LICENSE-casino-audio.txt', 'LICENSE-impact-sounds.txt', 'README.txt']) assert.ok(existsSync(new URL(`../webapp/audio/games/${file}`, import.meta.url)), file);
+});

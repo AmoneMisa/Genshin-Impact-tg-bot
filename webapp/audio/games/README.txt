@@ -1,0 +1,1 @@
+Sound effects of the games: Kenney "Casino Audio" and "Impact Sounds" (CC0, https://kenney.nl/assets/casino-audio and https://kenney.nl/assets/impact-sounds). Files are renamed by the effect that uses them; see GAME_FILES in webapp/audio.js. Where the browser cannot decode OGG, the synthesised effect of the same name plays instead.

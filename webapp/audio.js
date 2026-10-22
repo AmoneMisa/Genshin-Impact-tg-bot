@@ -38,7 +38,7 @@ function ensure() {
 /** Call once; resumes the context on the first touch and pauses it while the page is hidden. */
 export function installAudio() {
   if (installAudio.done) return; installAudio.done = true;
-  const unlock = () => { const c = ensure(); if (c && c.state === 'suspended' && !document.hidden) c.resume().catch(() => {}); if (c) { document.removeEventListener('pointerdown', unlock, true); document.removeEventListener('keydown', unlock, true); wantMusic(); } };
+  const unlock = () => { const c = ensure(); if (c && c.state === 'suspended' && !document.hidden) c.resume().catch(() => {}); if (c) { document.removeEventListener('pointerdown', unlock, true); document.removeEventListener('keydown', unlock, true); wantMusic(); preloadGameSounds(); } };
   document.addEventListener('pointerdown', unlock, true); document.addEventListener('keydown', unlock, true);
   document.addEventListener('visibilitychange', () => {
     if (!ctx) return;
@@ -64,6 +64,18 @@ async function playFile(url, { vol = 1, at = 0 } = {}) {
 }
 // Effects that use the client's own sound when it is there; the synthesised one is the fallback.
 const FROM_CLIENT = { click: 'click', deal: 'paper', flip: 'paper', chip: 'money', matchWin: 'fanfareSmall', win: 'jackpot', craftOk: 'craftOk', craftFail: 'craftFail', enchantOk: 'enchantOk', enchantFail: 'enchantFail', levelUp: 'levelUp', diceRoll: 'diceRoll', pickup: 'pickup', clickFailed: 'clickFailed', windowOpen: 'windowOpen', windowClose: 'windowClose', potion: 'potionDrink', teleport: 'teleport', questAccept: 'questAccept' };
+
+// Recorded effects of the games (Kenney "Casino Audio" and "Impact Sounds", CC0; webapp/audio/games). They win over
+// the synthesised effect of the same name, which plays when the file is missing or the browser cannot decode OGG.
+const GAME_DIR = '/audio/games/';
+const GAME_FILES = new Set(['diceShake', 'diceLand', 'diceKeep', 'diceFree', 'cardPlay', 'unit', 'hero', 'deal', 'flip', 'chip', 'ballBounce', 'kick', 'rim', 'dartHit', 'bullseye', 'pinsCrash', 'strike', 'reelStop', 'turn']);
+const gameUrl = name => `${GAME_DIR}${name}.ogg`;
+let gamePreloaded = false;
+/** Fetches and decodes the game effects once, after the first touch, so the first throw is not late. */
+function preloadGameSounds() {
+  if (gamePreloaded) return; gamePreloaded = true;
+  for (const name of GAME_FILES) loadBuffer(gameUrl(name));
+}
 
 /** A skill's own sounds by its Lineage II id: the cast now, the shot a moment later. Resolves false when the client has none. */
 export async function sfxSkill(l2Id, { shotDelay = 0.35 } = {}) {
@@ -175,6 +187,8 @@ export function sfx(name) {
     if (!ctx) return;
     if (ctx.state === 'suspended' && !document.hidden) ctx.resume().catch(() => {});
     if (!ready() || document.hidden) return;
+    const synth = () => (EFFECTS[name] || EFFECTS[ELEMENT_ALIAS[name]])?.();
+    if (GAME_FILES.has(name)) { playFile(gameUrl(name), { vol: 0.85 }).then(played => { if (!played) synth(); }); return; }
     const own = FROM_CLIENT[name];
     if (own) loadPack().then(pack => pack?.L2_SFX?.[own] ? playFile(pack.SFX_DIR + pack.L2_SFX[own], { vol: 0.9 }) : false).then(played => { if (!played) (EFFECTS[name] || EFFECTS[ELEMENT_ALIAS[name]])?.(); });
     else (EFFECTS[name] || EFFECTS[ELEMENT_ALIAS[name]])?.();
