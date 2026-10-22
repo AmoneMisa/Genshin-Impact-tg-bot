@@ -262,10 +262,25 @@ export default {
       ],
       "count": 594,
       "unportedMinionTemplates": []
+    },
+    "beast-farm": {
+      "city": "rune",
+      "npcIds": [
+        "18873",
+        "18880",
+        "18887",
+        "18894",
+        "18906",
+        "18907"
+      ],
+      "count": 355,
+      "unportedMinionTemplates": []
     }
   },
   "source": {
     "files": {
+      "stats/npcs/18800-18899.xml": "97c30f7fcc9316581f1d469e7849cfd72f951c2a90c06105d6c9d2ddddc51094",
+      "stats/npcs/18900-18999.xml": "deac9bb9f86c56e07e8dd79246ff47821be27d4d9779e1783164b8ebcb915474",
       "stats/npcs/20000-20099.xml": "0a724ea2409c42bc532882ac61c9bd19adc2ae60120ee297c3727c29b71fff58",
       "stats/npcs/20100-20199.xml": "a7b767114afe96a425a3aa66ee0ed28a810d26bcec1f81c4408d3cc11e91a275",
       "stats/npcs/20300-20399.xml": "6065fef3bfb2b647175a1dd3a896d60f12aa054cd9593e037c7798b0c40f1f57",
@@ -283,6 +298,30 @@ export default {
     "sha256": "42307eac0dd6bb2661e9b069d39a0fad67c62a466bf0ab520cac6a39fbd0b045"
   },
   "actors": {
+    "18873": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "18880": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "18887": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "18894": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "18906": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "18907": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
     "20009": {
       "runSpeed": 110.0,
       "attackRange": 40.0

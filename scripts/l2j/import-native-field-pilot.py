@@ -16,6 +16,7 @@ fields={
     'frozen-labyrinth': {'city': 'schuttgart'},
     'plains-of-the-lizardmen': {'city': 'oren'},
     'field-of-whispers': {'city': 'heine'},
+    'beast-farm': {'city': 'rune'},
 }
 catalog=json.loads(subprocess.check_output(['node','--input-type=module','-e',
     'import {LOCATION_LEVELS} from "./template/locationLevels.js";console.log(JSON.stringify(Object.fromEntries('+json.dumps(list(fields))+'.map(id=>[id,LOCATION_LEVELS[id]]))))'],encoding='utf-8'))
