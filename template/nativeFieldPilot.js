@@ -242,6 +242,46 @@ export default {
     ]
   },
   "fields": {
+    "dragon-valley": {
+      "city": "giran",
+      "fixedCount": 504,
+      "territoryCount": 39,
+      "npcIds": [
+        "18001",
+        "20134",
+        "20146",
+        "20235",
+        "20236",
+        "20237",
+        "20238",
+        "20239",
+        "20240",
+        "20241",
+        "20242",
+        "20246",
+        "22820",
+        "22822",
+        "22823",
+        "22824",
+        "22825",
+        "22826",
+        "22827",
+        "22828",
+        "22829",
+        "22830",
+        "22831",
+        "22832",
+        "22833",
+        "22834",
+        "22858",
+        "22859",
+        "22860",
+        "22861",
+        "22862"
+      ],
+      "count": 543,
+      "unportedMinionTemplates": []
+    },
     "silent-valley": {
       "city": "aden",
       "fixedCount": 0,
@@ -732,6 +772,7 @@ export default {
   },
   "source": {
     "files": {
+      "stats/npcs/18000-18099.xml": "a03369c1002918c851f381845a2e096a950409aaa8a21f7e5d3ca0dca47a55d0",
       "stats/npcs/18800-18899.xml": "97c30f7fcc9316581f1d469e7849cfd72f951c2a90c06105d6c9d2ddddc51094",
       "stats/npcs/18900-18999.xml": "deac9bb9f86c56e07e8dd79246ff47821be27d4d9779e1783164b8ebcb915474",
       "stats/npcs/20000-20099.xml": "0a724ea2409c42bc532882ac61c9bd19adc2ae60120ee297c3727c29b71fff58",
@@ -749,6 +790,7 @@ export default {
       "stats/npcs/22000-22099.xml": "99c9046f0c240f8de7fd4ed5737b65db17b8ee049aa6a496d09ce60be506e624",
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
+      "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
       "spawns/DarkElfTerritory/DarkElfStarting.xml": "25150d25ce60182390d35319d285859424c0efd486533390dc15fcc682d937e2",
       "spawns/Others/18_20.xml": "ba7a4304d86eab26aa136e82212e9deb54401531e367a574bcf07293ce584dae",
       "teleporters/town/30134.xml": "4dc2b144e46b6c699a45771e0eeef40cedc9d12ff9b01b4764358278c42e645b",
@@ -778,6 +820,10 @@ export default {
     "sha256": "42307eac0dd6bb2661e9b069d39a0fad67c62a466bf0ab520cac6a39fbd0b045"
   },
   "actors": {
+    "18001": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
     "18873": {
       "runSpeed": 110.0,
       "attackRange": 40.0
@@ -942,6 +988,14 @@ export default {
       "runSpeed": 120.0,
       "attackRange": 40.0
     },
+    "20134": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20146": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
     "20157": {
       "runSpeed": 120.0,
       "attackRange": 40.0
@@ -1010,8 +1064,40 @@ export default {
       "runSpeed": 174.0,
       "attackRange": 40.0
     },
+    "20235": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20236": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20237": {
+      "runSpeed": 174.0,
+      "attackRange": 1100.0
+    },
+    "20238": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20239": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20240": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
     "20241": {
       "runSpeed": 100.0,
+      "attackRange": 40.0
+    },
+    "20242": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20246": {
+      "runSpeed": 174.0,
       "attackRange": 40.0
     },
     "20250": {
@@ -1764,6 +1850,82 @@ export default {
     },
     "22774": {
       "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22820": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "22822": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22823": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22824": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22825": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22826": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22827": {
+      "runSpeed": 300.0,
+      "attackRange": 40.0
+    },
+    "22828": {
+      "runSpeed": 50.0,
+      "attackRange": 40.0
+    },
+    "22829": {
+      "runSpeed": 300.0,
+      "attackRange": 40.0
+    },
+    "22830": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22831": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "22832": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "22833": {
+      "runSpeed": 220.0,
+      "attackRange": 40.0
+    },
+    "22834": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "22858": {
+      "runSpeed": 300.0,
+      "attackRange": 40.0
+    },
+    "22859": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22860": {
+      "runSpeed": 50.0,
+      "attackRange": 40.0
+    },
+    "22861": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22862": {
+      "runSpeed": 200.0,
       "attackRange": 40.0
     }
   }

@@ -2,7 +2,7 @@
   "sourceCommit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
   "zoneCount": 39,
-  "nativeFieldCount": 25,
+  "nativeFieldCount": 26,
   "zones": [
     {
       "id": "talking-island",
@@ -322,7 +322,7 @@
       "validFixed": 504,
       "areas": 39,
       "unknown": 0,
-      "state": "Нужен мировой спавн в исходных областях"
+      "state": "Мировой бой подключён"
     },
     {
       "id": "den-of-evil",
