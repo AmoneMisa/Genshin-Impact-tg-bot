@@ -172,6 +172,26 @@ export default {
     ]
   },
   "fields": {
+    "enchanted-valley": {
+      "city": "hunters",
+      "fixedCount": 0,
+      "territoryCount": 383,
+      "npcIds": [
+        "20589",
+        "20590",
+        "20591",
+        "20592",
+        "20593",
+        "20594",
+        "20595",
+        "20596",
+        "20597",
+        "20598",
+        "20599"
+      ],
+      "count": 383,
+      "unportedMinionTemplates": []
+    },
     "cemetery": {
       "city": "aden",
       "fixedCount": 0,
@@ -788,6 +808,50 @@ export default {
       "attackRange": 40.0
     },
     "20588": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20589": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20590": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20591": {
+      "runSpeed": 12.0,
+      "attackRange": 40.0
+    },
+    "20592": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20593": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20594": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20595": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20596": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20597": {
+      "runSpeed": 12.0,
+      "attackRange": 40.0
+    },
+    "20598": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20599": {
       "runSpeed": 174.0,
       "attackRange": 40.0
     },

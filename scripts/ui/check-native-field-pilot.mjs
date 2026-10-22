@@ -103,7 +103,8 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  }
  else {
   const box=await page.locator('canvas').boundingBox(),actors=worldState(s,now).nativeField.actors;
-  const candidates=[600,1000,1500,2000,3000,4000,5000].flatMap(n=>[[n,0],[-n,0],[0,n],[0,-n],[n,n],[-n,-n],[n,-n],[-n,n]]).map(([x,y])=>({x:before.x+x,y:before.y+y,z:before.z})).filter(p=>{
+  const trail=[...(s.game.hunt.field.native.nativeTrail?.points||[]).slice().reverse(),...routes.routes[zone].path.slice(-12).reverse()],trace=trail.flatMap(p=>{const distance=Math.hypot(p.x-before.x,p.y-before.y);return [600,1000,1500,2000,3000,4000,5000].filter(n=>n<=distance).map(n=>({x:before.x+(p.x-before.x)*n/distance,y:before.y+(p.y-before.y)*n/distance,z:before.z}));});
+  const candidates=[...trace,...[600,1000,1500,2000,3000,4000,5000].flatMap(n=>[[n,0],[-n,0],[0,n],[0,-n],[n,n],[-n,-n],[n,-n],[-n,n]]).map(([x,y])=>({x:before.x+x,y:before.y+y,z:before.z}))].filter(p=>{
    const x=box.width/2+(p.x-before.x)*box.width/14000,y=box.height/2+(p.y-before.y)*box.width/14000;
    return x>30&&x<box.width-30&&y>30&&y<box.height-30&&actors.slice(0,box.width<700?8:16).every(a=>Math.hypot(a.x-p.x,a.y-p.y)*box.width/14000>30);
   });
