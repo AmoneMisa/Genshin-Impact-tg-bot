@@ -9,6 +9,7 @@ import {l2RawStat} from '../player/l2Effects.js';
 import getEquipStatByName from '../player/getters/getEquipStatByName.js';
 import {ROOM_SIZE} from '../world/navigation.js';
 import {skillCombatType} from '../player/combatType.js';
+import {nativeCombatLine} from '../world/nativeFieldSpace.js';
 
 export const BASIC_ATTACK = Object.freeze({name:'Attack', effect:'common_attack', isDealDamage:true,
     damageType:'physical', damageModifier:1, needLvl:1, cost:0, costHp:0, cooldown:0});
@@ -18,6 +19,7 @@ export const spatialDistance = (a,b) => Math.hypot(a.x-b.x,a.y-b.y)*ROOM_SIZE;
 
 /** Collision checks use the actual room walls, including thin walls between actors in the same pathfinding cell. */
 export function clearLine(a,b,walls=[]) {
+    if(a?.native||b?.native)return nativeCombatLine(a,b);
     return !walls.some(w => {
         let low=0, high=1;
         for(const [axis,min,max] of [['x',w.x,w.x+w.w],['y',w.y,w.y+w.h]]) {

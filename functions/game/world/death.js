@@ -7,13 +7,14 @@ import getMaxMp from '../player/getters/getMaxMp.js';
 import getMaxCp from '../player/getters/getMaxCp.js';
 import {CITIES} from '../../../template/worldMap.js';
 import {ensureCityOrigin} from './cityNavigation.js';
+import {nativeFieldBuckets} from './nativeFieldSpace.js';
 
 export function markWorldDeath(session,now=Date.now()){
  const w=session.game.world;if(!w||session.game.gameClass?.stats?.hp>0)return;
  recordDeath(session,{now,siege:w.mode==='siege'});
  w.died=true;w.death||={at:now};w.path=[];w.pending=null;w.channel=null;
  const f=session.game.hunt?.field;
- if(f){f.path=[];delete f.pendingRoom;for(const m of f.mobs||[])m.aggro=false;}
+ if(f){f.path=[];if(f.native)delete f.native.journey;delete f.pendingRoom;for(const m of f.native?nativeFieldBuckets(f).flatMap(b=>b.mobs):f.mobs||[])m.aggro=false;}
 }
 export function deathChoices(session,clan,records=[],now=Date.now()){
  const choices=[{id:'city',label:'В город'}];
@@ -47,7 +48,7 @@ export function respawnWorld(session,destination,clan,records=[],now=Date.now())
 export function revivalPosition(member){
  const w=member.game?.world,f=member.game?.hunt?.field;
  if(!w)return null;
- if(w.mode==='location'&&f)return {space:`${w.location}:${w.instanceId||''}:${f.floor||1}:${f.room}`,x:f.x,y:f.y};
+ if(w.mode==='location'&&f)return {space:`${w.location}:${w.instanceId||''}:${f.floor||1}:${f.native?'native':f.room}`,x:f.x,y:f.y};
  if(['city','entrance','hall','stronghold','siege'].includes(w.mode))return {space:`${w.mode}:${w.city}:${w.holding||''}`,x:w.x,y:w.y};
  return null;
 }

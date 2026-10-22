@@ -1,0 +1,15 @@
+.atlas-combat{display:grid;flex:none;gap:var(--space-2);padding:var(--space-3);min-width:0;max-height:45dvh;overflow:auto}
+.atlas-combat[hidden]{display:none}
+.atlas-combat-meters{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2);min-width:0}
+.atlas-combat-target{display:grid;grid-template-columns:minmax(0,1fr) minmax(110px,1fr);align-items:center;gap:var(--space-2)}
+.atlas-combat-target>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.atlas-combat-controls{display:flex;align-items:center;gap:var(--space-2);min-width:0}
+.atlas-combat-controls>label{display:grid;gap:var(--space-2);flex:1;min-width:0}
+.atlas-combat-controls .ds-select{max-width:100%}
+.atlas-combat [data-native-skills]{min-width:0;overflow:auto}
+.atlas-combat .mmo-hotbar{justify-content:flex-start;flex-wrap:nowrap}
+.atlas-combat-directions{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2)}
+.atlas-map-unavailable:has(.atlas-combat:not([hidden])) .atlas-stage{display:none}
+.atlas-map-unavailable:has(.atlas-combat:not([hidden])) .atlas-panel{height:auto;max-height:calc(100dvh - 24px);overflow:auto}
+.atlas-map-unavailable .atlas-combat{max-height:none;overflow:visible}
+@media(max-width:400px){.atlas-combat-target{grid-template-columns:1fr}.atlas-combat-meters{grid-template-columns:1fr}}

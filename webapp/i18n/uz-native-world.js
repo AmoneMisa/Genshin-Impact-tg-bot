@@ -1,4 +1,13 @@
 export default {
+ 'Бой на местности':'Ochiq hududdagi jang',
+ 'Цель рядом':'Yaqindagi nishon',
+ 'Выберите цель':'Nishonni tanlang',
+ 'Выберите цель на местности':'Hududdagi nishonni tanlang',
+ 'Шаг по местности':'Hudud bo‘ylab qadam',
+ 'На север':'Shimolga',
+ 'На юг':'Janubga',
+ 'На восток':'Sharqqa',
+ 'На запад':'G‘arbga',
  'К причалу':'Bandargohga borish',
  'Руна → Первобытный остров':'Rune → Ibtidoiy orol',
  'Первобытный остров → Руна':'Ibtidoiy orol → Rune',

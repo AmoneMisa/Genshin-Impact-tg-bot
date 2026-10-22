@@ -8,6 +8,7 @@ import {battleField,neighborhood,actorEntries} from './huntNeighborhood.js';
 import {pursueNeighborhood} from './huntPursuit.js';
 import {clearLine} from './huntSpatial.js';
 import {npcBehaviour,NPC_AI_VERSION} from './huntMobs.js';
+import {nativeFieldActors,nativeMobMovement,moveNativeActor,advanceNativeActor,nativeCombatLine} from '../world/nativeFieldSpace.js';
 
 export function huntDebuff(session, kind, now) {
     return (session.game.hunt?.playerDebuffs || []).find(e => e.kind === kind && e.until > now)?.amount || 0;
@@ -48,6 +49,7 @@ export function provokeMob(hunt, target, now) {
 }
 
 export function pursuePlayer(hunt, now) {
+    if(hunt.field?.native)return pursueNative(hunt,now);
     if(neighborhood(hunt))return pursueNeighborhood(hunt,now);
     let moved = false;
     for (const mob of hunt.field?.mobs || []) {
@@ -72,12 +74,14 @@ export function pursuePlayer(hunt, now) {
 
 export function canMobReach(hunt, mob,session=null,now=Date.now()) {
     if(session&&['Hide','FakeDeath'].some(kind=>l2HasControl(session,kind,now)))return false;
+    if(hunt.field?.native)return Boolean(nativeMobMovement(mob)&&Math.hypot(mob.x-hunt.field.x,mob.y-hunt.field.y)*2000<=nativeMobMovement(mob).attackRange&&nativeCombatLine(mob,hunt.field));
     if (!hunt.field || !mob.ai) return true;
     return Math.hypot(mob.x - hunt.field.x, mob.y - hunt.field.y) <= (mob.ai === 'mage' ? .45 : .26);
 }
 
 /** One scheduled turn, interrupted by stun/silence in the fight loop. */
 export function mobAiTurn(session, mob, at, note) {
+    if(session.game.hunt?.field?.native)return false;
     if (!mob.ai) return false;
     mob.buffs = (mob.buffs || []).filter(e => e.until > at);
     mob.turn = (mob.turn || 0) + 1;
@@ -110,4 +114,25 @@ export function mobAiTurn(session, mob, at, note) {
         return true;
     }
     return false;
+}
+
+/** The native pilot uses source run speed/reach; source geometry owns each movement leg. */
+function pursueNative(hunt,now){
+ let searches=0,moved=false;
+ for(const mob of nativeFieldActors(hunt)){
+  const seconds=Math.max(0,Math.min(5,(now-(mob.lastMoveAt??now))/1000));mob.lastMoveAt=now;
+  if(!mob.aggro||isBossStunned(mob,now)||l2HasControl(mob,'Root',now)||l2HasControl(mob,'ImmobileBuff',now)){delete mob.native.journey;mob.path=[];continue;}
+  const source=nativeMobMovement(mob);if(!source)continue;
+  const distance=Math.hypot(mob.x-hunt.field.x,mob.y-hunt.field.y)*2000;
+  if(distance<=source.attackRange&&nativeCombatLine(mob,hunt.field)){delete mob.native.journey;mob.path=[];continue;}
+  const destination=mob.native.destination;
+  if(!mob.native.journey||!destination||Math.hypot(destination.x-hunt.field.x,destination.y-hunt.field.y)*2000>80){
+   if(searches++>=12)continue;
+   const result=moveNativeActor(mob,hunt.field,now-seconds*1000,source.runSpeed);
+   if(!result.ok)continue;mob.native.destination={x:hunt.field.x,y:hunt.field.y};
+  }
+  const speed=Math.min(source.runSpeed*l2MoveMultiplier(mob,now),seconds>0?Math.max(0,distance-source.attackRange)/seconds:0);
+  advanceNativeActor(mob,now,speed);moved=true;
+ }
+ return moved;
 }

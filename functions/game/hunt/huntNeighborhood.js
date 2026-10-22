@@ -1,12 +1,13 @@
 import {getZone} from './huntMobs.js';
 import {roomLayout} from './huntRooms.js';
 import {continuousField} from '../world/continuousField.js';
+import {nativeFieldActors} from '../world/nativeFieldSpace.js';
 
 // Layouts are cached by roomLayout, so the 3x3 window of a cell is stable per (layout, room).
 const areas=new WeakMap();
 
 export function neighborhood(hunt){
- const field=hunt?.field;if(!field)return null;
+ const field=hunt?.field;if(!field||field.native)return null;
  const zone=getZone(hunt.zone),layout=roomLayout(zone,field.floor||1);
  let byRoom=areas.get(layout);
  if(!byRoom)areas.set(layout,byRoom=new Map());
@@ -30,6 +31,7 @@ export function battleWalls(hunt){const area=neighborhood(hunt);return area?proj
 
 /** Banks keep cell-local canonical actors; projected views never enter a room bank. */
 export function battleField(hunt){
+ if(hunt?.field?.native)return {...hunt.field,mobs:nativeFieldActors(hunt),walls:[]};
  const field=hunt?.field,area=neighborhood(hunt);if(!area)return field;
  const mobs=[];
  for(const room of area.rooms){
@@ -42,6 +44,7 @@ export function battleField(hunt){
 }
 export function battleActor(hunt,id){
  if(!id||!hunt?.field)return null;
+ if(hunt.field.native)return nativeFieldActors(hunt).find(m=>m.instanceId===id)||null;
  const field=hunt.field,local=field.mobs.find(m=>m.instanceId===id&&m.currentHp>0);if(local)return local;
  const area=neighborhood(hunt);if(!area)return null;
  for(const room of area.rooms)if(room.id!==field.room){
@@ -68,6 +71,7 @@ export function removeBattleActor(hunt,id){
 export function peerPosition(viewer,peer){
  const a=viewer?.game?.hunt,b=peer?.game?.hunt;if(!a?.field||!b?.field||a.zone!==b.zone)return null;
  if((a.field.floor||1)!==(b.field.floor||1)||(viewer.game.world?.instanceId||null)!==(peer.game.world?.instanceId||null))return null;
+ if(a.field.native||b.field.native)return a.field.native&&b.field.native?{x:b.field.x,y:b.field.y,native:{z:b.field.native.z}}:null;
  if(a.field.room===b.field.room)return {x:b.field.x,y:b.field.y};
  const area=neighborhood(a),room=area?.rooms.find(r=>r.id===b.field.room);if(!room)return null;
  return {x:b.field.x+room.col-area.current.col,y:b.field.y+room.row-area.current.row};

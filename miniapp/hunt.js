@@ -42,6 +42,7 @@ import {getCombatParty} from './party.js';
 import {populationCapacity,hellboundStage} from '../functions/game/hunt/sourcePopulation.js';
 import {fieldStream} from '../functions/game/world/continuousField.js';
 import {battleField,battleActor,peerPosition} from '../functions/game/hunt/huntNeighborhood.js';
+import {nativeActorPoint} from '../functions/game/world/nativeFieldSpace.js';
 
 const number = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
 const percent = (current, max) => (max > 0 ? Math.max(0, Math.min(100, current / max * 100)) : 0);
@@ -131,25 +132,25 @@ function fieldDto(hunt, now, session) {
     const layout = roomLayout(zone,field.floor||1);
     const current = roomById(zone, field.room,field.floor||1) || layout.rooms[0];
     const level=locationLevel(zone.id,field.floor||1);
-    const stream=fieldStream(zone,layout,current);
+    const stream=field.native?null:fieldStream(zone,layout,current);
     const capacity=room=>room.spawns?populationCapacity(room,session,zone.id):room.cap;
     const visited = new Set(field.visited || [current.id]);
     const pending = (field.respawns || []).filter(entry => entry.room === current.id);
     const nextSpawnMs = pending.length ? Math.max(0, Math.min(...pending.map(entry => entry.at)) - now) : 0;
     return {
     x: field.x, y: field.y, runSpeed:getSpeed(session), walls:field.walls||[], path: field.path || [], moveAt: field.moveAt, floor: field.floor || 1, floors:zone?.floors||(zone?.id==='tower-of-insolence'?14:1), target: field.target,
-        continuous:stream,
+        continuous:stream,native:field.native?{coordinateSpace:'l2j-world',point:nativeActorPoint(field)}:null,
         autoAttack:Boolean(field.autoAttack),attack:weaponSpatial(session,now),pendingRoom:field.pendingRoom||null,ship:shipDto(session,now),seed:seedDto(session,now),treasure:treasureDto(session,now),vortices:vortexMarkers(session),vortexBoneCount:getMaterialCount(session,'l2_17248'),raids:locationRaids(hunt.zone,field),links:regionLinks(hunt.zone,field),
         lastStrike:field.lastStrike&&now-field.lastStrike.at<900?field.lastStrike:null,
         action:field.action?{...field.action,name:session.game.gameClass.skills[field.action.index]?.name,
             spatial:skillSpatial(session,session.game.gameClass.skills[field.action.index],now)}:null,
-        exits:layout.map?layout.rooms.filter(r=>adjacent(current,r)).map(r=>({id:r.id,name:visited.has(r.id)?r.name:'Не исследовано',
+        exits:!field.native&&layout.map?layout.rooms.filter(r=>adjacent(current,r)).map(r=>({id:r.id,name:visited.has(r.id)?r.name:'Не исследовано',
             side:r.col>current.col?'east':r.col<current.col?'west':r.row>current.row?'south':'north'})):[],
         title:level?.title||zone?.title,level:levelTransitions(zone.id,field),sceneKey:`${hunt.zone}:${current.id}${level?':floor-'+(field.floor||1):current.sceneVariant?':area-'+current.sceneVariant:''}`,environment:current.environment,layoutSource:current.layoutSource,
         nativeExit:nativeExit(session),
         phase:zone.id==='hellbound'?{stage:hellboundStage(session),locked:hellboundStage(session)===0}:null,
         room: {id: current.id, name: current.name, landmark:stream?null:level?(layout.map?'Зал '+(current.row*layout.cols+current.col+1):null):current.landmark||null, big: current.big, cap: capacity(current), height: groundHeight(capacity(current))},
-        map: layout.map ? {
+        map: !field.native&&layout.map ? {
             cols: layout.cols, rows: layout.rows,exploration:Boolean(layout.exploration),
             rooms: layout.rooms.map(room => ({
                 id: room.id, row: room.row, col: room.col, big: room.big, cap: capacity(room),
@@ -164,7 +165,7 @@ function fieldDto(hunt, now, session) {
         } : null,
         respawning: pending.length,
         nextSpawnMs,
-        mobs: (stream?battleField(hunt).mobs.sort((a,b)=>Number(b.instanceId===field.target)-Number(a.instanceId===field.target)||Math.hypot(a.x-field.x,a.y-field.y)-Math.hypot(b.x-field.x,b.y-field.y)).slice(0,48):field.mobs).map(m => mobDto(m, now)),
+        mobs: (stream||field.native?battleField(hunt).mobs.sort((a,b)=>Number(b.instanceId===field.target)-Number(a.instanceId===field.target)||Math.hypot(a.x-field.x,a.y-field.y)-Math.hypot(b.x-field.x,b.y-field.y)).slice(0,48):field.mobs).map(m => mobDto(m, now)),
     };
 }
 

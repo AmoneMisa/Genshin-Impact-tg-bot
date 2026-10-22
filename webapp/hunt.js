@@ -1,3 +1,4 @@
+import {COMBAT_REASONS as REASONS,POTION_REASONS} from './combat-errors.js';
 import {enhanceSelects} from './design/select.js';
 import { castSkill } from './audio.js';
 import {createPoller} from './polling.js';
@@ -20,7 +21,7 @@ import {createHuntRenderer} from './hunt-phaser.js';
 import {showLootDetails,showDropPreview} from './loot-notice.js';
 import {shortMobName,targetCon,mobDisposition} from './combat-target.js';
 import {COMBAT_ACTIONS,combatActionButton} from './combat-actions.js';
-import {flaskHtml} from './inventory.js';
+import {combatSuppliesHtml} from './combat-supplies.js';
 import {createCombatSocial} from './combat-social.js';
 import {l2NavigationIcon} from './art/l2-navigation-art.js';
 import {ensureFeatureStyles} from './feature-styles.js';
@@ -29,48 +30,12 @@ import {visibleFieldMobs,visibleFieldPlayers} from './hunt-visible-actors.js';
 // Hunting fields (Lineage II style): pick a zone, fight one mob at a time in real time with skills,
 // potions and shots. Blue and red champions are tougher and pay much more.
 
-const REASONS = {
-  chest_too_far:'Подойди к сундуку. Возможно, его уже открыли.',
-  chest_level:'Уровень персонажа не подходит для этого сундука.',
-  chest_casting:'Сундук уже открывается.',
-  chest_unlock_unavailable:'Сначала изучи доступный твоему классу навык Unlock.',
-  chest_key_required:'Недостаточно ключей для открытия сундука.',
-  not_enough_sp:'Недостаточно SP.',
-
-  vortex_required:'Сначала призовите босса через Dragon Vortex в Долине Драконов.',
-  vortex_bone_required:'Нужна Large Dragon Bone для призыва.',
-  vortex_cooldown:'Dragon Vortex восстанавливается одну минуту после призыва.',room_in_combat:'Нельзя уйти из комнаты, пока монстры в бою: сначала победи их или отступи.',room_not_adjacent:'В эту комнату нельзя пройти напрямую.',no_active_crystal:'Выбери кристалл души.',no_soul_crystal:'Этот кристалл уже израсходован.',soul_level:'Прокачка кристаллов доступна с 40 уровня.',soul_max_stage:'Кристалл достиг 17 уровня.',soul_wrong_mob:'Душа этого монстра не подходит для текущей ступени.',soul_hp:'Используй кристалл, когда HP монстра будет не выше 50%.',soul_already_charged:'Кристалл уже использован на этом монстре.',invalid_seals:'Недостаточно камней печати.',
-  effect_betray:'На тебе предательство.',effect_distrust:'На тебе смятение.',
-  pvp_invalid_target:'Игрок недоступен для нападения.',pvp_not_here:'Игрок покинул локацию.',pvp_out_of_range:'Подойди ближе к игроку.',pvp_force_required:'Для атаки мирного игрока включи принудительную атаку.',pvp_stunned:'Ты оглушён.',pvp_silenced:'Магия заблокирована молчанием.',
-  unknown_zone: 'Такой зоны нет.',
-  already_fighting: 'Ты уже сражаешься.',
-  dead: 'Персонаж погиб и ещё не воскрес.',
-  no_combat_class: 'Сначала выбери класс.',
-  no_mob: 'Врага уже нет.',
-  invalid_skill: 'Навык больше недоступен.',
-  skill_locked: 'Навык откроется на более высоком уровне.',
-  not_enough_resource: 'Недостаточно HP или MP для навыка.',
-  cooldown: 'Навык ещё в откате.',
-  no_ammo:'Закончились стрелы или болты.',
-  effect_blocked:'Состояние персонажа не позволяет выполнить действие.',
-  path_blocked:'К этой точке нельзя пройти.',
-  combat_data_missing:'Для этого действия ещё нет проверенных данных дальности.',
-};
-REASONS.pvp_line_of_sight='Цель скрыта за препятствием.';
-Object.assign(REASONS,{objectives_remaining:'Сначала уничтожьте цели этого участка.',seed_quest_required:'Сначала возьми задание Тепиоса.',seed_mark_required:'Нужен знак Кецеруса первой или второй ступени.',seed_assembly_required:'Соберите объединение групп у входа.',seed_assembly_missing:'Объединение уже недоступно. Проверь код лидера.',seed_raid_size:'Количество игроков не соответствует выбранному маршруту.',seed_entry_required:'Внутрь входит собранная экспедиция.',location_path_required:'Пройдите по маршруту через предыдущую локацию.',hellbound_stage_required:'Башня откроется на 11-м этапе освобождения Хеллбаунда.',hellbound_pass_required:'Каждому участнику требуется благословение для прохода.',stairs_required:'Подойди к лестнице на карте комнаты.',invalid_floor:'Этот переход недоступен.',ship_required:'Сначала пройди к кораблю через Остров Дьявола.',party_not_ready:'Вся группа должна подойти ко входу и выйти из боя.',instance_party_required:'Вход открывает лидер готовой группы.',candle_too_far:'Подойди к свече.',candle_already_lit:'Эта свеча уже зажжена.',quick_travel_combat:'Сначала выйди из боя.',npc_too_far:'Подойди к хранителю портала.'});
-Object.assign(REASONS,{no_party:'Ты не состоишь в группе.',not_leader:'Это действие доступно лидеру группы.',target_in_party:'Игрок уже состоит в группе.',already_member:'Игрок уже в вашей группе.',party_full:'Группа заполнена.',unknown_player:'Игрок недоступен.',not_member:'Игрок не в вашей группе.',invalid_supplies:'Проверь настройки ACP: порог должен быть от 1 до 99%.',empty_hotbar:'Оставь хотя бы одно действие или умение.'});
-const POTION_REASONS = {
-  potion_empty: 'Это зелье закончилось.',
-  player_dead: 'Нельзя пить зелье, пока персонаж мёртв.',
-  hp_full: 'HP уже полное.',
-  mp_full: 'MP уже полное.',
-};
 const ELEMENT_ICONS = Object.fromEntries(['fire','water','wind','earth','holy','dark'].map(element=>[element,elementIcon(element)]));
 const CHAMPION = { blue: { icon: championIcon('blue'), label: 'Синий чемпион' }, red: { icon: championIcon('red'), label: 'Красный чемпион' } };
 
 export async function openHuntGame({ api, renderState, haptic, statusElement,initialZoneKind='field',onOpenAtlas }) {
   let state = await api('/api/hunt');
-  if(!state.field){const {openWorldMap}=await import('./world-map.js');return openWorldMap({api,renderState,haptic,statusElement,initialLayer:initialZoneKind==='catacomb'?'dungeons':'hunt'});}
+  if(!state.field||state.field.native){const {openWorldMap}=await import('./world-map.js');return openWorldMap({api,renderState,haptic,statusElement,initialLayer:initialZoneKind==='catacomb'?'dungeons':'hunt'});}
   let zoneKind=initialZoneKind==='catacomb'?'catacomb':'field';
   let skillTab = 'skills'; let editBar = false; let barDraft = [];
   let draggedSlot=null;
@@ -508,13 +473,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     });
     return `<div class="hunt-effects-hud" aria-label="Баффы, дебаффы и тогглы">${statusIcons(list,{strip:true,compact:true,interactive:true})}</div>`;
   }
-  function supplyBar(){
-    const supplies=state.supplies||{enabled:false,rows:[]},shots=state.shots;
-    const shotRows=shots?.kinds?.length?shots.kinds.filter(k=>['soulshot','blessed'].includes(k.id)):[{id:'soulshot',label:'Soulshot',count:0},{id:'blessed',label:'Blessed Spiritshot',count:0}];
-    const shotButtons=shotRows.map(kind=>`<button type="button" class="ui-button ui-combat-supply" data-shots="${kind.id}" aria-label="${escapeHtml(kind.label)} · автозаряды" title="${escapeHtml(kind.label)} · автозаряды" aria-pressed="${Boolean(shots?.enabled&&shots.selected===kind.id)}" ${pending||!shots?.grade?'disabled':''}>${shotIcon(kind.id,shots?.grade||'noGrade',kind.icon)}<em>${formatNumber(kind.count)}</em></button>`).join('');
-    const potions=supplies.rows.map(p=>`<button type="button" class="ui-button ui-combat-supply" data-supply="${p.slot}" ${supplies.enabled?`aria-pressed="${p.auto}"`:''} aria-label="${escapeHtml(p.name)}${supplies.enabled?' · авто':''}" title="${escapeHtml(p.name)} · ${formatNumber(p.count)}${supplies.enabled?' · авто':''}" ${pending||state.player.hp<=0||(!supplies.enabled&&!p.count)?'disabled':''}>${p.icon?l2IconHtml(p.icon):flaskHtml(p)}<em>${formatNumber(p.count)}</em></button>`).join('');
-    return `<div class="hunt-supplies" id="hunt-supply-items" ${shotsCollapsed?'hidden':''}><div class="hunt-shot-shortcuts" aria-label="Соски"><div class="hunt-shot-items" id="hunt-shot-items">${shotButtons}</div></div><div class="hunt-potion-shortcuts" aria-label="Банки">${potions}</div></div>`;
-  }
+  function supplyBar(){return combatSuppliesHtml(state,{pending,collapsed:shotsCollapsed});}
   const actionDisabled=action=>pending||state.player.hp<=0||(action.target&&!playerTarget)||(action.id==='attack'&&Boolean(playerTarget||!state.mob||!state.field?.attack))||(action.id==='next-target'&&!state.field?.mobs.length&&!state.players?.length);
   function actionCatalogue(){
     return `<div class="hunt-action-list">${COMBAT_ACTIONS.map(action=>`<div class="ui-content-row hunt-action-row" draggable="true" data-drag-action="action:${action.id}">${combatActionButton(action,{disabled:actionDisabled(action),active:Boolean(state.field?.autoAttack)})}<button class="ui-button ui-compact" data-pin-action="${action.id}" aria-label="${(state.player.hotbar||[]).includes('action:'+action.id)?'Убрать с панели':'На панель'}: ${action.label}">${(state.player.hotbar||[]).includes('action:'+action.id)?'Убрать':'На панель'}</button></div>`).join('')}</div>`;

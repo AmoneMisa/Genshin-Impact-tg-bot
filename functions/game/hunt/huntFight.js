@@ -40,6 +40,7 @@ import {syncResidentRooms,neighborhood,battleField,battleWalls,battleActor,remov
 import getSpeed from '../player/getters/getSpeed.js';
 import {BASIC_ATTACK, hostileSkill, skillSpatial, weaponSpatial, needsTarget, inSkillReach, spatialTargets, spatialDistance,clearLine} from './huntSpatial.js';
 import {skillCombatType} from '../player/combatType.js';
+import {syncNativePopulation,moveNativeActor,advanceNativeActor,placeNativeActor,stopNativeActor} from '../world/nativeFieldSpace.js';
 
 // A mob that was not attacked for this long loses interest and leaves.
 export const IDLE_MS = 2 * 60 * 1000;
@@ -100,6 +101,7 @@ export function ensureHunt(session, now = Date.now(),random=Math.random) {
 
 /** Keeps the 3x3 window of cells populated; population itself stays in populateRoom. */
 function syncResident(session,hunt,now,random){
+    if(hunt.field?.native)return syncNativePopulation(hunt,roomLayout(getZone(hunt.zone),1),now,(room,slot,prefix)=>populateRoom(session,getZone(hunt.zone),room,{now,random,count:1,sourceSlot:slot,prefix}));
     return syncResidentRooms(hunt,now,(zone,room,prefix)=>populateRoom(session,zone,room,{now,random,prefix}));
 }
 
@@ -169,14 +171,15 @@ export function advanceHunt(session, now = Date.now(), random = Math.random) {
         const mob=battleActor(hunt,order.targetId),skill=field.action?session.game.gameClass.skills[order.index]:BASIC_ATTACK;
         const geometry=skill&&skillSpatial(session,skill,now);
         if(!mob||!geometry)stopHuntAction(field,now);
-        else if(inSkillReach(battleField(hunt),mob,geometry)){field.path=[];delete field.crossing;delete order.approach;}
+        else if(inSkillReach(battleField(hunt),mob,geometry)){field.path=[];if(field.native)stopNativeActor(field);delete field.crossing;delete order.approach;}
         else {
             const moveAt=field.moveAt;
             if(!approachTarget(session,mob,geometry,now).ok)stopHuntAction(field,now);
             else field.moveAt=moveAt; // Replanning must neither discard nor multiply elapsed walking time.
         }
     }
-    if (l2ActionBlock(session,{move:true},now)) {field.path=[];delete field.pendingRoom;delete field.crossing;field.moveAt=now;}
+    if (l2ActionBlock(session,{move:true},now)) {field.path=[];if(field.native)stopNativeActor(field);delete field.pendingRoom;delete field.crossing;field.moveAt=now;}
+    else if(field.native)advanceNativeActor(field,now,getSpeed(session)*l2MoveMultiplier(session,now));
     else if(field.crossing){
         const speed=getSpeed(session)*l2MoveMultiplier(session,now);
         let remaining=Math.max(0,(now-(field.moveAt??now))/1000)*Math.max(0,speed)/ROOM_SIZE;field.moveAt=now;
@@ -248,11 +251,20 @@ export function stopHuntAction(field,now=Date.now()) {
     delete field.pendingRoom;
     delete field.crossing;
     field.path=[];field.moveAt=now;
+    if(field.native)stopNativeActor(field);
 }
 
 function approachTarget(session,mob,geometry,now) {
     const field=session.game.hunt.field;
     if(l2ActionBlock(session,{move:true},now))return {ok:false,reason:'effect_blocked'};
+    if(field.native){
+        const order=field.action||field.autoAttack;
+        if(field.native.journey&&order?.approach?.id===mob.instanceId&&Math.hypot(order.approach.x-mob.x,order.approach.y-mob.y)*ROOM_SIZE<80)return {ok:true};
+        const distance=spatialDistance(field,mob),share=Math.min(1,geometry.range*.85/Math.max(1,distance));
+        const result=moveNativeActor(field,{x:mob.x+(field.x-mob.x)*share,y:mob.y+(field.y-mob.y)*share},now,getSpeed(session)*l2MoveMultiplier(session,now));
+        if(result.ok&&(field.action||field.autoAttack))(field.action||field.autoAttack).approach={id:mob.instanceId,x:mob.x,y:mob.y,range:geometry.range};
+        return result;
+    }
     const area=neighborhood(session.game.hunt),order=field.action||field.autoAttack;
     if(area){
         const anchor={id:mob.instanceId,x:mob.x+area.current.col,y:mob.y+area.current.row,range:geometry.range};
@@ -394,8 +406,10 @@ function populateRoom(session, zone, room, {now, random, count = room.cap, prefi
         const def=placement?getMobDef(zone,placement.id):pool[(offset + index) % pool.length];
         const mob = buildMob(zone, def, {now, random,champion:def.rewardless?null:undefined, className: session.game.gameClass.stats.name});
         if(placement)Object.assign(mob,{sourceRoom:room.id,sourceSlot:placement.slot,sourceRandomGroup:placement.randomGroup,sourceNativeRespawn:Boolean(locationLevels(zone.id)?.population),sourcePosition:placement.coordinateSource==='point'?{x:placement.x,y:placement.y,z:placement.z}:null,sourceTerritory:placement.polygon?.length?{polygon:placement.polygon,minZ:placement.minZ,maxZ:placement.maxZ}:null,sourceRespawnMs:placement.respawnMs,sourceRespawnRandomMs:placement.respawnRandomMs});
-        return {...mob, instanceId: `${prefix}:${index}`, ai: AI_ROLES[index % AI_ROLES.length],
+        const actor={...mob, instanceId: `${prefix}:${index}`, ai: AI_ROLES[index % AI_ROLES.length],
             aggro: false, ...nearestOpenPoint(slot,room.walls), buffs: []};
+        if(session.game.hunt?.field?.native){placeNativeActor(actor,actor.sourcePosition);actor.ai=null;}
+        return actor;
     });
 }
 
@@ -417,10 +431,8 @@ function settleRespawns(session, hunt, now, random) {
         const [fresh] = populateRoom(session, zone, room, {now, random, count: 1,sourceSlot:entry.sourceSlot??null, prefix: `${now}:${room.id}:r${field.seq}`});
         if(!fresh)continue;
         // a new monster appears somewhere in the upper part of the area
-        fresh.x = .12 + random() * .76;
-        fresh.y = .12 + random() * .43;
-        Object.assign(fresh,nearestOpenPoint(fresh,room.walls));
-        fresh.ai = AI_ROLES[Math.floor(random() * AI_ROLES.length)];
+        if(field.native){if(!placeNativeActor(fresh,fresh.sourcePosition))continue;fresh.ai=null;}
+        else {fresh.x = .12 + random() * .76;fresh.y = .12 + random() * .43;Object.assign(fresh,nearestOpenPoint(fresh,room.walls));fresh.ai = AI_ROLES[Math.floor(random() * AI_ROLES.length)];}
         bucket.push(fresh);
     }
     if (!field.target && field.mobs.length) field.target = field.mobs[0].instanceId;
@@ -561,6 +573,13 @@ export function moveHuntField(session, direction, now = Date.now(), random = Mat
     const hunt = ensureHunt(session,now,random);
     if (!hunt.field || isDead(session, now)) return {ok: false, reason: 'no_field', changed};
     const field=hunt.field,zone=getZone(hunt.zone),room=roomById(zone,field.room,field.floor||1);
+    if(field.native){
+        if(typeof direction!=='object'||!direction)return {ok:false,reason:'invalid_move'};
+        stopHuntAction(field,now);
+        const result=moveNativeActor(field,{x:Number(direction.x),y:Number(direction.y)},now,getSpeed(session)*l2MoveMultiplier(session,now));
+        if(result.ok){hunt.lastActionAt=now;if(session.game.world)session.game.world.channel=null;}
+        return result;
+    }
     if(zone.instance?.kind==='rift'&&typeof direction==='string')return {ok:false,reason:'rift_jump_only'};
     let target=direction;
     let crossing=null,plannedPath=null;

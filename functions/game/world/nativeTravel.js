@@ -8,7 +8,8 @@ import {worldGeodata,geoRegionId} from './l2jGeodata.js';
 import {nativeTownPath,nativeTownCities,nativeTownHub,nativeTownEdges,nativeTownSource} from './nativeTownGraph.js';
 import ports from '../../../template/nativePortRoutes.js';
 import islands from '../../../template/nativeIslandRoutes.js';
-import {nativeTrailBack,resumeNativeJourney} from './nativeTrail.js';
+import {nativeTrailBack,resumeNativeJourney,rememberNativeTrail} from './nativeTrail.js';
+import {nativeFieldPoint} from './nativeFieldSpace.js';
 
 export const nativeRoute=id=>islands.routes[id]?.available?islands.routes[id]:routes.routes[id]?.available?routes.routes[id]:null;
 export const nativeIsland=session=>session.game.world.mode==='location'?nativeRoute(session.game.world.location)?.island||null:session.game.world.nativeIsland||null;
@@ -66,6 +67,7 @@ function reconnectNativeHistory(world,to,city){
 export function nativeExit(session){
  const w=session.game.world,f=session.game.hunt?.field,route=nativeRoute(w?.location);
  if(w?.mode!=='location'||session.game.hunt?.zone!==w.location||!route?.returnPath||!f)return null;
+ if(f.native)return {room:f.room,floor:1,point:{x:f.x,y:f.y},near:true,city:route.city,island:null,port:null};
  const floor=LOCATIONS.find(l=>l.id===w.location)?.nativeEntryFloor||1;
  return {room:'r0c0',floor,point:{x:.5,y:.95},near:f.room==='r0c0'&&(f.floor||1)===floor&&Math.hypot(f.x-.5,f.y-.95)<=.08,city:route.city,island:route.island||null,port:route.isolatedPort||null};
 }
@@ -95,6 +97,13 @@ export function nativeTravel(session,target,now,speed){
   const prefix=findNativePath({...point,z:Number.isFinite(w.z)?w.z:town.z},link.start,{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true,heuristicWeight:2});
   if(!prefix.ok)return prefix;
   start=prefix.start;path=[...prefix.path,...link.path,...(to?.path||[])];
+ }else if(w.mode==='location'&&nativeFieldPoint(session)){
+  const point=nativeFieldPoint(session),endpoint=to?.to||nativeTownHub(arrivalCity);
+  if(!endpoint)return {ok:false,reason:'location_path_required'};
+  const field=session.game.hunt.field,history={...w,nativePosition:point,nativeTrail:field.native.nativeTrail};
+  rememberNativeTrail(history,field.native.journey);
+  const plan=reconnectNativeTrail(point,to,arrivalCity)||reconnectNativeHistory(history,to,arrivalCity)||findNativePath(point,endpoint,{allowed:nativeGroundAllowed,maxNodes:6000,reversible:true});
+  if(!plan.ok)return plan;start=plan.start;path=plan.path;
  }else if(w.mode==='location'&&from?.returnPath){
   if(!nativeExit(session)?.near)return {ok:false,reason:'entrance_required'};
   const link=nativeTownPath(from.city,to?.city||arrivalCity);if(!link)return {ok:false,reason:'location_path_required'};
@@ -146,4 +155,4 @@ export function nativeWalkCities(session){
  return CITIES.filter(c=>{const town=nativeTownSource(c.id);return (c.continent||'aden')===realm&&town&&worldGeodata.manifest.regions[geoRegionId(town.x,town.y)];}).map(c=>c.id);
 }
 
-export const nativeWorldPoint=session=>{const w=session.game.world;return w?.mode==='road'?w.walkHome?.native?.point||null:w?.mode==='native'?w.nativePosition||null:null;};
+export const nativeWorldPoint=session=>{const w=session.game.world;return nativeFieldPoint(session)||(w?.mode==='road'?w.walkHome?.native?.point||null:w?.mode==='native'?w.nativePosition||null:null);};
