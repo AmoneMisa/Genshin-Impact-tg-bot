@@ -172,6 +172,22 @@ export default {
     ]
   },
   "fields": {
+    "outlaw-forest": {
+      "city": "oren",
+      "fixedCount": 0,
+      "territoryCount": 255,
+      "npcIds": [
+        "20161",
+        "20241",
+        "20573",
+        "20574",
+        "20575",
+        "20576",
+        "21261"
+      ],
+      "count": 255,
+      "unportedMinionTemplates": []
+    },
     "plains-of-glory": {
       "city": "aden",
       "fixedCount": 0,
@@ -464,9 +480,11 @@ export default {
       "stats/npcs/20600-20699.xml": "a39a79946ab71daea2d4492ef334a9e3f4cd5d3560e7c484cae39d9d4b9b6997",
       "stats/npcs/20700-20799.xml": "ee0c2bd8d88c1925e6c56baa4766df44092bbd3518311b7b68c2dcf54aff2fab",
       "stats/npcs/20900-20999.xml": "6a01623585dd2d7df3beb8d348865c3e1eb48f394564e2980b76e402d8351b9b",
+      "stats/npcs/21200-21299.xml": "b81ef77a5bf329d25289d900577e0b577ce5f0d64e6b0477c19df81a8ffd4dc4",
       "stats/npcs/22000-22099.xml": "99c9046f0c240f8de7fd4ed5737b65db17b8ee049aa6a496d09ce60be506e624",
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
+      "spawns/Oren/OutlawForest.xml": "ee758cc2076640bcd5dbee5aa47de2a3365fa951f55eb1d0cd5ba56eef4d0753",
       "spawns/Aden/PlainsOfGlory.xml": "f5034ee510412480b8d00e8288a1c684519986a86b294cd9ebf4f5e105cb7fcf",
       "spawns/Oren/SeaOfSpores.xml": "76d8e1fd2622c17912b7a02d7ce1a4ef5d2943d79dad4f752c53115a28df983e",
       "spawns/Oren/TimakOutpost.xml": "be1285abe04e42f15758b8a89182afa1956eebc3c4485c1653e16caaee3fdd47",
@@ -556,6 +574,10 @@ export default {
       "runSpeed": 120.0,
       "attackRange": 40.0
     },
+    "20161": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
     "20168": {
       "runSpeed": 110.0,
       "attackRange": 40.0
@@ -614,6 +636,10 @@ export default {
     },
     "20234": {
       "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20241": {
+      "runSpeed": 100.0,
       "attackRange": 40.0
     },
     "20250": {
@@ -702,6 +728,22 @@ export default {
     },
     "20562": {
       "runSpeed": 15.0,
+      "attackRange": 40.0
+    },
+    "20573": {
+      "runSpeed": 100.0,
+      "attackRange": 40.0
+    },
+    "20574": {
+      "runSpeed": 100.0,
+      "attackRange": 40.0
+    },
+    "20575": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "20576": {
+      "runSpeed": 130.0,
       "attackRange": 40.0
     },
     "20583": {
@@ -798,6 +840,10 @@ export default {
     },
     "20935": {
       "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21261": {
+      "runSpeed": 110.0,
       "attackRange": 40.0
     },
     "22080": {
