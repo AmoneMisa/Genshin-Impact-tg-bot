@@ -52,6 +52,7 @@
 | --- | --- | --- | --- |
 | Застава Тимак | Орен | 76536, 58652 / -2856 | spawns/Oren/TimakOutpost.xml, oren28_2219_13, вершина 0 |
 | Равнины Славы | Аден | 139312, 31184 / -3368 | spawns/Aden/PlainsOfGlory.xml, aden25_2418_16, вершина 1 |
+| Кладбище Адена | Аден | 167532, 23480 / -3328 | spawns/Aden/Cemetery.xml, aden09_2518_10, вершина 6 |
 
 Воспроизведение: `node scripts/l2j/import-native-territory-entries.mjs ID`, затем `node scripts/l2j/build-native-routes.mjs ID`. Если слой неоднозначен или путь не подтверждён, запись не создаётся.
 

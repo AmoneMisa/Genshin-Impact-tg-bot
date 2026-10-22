@@ -151,5 +151,85 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "cemetery": {
+    "x": 167532,
+    "y": 23480,
+    "z": -3328,
+    "region": "aden",
+    "teleportGold": null,
+    "entryRoutes": [],
+    "access": {
+      "kind": "walk-only"
+    },
+    "entrySource": {
+      "type": "TERRITORY_BOUNDARY",
+      "coordinateSource": "territory-node",
+      "originalEntrance": null,
+      "file": "spawns/Aden/Cemetery.xml",
+      "sha256": "c08ae4e693131861e2bc7a68726ec0827cb22e5683ac8d665c97f8b43a1bcf16",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "zone": "aden09_2518_10",
+      "vertex": 6,
+      "npcIds": [
+        20997,
+        20998,
+        20666
+      ],
+      "polygon": [
+        [
+          167552,
+          20596
+        ],
+        [
+          171928,
+          20568
+        ],
+        [
+          172160,
+          20836
+        ],
+        [
+          172160,
+          25312
+        ],
+        [
+          170504,
+          25316
+        ],
+        [
+          168488,
+          24444
+        ],
+        [
+          167532,
+          23480
+        ]
+      ],
+      "minZ": -3472,
+      "maxZ": -3172,
+      "heightSource": "l2j-geodata",
+      "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
+      "selectionRule": "nearest-source-vertex-with-confirmed-ground-path"
+    },
+    "polygon": [
+      [
+        162532,
+        18480
+      ],
+      [
+        172532,
+        18480
+      ],
+      [
+        172532,
+        28480
+      ],
+      [
+        162532,
+        28480
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
