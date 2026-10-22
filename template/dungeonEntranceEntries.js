@@ -443,5 +443,55 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "necropolis-patriots": {
+    "x": -22224,
+    "y": 77376,
+    "z": -5171,
+    "region": "gludio",
+    "regionAssociation": "nearest-source-town",
+    "dungeonEntranceSource": {
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "files": {
+        "stats/npcs/31000-31099.xml": "58bdaf574082c0446388154252e6cfdaceaa4a228d95aac6255f810fb5f39b3f",
+        "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
+        "spawns/Others/19_20.xml": "9288973c393d4b37001bb9ed71607be55d02f3714bf3255c2cda98a9384c63b0"
+      },
+      "npcId": 31098,
+      "role": 0,
+      "interiorNpcId": 31106,
+      "signNumber": 1,
+      "insideDestination": {
+        "x": -21666,
+        "y": 77376,
+        "z": -5198
+      },
+      "returnDestination": {
+        "x": -22076,
+        "y": 77375,
+        "z": -5200
+      },
+      "nativeGroundApproach": null,
+      "teleportTariff": null
+    },
+    "polygon": [
+      [
+        -22724,
+        76876
+      ],
+      [
+        -21724,
+        76876
+      ],
+      [
+        -21724,
+        77876
+      ],
+      [
+        -22724,
+        77876
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
