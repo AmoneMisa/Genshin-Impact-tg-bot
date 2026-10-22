@@ -2,6 +2,7 @@ import {getMaterialCount,spendMaterials} from '../player/materials.js';
 import {WORLD_EXTENSION_LOCATIONS,WORLD_EXTENSION_LEVELS} from '../../../template/worldExtension.js';
 export function regionAccessBlock(session,location,{linked=false,walking=false,now=Date.now()}={}){
  const rule=location?.access;
+ if(rule?.kind==='walk-only'&&!walking)return 'city_route_unavailable';
  if(rule?.kind==='linked'&&!linked)return 'location_path_required';
  if(linked&&location.id==='tower-of-infinitum'){
   if(Number(session.ownerDocument?.()?.game?.hellbound?.level||0)<11)return 'hellbound_stage_required';
