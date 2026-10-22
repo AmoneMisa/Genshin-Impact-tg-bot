@@ -13,10 +13,11 @@ import change from '../../functions/game/player/changePlayerGameClass.js';
 import update from '../../functions/game/player/updatePlayerStats.js';
 import routes from '../../template/nativeRoutes.js';
 import pilot from '../../template/nativeFieldPilot.js';
-import {LOCATIONS} from '../../template/worldMap.js';
+import {LOCATIONS,CITIES} from '../../template/worldMap.js';
+import {LOCATION_LEVELS} from '../../template/locationLevels.js';
 import {WORLD_EXTENSION} from '../../template/worldExtension.js';
 const zone=process.env.NATIVE_PILOT_ZONE||'vuku-lands',city=pilot.fields[zone].city;
-const zoneName=WORLD_EXTENSION.find(r=>r.zone.id===zone)?.zone.title||LOCATIONS.find(l=>l.id===zone)?.name||zone,cityName={gludio:'Глудио',aden:'Аден'}[city],endpoint=routes.routes[zone].to;
+const zoneName=WORLD_EXTENSION.find(r=>r.zone.id===zone)?.zone.title||LOCATIONS.find(l=>l.id===zone)?.name||zone,cityName=CITIES.find(c=>c.id===city).name,endpoint=routes.routes[zone].to;
 const {chromium}=createRequire('C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json')('playwright');
 const root=path.resolve('webapp'),out=path.resolve('.tmp/native-field-pilot-ui',zone);fs.mkdirSync(out,{recursive:true});
 const assets=bundlePageAssets(fs.readFileSync(path.join(root,'index.html'),'utf8'),f=>fs.readFileSync(path.join(root,f.slice(1)),'utf8'));
@@ -25,7 +26,7 @@ const browser=await chromium.launch({headless:true,executablePath:'C:/Users/kuba
 const cases=[{width:320},{width:390},{width:1100},{width:320,noCanvas:true},{width:320,noImages:true}].filter(c=>!process.env.NATIVE_WIDTH||String(c.width)===process.env.NATIVE_WIDTH);
 try{for(const {width,noCanvas=false,noImages=false} of cases){
  let now=1800000000000,finishRoad=false;
- const s={userId:1,userChatData:{user:{id:1,first_name:'Test'}},game:{stats:{lvl:zone==='vuku-lands'?25:58,currentExp:0},inventory:{gold:1e6,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city,x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
+ const s={userId:1,userChatData:{user:{id:1,first_name:'Test'}},game:{stats:{lvl:Math.max(...LOCATION_LEVELS[zone].mobs.map(m=>m.level))+4,currentExp:0},inventory:{gold:1e6,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city,x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
  const chat={game:{},members:[s]};s.ownerDocument=()=>chat;change(s,'humanFighter');update(s);
  const quiet=()=>{const f=s.game.hunt?.field;if(f)for(const bank of nativeFieldBuckets(f))for(const mob of bank.mobs){mob.aggressive=false;mob.nextAttackAt=now+1e9;}};
  const dto=()=>{const trip=s.game.world.walkHome||s.game.hunt?.field?.native?.journey;if(finishRoad&&trip?.native){now=trip.until+1;finishRoad=false;}advanceWorld(s,now);quiet();return {world:{...worldState(s,now),holdings:[],corpses:[]}};};

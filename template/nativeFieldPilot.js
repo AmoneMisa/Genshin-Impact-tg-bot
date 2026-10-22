@@ -20,11 +20,27 @@ export default {
         "20645"
       ],
       "count": 49
+    },
+    "marsh-zombies": {
+      "city": "dark-elven-village",
+      "npcIds": [
+        "20015",
+        "20020",
+        "20025",
+        "20105",
+        "20379",
+        "20392",
+        "20433"
+      ],
+      "count": 375
     }
   },
   "source": {
     "files": {
       "stats/npcs/20000-20099.xml": "0a724ea2409c42bc532882ac61c9bd19adc2ae60120ee297c3727c29b71fff58",
+      "stats/npcs/20100-20199.xml": "a7b767114afe96a425a3aa66ee0ed28a810d26bcec1f81c4408d3cc11e91a275",
+      "stats/npcs/20300-20399.xml": "6065fef3bfb2b647175a1dd3a896d60f12aa054cd9593e037c7798b0c40f1f57",
+      "stats/npcs/20400-20499.xml": "802cae19b54fe18d0c39fa1b8db2a727546b3a10c16c16269711ec285a91ea2e",
       "stats/npcs/20600-20699.xml": "a39a79946ab71daea2d4492ef334a9e3f4cd5d3560e7c484cae39d9d4b9b6997"
     },
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
@@ -43,6 +59,18 @@ export default {
       "runSpeed": 110.0,
       "attackRange": 1100.0
     },
+    "20015": {
+      "runSpeed": 15.0,
+      "attackRange": 40.0
+    },
+    "20020": {
+      "runSpeed": 15.0,
+      "attackRange": 40.0
+    },
+    "20025": {
+      "runSpeed": 100.0,
+      "attackRange": 40.0
+    },
     "20039": {
       "runSpeed": 120.0,
       "attackRange": 40.0
@@ -53,6 +81,22 @@ export default {
     },
     "20049": {
       "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "20105": {
+      "runSpeed": 100.0,
+      "attackRange": 40.0
+    },
+    "20379": {
+      "runSpeed": 23.0,
+      "attackRange": 40.0
+    },
+    "20392": {
+      "runSpeed": 80.0,
+      "attackRange": 40.0
+    },
+    "20433": {
+      "runSpeed": 80.0,
       "attackRange": 40.0
     },
     "20643": {

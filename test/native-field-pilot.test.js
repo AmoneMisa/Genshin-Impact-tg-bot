@@ -133,3 +133,25 @@ test('all 49 Angel Waterfall fixed spawns retain original XY and valid H5 spawn 
   assert.deepEqual(pilot.actors[source.id],{runSpeed:174,attackRange:40});
  }
 });
+test('Marsh Zombies use all 375 original ground positions and preserve population through their town route',()=>{
+ const zone='marsh-zombies',s=hero();s.game.world.city='dark-elven-village';
+ const slots=LOCATION_LEVELS[zone].floors[0].rooms.flatMap(r=>r.spawns);assert.equal(slots.length,375);
+ for(const source of slots){const actor={};assert.equal(placeNativeActor(actor,source),true);const p=nativeActorPoint(actor);
+  assert.equal(p.x,source.x);assert.equal(p.y,source.y);assert.ok(Math.abs(p.z-source.z)<300);
+ }
+ assert.deepEqual(pilot.actors['20015'],{runSpeed:15,attackRange:40});
+ assert.deepEqual(pilot.actors['20379'],{runSpeed:23,attackRange:40});
+ assert.equal(worldAction(s,{action:'walk_location',location:zone},START).ok,true);
+ const now=s.game.world.walkHome.until+1;advanceWorld(s,now);quiet(s,now);
+ const dto=worldState(s,now);assert.equal(dto.nativeField.zone,zone);assert.deepEqual(dto.nativeField.point,routes.routes[zone].to);
+ assert.ok(dto.nativeField.actors.length>0&&dto.nativeField.actors.length<=48);
+ const mobs=nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs),keys=mobs.map(m=>m.sourceRoom+':'+m.sourceSlot);
+ assert.equal(keys.length,new Set(keys).size);assert.ok(mobs.every(m=>pilot.fields[zone].npcIds.includes(m.mobId)));
+ const mob=mobs[0],hp=Math.floor(mob.hp/2);mob.currentHp=hp;
+ assert.equal(worldAction(s,{action:'native_walk_city',city:'dark-elven-village'},now).ok,true);
+ const back=s.game.world.walkHome.until+1;advanceWorld(s,back);assert.equal(s.game.world.mode,'city');
+ assert.equal(worldAction(s,{action:'walk_location',location:zone},back+1).ok,true);
+ const end=s.game.world.walkHome.until+1;advanceWorld(s,end);
+ assert.equal(nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.instanceId===mob.instanceId).currentHp,hp);
+ assert.equal(s.game.inventory.gold,1000000);
+});
