@@ -28,6 +28,9 @@ try{for(const {width,noCanvas=false} of configurations){
  let now=1800000000000,finishNext=false;
  const s={userId:1,userChatData:{user:{id:1}},game:{stats:{lvl:85,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:first.city,x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
  const chat={game:{},members:[s]};s.ownerDocument=()=>chat;change(s,'humanFighter');update(s);
+ if(process.env.NATIVE_QUEST_WALK){s.game.soulCrystalQuest={startedAt:now};s.game.soulCrystal={stage:0};}
+ const questName=process.env.NATIVE_QUEST_WALK?worldState(s,now).questTargets.find(q=>q.location===firstId)?.name:null;
+ if(process.env.NATIVE_QUEST_WALK)assert.ok(questName,'the source zone has an actual active Soul Crystal objective');
  const quiet=()=>{const f=s.game.hunt?.field;if(f)for(const m of [f,...Object.values(f.rooms||{})].flatMap(r=>r.mobs||[]))Object.assign(m,{aggressive:false,aggro:false,aggroRange:0,nextAttackAt:now+1e12});};
  const dto=()=>{
   if(finishNext&&s.game.world.walkHome?.native){now=Math.max(now,s.game.world.walkHome.until+1);finishNext=false;}
@@ -66,8 +69,9 @@ try{for(const {width,noCanvas=false} of configurations){
  async function selectWalk(name){
   await page.locator('[data-movement]').click();
   await page.getByRole('combobox',{name:'Разделы телепорта',exact:true}).click();
-  await page.getByRole('option',{name:'Охота',exact:true}).click();
-  await page.locator('[data-quick-go]').filter({hasText:name}).click();
+  const quest=questName&&name===zoneName(firstId);
+  await page.getByRole('option',{name:quest?'Квестовые монстры':'Охота',exact:true}).click();
+  await page.locator('[data-quick-go]').filter({hasText:quest?questName:name}).click();
   const walk=page.locator('[data-native-walk]');assert.equal(await walk.isEnabled(),true);
   await walk.focus();assert.equal(await walk.evaluate(n=>n===document.activeElement),true);
   assert.equal(await page.locator('.atlas-popup').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);

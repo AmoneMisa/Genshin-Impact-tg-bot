@@ -12,3 +12,13 @@ test('hunting level sections partition destinations without duplicates or missin
  assert.deepEqual(ids,['low','high']);assert.equal(new Set(ids).size,ids.length);
  assert.deepEqual(quickTravelDestinations(state,'hunting','76').map(q=>q.id),['high']);
 });
+test('active quest objectives stay visible when only their native walking route is available',()=>{
+ const target={id:'low:1',location:'low',name:'Quest monster'},s={...state,questTargets:[target],nativeWalk:{low:{enabled:true}},quickTravel:{...state.quickTravel,locations:[]}};
+ const [row]=quickTravelDestinations(s,'quests');assert.equal(row.id,target.id);assert.equal(row.location,'low');assert.equal(row.kind,'quest');assert.equal(row.gold,null);assert.ok(row.walkingOnly&&row.unavailable);
+ assert.deepEqual(quickTravelDestinations({...s,questTargets:[]},'quests'),[]);
+ assert.deepEqual(quickTravelDestinations({...s,nativeWalk:{}},'quests'),[]);
+});
+test('a paid quest destination is listed once when a walking route also exists',()=>{
+ const s={...state,questTargets:[{id:'low:1',location:'low',name:'Quest monster'}],nativeWalk:{low:{enabled:true}}};
+ const rows=quickTravelDestinations(s,'quests');assert.equal(rows.length,1);assert.equal(rows[0].gold,27000);assert.ok(!rows[0].unavailable);
+});

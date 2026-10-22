@@ -10,7 +10,7 @@ export const QUICK_TRAVEL_LEVELS = [
 /** Use server quotes only; list all regions independently of the atlas viewport. */
 export function quickTravelDestinations(state, section='cities', level='all') {
   if(section==='raids'||section==='epics')return (state.bosses||[]).filter(b=>Boolean(b.raid)===(section==='raids')).map(b=>({...b,id:b.name,name:b.nameCall||b.name,kind:'boss',gold:0,region:b.map?.region,levelMin:b.level,levelMax:b.level,missingSpawn:!b.map,unavailable:b.instanceEntry||!b.map||(!b.available&&!b.fighting)})).sort((a,b)=>a.levelMin-b.levelMin);
-  if(section==='quests')return (state.questTargets||[]).flatMap(q=>{const quote=state.quickTravel?.locations?.find(l=>l.id===q.location);return quote?[{...q,gold:quote.gold,kind:'quest'}]:[];});
+  if(section==='quests')return (state.questTargets||[]).flatMap(q=>{const quote=state.quickTravel?.locations?.find(l=>l.id===q.location);return quote?[{...q,gold:quote.gold,kind:'quest'}]:state.nativeWalk?.[q.location]?[{...q,gold:null,kind:'quest',walkingOnly:true,unavailable:true}]:[];});
   if(section==='cities'){
    const quotes=state.quickTravel?.cities||[],walking=(state.nativeWalkCities||[]).filter(id=>!quotes.some(q=>q.id===id)).map(id=>({id,gold:null,unavailable:true,walkingOnly:true}));
    return [...quotes,...walking].flatMap(quote=>{

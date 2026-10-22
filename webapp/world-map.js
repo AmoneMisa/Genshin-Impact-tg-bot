@@ -124,10 +124,11 @@ export async function openWorldMap(options){
             popup.querySelector('[data-native-stop]').onclick=()=>act({action:'native_stop'});
         }
         if(state.ferries?.length){popup.insertAdjacentHTML('beforeend','<button type="button" class="ui-button" data-ferry-menu>Морские рейсы</button>');popup.querySelector('[data-ferry-menu]').onclick=()=>ferryMenu(state.player.walkHome?.kind==='ferry'?state.player.walkHome.port:null);}
-        const walk=travelSelection?.kind==='location'&&state.nativeWalk?.[travelSelection.id];
+        const walkLocation=travelSelection?.kind==='location'?travelSelection.id:travelSelection?.kind==='quest'?state.questTargets?.find(q=>q.id===travelSelection.id)?.location:null;
+        const walk=walkLocation&&state.nativeWalk?.[walkLocation];
         if(walk){
             popup.querySelector('.atlas-travel-confirm')?.insertAdjacentHTML('beforeend',`<button type="button" class="ui-button" data-native-walk ${busy||blocked||!walk.enabled||walk.exitRequired?'disabled':''}>${walk.exitRequired?'Подойдите к выходу из локации':walk.viaCity?'Пешком через '+esc(walk.viaCity):'Дойти пешком'}</button>`);
-            popup.querySelector('[data-native-walk]')?.addEventListener('click',()=>act({action:'walk_location',location:travelSelection.id}));
+            popup.querySelector('[data-native-walk]')?.addEventListener('click',()=>act({action:'walk_location',location:walkLocation}));
         }
         if(travelSelection?.kind==='city'&&state.nativeWalkCities?.includes(travelSelection.id)){
             popup.querySelector('.atlas-travel-confirm')?.insertAdjacentHTML('beforeend',`<button type="button" class="ui-button" data-native-city ${busy||blocked?'disabled':''}>Дойти пешком</button>`);
