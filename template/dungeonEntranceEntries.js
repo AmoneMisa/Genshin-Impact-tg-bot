@@ -97,5 +97,54 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "catacomb-apostate": {
+    "x": 77312,
+    "y": 78400,
+    "z": -5123,
+    "region": "oren",
+    "regionAssociation": "nearest-source-town",
+    "dungeonEntranceSource": {
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "files": {
+        "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
+        "spawns/Others/22_20.xml": "0f2c6b761515b59ddae09dbadf873e5a9158600b63d7d68806de746850b0e135"
+      },
+      "npcId": 31116,
+      "role": 0,
+      "interiorNpcId": 31122,
+      "signNumber": 2,
+      "insideDestination": {
+        "x": -20470,
+        "y": -250784,
+        "z": -8190
+      },
+      "returnDestination": {
+        "x": 77147,
+        "y": 78400,
+        "z": -5152
+      },
+      "nativeGroundApproach": null,
+      "teleportTariff": null
+    },
+    "polygon": [
+      [
+        76812,
+        77900
+      ],
+      [
+        77812,
+        77900
+      ],
+      [
+        77812,
+        78900
+      ],
+      [
+        76812,
+        78900
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
