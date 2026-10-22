@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {sampleNativeTerritory} from '../functions/game/world/nativeSpawnTerritory.js';
+import {sampleNativeTerritory,nativeTerritorySource} from '../functions/game/world/nativeSpawnTerritory.js';
 import {pointInPolygon} from '../functions/game/world/navigation.js';
 import {worldGeodata} from '../functions/game/world/l2jGeodata.js';
 import {nativeGroundAllowed} from '../functions/game/world/nativeGround.js';
@@ -34,6 +34,13 @@ test('exhausted polygon, water, excluded territory and height searches never fal
  assert.equal(sampleNativeTerritory(square,{random:()=>.5,geo:{point:p=>({...p,z:104,nswe:15})}}),null);
  assert.equal(sampleNativeTerritory(square,{random:()=>.5,geo:{point:p=>({...p,z:-104,nswe:15})}}),null);
  assert.equal(sampleNativeTerritory({...square,bannedTerritories:[square]},{random:()=>.5,geo,allowed:()=>true}),null);
+});
+test('the original Valley of Saints exclusion is imported and applied to real geodata proposals',()=>{
+ const slot=LOCATION_LEVELS['valley-of-saints'].floors[0].rooms.flatMap(r=>r.spawns).find(s=>s.sourceGroup==='rune08_2215_19');
+ const territory=nativeTerritorySource('valley-of-saints',slot),random=rng(983);
+ assert.equal(territory.bannedTerritories.length,1);
+ const banned=territory.bannedTerritories[0];assert.deepEqual(banned.polygon[0],[75988,-86364]);assert.equal(banned.minZ,-3705);assert.equal(banned.maxZ,-3105);
+ for(let i=0;i<200;i++){const p=sampleNativeTerritory(territory,{random});assert.ok(p);assert.ok(p.z<banned.minZ||p.z>banned.maxZ||!pointInPolygon(p,banned.polygon));}
 });
 test('a native territory kill rewards once and respawns a new point in the same source territory and slot',()=>{
  const start=1800000000000,s={userId:1,userChatData:{user:{id:1,first_name:'Test'}},game:{stats:{lvl:40,currentExp:0},inventory:{gold:1e6,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:'dion',x:.5,y:.5,path:[],moveAt:start,locks:{}}}};

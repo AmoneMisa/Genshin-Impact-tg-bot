@@ -4,6 +4,11 @@ import {nativeGroundAllowed} from './nativeGround.js';
 import {pointInPolygon} from './navigation.js';
 
 const geometry=new WeakMap();
+export function nativeTerritorySource(zone,entry){
+ if(!entry?.polygon?.length)return null;
+ const key=(entry.sourceFile||entry.file)+':'+entry.sourceGroup;
+ return {polygon:entry.polygon,minZ:entry.minZ,maxZ:entry.maxZ,bannedTerritories:source.territoryExclusions?.[zone]?.[key]||[]};
+}
 function bounds(territory){
  if(!territory||!Array.isArray(territory.polygon)||territory.polygon.length<3||!territory.polygon.every(p=>p.length===2&&p.every(Number.isInteger))||!Number.isInteger(territory.minZ)||!Number.isInteger(territory.maxZ)||territory.minZ>territory.maxZ)return null;
  let box=geometry.get(territory);if(!box){const xs=territory.polygon.map(p=>p[0]),ys=territory.polygon.map(p=>p[1]);box={left:Math.min(...xs),right:Math.max(...xs),top:Math.min(...ys),bottom:Math.max(...ys)};geometry.set(territory,box);}return box;

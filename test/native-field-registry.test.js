@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {worldAction,advanceWorld,worldState} from '../functions/game/world/world.js';
 import {nativeFieldBuckets,nativeActorPoint,placeNativeActor} from '../functions/game/world/nativeFieldSpace.js';
-import {sampleNativeTerritory} from '../functions/game/world/nativeSpawnTerritory.js';
+import {sampleNativeTerritory,nativeTerritorySource} from '../functions/game/world/nativeSpawnTerritory.js';
 import {pointInPolygon} from '../functions/game/world/navigation.js';
 import {LOCATION_LEVELS} from '../template/locationLevels.js';
 import registry from '../template/nativeFieldPilot.js';
@@ -30,7 +30,7 @@ for(const [zone,meta]of Object.entries(registry.fields)){
  test(`${zone}: source ground spawns, bounded DTO, saved ownership and physical city return`,()=>{
   const slots=LOCATION_LEVELS[zone].floors[0].rooms.flatMap(r=>r.spawns||[]);
   assert.equal(slots.reduce((n,s)=>n+s.count,0),meta.count);
-  for(const slot of slots){const actor={},position=slot.coordinateSource==='point'?slot:sampleNativeTerritory(slot);assert.ok(position);assert.equal(placeNativeActor(actor,position),true,`${zone} ${slot.id} ${slot.x},${slot.y},${slot.z}`);
+  for(const slot of slots){const actor={},position=slot.coordinateSource==='point'?slot:sampleNativeTerritory(nativeTerritorySource(zone,slot));assert.ok(position);assert.equal(placeNativeActor(actor,position),true,`${zone} ${slot.id} ${slot.x},${slot.y},${slot.z}`);
    const point=nativeActorPoint(actor);if(slot.coordinateSource==='point'){assert.equal(point.x,slot.x);assert.equal(point.y,slot.y);assert.ok(Math.abs(point.z-slot.z)<300);}
    else {assert.ok(pointInPolygon(point,slot.polygon));assert.ok(point.z>=slot.minZ&&point.z<=slot.maxZ);}
    assert.ok(registry.actors[slot.id].runSpeed>0);assert.ok(registry.actors[slot.id].attackRange>0);
@@ -47,6 +47,7 @@ for(const [zone,meta]of Object.entries(registry.fields)){
   assert.ok(dto.nativeField.actors.length>0&&dto.nativeField.actors.length<=48);
   const mobs=actors(s),keys=mobs.map(m=>m.sourceRoom+':'+m.sourceSlot);assert.equal(new Set(keys).size,keys.length);
   assert.ok(mobs.every(m=>meta.npcIds.includes(m.mobId)));
+  for(const mob of mobs)for(const banned of mob.sourceTerritory?.bannedTerritories||[]){const p=mob.sourcePosition;assert.ok(p.z<banned.minZ||p.z>banned.maxZ||!pointInPolygon(p,banned.polygon),'source exclusion must be preserved during actual population loading');}
   const victim=mobs.find(m=>dto.nativeField.actors.some(a=>a.instanceId===m.instanceId));assert.ok(victim);
   victim.currentHp=Math.floor(victim.hp/2);const saved={id:victim.instanceId,hp:victim.currentHp,position:{...victim.sourcePosition}};
   s=JSON.parse(JSON.stringify(s));quiet(s,arrival);

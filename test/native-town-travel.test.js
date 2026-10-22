@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import compiled from '../template/nativeTownRoutes.js';
 import {CITIES,worldAction,worldState,advanceWorld,ensureWorld,cityPoint} from '../functions/game/world/world.js';
 import {nativeTownPath,nativeTownHub,nativeTownCities,nativeCityAt,nativeTownEdges} from '../functions/game/world/nativeTownGraph.js';
+import {nativeWorldPoint} from '../functions/game/world/nativeTravel.js';
 import {nativeSegment,findNativePath} from '../functions/game/world/nativeNavigation.js';
 import {nativeGroundAllowed} from '../functions/game/world/nativeGround.js';
 import {quickTravelDestinations} from '../webapp/quick-travel-menu.js';
@@ -15,7 +16,7 @@ function hero(city='dion'){
  const s={userId:1,game:{stats:{lvl:85},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city,x:.5,y:.5,path:[],moveAt:NOW,locks:{}}}};
  change(s,'humanFighter');update(s);ensureWorld(s,NOW);return s;
 }
-function finish(s,now){assert.ok(s.game.world.walkHome?.native);advanceWorld(s,now);assert.equal(s.game.world.walkHome,undefined);}
+function finish(s,now){assert.ok(s.game.world.walkHome?.native||s.game.hunt?.field?.native?.journey?.native);advanceWorld(s,now);assert.equal(s.game.world.walkHome,undefined);assert.equal(s.game.hunt?.field?.native?.journey,undefined);}
 function quiet(s){const f=s.game.hunt.field;for(const m of [f,...Object.values(f.rooms||{})].flatMap(r=>r.mobs||[]))Object.assign(m,{aggressive:false,aggro:false,aggroRange:0,nextAttackAt:NOW+1e12});}
 test('published original town links verify every cell in both directions and graph joins preserve exact hub positions',()=>{
  assert.ok(nativeTownEdges().length>=8);
@@ -122,7 +123,7 @@ test('a regular city click can leave its source boundary and walking back enters
  const goal=route.path.find(p=>!nativeCityAt(p)&&Math.hypot(p.x-start.x,p.y-start.y)<8192&&findNativePath(start,p,{allowed:nativeGroundAllowed,maxNodes:6000,reversible:true}).ok);
  assert.ok(goal,'source road has a reachable point outside the town');
  assert.ok(worldAction(s,{action:'move',point:{...cityPoint(city,goal),z:1e9},floor:99},NOW).ok);assert.equal(s.game.world.mode,'road');assert.ok(s.game.world.walkHome.native);
- finish(s,NOW+1e6);assert.equal(s.game.world.mode,'native');assert.equal(s.game.world.nativePosition.z,goal.z);
+ finish(s,NOW+1e6);const point=nativeWorldPoint(s);assert.ok(point);assert.equal(point.z,goal.z);assert.ok(Math.hypot(point.x-goal.x,point.y-goal.y)<1e-6);
  assert.ok(worldAction(s,{action:'native_move',point:{x:start.x,y:start.y,z:1e9,city:'giran'}},NOW+1e6).ok);finish(s,NOW+2e6);
  assert.equal(s.game.world.mode,'city');assert.equal(s.game.world.city,'dion');assert.ok(Math.hypot(city.x+(s.game.world.x-.5)*14000-start.x,city.y+(s.game.world.y-.5)*14000-start.y)<1e-6);assert.equal(s.game.world.z,start.z);
  assert.equal(nativeCityAt({...start,z:1e9}),null);
