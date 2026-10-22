@@ -11,6 +11,7 @@ import { loadoutKey } from '../../webapp/gwent-decks.js';
 import { runGwent, emptyLobby, LOBBY_KEY } from '../gwentLobby.js';
 import { collectCredits, returnStake, takeStake, walletOf } from '../gwentWallet.js';
 import { getRating, applyRatingUpdates, leaderboard } from '../gwentRatings.js';
+import { pendingTableUsers } from '../gwentRating.js';
 import { gwentAppBase, addGwentLinks, pushGwentInvite, pushGwentPlay } from '../gwent-sharing.js';
 import { gwentAppLink } from '../../webapp/gwent-links.js';
 
@@ -84,16 +85,20 @@ async function handle(req, res, mutation) {
     }
     let saved = null;
     let rating = await getRating(context.userId);
+    let tableRating = null;
     let charged = null, credited = [];
     let run;
     try {
       run = await withLobby(async lobby => {
         // What the lobby owes this player is paid first, so the stake can use it.
         const early = collectCredits(lobby, context.session);
+        // The table ratings of the people of a rated table this player sits at, to count it the moment it ends.
+        const tableRatings = Object.fromEntries(await Promise.all(pendingTableUsers(lobby, context.userId).map(async userId => [userId, await getRating(userId, 'table')])));
         const out = runGwent({ lobby, userId: context.userId, name: people[String(context.userId)].name, people, loadouts: savedLoadouts(context.session),
-          saveLoadout: loadout => { saved = loadout; }, strangers, rating, wallet: walletOf(context.session), mutation, body, watch: params.get('watch'), invite: params.get('invite'), now });
+          saveLoadout: loadout => { saved = loadout; }, strangers, rating, tableRatings, wallet: walletOf(context.session), mutation, body, watch: params.get('watch'), invite: params.get('invite'), now });
         // Finished rated games change ratings. If the database refuses, the lobby is not saved and the games stay uncounted.
         await applyRatingUpdates(out.ratingUpdates, now);
+        await applyRatingUpdates(out.tableUpdates, now, 'table');
         if (out.ratingUpdates.some(update => String(update.userId) === String(context.userId))) rating = await getRating(context.userId);
         const stake = out.result.charge;
         delete out.result.charge;
@@ -112,9 +117,10 @@ async function handle(req, res, mutation) {
     }
     if (run.ok !== false) {
       run.rating = rating;
+      run.tableRating = await getRating(context.userId, 'table');
       run.wallet = walletOf(context.session);
       if (credited.length) run.credited = credited;
-      if (!mutation && params.get('board')) run.leaderboard = await leaderboard(context.userId, now);
+      if (!mutation && params.get('board')) run.leaderboard = await leaderboard(context.userId, now, params.get('board') === 'table' ? 'table' : 'duel');
     }
     if (saved) {
       const game = context.session.game ||= {};

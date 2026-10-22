@@ -1,6 +1,6 @@
 import { gwentState, gwentAction, gwentFingerprint } from './gwent.js';
 import { inspectLoadout } from '../webapp/gwent-builder.js';
-import { collectRatingUpdates } from './gwentRating.js';
+import { collectRatingUpdates, collectTableRatingUpdates } from './gwentRating.js';
 import { loadoutKey } from '../webapp/gwent-decks.js';
 
 // Gwent for the whole app. A player has one hero in every chat, so the search queue, invitations and
@@ -70,7 +70,7 @@ function pruneProfiles(lobby, now) {
  * saved decks from their hero and `saveLoadout(loadout)` stores one back there.
  * Returns the answer and whether the lobby must be saved.
  */
-export function runGwent({ lobby, userId, name, people = {}, loadouts = {}, saveLoadout = null, strangers = [], rating = null, wallet = null, mutation, body = null, watch = null, invite = null, now = Date.now(), rng = Math.random }) {
+export function runGwent({ lobby, userId, name, people = {}, loadouts = {}, saveLoadout = null, strangers = [], rating = null, tableRatings = {}, wallet = null, mutation, body = null, watch = null, invite = null, now = Date.now(), rng = Math.random }) {
   const id = String(userId);
   const before = lobbyFingerprint(lobby);
   // Only players who use the lobby are remembered; a visitor who just looks at the list is not stored.
@@ -93,12 +93,13 @@ export function runGwent({ lobby, userId, name, people = {}, loadouts = {}, save
   }
   // Finished rated games change ratings once; the caller stores the changes.
   const ratingUpdates = collectRatingUpdates(lobby);
-  if (ratingUpdates.length && result.ok !== false && result.match !== undefined) {
+  const tableUpdates = collectTableRatingUpdates(lobby, tableRatings);
+  if ((ratingUpdates.length || tableUpdates.length) && result.ok !== false && result.match !== undefined) {
     // The answer was built before the games were counted; show the change on the result screen.
     const fresh = gwentState(shared, id, now, { rng });
     result = { ...result, match: fresh.match, games: fresh.games };
   }
   if (result.ok !== false) result.loadouts = structuredClone(loadouts);
   pruneProfiles(lobby, now);
-  return { result, ratingUpdates, lobbyChanged: lobbyFingerprint(lobby) !== before };
+  return { result, ratingUpdates, tableUpdates, lobbyChanged: lobbyFingerprint(lobby) !== before };
 }

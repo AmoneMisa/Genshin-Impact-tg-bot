@@ -125,7 +125,8 @@ export function tableMatchView(match, userId, { spectator = false, endReason = '
   if (state.lastRound) state.lastRound = round(state.lastRound);
   const names = Object.fromEntries(abs.map(seat => [toRel(seat), match.names[abs.indexOf(seat)]]));
   const factions = Object.fromEntries(abs.map(seat => [toRel(seat), match.factions[abs.indexOf(seat)]]));
-  return { id: match.id, table: count, ruleset: 'extended', revision: match.revision, deadline: match.deadline, endReason, rematch: null, rated: null,
+  return { id: match.id, table: count, ruleset: 'extended', revision: match.revision, deadline: match.deadline, endReason, rematch: null,
+    rated: match.tableRated && !spectator ? { table: true, change: match.tableRated.result?.[String(userId)] || null } : null,
     seatNames: names, seatFactions: factions, opponent: names.ai, faction: factions.player, enemyFaction: factions.ai, state,
     ...(spectator ? { spectator: true, playerName: names.player } : {}) };
 }

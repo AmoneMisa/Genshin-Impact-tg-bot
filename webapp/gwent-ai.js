@@ -8,7 +8,7 @@
 //           many random deals of the cards it cannot see (counted from the opponent's faction minus
 //           everything already played), with both sides playing a fast heuristic to the end of the round.
 import { ROWS, deckFor, expandDeck } from './gwent-decks.js';
-import { OPPONENT, legalPlays, playCard, passRound, resolveChoice, aiChoiceId, scores, rowValuesFor } from './gwent-engine.js';
+import { OPPONENT, legalPlays, playCard, passRound, resolveChoice, aiChoiceId, scores, rowValuesFor, alliesOf, teamScores } from './gwent-engine.js';
 
 export const AI_LEVELS = Object.freeze(['easy', 'medium', 'hard']);
 export const DEFAULT_AI_LEVEL = 'medium';
@@ -540,5 +540,34 @@ export function chooseTableAction(state, seat, options = {}) {
   if (mover !== seat || state.phase !== 'playing') return null;
   const foe = strongestFoe(state, seat);
   const action = chooseAiAction(projectDuel(state, seat, foe), { ...options, side: 'ai' });
-  return action && action.type === 'play' ? { ...action, seat: foe } : action;
+  const own = action && action.type === 'play' ? { ...action, seat: foe } : action;
+  return (!state.pending && allyBuff(state, seat, own)) || own;
+}
+
+/** The lead of the team of `seat` over the other team, after a play (or now, without one). */
+function teamLead(state, seat, play) {
+  const next = play ? playCard(state, seat, play.uid, play) : { state };
+  if (next.error) return -Infinity;
+  const sums = teamScores(next.state), mine = next.state.teams[seat];
+  return Object.entries(sums).reduce((lead, [team, sum]) => lead + (String(team) === String(mine) ? sum : -sum), 0);
+}
+
+/**
+ * Two against two: a horn, a boost or a blessing laid on the teammate's units. It replaces the seat's own choice only
+ * when it lifts the team's lead clearly more than that choice does (a pass gains nothing).
+ */
+function allyBuff(state, seat, own) {
+  if (!state.teams || state.passed[seat]) return null;
+  const allies = alliesOf(state, seat);
+  if (!allies.length || allies.every(ally => state.passed[ally])) return null;
+  const base = teamLead(state, seat, null);
+  const gainOf = play => teamLead(state, seat, play) - base;
+  const reference = own && own.type === 'play' ? gainOf(own) : 0;
+  let best = null;
+  for (const play of legalPlays(state, seat)) {
+    if (!allies.includes(play.seat)) continue;
+    const gain = gainOf(play);
+    if (gain >= 6 && gain > reference + 2 && (!best || gain > best.gain)) best = { gain, play };
+  }
+  return best ? { type: 'play', ...best.play } : null;
 }

@@ -192,6 +192,8 @@ export function gwentState(chat, userId, now = Date.now(), { watch = null, invit
 function launchTable(chat, data, room, now, rng, actorId) {
   const match = startTable(room.table.players, room.table.size, now, { rng, turnTtl: TURN_TTL, teams: !!room.table.teams });
   if (room.stake) match.stake = { ...room.stake, holders: humansOf(match), settled: false };
+  // Tables with every seat taken by a person are rated (their own table rating, see gwentRating.js).
+  if (room.table.players.length === room.table.size) match.tableRated = { seated: [...match.players], result: null };
   data.matches.push(match);
   room.status = 'accepted'; room.matchId = match.id;
   const seated = new Set(room.table.players.map(person => person.userId));

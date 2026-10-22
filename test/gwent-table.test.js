@@ -307,3 +307,31 @@ test('in two against two a teammate may be blessed, boosted or given a horn; opp
   assert.equal(scores(next).ai2, 10, 'the horn doubles the teammate row');
   assert.ok(next.sides.ai2.rows.close.some(card => card.uid === horn.uid));
 });
+
+test('in two against two the AI lays a horn on a strong teammate row instead of a weak play of its own', () => {
+  const state = teams();
+  const unit = (strength, rowName = 'close') => ({ id: 'u' + strength, uid: nextUid++, type: 'unit', name: 'Отряд', rows: [rowName], strength });
+  state.sides.player.rows.close = [unit(9), unit(8)];
+  state.sides.ai.rows.close = [unit(2)];
+  const horn = { id: 'h', uid: nextUid++, type: 'special', special: 'horn', name: 'Рог' };
+  state.sides.ai2.hand = [horn, unit(1)];
+  state.sides.ai.hand = [unit(1)]; state.sides.ai3.hand = [unit(1)];
+  state.turn = 'ai2';
+  const action = chooseTableAction(state, 'ai2', { level: 'medium', rng: seededRandom(3) });
+  assert.equal(action.type, 'play');
+  assert.equal(action.uid, horn.uid);
+  assert.equal(action.seat, 'player', 'the horn is laid on the teammate row');
+  assert.equal(action.row, 'close');
+});
+
+test('in two against two the AI does not spend a horn on a single weak teammate unit', () => {
+  const state = teams();
+  const unit = (strength, rowName = 'close') => ({ id: 'u' + strength, uid: nextUid++, type: 'unit', name: 'Отряд', rows: [rowName], strength });
+  state.sides.player.rows.close = [unit(1)];
+  const horn = { id: 'h', uid: nextUid++, type: 'special', special: 'horn', name: 'Рог' };
+  state.sides.ai2.hand = [horn, unit(6)];
+  state.sides.ai.hand = [unit(1)]; state.sides.ai3.hand = [unit(1)];
+  state.turn = 'ai2';
+  const action = chooseTableAction(state, 'ai2', { level: 'medium', rng: seededRandom(3) });
+  assert.ok(!(action.type === 'play' && action.seat === 'player'), 'doubling a single weak unit is not worth a card');
+});

@@ -57,7 +57,7 @@ export function pairQueue(data, now, start) {
 export function collectRatingUpdates(lobby) {
   const updates = [];
   for (const match of lobby.gwent.matches) {
-    if (!match.rated || match.ratingApplied || match.state.phase !== 'matchOver') continue;
+    if (match.table || !match.rated || match.ratingApplied || match.state.phase !== 'matchOver') continue;
     const outcome = match.state.winner === 'player' ? 'first' : match.state.winner === 'ai' ? 'second' : 'draw';
     const [one, two] = match.players;
     const before = [match.rated.ratings[0], match.rated.ratings[1]], games = match.rated.games;
@@ -68,6 +68,66 @@ export function collectRatingUpdates(lobby) {
     const result = side => outcome === 'draw' ? 'draw' : (outcome === 'first') === (side === 0) ? 'win' : 'loss';
     updates.push({ userId: one, name: match.names[0], before: before[0], after: after[0], result: result(0), matchId: match.id });
     updates.push({ userId: two, name: match.names[1], before: before[1], after: after[1], result: result(1), matchId: match.id });
+  }
+  return updates;
+}
+
+/** Elo change of every seat of a table. `seats`: `{ rating, games, points, team? }`; a seat that left has `left: true` and counts as last. */
+export function tableEloChanges(seats, { teams = false, draw = false } = {}) {
+  if (teams) {
+    const average = team => seats.filter(seat => seat.team === team).reduce((all, seat, _, list) => all + seat.rating / list.length, 0);
+    const top = Math.max(...seats.filter(seat => !seat.left).map(seat => seat.points), -Infinity);
+    return seats.map(seat => {
+      const own = average(seat.team), other = average(seat.team === 'A' ? 'B' : 'A');
+      const score = seat.left ? 0 : draw ? 0.5 : seat.points === top ? 1 : 0;
+      return Math.round(kFactor(seat.games) * (score - expectedScore(own, other)));
+    });
+  }
+  const standing = seat => (seat.left ? -1 : seat.points);
+  return seats.map((seat, i) => {
+    const others = seats.filter((_, j) => j !== i);
+    const score = others.reduce((all, other) => all + (seat.left ? 0 : standing(seat) > standing(other) ? 1 : standing(seat) === standing(other) ? 0.5 : 0), 0) / others.length;
+    const expected = others.reduce((all, other) => all + expectedScore(seat.rating, other.rating), 0) / others.length;
+    return Math.round(kFactor(seat.games) * (score - expected));
+  });
+}
+
+/** The people (ids) of tables that are rated and not counted yet, among which `userId` sits: their table ratings are needed to count. */
+export function pendingTableUsers(lobby, userId) {
+  const ids = new Set();
+  for (const match of lobby.gwent.matches) {
+    if (match.tableRated && !match.tableRated.result && match.tableRated.seated.includes(String(userId))) match.tableRated.seated.forEach(id => ids.add(id));
+  }
+  return [...ids];
+}
+
+/**
+ * Rating changes of finished rated tables (every seat taken by a person when the table started) that were not counted yet.
+ * `ratings` maps a user id to `{ rating, games }`; a table whose people are not all listed waits for the next request.
+ * Whoever left (the AI took the seat) counts as the last. A table where everybody left is not counted.
+ */
+export function collectTableRatingUpdates(lobby, ratings = {}) {
+  const updates = [];
+  for (const match of lobby.gwent.matches) {
+    const rated = match.tableRated;
+    if (!match.table || !rated || rated.result || match.state.phase !== 'matchOver') continue;
+    if (match.endKind === 'abandoned') { rated.result = {}; continue; }
+    if (!rated.seated.every(id => ratings[id])) continue;
+    const state = match.state, seats = state.seats || ['player', 'ai', 'ai2', 'ai3'].slice(0, match.players.length);
+    const teams = Boolean(state.teams);
+    const seated = rated.seated.map((id, index) => {
+      const seat = seats[index];
+      return { id, name: match.names[index].replace(/ \(бот\)$/, ''), rating: ratings[id].rating, games: ratings[id].games, left: match.players[index] !== id,
+        team: teams ? state.teams[seat] : undefined, points: teams ? (state.winners.includes(seat) ? 1 : 0) : state.points[seat], won: state.winners.includes(seat) };
+    });
+    const deltas = tableEloChanges(seated, { teams, draw: teams && state.winners.length === 0 });
+    rated.result = {};
+    seated.forEach((seat, i) => {
+      const after = Math.max(MIN_RATING, seat.rating + deltas[i]);
+      rated.result[seat.id] = { before: seat.rating, after, delta: after - seat.rating };
+      const result = !seat.left && seat.won ? 'win' : !seat.left && state.winners.length === 0 ? 'draw' : 'loss';
+      updates.push({ userId: seat.id, name: seat.name, before: seat.rating, after, result, matchId: match.id });
+    });
   }
   return updates;
 }
