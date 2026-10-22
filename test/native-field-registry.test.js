@@ -10,6 +10,15 @@ import update from '../functions/game/player/updatePlayerStats.js';
 const START=1800000000000;
 const actors=s=>nativeFieldBuckets(s.game.hunt?.field).flatMap(b=>b.mobs||[]);
 const quiet=(s,now)=>{for(const m of actors(s))Object.assign(m,{aggressive:false,aggro:false,nextAttackAt:now+1e9});};
+test('Ragna minion references cannot overwrite their independent source movement templates',()=>{
+ assert.deepEqual(registry.actors['22695'],{runSpeed:120,attackRange:40});
+ assert.deepEqual(registry.actors['22698'],{runSpeed:110,attackRange:1100});
+ assert.deepEqual(registry.fields['den-of-evil'].unportedMinionTemplates,['22693','22694','22697']);
+ assert.deepEqual(registry.npcMinionTemplates['22693'],[
+  {name:'Privates1',npcs:[{id:'22695',count:'1',respawnTime:'0',weightPoint:'1'}]},
+  {name:'Privates2',npcs:[{id:'22692',count:'1',respawnTime:'0',weightPoint:'1'}]}
+ ]);
+});
 function hero(zone){
  const city=registry.fields[zone].city,lvl=Math.min(85,Math.max(...LOCATION_LEVELS[zone].mobs.map(m=>m.level))+4);
  const s={userId:1,game:{stats:{lvl,currentExp:0},inventory:{gold:1e6,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city,x:.5,y:.5,path:[],moveAt:START,locks:{}}}};
