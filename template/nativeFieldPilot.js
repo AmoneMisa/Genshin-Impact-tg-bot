@@ -67,6 +67,19 @@ export default {
         ]
       }
     ],
+    "20773": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "20774",
+            "count": "3",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
     "20974": [
       {
         "name": "Privates",
@@ -261,6 +274,29 @@ export default {
     ]
   },
   "fields": {
+    "blazing-swamp": {
+      "city": "aden",
+      "fixedCount": 0,
+      "territoryCount": 385,
+      "npcIds": [
+        "20676",
+        "20677",
+        "20773",
+        "21108",
+        "21109",
+        "21110",
+        "21111",
+        "21112",
+        "21113",
+        "21114",
+        "21115",
+        "21116"
+      ],
+      "count": 385,
+      "unportedMinionTemplates": [
+        "20773"
+      ]
+    },
     "fields-of-massacre": {
       "city": "aden",
       "fixedCount": 0,
@@ -827,12 +863,14 @@ export default {
       "stats/npcs/20700-20799.xml": "ee0c2bd8d88c1925e6c56baa4766df44092bbd3518311b7b68c2dcf54aff2fab",
       "stats/npcs/20900-20999.xml": "6a01623585dd2d7df3beb8d348865c3e1eb48f394564e2980b76e402d8351b9b",
       "stats/npcs/21000-21099.xml": "63aa0be0a7e73013ab7c4c774df6af9b18475cfd484cd9519230e9e85dd5ab5a",
+      "stats/npcs/21100-21199.xml": "287edf9c857311c30873682e0b7f3db1ab756800b708b5d8c8db9f8625feccab",
       "stats/npcs/21200-21299.xml": "b81ef77a5bf329d25289d900577e0b577ce5f0d64e6b0477c19df81a8ffd4dc4",
       "stats/npcs/21500-21599.xml": "2e3d3d1519d13f1bfbbf4a2bdbba852cda25912d384021ae9d099462c7ba5645",
       "stats/npcs/22000-22099.xml": "99c9046f0c240f8de7fd4ed5737b65db17b8ee049aa6a496d09ce60be506e624",
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Aden/BlazingSwamp.xml": "448c98626ee8a35c5d26341a0996d84d08eaf15359f3ee38c970d9b0dd838d8b",
       "spawns/Aden/FieldsOfMassacre.xml": "68738c3da0a09afb3586e310b132dc5b736b2bf6526b2b50bc4d48325cff132d",
       "spawns/DarkElfTerritory/DarkElfStarting.xml": "25150d25ce60182390d35319d285859424c0efd486533390dc15fcc682d937e2",
       "spawns/Others/18_20.xml": "ba7a4304d86eab26aa136e82212e9deb54401531e367a574bcf07293ce584dae",
@@ -1527,6 +1565,14 @@ export default {
       "runSpeed": 174.0,
       "attackRange": 40.0
     },
+    "20676": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20677": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
     "20678": {
       "runSpeed": 174.0,
       "attackRange": 40.0
@@ -1556,6 +1602,10 @@ export default {
       "attackRange": 40.0
     },
     "20767": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20773": {
       "runSpeed": 174.0,
       "attackRange": 40.0
     },
@@ -1689,6 +1739,42 @@ export default {
     },
     "21010": {
       "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21108": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "21109": {
+      "runSpeed": 185.0,
+      "attackRange": 40.0
+    },
+    "21110": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21111": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21112": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "21113": {
+      "runSpeed": 160.0,
+      "attackRange": 1100.0
+    },
+    "21114": {
+      "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21115": {
+      "runSpeed": 145.0,
+      "attackRange": 40.0
+    },
+    "21116": {
+      "runSpeed": 175.0,
       "attackRange": 40.0
     },
     "21261": {
