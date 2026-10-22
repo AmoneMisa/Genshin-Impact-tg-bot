@@ -8,6 +8,7 @@ from pathlib import Path
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
 fields={
+    'swamp-of-screams': {'city': 'rune'},
     'blazing-swamp': {'city': 'aden'},
     'fields-of-massacre': {'city': 'aden'},
     'dragon-valley': {'city': 'giran'},
