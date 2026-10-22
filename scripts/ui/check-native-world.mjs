@@ -86,6 +86,18 @@ try{for(const {width,noCanvas=false} of configurations){
   assert.equal(await page.locator('[data-native-walk]').count(),0,'an original marker alone must not publish an unverified walk');
   assert.equal(await page.locator('.atlas-popup').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
   await page.locator('.atlas-popup [data-dismiss]').click();
+  if(!noCanvas&&process.env.UNCONFIRMED_APPROACH_CHECK){
+   const city=CITIES.find(c=>c.id===place.region);
+   await page.getByRole('combobox',{name:'Регион',exact:true}).click();await page.getByRole('option',{name:city.name,exact:true}).click();
+   await page.locator('[data-mode="region"]').click();
+   const box=await page.locator('canvas').boundingBox(),cx=box.x+box.width/2,cy=box.y+box.height/2;
+   await page.mouse.move(cx,cy);await page.mouse.down();await page.mouse.move(cx+(city.x-place.x)*box.width/100000,cy+(city.y-place.y)*box.width/100000,{steps:8});await page.mouse.up();
+   await page.locator('canvas').click({position:{x:box.width/2,y:box.height/2}});
+   const grouped=page.locator('[data-group]').filter({hasText:place.name});if(await grouped.count())await grouped.click();
+   await page.locator('[data-travel]').waitFor();
+   assert.equal(await page.locator('[data-location-walk]').count(),0,'the map marker must not revive the retired estimated-distance walking action');
+   await page.locator('.atlas-popup [data-dismiss]').click();
+  }
  }
  await selectWalk(zoneName(firstId));assert.equal(s.game.world.mode,'road');assert.ok(s.game.world.walkHome.native);
  assert.equal(await page.locator('[data-mode="city"]').textContent(),'Местность');
