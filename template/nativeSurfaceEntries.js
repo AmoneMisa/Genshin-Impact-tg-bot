@@ -1227,5 +1227,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "monastery-of-silence": {
+    "x": 106414,
+    "y": -87799,
+    "z": -2920,
+    "region": "goddard",
+    "teleportGold": 10000,
+    "entrySource": {
+      "file": "teleporters/town/31275.xml",
+      "npcId": 31275,
+      "name": "Monastery of Silence",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "812a374e2a26cd653f9139c2e5835d84f486d585d40b80045e4a6980f413a8d2"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 31275,
+        "npcName": "Tatiana",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 10000,
+        "source": {
+          "file": "teleporters/town/31275.xml",
+          "npcId": 31275,
+          "name": "Monastery of Silence",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "812a374e2a26cd653f9139c2e5835d84f486d585d40b80045e4a6980f413a8d2"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        101414,
+        -92799
+      ],
+      [
+        111414,
+        -92799
+      ],
+      [
+        111414,
+        -82799
+      ],
+      [
+        101414,
+        -82799
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };

@@ -21,6 +21,15 @@ for(const target of candidates){
   attempts.push({stride,maxNodes,heuristicWeight,margin,visited:result.visited||0,reason:result.reason||null});
   console.log(target.id,stride,result.ok,result.reason||'',result.visited,Math.round(performance.now()-start)+'ms');
   if(result.ok)break;
+  // A coarse lattice rooted at the town can miss a narrow entrance. Search
+  // outward from that original entrance too, retaining the same cell checks.
+  if(stride===8&&maxNodes===30000){
+   const reverseStart=performance.now(),backward=findNativePath(to,from,{allowed:nativeGroundAllowed,stride:8,maxNodes:30000,heuristicWeight:2,margin:1024,reversible:true});
+   const bounded=backward.ok&&backward.path.length<=512;
+   attempts.push({direction:'reverse',stride:8,maxNodes:30000,heuristicWeight:2,margin:1024,visited:backward.visited||0,reason:backward.ok&&!bounded?'route_vertex_limit':backward.reason||null});
+   console.log(target.id,'reverse',bounded,backward.reason||'',backward.visited,Math.round(performance.now()-reverseStart)+'ms');
+   if(bounded){result={...backward,start:backward.path.at(-1),path:[backward.start,...backward.path.slice(0,-1)].reverse()};break;}
+  }
  }
  // Reuse a published physical approach before declaring a gap. Only the final
  // branch needs bounded offline search; both directions are rechecked below.
