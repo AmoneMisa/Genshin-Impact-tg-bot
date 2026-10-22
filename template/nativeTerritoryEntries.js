@@ -231,5 +231,76 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "alligator-beach": {
+    "x": 105550,
+    "y": 213106,
+    "z": -3032,
+    "region": "heine",
+    "teleportGold": null,
+    "entryRoutes": [],
+    "access": {
+      "kind": "walk-only"
+    },
+    "entrySource": {
+      "type": "TERRITORY_BOUNDARY",
+      "coordinateSource": "territory-node",
+      "originalEntrance": null,
+      "file": "spawns/Innadril/AlligatorBeach.xml",
+      "sha256": "7cd9c497405ec5931dd94f40ce5a9eddfcf094298b740d01ae71a9b8c53d7991",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "zone": "innadril13_2324_tas03",
+      "vertex": 3,
+      "npcIds": [
+        20784,
+        21639,
+        20785,
+        21640,
+        21642,
+        21643
+      ],
+      "polygon": [
+        [
+          102952,
+          209827
+        ],
+        [
+          104702,
+          209799
+        ],
+        [
+          105958,
+          211507
+        ],
+        [
+          105550,
+          213106
+        ]
+      ],
+      "minZ": -3092,
+      "maxZ": -2492,
+      "heightSource": "l2j-geodata",
+      "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
+      "selectionRule": "nearest-source-vertex-with-confirmed-ground-path"
+    },
+    "polygon": [
+      [
+        100550,
+        208106
+      ],
+      [
+        110550,
+        208106
+      ],
+      [
+        110550,
+        218106
+      ],
+      [
+        100550,
+        218106
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
