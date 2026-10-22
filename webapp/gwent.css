@@ -64,6 +64,13 @@ body .game-overlay>.gwent-board-panel{max-height:calc(100dvh - 16px - env(safe-a
 .gwent-hand{display:flex;align-items:stretch;gap:var(--space-2);overflow-x:auto;padding:var(--space-2);min-width:0;scrollbar-width:thin}
 .gwent-hand>.gwent-card{height:104px}
 .gwent-hand>.gwent-card.printed{flex-basis:64px;width:64px;height:121px}
+.gwent-hand-preview{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,360px);align-items:end;gap:var(--space-2)}
+.gwent-selected-effect{flex-direction:column;align-items:stretch;justify-content:flex-start;gap:var(--space-2);padding:var(--space-2);min-width:0;overflow-wrap:anywhere}
+.gwent-selected-effect>strong{font-size:14px}
+.gwent-selected-effect>p{margin:0;font-size:13px;line-height:1.5}
+.gwent-abilities.compact{margin:0}
+.gwent-abilities.compact .gwent-ability{display:flex;padding:0}
+@media(max-width:600px){.gwent-hand-preview{grid-template-columns:minmax(0,1fr)}}
 .gwent-actions{display:flex;align-items:center;justify-content:flex-end;gap:var(--space-2);flex-wrap:wrap}
 .gwent-more{position:relative}.gwent-more summary{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:32px;height:32px;min-height:0;padding:var(--space-1)}.gwent-more[open]>div{position:absolute;bottom:100%;right:0;padding:var(--space-2);z-index:2;width:180px}
 .gwent-picker{flex-wrap:wrap}.gwent-picker>span{flex:1;min-width:120px}.gwent-picker small{display:block}.gwent-feedback{font-size:13px;padding:var(--space-2);line-height:1.5}.gwent-reveal{overflow-wrap:anywhere}

@@ -308,6 +308,13 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       selectable: playable.has(card.uid), selected: (pick?.uid || decoy?.uid) === card.uid, action: playable.has(card.uid) ? '' : `data-preview-id="${card.id}" data-hand-uid="${card.uid}"`,
     })).join('') || '<span class="gwent-hint">В руке нет карт</span>'}</div>`;
   }
+  /** Explain the selected card before committing a play, including cards that require a target. */
+  function selectedEffectHtml() {
+    const card = pick?.card || (decoy && state.sides.player.hand.find(card => card.uid === decoy.uid));
+    if (!card) return handHtml();
+    return `<div class="gwent-hand-preview">${handHtml()}<aside class="ui-inset-row gwent-selected-effect" role="status" aria-label="Эффект выбранной карты"><strong>${esc(card.name)}</strong>${cardAbilityHtml(card, { compact: true })}</aside></div>`;
+  }
+
   /** What a selected card still needs: an opponent (at a table), then a row, or just a button to play it. */
   function pickerHtml() {
     const hint = ({ ambush: ' · выберите ряд противника', fireball: ' · выберите ряд противника', curse: ' · выберите ряд противника', blessing: state.teams ? ' · свой ряд или ряд союзника' : ' · выберите свой ряд', horn: state.teams ? ' · свой ряд или ряд союзника' : '' })[pick.card.special] || '';
@@ -344,7 +351,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     return `<div class="gwent-status"><span>Раунд ${state.round} <span aria-hidden="true">│</span> ${standing}</span>${remote && state.phase === 'playing' ? `<small data-gwent-clock>До хода: ${Math.max(0, Math.ceil((remote.deadline - (Date.now() + serverOffset)) / 60000))} мин.</small>` : ''}${remote?.stake ? `<small>Приз: ${stakeText({ ...remote.stake, amount: remote.stake.prize })}</small>` : ''}</div>
       ${state.seats?.length > 2 ? state.seats.filter(seat => seat !== 'player').map(opponentHtml).join('') : sideHtml('ai')}<div class="gwent-weather">${esc(weather)}</div>${sideHtml('player')}
       ${state.reveals.player.length ? `<div class="ui-inset-row gwent-reveal">Открыты: ${state.reveals.player.map(card => esc(card.name)).join(', ')}</div>` : ''}
-      <div class="gwent-turn" role="status">${turn}</div>${handHtml()}
+      <div class="gwent-turn" role="status">${turn}</div>${selectedEffectHtml()}
       ${pick ? pickerHtml() : ''}
       ${decoy ? `<div class="ui-inset-row gwent-picker"><span>${decoy.chosen ? 'Выберите ряд' : promptFor(state.sides.player.hand.find(card => card.uid === decoy.uid)?.special) ?? (decoy.row ? 'Выберите свой отряд, который вернётся в руку' : 'Выберите свой обычный отряд на поле для замены чучелом')}</span>${decoy.chosen ? decoy.rowChoices.map(row => button(ROW_LABELS[row], `data-pick-row="${row}"`)).join('') : ''}${button('Отмена', 'data-cancel-card')}</div>` : ''}
       <div class="gwent-actions">${actions}</div>`;
@@ -393,13 +400,6 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
       </div>${rematch}
       <div class="gwent-actions">${button('К полю', 'data-close-summary')}${remote?.spectator ? button('К списку игр', 'data-leave-watch', true) : button('Новая игра', 'data-finish', !rematch)}</div></div>`;
   }
-  /** One line about the rating: the change of a counted game, a game still being counted, or a friendly game. */
-  function ratingChangeHtml() {
-    if (!remote || remote.spectator) return '';
-    const rated = remote.rated;
-    if (remote.ruleset === 'extended') return '<p class="gwent-hint">Расширенные правила: рейтинг не меняется</p>';
-    if (!rated) return '<p class="gwent-hint">Товарищеская игра: рейтинг не меняется</p>';
-    if (!rated.change) return '<p class="gwent-hint">Рейтинговая игра: считаем результат…</p>';
   /** The table rating line of a finished table: the change, a table still being counted, or a game with the AI. */
   function tableRatingHtml() {
     if (!remote || remote.spectator) return '';
@@ -409,6 +409,13 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     const delta = rated.change.delta;
     return `<p class="gwent-rating-line" role="status" data-delta="${delta >= 0 ? 'up' : 'down'}">Рейтинг столов: ${rated.change.before} → <strong>${rated.change.after}</strong> (${delta >= 0 ? '+' : '−'}${Math.abs(delta)})</p>`;
   }
+  /** One line about the rating: the change of a counted game, a game still being counted, or a friendly game. */
+  function ratingChangeHtml() {
+    if (!remote || remote.spectator) return '';
+    const rated = remote.rated;
+    if (remote.ruleset === 'extended') return '<p class="gwent-hint">Расширенные правила: рейтинг не меняется</p>';
+    if (!rated) return '<p class="gwent-hint">Товарищеская игра: рейтинг не меняется</p>';
+    if (!rated.change) return '<p class="gwent-hint">Рейтинговая игра: считаем результат…</p>';
     const delta = rated.change.delta;
     return `<p class="gwent-rating-line" role="status" data-delta="${delta >= 0 ? 'up' : 'down'}">Рейтинг: ${rated.before} → <strong>${rated.change.after}</strong> (${delta >= 0 ? '+' : '−'}${Math.abs(delta)})</p>`;
   }
@@ -487,6 +494,7 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     for (const [id, config] of Object.entries(data.loadouts || {})) if (inspectLoadout(config).valid && loadoutKey(config.ruleset, config.faction) === id) loadouts[id] = config;
     lobby = {friends:data.friends || [],incoming:data.incoming || [],outgoing:data.outgoing || [],games:data.games || [],room:data.room || null};
     if (data.rating) myRating = data.rating;
+    if (data.tableRating) myTableRating = data.tableRating;
     if (data.wallet) wallet = data.wallet;
     if (data.credited?.length) note(`Получено: ${data.credited.map(stakeText).join(', ')}`);
     if (data.leaderboard) board = data.leaderboard;
@@ -494,7 +502,6 @@ export async function openGwentGame({ api = null, haptic = () => {}, initialInvi
     const snapshot = watchId ? data.spectating : data.match;
     if (snapshot) {
       const changed = !remote || remote.id !== snapshot.id || remote.revision !== snapshot.revision;
-    if (data.tableRating) myTableRating = data.tableRating;
       remote = snapshot; state = remote.state; faction = remote.faction; enemyFaction = remote.enemyFaction;
       // The result popup opens once per finished match, and again when the opponent offers a rematch.
       if (state.phase !== 'matchOver') summary = false;

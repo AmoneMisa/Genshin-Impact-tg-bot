@@ -35,11 +35,11 @@ export function abilitiesHtml() {
 }
 
 /** Readable card effects use the same descriptions as the ability guide. */
-export function cardAbilityHtml(card) {
+export function cardAbilityHtml(card, { compact = false } = {}) {
   const names = cardTraits(card).split(' · ').filter(Boolean);
   if (card.onPlay?.type === 'selfBoost') names.push('Усиление при розыгрыше');
   if (!names.length) return '<p>Обычный отряд. Добавляет свою силу к очкам выбранного ряда.</p>';
-  return `<dl class="gwent-abilities">${names.map(name => {
+  return `<dl class="gwent-abilities${compact ? ' compact' : ''}">${names.map(name => {
     const key = ['Берсерк', 'Мардрём'].includes(name) ? 'Мардрём и берсерк' : name;
     let text = ABILITIES.find(([label]) => label === key)?.[1] || '';
     if (name === 'Усиление при розыгрыше') text = `При розыгрыше получает +${card.onPlay.amount} к силе, если у противника на столе есть маг.`;
@@ -51,6 +51,6 @@ export function cardAbilityHtml(card) {
     if (card.special === 'strike') text = `Наносит обычному отряду противника ${card.amount} урона.${card.mageBonus ? ` Против мага: ещё +${card.mageBonus}.` : ''} Если силы не осталось, отряд уничтожен.`;
     if (card.special === 'curse' || card.special === 'blessing') text = `${card.special === 'curse' ? 'Снижает' : 'Повышает'} силу обычных отрядов выбранного ${card.special === 'curse' ? 'вражеского' : 'вашего'} ряда на ${card.amount || 1} до конца раунда.`;
     if (card.special === 'recall') text = `Возвращает выбранный обычный отряд из вашего отбоя в руку.${card.maxBase != null ? ` Базовая сила — не выше ${card.maxBase}.` : ''}`;
-    return `<div class="ui-inset-row gwent-ability"><dt>${esc(name)}</dt><dd>${esc(text)}</dd></div>`;
+    return `<div class="${compact ? '' : 'ui-inset-row '}gwent-ability"><dt>${esc(name)}</dt><dd>${esc(text)}</dd></div>`;
   }).join('')}</dl>`;
 }

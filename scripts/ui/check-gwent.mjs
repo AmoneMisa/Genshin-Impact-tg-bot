@@ -124,10 +124,22 @@ try {
     await page.locator('[data-game-rules]').click();await page.keyboard.press('Escape');
     // Escape dismisses only the rules tooltip; the match remains open.
     assert.equal(await page.locator('.gwent-panel').count(),1);
-    const hand = page.locator(".gwent-hand [data-card-uid]");assert.ok(await hand.count()>0);await hand.first().click();
+    const hand = page.locator(".gwent-hand [data-card-uid]");assert.ok(await hand.count()>0);
+    assert.equal(await page.locator('.gwent-selected-effect').count(),0,'no empty effect panel before selection');
+    const handCount = await hand.count(), selectedName = await hand.first().getAttribute('aria-label');
+    await hand.first().click();
+    assert.equal(await hand.count(),handCount,'selection does not play the card');
+    assert.ok(selectedName.startsWith(await page.locator('.gwent-selected-effect>strong').innerText()),'effect belongs to the selected card');
+    assert.ok((await page.locator('.gwent-selected-effect').innerText()).length>20,'effect is explained before play');
+    assert.equal(await page.locator('.gwent-selected-effect').evaluate(n=>{const r=n.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth;}),true,'effect fits the viewport');
+    await shot('selected-effect');
+    await page.locator('[data-cancel-card]').click();
+    assert.equal(await page.locator('.gwent-selected-effect').count(),0,'cancel removes effect');
+    await hand.first().click();
     if (await page.locator('[data-play-selected]').count()) await page.locator('[data-play-selected]').click();
     else if (await page.locator('[data-pick-row]').count()) await page.locator('[data-pick-row]').first().click();
     else if (await page.locator('[data-target-uid]').count()) await page.locator('[data-target-uid]').first().click();
+    assert.equal(await page.locator('.gwent-selected-effect').count(),0,'play removes effect');
     await page.waitForTimeout(800);await fits();
     if(width===320){await page.waitForTimeout(1800);assert.equal(page.workers().length,1,'the strong AI searches in a Web Worker');}
     await page.locator('[data-horn-side=player]').first().click();assert.match(await page.locator('.gwent-feedback').innerText(),/Командирский рог|Рог от способности|Удвоение от лидера/);
