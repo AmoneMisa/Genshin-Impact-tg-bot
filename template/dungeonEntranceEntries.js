@@ -48,5 +48,54 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "catacomb-branded": {
+    "x": 45808,
+    "y": 170304,
+    "z": -4979,
+    "region": "dion",
+    "regionAssociation": "nearest-source-town",
+    "dungeonEntranceSource": {
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "files": {
+        "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
+        "spawns/Others/21_23.xml": "7b40f748a5e5d4e458fc84a0c68eb5335ddd5a7f6786f27ca349ea472555af91"
+      },
+      "npcId": 31115,
+      "role": 0,
+      "interiorNpcId": 31121,
+      "signNumber": 2,
+      "insideDestination": {
+        "x": 46262,
+        "y": 170303,
+        "z": -5006
+      },
+      "returnDestination": {
+        "x": 45913,
+        "y": 170306,
+        "z": -5008
+      },
+      "nativeGroundApproach": null,
+      "teleportTariff": null
+    },
+    "polygon": [
+      [
+        45308,
+        169804
+      ],
+      [
+        46308,
+        169804
+      ],
+      [
+        46308,
+        170804
+      ],
+      [
+        45308,
+        170804
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
