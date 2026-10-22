@@ -9,6 +9,8 @@ import shores from '../../template/nativePortRoutes.js';
 import islandRoutes from '../../template/nativeIslandRoutes.js';
 import {ferryDock} from '../../functions/game/world/ferryTravel.js';
 import {nativeTownHub} from '../../functions/game/world/nativeTownGraph.js';
+import {nativeFieldBuckets} from '../../functions/game/world/nativeFieldSpace.js';
+import {getHuntState} from '../../miniapp/hunt.js';
 import change from '../../functions/game/player/changePlayerGameClass.js';
 import update from '../../functions/game/player/updatePlayerStats.js';
 const {chromium}=createRequire(process.env.PLAYWRIGHT_PACKAGE||'C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json')('playwright');
@@ -22,7 +24,8 @@ try{for(const reverse of [false,true])for(const {width,noCanvas=false} of [{widt
  const s={userId:1,game:{stats:{lvl:85,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};
  change(s,'humanFighter');update(s);ensureWorld(s,now);
  const hub=nativeTownHub(origin);Object.assign(s.game.world,{city:origin,z:hub.z},cityPoint(CITIES.find(c=>c.id===origin),hub));if(data.ports[originPort].island)Object.assign(s.game.world,{mode:'native',nativeIsland:data.ports[originPort].island,nativePosition:{...islandRoutes.routes[data.ports[originPort].island].to}});
- const dto=()=>({world:{...worldState(s,now),holdings:[],corpses:[]}}),errors=[],calls=[],requests=[];
+ const quiet=()=>{for(const m of nativeFieldBuckets(s.game.hunt?.field).flatMap(b=>b.mobs||[]))Object.assign(m,{aggressive:false,aggro:false,nextAttackAt:now+1e9});};
+ const dto=()=>{advanceWorld(s,now);quiet();return {world:{...worldState(s,now),holdings:[],corpses:[]}};},errors=[],calls=[],requests=[];
  const page=await browser.newPage({viewport:{width,height:900},hasTouch:width<500,reducedMotion:width===390?'no-preference':'reduce'});
  page.on('pageerror',e=>errors.push(e.message));
  if(noCanvas)await page.addInitScript(()=>{HTMLCanvasElement.prototype.getContext=()=>null;});
@@ -30,6 +33,7 @@ try{for(const reverse of [false,true])for(const {width,noCanvas=false} of [{widt
   const u=new URL(route.request().url()).pathname;requests.push(u);
   if(u==='/fixture')return route.fulfill({contentType:'text/html',body:'<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+styles+'<body></body>'});
   if(u==='/api/world')return route.fulfill({json:dto()});
+  if(u==='/api/hunt'){quiet();return route.fulfill({json:await getHuntState(s,now)});}
   if(u==='/api/boss/epic')return route.fulfill({json:{bosses:[]}});
   if(u==='/api/world/action'){now+=1000;const body=route.request().postDataJSON();calls.push(body);const result=worldAction(s,body,now);return route.fulfill({status:result.ok?200:409,json:{...result,...dto()}});}
   const bundle=assets.bundles?.find(b=>b.path===u);if(bundle)return route.fulfill({contentType:'text/css',body:bundle.css});
@@ -43,15 +47,16 @@ try{for(const reverse of [false,true])for(const {width,noCanvas=false} of [{widt
   await(await import('/world-map.js')).openWorldMap({api,haptic:()=>{},renderState:()=>{}});
  });
  async function live(predicate){await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&predicate((await r.json()).world.player));}
+ const atShore=(p,point)=>['native','location'].includes(p.mode)&&['x','y','z'].every(k=>p.worldPoint?.[k]===point[k]);
  async function menu(){await page.locator('[data-movement]').click();await page.locator('[data-ferry-menu]').click();const select=page.locator(`[data-ferry-select="${originPort}"]`);if(await select.count())await select.click();}
  async function action(name,stop){const button=page.locator(`[data-ferry-action="${name}"]${stop?'[data-stop="'+stop+'"]':''}`);assert.equal(await button.isEnabled(),true);await button.focus();assert.equal(await button.evaluate(n=>n===document.activeElement),true);await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='ferry_'+name),button.click()]);}
  await menu();assert.equal(await page.locator('[data-ferry-action="ticket"]').isDisabled(),true);assert.equal(await page.locator('[data-ferry-action="board"]').isDisabled(),true);
- await action('walk','vendor');now=s.game.world.walkHome.until+1;await live(p=>p.mode==='native');
+ await action('walk','vendor');now=s.game.world.walkHome.until+1;await live(p=>atShore(p,shores.routes[originPort].vendor));
  await menu();await action('ticket');assert.equal(s.game.inventory.gold,remainingGold);await page.waitForFunction(()=>document.querySelector('[data-ferry-stock]')?.textContent==='1');
  assert.equal(await page.locator('[data-ferry-panel] img').evaluate(img=>img.complete&&img.naturalWidth>0),true);
  await page.screenshot({path:path.join(out,`${origin}-vendor-${width}${noCanvas?'-fallback':''}.png`)});
- await action('walk','boarding');now=s.game.world.walkHome.until+1;await live(p=>p.mode==='native');
- now=ferryDock(originPort,now).dockAt+1000;await live(p=>p.mode==='native');
+ await action('walk','boarding');now=s.game.world.walkHome.until+1;await live(p=>atShore(p,shores.routes[originPort].to));
+ now=ferryDock(originPort,now).dockAt+1000;await live(p=>atShore(p,shores.routes[originPort].to));
  await menu();await action('board');const trip={...s.game.world.walkHome};
  await page.waitForFunction(()=>document.querySelector('.atlas-status')?.textContent.includes('Ожидание отправления'));
  await menu();assert.equal(await page.locator('[data-native-stop]').count(),0);assert.equal(await page.locator('[data-ferry-action="leave"]').isEnabled(),true);
@@ -61,7 +66,7 @@ try{for(const reverse of [false,true])for(const {width,noCanvas=false} of [{widt
  if(!noCanvas)await page.waitForFunction(()=>document.querySelector('.atlas-status')?.textContent==='Морской переход');
  assert.equal(await page.locator('.atlas-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  await page.screenshot({path:path.join(out,`${origin}-${width}${noCanvas?'-fallback':''}.png`)});
- now=trip.until;await live(p=>p.mode==='native'&&p.city===destination);
+ now=trip.until;await live(p=>atShore(p,shores.routes[targetPort].to)&&p.city===destination);
  if(!data.ports[targetPort].island){
  await page.locator('[data-movement]').click();await page.getByRole('combobox',{name:'Разделы телепорта',exact:true}).click();await page.getByRole('option',{name:'Города',exact:true}).click();
  await page.locator('[data-quick-go]').filter({hasText:CITIES.find(c=>c.id===destination).name}).click();

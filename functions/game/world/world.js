@@ -61,7 +61,7 @@ function enterPublicField(session,id,{departure,...options}){
     session.game.world.nativeIsland=nativeRoute(id)?.island||null;delete session.game.world.nativeTrail;delete session.game.world.nativeResume;
     if(departure)saveNativeField(session,options.now,departure);
     if(nativeRoute(id)){
-        if(options.targetMobId){if(session.game.world.nativeFields)delete session.game.world.nativeFields[id];}
+        if(options.targetMobId&&!nativeFieldSupported(id)){if(session.game.world.nativeFields)delete session.game.world.nativeFields[id];}
         else restoreNativeField(session,id,options.now);
         activateNativeField(session.game.hunt,nativeRoute(id).to,options.now);
     }
@@ -218,6 +218,8 @@ export function worldAction(session,body,now=Date.now()){
         if(body.action==='ferry_ticket')return buyFerryTicket(session,body.port);
         if(body.action==='ferry_board'){
             const result=boardFerry(session,body.port,now);if(!result.ok)return result;
+            if(w.mode==='location')saveNativeField(session,now);
+            if(session.game.hunt){session.game.hunt.field=null;session.game.hunt.mob=null;}
             Object.assign(w,{mode:'road',walkHome:result.trip,path:[],pending:null,channel:null,location:null});delete w.nativePosition;delete w.nativeTrail;delete w.nativeResume;delete w.cityWalk;return {ok:true};
         }
         const result=nativeTravel(session,{port:body.port,stop:body.stop},now,getSpeed(session)*l2MoveMultiplier(session,now));if(!result.ok)return result;

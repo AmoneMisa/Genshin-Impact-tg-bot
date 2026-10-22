@@ -2,6 +2,7 @@ import data from '../../../template/ferryData.js';
 import shores from '../../../template/nativePortRoutes.js';
 import {nativeTownPath} from './nativeTownGraph.js';
 import {nativeExit,nativeIsland} from './nativeTravel.js';
+import {nativeFieldPoint} from './nativeFieldSpace.js';
 import {outdoorPoint} from './holdingEntry.js';
 import {getMaterialCount,addMaterial,spendMaterials} from '../player/materials.js';
 
@@ -9,7 +10,7 @@ import {FERRY_PLANS,scheduledFerry,scheduledFerryFrames} from './ferryCalendar.j
 const range=(a,b)=>[a?.x,a?.y,a?.z,b?.x,b?.y,b?.z].every(Number.isFinite)?Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z):Infinity;
 export const FERRY_SCHEDULE=Object.freeze({dockMs:data.dockMs,outwardMs:FERRY_PLANS.gludin.duration,inwardMs:FERRY_PLANS.rune.duration,cycleMs:2*data.dockMs+FERRY_PLANS.gludin.duration+FERRY_PLANS.rune.duration});
 export function ferryDock(id,now){const visit=scheduledFerry(id,now);if(!visit)return null;const {docked,dockAt,departureAt,until}=visit;return {docked,dockAt,departureAt,until};}
-function shorePosition(session){const w=session.game.world;return w.mode==='native'?w.nativePosition:w.mode==='city'?{...outdoorPoint(session),z:w.z}:null;}
+function shorePosition(session){const w=session.game.world;return nativeFieldPoint(session)||(w.mode==='native'?w.nativePosition:w.mode==='city'?{...outdoorPoint(session),z:w.z}:null);}
 export function ferryOptions(session,now){
  const w=session.game.world,at=shorePosition(session),origin=w.mode==='location'?nativeExit(session)?.city:w.city,island=nativeIsland(session);
  return Object.values(data.ports).filter(p=>island?p.island===island:!p.island&&origin&&nativeTownPath(origin,p.city)).map(p=>({id:p.id,name:p.name,city:p.city,vendor:{...p.vendor},dock:{...p.dock},ticket:p.ticket,ticketPrice:p.ticketPrice,tickets:getMaterialCount(session,'l2_'+p.ticket),destination:data.ports[p.destination].island||data.ports[p.destination].city,nearVendor:range(at,p.vendor)<=data.source.vendorInteractionRadius,nearBoarding:range(at,p.dock)<=data.source.boardingRadius,canWalk:['city','native','location'].includes(w.mode)&&(!nativeExit(session)||nativeExit(session).near),...ferryDock(p.id,now)}));

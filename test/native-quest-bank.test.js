@@ -1,0 +1,22 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {worldAction,worldState,advanceWorld} from '../functions/game/world/world.js';
+import {nativeFieldBuckets} from '../functions/game/world/nativeFieldSpace.js';
+import routes from '../template/nativeRoutes.js';
+import change from '../functions/game/player/changePlayerGameClass.js';
+import update from '../functions/game/player/updatePlayerStats.js';
+test('an active quest teleport preserves the original native actors instead of rerolling their health and positions',()=>{
+ const start=1800000000000,s={userId:1,userChatData:{user:{id:1,first_name:'Test'}},game:{stats:{lvl:85,currentExp:0},inventory:{gold:1e6,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:'aden',x:.5,y:.5,path:[],moveAt:start,locks:{}},soulCrystalQuest:{startedAt:start},soulCrystal:{stage:0}}};
+ const chat={game:{},members:[s]};s.ownerDocument=()=>chat;change(s,'humanFighter');update(s);
+ assert.equal(worldAction(s,{action:'walk_location',location:'fields-of-massacre'},start).ok,true);
+ let now=s.game.world.walkHome.until+1;advanceWorld(s,now);
+ const actors=()=>nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs||[]),quiet=()=>{for(const m of actors())Object.assign(m,{aggressive:false,aggro:false});};quiet();
+ const targets=worldState(s,now).questTargets.filter(q=>q.location==='fields-of-massacre');assert.ok(targets.length);
+ const mob=actors().find(m=>targets.some(q=>q.mobId===m.mobId));assert.ok(mob);
+ mob.currentHp=Math.floor(mob.hp*.4);const saved={id:mob.instanceId,hp:mob.currentHp,point:{...mob.sourcePosition}};
+ const quest=targets.find(q=>q.mobId===mob.mobId).id;
+ const check=()=>{const copies=actors().filter(m=>m.instanceId===saved.id);assert.equal(copies.length,1);assert.equal(copies[0].currentHp,saved.hp);assert.deepEqual(copies[0].sourcePosition,saved.point);const dto=worldState(s,now);for(const axis of ['x','y','z'])assert.equal(dto.nativeField.point[axis],routes.routes['fields-of-massacre'].to[axis]);};
+ let gold=s.game.inventory.gold;assert.equal(worldAction(s,{action:'quick_travel',quest},++now).ok,true);check();assert.ok(s.game.inventory.gold<gold);quiet();
+ assert.equal(worldAction(s,{action:'native_walk_city',city:'aden'},now).ok,true);now=s.game.world.walkHome.until+1;advanceWorld(s,now);assert.equal(s.game.world.mode,'city');
+ gold=s.game.inventory.gold;assert.equal(worldAction(s,{action:'quick_travel',quest},++now).ok,true);check();assert.ok(s.game.inventory.gold<gold);
+});

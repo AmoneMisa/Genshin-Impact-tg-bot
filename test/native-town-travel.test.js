@@ -133,7 +133,7 @@ test('walking-only towns use the shared list and routes cannot bypass realm, ent
  assert.ok(row?.walkingOnly&&row.unavailable);assert.equal(row.gold,null);assert.match(movementHtml(dto,{selected:{kind:'city',id:'floran'}}),/data-quick-confirm disabled/);
  assert.equal(worldAction(s,{action:'native_walk_city',city:'keucereus-alliance-base'},NOW).ok,false);
  assert.equal(worldAction(s,{action:'native_move',point:{x:1e9,y:1e9,z:0}},NOW).ok,false);assert.equal(s.game.world.mode,'city');
- assert.ok(worldAction(s,{action:'walk_location',location:'dragon-valley'},NOW).ok);finish(s,NOW+1e7);await getHuntState(s,NOW+1e7);quiet(s);
+ assert.ok(worldAction(s,{action:'walk_location',location:'cruma-tower'},NOW).ok);finish(s,NOW+1e7);await getHuntState(s,NOW+1e7);quiet(s);
  s.game.hunt.field.x=.2;s.game.hunt.field.y=.2;assert.deepEqual(worldState(s,NOW+1e7).nativeWalkCities,[]);
  assert.equal(worldAction(s,{action:'native_walk_city',city:'heine'},NOW+1e7).reason,'entrance_required');
 });

@@ -6,6 +6,8 @@ import shores from '../template/nativePortRoutes.js';
 import {worldGeodata} from '../functions/game/world/l2jGeodata.js';
 import {nativeSegment} from '../functions/game/world/nativeNavigation.js';
 import {nativeGroundAllowed} from '../functions/game/world/nativeGround.js';
+import {nativeWorldPoint} from '../functions/game/world/nativeTravel.js';
+import {nativeFieldBuckets} from '../functions/game/world/nativeFieldSpace.js';
 import {nativeTownHub,nativeTownPath} from '../functions/game/world/nativeTownGraph.js';
 import {worldAction,worldState,advanceWorld,ensureWorld,cityPoint,CITIES} from '../functions/game/world/world.js';
 import {ferryDock,ferryJourneyPosition,FERRY_SCHEDULE} from '../functions/game/world/ferryTravel.js';
@@ -37,14 +39,18 @@ for(const origin of ['gludin','rune','talking-gludin','gludin-talking'])test(`co
  assert.equal(worldAction(s,{action:'ferry_ticket',port:origin},now).reason,'npc_too_far');
  assert.equal(worldAction(s,{action:'ferry_board',port:origin},now).reason,'ferry_boarding_required');
  assert.equal(worldAction(s,{action:'ferry_walk',port:origin,stop:'vendor'},now).ok,true);
- now=s.game.world.walkHome.until+1;advanceWorld(s,now);assert.equal(s.game.world.mode,'native');assert.deepEqual(s.game.world.nativePosition,shores.routes[origin].vendor);
+ now=s.game.world.walkHome.until+1;advanceWorld(s,now);assert.deepEqual(nativeWorldPoint(s),shores.routes[origin].vendor);
+ const mobs=()=>nativeFieldBuckets(s.game.hunt?.field).flatMap(b=>b.mobs||[]),quiet=()=>{for(const m of mobs())Object.assign(m,{aggressive:false,aggro:false});};quiet();
  assert.equal(worldAction(s,{action:'ferry_ticket',port:origin},now).ok,true);assert.equal(s.game.inventory.gold,remainingGold);
  assert.equal(worldAction(s,{action:'ferry_walk',port:origin,stop:'boarding'},now).ok,true);
- now=s.game.world.walkHome.until+1;advanceWorld(s,now);assert.deepEqual(s.game.world.nativePosition,shores.routes[origin].to);
+ now=s.game.world.walkHome.until+1;advanceWorld(s,now);quiet();assert.deepEqual(nativeWorldPoint(s),shores.routes[origin].to);
+ const resident=mobs()[0],bankZone=resident&&s.game.hunt.zone;if(resident)resident.currentHp=Math.floor(resident.hp/2);const saved=resident&&{id:resident.instanceId,hp:resident.currentHp,point:{...resident.sourcePosition}};
  now=ferryDock(origin,now).dockAt+1000;
  assert.equal(worldAction(s,{action:'ferry_board',port:origin},now).ok,true);assert.equal(s.game.inventory.materials['l2_'+port.ticket],1);
+ if(saved)assert.ok(s.game.world.nativeFields[bankZone]);assert.equal(s.game.hunt?.field??null,null);
  assert.equal(worldAction(s,{action:'ferry_leave'},now+1).ok,true);assert.equal(s.game.inventory.materials['l2_'+port.ticket],1);
  assert.equal(worldState(s,now+1).player.city,port.city);assert.ok(worldState(s,now+1).ferries.some(p=>p.id===origin));
+ quiet();if(saved){const copies=mobs().filter(m=>m.instanceId===saved.id);assert.equal(copies.length,1);assert.equal(copies[0].currentHp,saved.hp);assert.deepEqual(copies[0].sourcePosition,saved.point);}
  assert.equal(worldAction(s,{action:'ferry_board',port:origin},now+2).ok,true);
  const trip={...s.game.world.walkHome};assert.equal(worldState(s,trip.departureAt-1).player.transportPhase,'waiting');
  const departure=worldState(s,trip.departureAt);assert.equal(departure.player.transportPhase,'sailing');assert.equal(s.game.inventory.materials['l2_'+port.ticket],0);
@@ -56,7 +62,7 @@ for(const origin of ['gludin','rune','talking-gludin','gludin-talking'])test(`co
  const position=ferryJourneyPosition(trip,mid),predicted=displayedPosition({...position,runSpeed:99999},1000).worldPoint,actual=ferryJourneyPosition(trip,mid+1000).worldPoint;
  assert.ok(near(predicted,actual)<1e-7);assert.ok(position.worldMotion.length<=17);
  advanceWorld(s,trip.until-1);assert.equal(s.game.world.mode,'road');advanceWorld(s,trip.until);
- assert.equal(s.game.world.mode,'native');assert.equal(s.game.world.city,target);assert.deepEqual(s.game.world.nativePosition,shores.routes[targetPort].to);
+ quiet();assert.equal(s.game.world.city,target);assert.deepEqual(nativeWorldPoint(s),shores.routes[targetPort].to);
  assert.equal(worldAction(s,{action:'native_walk_city',city:target},trip.until+1).ok,true);
  now=s.game.world.walkHome.until+1;advanceWorld(s,now);assert.equal(s.game.world.mode,'city');assert.equal(s.game.world.city,target);
  const hub=nativeTownHub(target);assert.deepEqual({x:s.game.world.x,y:s.game.world.y},cityPoint(CITIES.find(c=>c.id===target),hub));
