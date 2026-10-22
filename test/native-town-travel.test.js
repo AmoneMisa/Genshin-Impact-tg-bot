@@ -30,6 +30,15 @@ test('published original town links verify every cell in both directions and gra
  assert.ok(nativeTownCities('dion').includes('aden'));assert.ok(nativeTownPath('gludio','dion'));assert.equal(nativeTownPath('dion','keucereus-alliance-base'),null);
 });
 
+test('Rune reaches Schuttgart through Goddard without entering the hunting rooms passed on the road',()=>{
+ let s=hero('rune');assert.deepEqual(nativeTownPath('rune','schuttgart').cities,['rune','goddard','schuttgart']);
+ assert.equal(worldAction(s,{action:'native_walk_city',city:'schuttgart'},NOW).ok,true);
+ const middle=NOW+Math.floor((s.game.world.walkHome.until-NOW)*.5);advanceWorld(s,middle);
+ assert.equal(s.game.world.mode,'road');s=JSON.parse(JSON.stringify(s));finish(s,middle+1e7);
+ assert.equal(s.game.world.city,'schuttgart');assert.equal(s.game.inventory.gold,1000000);assert.ok(!s.game.hunt?.field);
+ assert.ok(!s.game.world.nativeFields?.['monastery-of-silence']);assert.ok(!s.game.world.nativeFields?.['frozen-labyrinth']);
+ assert.equal(worldAction(s,{action:'native_walk_city',city:'rune'},middle+1e7).ok,true);finish(s,middle+2e7);assert.equal(s.game.world.city,'rune');
+});
 test('Gludin joins the central mainland across the reverse-compiled Gludio to Dion road',()=>{
  let s=hero('gludin');const link=nativeTownPath('gludin','aden');
  assert.deepEqual(link.cities.slice(0,3),['gludin','gludio','dion']);assert.ok(link.path.length<512);
