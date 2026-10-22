@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import entries from '../../template/dungeonEntranceEntries.js';
+import {LOCATIONS,CITIES} from '../../template/worldMap.js';
+const lines=['# Исходные внешние входы катакомб и некрополей','',
+ 'Метка Атласа использует NPC `DungeonGatekeeper` с исходной ролью `Role=0`. Внутренний `Role=1` и его удалённая точка назначения сохранены отдельно. Одинаковое имя Gatekeeper Ziggurat не означает одинаковую роль или расположение. Для каждого входа проверяются тип NPC, роль, SignNumber и единственная исходная позиция; записаны SHA-256 XML спавна и характеристик.','',
+ '| Локация | Ближайшее исходное поселение | Внешний NPC и XYZ | Внутренний NPC |','| --- | --- | --- | --- |',
+ ...Object.entries(entries).map(([id,e])=>`| ${LOCATIONS.find(l=>l.id===id)?.name||id} | ${CITIES.find(c=>c.id===e.region)?.name||e.region} | ${e.dungeonEntranceSource.npcId}: ${e.x}, ${e.y}, ${e.z} | ${e.dungeonEntranceSource.interiorNpcId} |`),'',
+ 'Привязка к поселению географическая: ближайший исходный городской NPC. Контур выбора размером 1000×1000 — авторский охват Атласа, а не стены или геодата. Именованные координаты NPC не усредняются и не заменяются центром территории.','',
+ 'Пеший подход к этим входам через воду/двери, условия Семи Печатей и тариф NPC остаются неподтверждёнными (`nativeGroundApproach=null`, `teleportTariff=null`). Исправленная метка сама по себе не открывает новое пешее действие. Существующий проектный быстрый телепорт — отдельная старая механика; его цена не объявляется исходным тарифом зиккурата.','',
+ 'Источник: Mobius High Five `9fb01cb20513e55190cdde8d91e41be2c0914f84`. Воспроизведение: `node scripts/l2j/import-dungeon-entrances.mjs ID`, `node scripts/ui/report-dungeon-entrances.mjs`.','',
+ 'Проверки: `node --test test/dungeon-entrances.test.js`; `DUNGEON_MAP_CHECK=catacomb-heretic node scripts/ui/check-native-world.mjs` — правильный регион в общем списке Атласа, отсутствие выдуманного пешего входа, 320/390/1100 px и 320 px без Canvas.',''];
+fs.writeFileSync('docs/dungeon-entrances.md',lines.join('\n'));console.log(Object.keys(entries).length,'original outside dungeon markers');

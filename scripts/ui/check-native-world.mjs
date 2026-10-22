@@ -78,6 +78,13 @@ try{for(const {width,noCanvas=false} of configurations){
   await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='walk_location'),walk.click()]);
   await page.waitForTimeout(100);
  }
+ if(process.env.DUNGEON_MAP_CHECK){
+  const id=process.env.DUNGEON_MAP_CHECK,place=worldState(s,now).locations.find(l=>l.id===id);assert.equal(place.dungeonEntranceSource.role,0);
+  await page.locator('[data-movement]').click();await page.getByRole('combobox',{name:'Разделы телепорта',exact:true}).click();await page.getByRole('option',{name:'Катакомбы и некрополи',exact:true}).click();
+  const row=page.locator('[data-quick-go]').filter({hasText:place.name});assert.ok((await row.innerText()).includes(CITIES.find(c=>c.id===place.region).name));await row.click();
+  assert.equal(await page.locator('[data-native-walk]').count(),0,'an outside marker alone must not publish an unverified dungeon walk');
+  assert.equal(await page.locator('.atlas-popup').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
+ }
  await selectWalk(zoneName(firstId));assert.equal(s.game.world.mode,'road');assert.ok(s.game.world.walkHome.native);
  assert.equal(await page.locator('[data-mode="city"]').textContent(),'Местность');
  assert.equal(await page.locator('[data-city-view]').count(),0);
