@@ -19,6 +19,7 @@ for(const [id,entry] of Object.entries({...entries,...territoryEntries})){
   assert.deepEqual([place.x,place.y,place.z],[entry.x,entry.y,entry.z]);assert.equal(place.teleportGold,null);assert.deepEqual(place.entryRoutes,[]);assert.equal(place.access.kind,'walk-only');
   const source=entry.entrySource;assert.match(source.sha256,/^[a-f0-9]{64}$/);assert.ok(!entries[id]||!territoryEntries[id]);
   if(source.type==='NPC_SPAWN'){assert.equal(source.coordinateSource,'point');assert.ok(Number.isInteger(source.npcId));}
+  else if(source.type==='SCRIPT_LOCATION'){assert.equal(source.coordinateSource,'script-location');assert.ok(source.symbol);assert.ok(Number.isInteger(entry.nativeEntryFloor));}
   else{
    assert.equal(source.type,'TERRITORY_BOUNDARY');assert.equal(source.coordinateSource,'territory-node');assert.equal(source.originalEntrance,null);assert.equal(source.heightSource,'l2j-geodata');assert.equal(source.geodataCommit,worldGeodata.manifest.commit);
    assert.deepEqual([entry.x,entry.y],source.polygon[source.vertex]);assert.ok(entry.z>=source.minZ&&entry.z<=source.maxZ);

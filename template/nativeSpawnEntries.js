@@ -75,5 +75,44 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "pagan-temple": {
+    "x": 36640,
+    "y": -51218,
+    "z": 718,
+    "region": "rune",
+    "nativeEntryFloor": 3,
+    "teleportGold": null,
+    "entryRoutes": [],
+    "access": {
+      "kind": "walk-only"
+    },
+    "entrySource": {
+      "file": "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java",
+      "symbol": "TRIOLS_LOCS[TRIOLS_MIRROR_2]",
+      "type": "SCRIPT_LOCATION",
+      "coordinateSource": "script-location",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695"
+    },
+    "polygon": [
+      [
+        31640,
+        -56218
+      ],
+      [
+        41640,
+        -56218
+      ],
+      [
+        41640,
+        -46218
+      ],
+      [
+        31640,
+        -46218
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };

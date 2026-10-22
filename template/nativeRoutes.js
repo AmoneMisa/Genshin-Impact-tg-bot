@@ -11071,6 +11071,121 @@ export default {
           "reason": null
         }
       ]
+    },
+    "pagan-temple": {
+      "city": "rune",
+      "available": true,
+      "from": {
+        "x": 43824,
+        "y": -47664,
+        "z": -792
+      },
+      "to": {
+        "x": 36640,
+        "y": -51218,
+        "z": 712
+      },
+      "sourceTown": {
+        "npcId": 31320,
+        "name": "Ilyana",
+        "x": 43824,
+        "y": -47664,
+        "z": -800,
+        "file": "spawns/Others/21_16.xml"
+      },
+      "sourceEntry": {
+        "file": "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java",
+        "symbol": "TRIOLS_LOCS[TRIOLS_MIRROR_2]",
+        "type": "SCRIPT_LOCATION",
+        "coordinateSource": "script-location",
+        "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+        "sha256": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695"
+      },
+      "distance": 8862.241704693697,
+      "path": [
+        {
+          "x": 43704,
+          "y": -47784,
+          "z": -792
+        },
+        {
+          "x": 42552,
+          "y": -48040,
+          "z": -792
+        },
+        {
+          "x": 40504,
+          "y": -48424,
+          "z": -768
+        },
+        {
+          "x": 40120,
+          "y": -49832,
+          "z": -320
+        },
+        {
+          "x": 39352,
+          "y": -50728,
+          "z": -160
+        },
+        {
+          "x": 37688,
+          "y": -51240,
+          "z": 400
+        },
+        {
+          "x": 36640,
+          "y": -51218,
+          "z": 712
+        }
+      ],
+      "returnPath": [
+        {
+          "x": 37688,
+          "y": -51240,
+          "z": 400
+        },
+        {
+          "x": 39352,
+          "y": -50728,
+          "z": -160
+        },
+        {
+          "x": 40120,
+          "y": -49832,
+          "z": -320
+        },
+        {
+          "x": 40504,
+          "y": -48424,
+          "z": -768
+        },
+        {
+          "x": 42552,
+          "y": -48040,
+          "z": -792
+        },
+        {
+          "x": 43704,
+          "y": -47784,
+          "z": -792
+        },
+        {
+          "x": 43824,
+          "y": -47664,
+          "z": -792
+        }
+      ],
+      "attempts": [
+        {
+          "stride": 8,
+          "maxNodes": 30000,
+          "heuristicWeight": 1,
+          "margin": 256,
+          "visited": 383,
+          "reason": null
+        }
+      ]
     }
   }
 };

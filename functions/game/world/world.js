@@ -317,7 +317,7 @@ export function worldAction(session,body,now=Date.now()){
         const npc=CITY_NPCS.find(n=>n.service==='pagan-church');
         if(w.mode!=='city'||w.city!==npc.city||!nearNpc(w,npc))return {ok:false,reason:'npc_too_far'};
         const denied=quickTravelBlock(session,now);if(denied)return {ok:false,reason:denied};
-        const result=enterHuntField(session,'pagan-temple',{now,floor:3});
+        const result=enterPublicField(session,'pagan-temple',{now,floor:3});
         if(result.ok)Object.assign(w,{mode:'location',location:'pagan-temple',instanceId:null,path:[],pending:null,channel:null});
         return result;
     }

@@ -1,5 +1,5 @@
 import routes from '../../../template/nativeRoutes.js';
-import {CITIES} from '../../../template/worldMap.js';
+import {CITIES,LOCATIONS} from '../../../template/worldMap.js';
 import {findNativePath,nativeSegment} from './nativeNavigation.js';
 import {nativeGroundAllowed} from './nativeGround.js';
 import {createNativeJourney,pruneNativeLoops} from './nativeJourney.js';
@@ -66,7 +66,8 @@ function reconnectNativeHistory(world,to,city){
 export function nativeExit(session){
  const w=session.game.world,f=session.game.hunt?.field,route=nativeRoute(w?.location);
  if(w?.mode!=='location'||session.game.hunt?.zone!==w.location||!route?.returnPath||!f)return null;
- return {room:'r0c0',floor:1,point:{x:.5,y:.95},near:f.room==='r0c0'&&(f.floor||1)===1&&Math.hypot(f.x-.5,f.y-.95)<=.08,city:route.city,island:route.island||null,port:route.isolatedPort||null};
+ const floor=LOCATIONS.find(l=>l.id===w.location)?.nativeEntryFloor||1;
+ return {room:'r0c0',floor,point:{x:.5,y:.95},near:f.room==='r0c0'&&(f.floor||1)===floor&&Math.hypot(f.x-.5,f.y-.95)<=.08,city:route.city,island:route.island||null,port:route.isolatedPort||null};
 }
 
 /** Original entry/gatekeeper anchors bind local artwork to the native coordinate space. */

@@ -1,6 +1,7 @@
 """Publish explicit source NPC points for walking; never invent a teleport tariff."""
 import hashlib
 import json
+import re
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -11,8 +12,19 @@ world=json.loads(Path('template/nativeWorld.js').read_text(encoding='utf-8').spl
 file=Path('template/nativeSpawnEntries.js')
 entries=json.loads(file.read_text(encoding='utf-8').split('export default ',1)[1].strip().rstrip(';'))
 ids=sys.argv[1:]
-assert ids and all(id in config for id in ids), 'Supply configured source location IDs'
+assert ids and all(id in config or id=='pagan-temple' for id in ids), 'Supply configured source location IDs'
 for id in ids:
+    if id=='pagan-temple':
+        path='scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java';source=base/path
+        match=re.search(r'TRIOLS_LOCS\.put\(TRIOLS_MIRROR_2, new Location\((-?\d+), (-?\d+), (-?\d+)\)\)',source.read_text(encoding='utf-8'))
+        assert match, 'Original church landing missing'
+        x,y,z=map(int,match.groups())
+        entries[id]={'x':x,'y':y,'z':z,'region':'rune','nativeEntryFloor':3,'teleportGold':None,'entryRoutes':[],
+            'access':{'kind':'walk-only'},'entrySource':{'file':path,'symbol':'TRIOLS_LOCS[TRIOLS_MIRROR_2]',
+            'type':'SCRIPT_LOCATION','coordinateSource':'script-location','commit':world['source']['commit'],
+            'sha256':hashlib.sha256(source.read_bytes()).hexdigest()},
+            'polygon':[[x-5000,y-5000],[x+5000,y-5000],[x+5000,y+5000],[x-5000,y+5000]],'selectionGeometry':'authored-extent'}
+        print(id,'original church landing',(x,y,z),'floor 3; walking only');continue
     city,path,npc,xyz=config[id];source=base/path
     row=next(n for n in ET.parse(source).iter('npc') if n.get('id')==str(npc) and all(n.get(k)==str(v) for k,v in zip(['x','y','z'],xyz)))
     x,y,z=(int(row.get(k)) for k in ['x','y','z'])
