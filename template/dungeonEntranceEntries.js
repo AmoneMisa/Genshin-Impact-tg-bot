@@ -146,5 +146,54 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "catacomb-witch": {
+    "x": 140032,
+    "y": 79680,
+    "z": -5427,
+    "region": "hunters",
+    "regionAssociation": "nearest-source-town",
+    "dungeonEntranceSource": {
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "files": {
+        "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
+        "spawns/Others/24_20.xml": "120af1a0077ed82ad185b1e72e7d272b893c2f5d5f96ad55cc6c918e5ccf3faa"
+      },
+      "npcId": 31117,
+      "role": 0,
+      "interiorNpcId": 31123,
+      "signNumber": 2,
+      "insideDestination": {
+        "x": 140499,
+        "y": 79679,
+        "z": -5454
+      },
+      "returnDestination": {
+        "x": 140130,
+        "y": 79681,
+        "z": -5456
+      },
+      "nativeGroundApproach": null,
+      "teleportTariff": null
+    },
+    "polygon": [
+      [
+        139532,
+        79180
+      ],
+      [
+        140532,
+        79180
+      ],
+      [
+        140532,
+        80180
+      ],
+      [
+        139532,
+        80180
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
