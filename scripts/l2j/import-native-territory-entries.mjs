@@ -4,14 +4,14 @@ import nativeWorld from '../../template/nativeWorld.js';
 import {worldGeodata} from '../../functions/game/world/l2jGeodata.js';
 import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';
 import {findNativePath} from '../../functions/game/world/nativeNavigation.js';
+import {sourceTerritoryLayer} from './source-territory-layer.mjs';
 const file='template/nativeTerritoryEntries.js',entries=(await import(new URL('../../'+file,import.meta.url))).default;
 for(const id of process.argv.slice(2)){
  const source=JSON.parse(execFileSync('python',['scripts/l2j/read-native-territories.py',id],{encoding:'utf8'}));
  const from=nativeWorld.towns[source.city],candidates=[],seen=new Set();
  for(const territory of source.territories)for(const [vertex,node] of territory.nodes.entries()){
-  const low=worldGeodata.point({...node,z:territory.minZ}),high=worldGeodata.point({...node,z:territory.maxZ});
-  // Only an unambiguous original layer inside the source Z interval is eligible.
-  if(!low||!high||low.z!==high.z||low.z<territory.minZ||low.z>territory.maxZ||!low.nswe||!nativeGroundAllowed(low))continue;
+  const low=sourceTerritoryLayer(worldGeodata,node,territory.minZ,territory.maxZ,nativeGroundAllowed);
+  if(!low)continue;
   const key=[low.x,low.y,low.z].join(',');if(seen.has(key))continue;seen.add(key);
   candidates.push({point:low,territory,vertex,distance:Math.hypot(from.x-low.x,from.y-low.y)});
  }
