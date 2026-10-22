@@ -37,5 +37,43 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "sel-mahums": {
+    "x": 88347,
+    "y": 56413,
+    "z": -3495,
+    "region": "oren",
+    "teleportGold": null,
+    "entryRoutes": [],
+    "access": {
+      "kind": "walk-only"
+    },
+    "entrySource": {
+      "file": "spawns/Oren/SelMahums.xml",
+      "npcId": 22775,
+      "type": "NPC_SPAWN",
+      "coordinateSource": "point",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "dc73abf212503f4bcd5e2e9dc70ac00c16cd85370b4b337d712ddf67dd77384e"
+    },
+    "polygon": [
+      [
+        83347,
+        51413
+      ],
+      [
+        93347,
+        51413
+      ],
+      [
+        93347,
+        61413
+      ],
+      [
+        83347,
+        61413
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };

@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
-config={'vuku-lands':('gludio','spawns/Others/19_21.xml',20011,(-12420,99284,-3066))}
+config={"sel-mahums":("oren","spawns/Oren/SelMahums.xml",22775,(88347,56413,-3495)),'vuku-lands':('gludio','spawns/Others/19_21.xml',20011,(-12420,99284,-3066))}
 world=json.loads(Path('template/nativeWorld.js').read_text(encoding='utf-8').split('export default ',1)[1].strip().rstrip(';'))
 file=Path('template/nativeSpawnEntries.js')
 entries=json.loads(file.read_text(encoding='utf-8').split('export default ',1)[1].strip().rstrip(';'))
