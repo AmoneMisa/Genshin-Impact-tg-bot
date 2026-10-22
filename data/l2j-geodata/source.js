@@ -277,6 +277,14 @@ export default {
       "compressedSha256": "2846c0019d60e29e726d3ee81fa9048947df89b99f26d6b7b001688f50df27d0",
       "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/21_23.l2j"
     },
+    "21_24": {
+      "file": "21_24.l2j.gz",
+      "bytes": 6782194,
+      "sha256": "9d1de8596fcc760422f5d8b739e180bd1a1dc4e2eab847a6e8d5a29bd37fb6a4",
+      "compressedBytes": 1976135,
+      "compressedSha256": "5a6127744c9f2d44233d7fefcab4513726e898b0ab79fbea9f580953f564f53c",
+      "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/21_24.l2j"
+    },
     "22_13": {
       "file": "22_13.l2j.gz",
       "bytes": 7826806,

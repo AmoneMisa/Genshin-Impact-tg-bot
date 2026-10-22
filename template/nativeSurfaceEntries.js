@@ -1482,5 +1482,56 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "devils-isle": {
+    "x": 43408,
+    "y": 206881,
+    "z": -3752,
+    "region": "giran",
+    "teleportGold": 5700,
+    "entrySource": {
+      "file": "teleporters/town/30080.xml",
+      "npcId": 30080,
+      "name": "Devil's Isle",
+      "type": "NORMAL",
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "sha256": "8c01e023e75b46bf01c6be9e9b117cb6f1d4f33b416cda98e1b5e21dbee1c6f5"
+    },
+    "entryRoutes": [
+      {
+        "npcId": 30080,
+        "npcName": "Clarissa",
+        "type": "NORMAL",
+        "item": 57,
+        "fee": 5700,
+        "source": {
+          "file": "teleporters/town/30080.xml",
+          "npcId": 30080,
+          "name": "Devil's Isle",
+          "type": "NORMAL",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+          "sha256": "8c01e023e75b46bf01c6be9e9b117cb6f1d4f33b416cda98e1b5e21dbee1c6f5"
+        }
+      }
+    ],
+    "polygon": [
+      [
+        38408,
+        201881
+      ],
+      [
+        48408,
+        201881
+      ],
+      [
+        48408,
+        211881
+      ],
+      [
+        38408,
+        211881
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };

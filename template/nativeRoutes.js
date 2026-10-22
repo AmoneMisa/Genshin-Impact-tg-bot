@@ -11699,6 +11699,83 @@ export default {
           "reason": "geodata_search_limit"
         }
       ]
+    },
+    "devils-isle": {
+      "city": "giran",
+      "available": false,
+      "to": {
+        "x": 43408,
+        "y": 206881,
+        "z": -3752
+      },
+      "sourceEntry": {
+        "file": "teleporters/town/30080.xml",
+        "npcId": 30080,
+        "name": "Devil's Isle",
+        "type": "NORMAL",
+        "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+        "sha256": "8c01e023e75b46bf01c6be9e9b117cb6f1d4f33b416cda98e1b5e21dbee1c6f5"
+      },
+      "reason": "geodata_search_limit",
+      "attempts": [
+        {
+          "stride": 8,
+          "maxNodes": 30000,
+          "heuristicWeight": 1,
+          "margin": 256,
+          "visited": 30000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "direction": "reverse",
+          "stride": 8,
+          "maxNodes": 30000,
+          "heuristicWeight": 2,
+          "margin": 1024,
+          "visited": 13212,
+          "reason": "path_blocked"
+        },
+        {
+          "stride": 4,
+          "maxNodes": 30000,
+          "heuristicWeight": 1,
+          "margin": 256,
+          "visited": 30000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "stride": 2,
+          "maxNodes": 50000,
+          "heuristicWeight": 1,
+          "margin": 256,
+          "visited": 50000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "stride": 1,
+          "maxNodes": 60000,
+          "heuristicWeight": 1,
+          "margin": 256,
+          "visited": 60000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "stride": 8,
+          "maxNodes": 120000,
+          "heuristicWeight": 2,
+          "margin": 1024,
+          "visited": 120000,
+          "reason": "geodata_search_limit"
+        },
+        {
+          "stride": 4,
+          "maxNodes": 120000,
+          "heuristicWeight": 2,
+          "margin": 1024,
+          "visited": 120000,
+          "reason": "geodata_search_limit"
+        }
+      ]
     }
   }
 };
