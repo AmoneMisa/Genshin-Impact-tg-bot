@@ -641,5 +641,54 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "necropolis-disciples": {
+    "x": 82688,
+    "y": 209216,
+    "z": -5437,
+    "region": "heine",
+    "regionAssociation": "nearest-source-town",
+    "dungeonEntranceSource": {
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "files": {
+        "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
+        "spawns/Others/22_24.xml": "6642af364019bf2592d5fadb4b121b673d312585ba3be9f732d31db38aa65e29"
+      },
+      "npcId": 31102,
+      "role": 0,
+      "interiorNpcId": 31110,
+      "signNumber": 1,
+      "insideDestination": {
+        "x": 83146,
+        "y": 209217,
+        "z": -5466
+      },
+      "returnDestination": {
+        "x": 82700,
+        "y": 209200,
+        "z": -5432
+      },
+      "nativeGroundApproach": null,
+      "teleportTariff": null
+    },
+    "polygon": [
+      [
+        82188,
+        208716
+      ],
+      [
+        83188,
+        208716
+      ],
+      [
+        83188,
+        209716
+      ],
+      [
+        82188,
+        209716
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
