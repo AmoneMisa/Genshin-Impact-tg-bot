@@ -543,5 +543,54 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "necropolis-martyrdom": {
+    "x": 117872,
+    "y": 132800,
+    "z": -4829,
+    "region": "giran",
+    "regionAssociation": "nearest-source-town",
+    "dungeonEntranceSource": {
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "files": {
+        "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
+        "spawns/Others/23_22.xml": "0f9cfa3e19fa3fbf18d698283456df4a0070daeb8b322543ba335417ea6c3fe6"
+      },
+      "npcId": 31100,
+      "role": 0,
+      "interiorNpcId": 31108,
+      "signNumber": 1,
+      "insideDestination": {
+        "x": 118333,
+        "y": 132800,
+        "z": -4856
+      },
+      "returnDestination": {
+        "x": 117980,
+        "y": 132800,
+        "z": -4858
+      },
+      "nativeGroundApproach": null,
+      "teleportTariff": null
+    },
+    "polygon": [
+      [
+        117372,
+        132300
+      ],
+      [
+        118372,
+        132300
+      ],
+      [
+        118372,
+        133300
+      ],
+      [
+        117372,
+        133300
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
