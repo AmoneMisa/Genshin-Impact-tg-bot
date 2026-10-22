@@ -393,5 +393,55 @@ export default {
       ]
     ],
     "selectionGeometry": "authored-extent"
+  },
+  "necropolis-worship": {
+    "x": 110848,
+    "y": 174016,
+    "z": -5437,
+    "region": "giran",
+    "regionAssociation": "nearest-source-town",
+    "dungeonEntranceSource": {
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "files": {
+        "stats/npcs/31000-31099.xml": "58bdaf574082c0446388154252e6cfdaceaa4a228d95aac6255f810fb5f39b3f",
+        "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
+        "spawns/Others/23_23.xml": "bce4a4862c29adea296a47ed9f86e03ade31dd001ef7980f7b4049705b2d264f"
+      },
+      "npcId": 31097,
+      "role": 0,
+      "interiorNpcId": 31105,
+      "signNumber": 1,
+      "insideDestination": {
+        "x": 111287,
+        "y": 174018,
+        "z": -5464
+      },
+      "returnDestination": {
+        "x": 110966,
+        "y": 174015,
+        "z": -5466
+      },
+      "nativeGroundApproach": null,
+      "teleportTariff": null
+    },
+    "polygon": [
+      [
+        110348,
+        173516
+      ],
+      [
+        111348,
+        173516
+      ],
+      [
+        111348,
+        174516
+      ],
+      [
+        110348,
+        174516
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
   }
 };
