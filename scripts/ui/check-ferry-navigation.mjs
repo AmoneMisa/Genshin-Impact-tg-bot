@@ -72,7 +72,7 @@ try{for(const reverse of [false,true])for(const {width,noCanvas=false} of [{widt
  await page.locator('[data-quick-go]').filter({hasText:CITIES.find(c=>c.id===destination).name}).click();
  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_walk_city'),page.locator('[data-native-city]').click()]);
  now=s.game.world.walkHome.until+1;await live(p=>p.mode==='city'&&p.city===destination);
- }else {assert.deepEqual(worldState(s,now).nativeWalkCities,[]);assert.equal(worldState(s,now).nativeWalk['primeval-isle'].enabled,true);}
+ }else {const dto=worldState(s,now);assert.deepEqual(dto.nativeWalkCities,[]);assert.equal(dto.nativeWalk['primeval-isle'].enabled,!dto.nativeField);}
  assert.equal(s.game.world.city,destination);assert.equal(s.game.inventory.gold,remainingGold);
  assert.equal(s.game.inventory.materials['l2_'+data.ports[originPort].ticket],0);
  await page.locator('.atlas-panel [data-dismiss]').first().click();await page.waitForSelector('.atlas-panel',{state:'detached'});

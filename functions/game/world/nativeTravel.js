@@ -67,7 +67,7 @@ function reconnectNativeHistory(world,to,city){
 export function nativeExit(session){
  const w=session.game.world,f=session.game.hunt?.field,route=nativeRoute(w?.location);
  if(w?.mode!=='location'||session.game.hunt?.zone!==w.location||!route?.returnPath||!f)return null;
- if(f.native)return {room:f.room,floor:1,point:{x:f.x,y:f.y},near:true,city:route.city,island:null,port:null};
+ if(f.native)return {room:f.room,floor:1,point:{x:f.x,y:f.y},near:true,city:route.city,island:route.island||null,port:route.isolatedPort||null};
  const floor=LOCATIONS.find(l=>l.id===w.location)?.nativeEntryFloor||1;
  return {room:'r0c0',floor,point:{x:.5,y:.95},near:f.room==='r0c0'&&(f.floor||1)===floor&&Math.hypot(f.x-.5,f.y-.95)<=.08,city:route.city,island:route.island||null,port:route.isolatedPort||null};
 }
@@ -83,7 +83,13 @@ export function nativeTravel(session,target,now,speed){
  if(target?.location&&target.location===w.location&&w.mode==='location')return {ok:false,reason:'location_path_required'};
  if(island){
   if(to?.island!==island||arrivalCity)return {ok:false,reason:'location_path_required'};
-  if(w.mode==='location'&&from?.island===island){
+  if(w.mode==='location'&&point&&from?.island===island){
+   const history={nativePosition:point,nativeIsland:island,nativeTrail:session.game.hunt.field.native.nativeTrail};
+   rememberNativeTrail(history,session.game.hunt.field.native.journey);
+   let plan=findNativePath(point,to.to,{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true});
+   if(!plan.ok){const trail=nativeTrailBack(history);if(trail){const join=findNativePath(trail.root,to.to,{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true});if(join.ok)plan={ok:true,start:point,path:[...trail.path,...join.path]};}}
+   if(!plan.ok)return plan;start=plan.start;path=plan.path;
+  }else if(w.mode==='location'&&from?.island===island){
    if(!nativeExit(session)?.near)return {ok:false,reason:'entrance_required'};
    start=from.to;path=[...from.returnPath,...to.path];
   }else if(w.mode==='native'&&w.nativePosition&&Math.hypot(w.nativePosition.x-to.to.x,w.nativePosition.y-to.to.y)<=8192){
@@ -141,7 +147,7 @@ export function nativeWalkOptions(session){
  const w=session.game.world,exit=nativeExit(session);
  const island=nativeIsland(session);
  return Object.fromEntries(Object.entries({...routes.routes,...islands.routes}).filter(([,r])=>r.available).map(([id,r])=>{
-  if(island||r.island)return [id,{enabled:Boolean(w.mode==='native'&&island===r.island),viaCity:null,exitRequired:w.mode==='location'&&!exit?.near}];
+  if(island||r.island)return [id,{enabled:Boolean(island===r.island&&(w.mode==='native'||nativeFieldPoint(session)&&w.nativeResume?.target?.location===id)),viaCity:null,exitRequired:w.mode==='location'&&!exit?.near}];
   const origin=w.mode==='location'?exit?.city:w.city,link=origin&&nativeTownPath(origin,r.city);
   return [id,{enabled:w.mode==='city'?Boolean(link):w.mode==='location'?Boolean(exit&&link&&(id!==w.location||nativeFieldPoint(session)&&w.nativeResume?.target?.location===id)):w.mode==='native',viaCity:null,exitRequired:w.mode==='location'&&!exit?.near}];
  }));

@@ -102,7 +102,7 @@ export function ensureHunt(session, now = Date.now(),random=Math.random) {
 
 /** Keeps the 3x3 window of cells populated; population itself stays in populateRoom. */
 function syncResident(session,hunt,now,random){
-    if(hunt.field?.native)return syncNativePopulation(hunt,roomLayout(getZone(hunt.zone),1),now,(room,slot,prefix)=>populateRoom(session,getZone(hunt.zone),room,{now,random,count:1,sourceSlot:slot,prefix}));
+    if(hunt.field?.native)return syncNativePopulation(hunt,roomLayout(getZone(hunt.zone),1),now,(room,slot,prefix)=>populateRoom(session,getZone(hunt.zone),room,{now,random,count:1,sourceSlot:slot,prefix}),random);
     return syncResidentRooms(hunt,now,(zone,room,prefix)=>populateRoom(session,zone,room,{now,random,prefix}));
 }
 
@@ -262,7 +262,7 @@ function approachTarget(session,mob,geometry,now) {
         const order=field.action||field.autoAttack;
         if(field.native.journey&&order?.approach?.id===mob.instanceId&&Math.hypot(order.approach.x-mob.x,order.approach.y-mob.y)*ROOM_SIZE<80)return {ok:true};
         const distance=spatialDistance(field,mob),share=Math.min(1,geometry.range*.85/Math.max(1,distance));
-        const result=moveNativeActor(field,{x:mob.x+(field.x-mob.x)*share,y:mob.y+(field.y-mob.y)*share},now,getSpeed(session)*l2MoveMultiplier(session,now));
+        const result=moveNativeActor(field,{x:mob.x+(field.x-mob.x)*share,y:mob.y+(field.y-mob.y)*share,native:{z:mob.native.z}},now,getSpeed(session)*l2MoveMultiplier(session,now));
         if(result.ok&&(field.action||field.autoAttack))(field.action||field.autoAttack).approach={id:mob.instanceId,x:mob.x,y:mob.y,range:geometry.range};
         return result;
     }

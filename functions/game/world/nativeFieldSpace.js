@@ -50,7 +50,17 @@ export function placeNativeSpawn(actor,random=Math.random){
 export function activateNativeField(hunt,point,now){
  const f=hunt?.field;if(!nativeFieldSupported(hunt?.zone)||!f)return false;
  if(!f.native){
-  f.native={version:1,z:point.z,loaded:{},missing:{}};
+  f.native={version:1,z:point.z,loaded:{},missing:{},randomGroups:{}};
+  // Existing room banks already rolled their entire source group. Preserve even
+  // mixed species left by respawns; migration must never refill lost rolls.
+  const existing=nativeFieldBuckets(f).flatMap(b=>b.mobs||[]);
+  for(const room of LOCATION_LEVELS[hunt.zone].floors[0].rooms){
+   let slot=0;
+   for(const entry of room.spawns||[]){
+    if(entry.randomGroup&&(room.id===f.room||Object.hasOwn(f.rooms||{},room.id)||existing.some(m=>m.sourceRoom===room.id&&m.sourceRandomGroup===entry.randomGroup)||(f.respawns||[]).some(r=>r.room===room.id&&r.sourceSlot>=slot&&r.sourceSlot<slot+entry.count)))f.native.randomGroups[room.id+':'+entry.randomGroup]=-1;
+    slot+=entry.count;
+   }
+  }
   for(const bank of nativeFieldBuckets(f))bank.mobs=(bank.mobs||[]).filter(m=>{
    const key=m.sourceRoom+':'+m.sourceSlot;
    if(!placeNativeSpawn(m)){f.native.missing[key]='source_ground_unavailable';return false;}
@@ -58,7 +68,7 @@ export function activateNativeField(hunt,point,now){
   });
  }
  Object.assign(f,{x:point.x/ROOM_SIZE,y:point.y/ROOM_SIZE,path:[],walls:[],moveAt:now,seenAt:now});
- f.native.z=point.z;delete f.native.journey;delete f.native.nativeTrail;
+ f.native.z=point.z;f.native.nativeIsland=pilot.fields[hunt.zone]?.island||null;delete f.native.journey;delete f.native.nativeTrail;
  const nearest=LOCATION_LEVELS[hunt.zone].floors[0].rooms.flatMap(r=>(r.spawns||[]).map(s=>({room:r.id,distance:nativeSpawnDistance(point,s)}))).sort((a,b)=>a.distance-b.distance)[0];
  if(nearest&&nearest.room!==f.room){
   f.rooms[f.room]={mobs:f.mobs};f.mobs=f.rooms[nearest.room]?.mobs||[];delete f.rooms[nearest.room];f.room=nearest.room;
@@ -66,15 +76,20 @@ export function activateNativeField(hunt,point,now){
  return true;
 }
 /** Reuse original room/slot ownership for rewards and respawns; visual rooms own no copies. */
-export function syncNativePopulation(hunt,layout,now,populate){
+export function syncNativePopulation(hunt,layout,now,populate,random=Math.random){
  const f=hunt?.field;if(!f?.native)return false;
  const pending=new Set((f.respawns||[]).map(r=>r.room+':'+r.sourceSlot));
  for(const room of layout.rooms){
   let slot=0;
-  for(const source of room.spawns||[])for(let i=0;i<source.count;i++,slot++){
+  for(const [entryIndex,source] of (room.spawns||[]).entries())for(let i=0;i<source.count;i++,slot++){
    const key=room.id+':'+slot;
    if(f.native.loaded[key]||f.native.missing[key]||pending.has(key))continue;
    if(nativeSpawnDistance({x:f.x*ROOM_SIZE,y:f.y*ROOM_SIZE},source)>NATIVE_FIELD_RADIUS)continue;
+   if(source.randomGroup){
+    const groups=f.native.randomGroups||={},key=room.id+':'+source.randomGroup;
+    if(!Object.hasOwn(groups,key)){const entries=room.spawns.flatMap((s,index)=>s.randomGroup===source.randomGroup?[index]:[]);groups[key]=entries[Math.min(entries.length-1,Math.floor(random()*entries.length))];}
+    if(groups[key]!==entryIndex)continue;
+   }
    const bank=room.id===f.room?f:(f.rooms[room.id]||={mobs:[]});
    f.seq=(f.seq||0)+1;
    const [mob]=populate(room,slot,`${now}:native:${f.seq}`);
@@ -91,7 +106,9 @@ export function syncNativePopulation(hunt,layout,now,populate){
 }
 export function moveNativeActor(actor,target,now,speed){
  const from=nativeActorPoint(actor);if(!from||!target||![target.x,target.y].every(Number.isFinite))return {ok:false,reason:'invalid_move'};
- const goal={x:target.x*ROOM_SIZE,y:target.y*ROOM_SIZE,z:from.z};
+ // Combat targets are server-owned actors. Plain walking commands carry only
+ // XY, so a client cannot choose a floor by supplying a height.
+ const goal={x:target.x*ROOM_SIZE,y:target.y*ROOM_SIZE,z:Number.isFinite(target.native?.z)?target.native.z:from.z};
  if(Math.hypot(goal.x-from.x,goal.y-from.y)>8192)return {ok:false,reason:'path_blocked'};
  const plan=findNativePath(from,goal,{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true});
  if(!plan.ok)return plan;

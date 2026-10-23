@@ -7,6 +7,8 @@ import entries from '../template/nativeIslandEntries.js';
 import {worldAction,worldState,advanceWorld,ensureWorld,cityPoint,CITIES,LOCATIONS,CITY_NPCS} from '../functions/game/world/world.js';
 import {nativeSegment} from '../functions/game/world/nativeNavigation.js';
 import {nativeGroundAllowed} from '../functions/game/world/nativeGround.js';
+import {nativeWorldPoint} from '../functions/game/world/nativeTravel.js';
+import {nativeFieldBuckets} from '../functions/game/world/nativeFieldSpace.js';
 import {nativeTownHub} from '../functions/game/world/nativeTownGraph.js';
 import {ferryDock} from '../functions/game/world/ferryTravel.js';
 import {getHuntState} from '../miniapp/hunt.js';
@@ -18,7 +20,7 @@ import update from '../functions/game/player/updatePlayerStats.js';
 const NOW=1800000000000;
 function hero(){const s={userId:1,game:{stats:{lvl:85,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0}};change(s,'humanFighter');update(s);ensureWorld(s,NOW);const hub=nativeTownHub('rune');Object.assign(s.game.world,{city:'rune',z:hub.z},cityPoint(CITIES.find(c=>c.id==='rune'),hub));return s;}
 const quiet=field=>{for(const mob of [field,...Object.values(field.rooms||{})].flatMap(r=>r.mobs||[]))Object.assign(mob,{aggressive:false,aggro:false,nextAttackAt:NOW+1e12});};
-function walk(s,body,now){const result=worldAction(s,body,now);assert.equal(result.ok,true,result.reason);now=s.game.world.walkHome.until+1;advanceWorld(s,now);return now;}
+function walk(s,body,now){if(s.game.hunt?.field)quiet(s.game.hunt.field);const result=worldAction(s,body,now);assert.equal(result.ok,true,result.reason);now=(s.game.world.walkHome||s.game.hunt?.field?.native?.journey).until+1;advanceWorld(s,now);if(s.game.hunt?.field)quiet(s.game.hunt.field);return now;}
 function sail(s,id,now){if(!worldState(s,now).ferries.find(p=>p.id===id)?.nearVendor)now=walk(s,{action:'ferry_walk',port:id,stop:'vendor'},now);assert.equal(worldAction(s,{action:'ferry_ticket',port:id},now).ok,true);now=walk(s,{action:'ferry_walk',port:id,stop:'boarding'},now);now=ferryDock(id,now).dockAt+1000;assert.equal(worldAction(s,{action:'ferry_board',port:id},now).ok,true);now=s.game.world.walkHome.until;advanceWorld(s,now);return now;}
 test('Primeval uses the original wharf entrance, ticket names/icons/fees and reversible shore paths',()=>{
  const entry=entries['primeval-isle'],location=LOCATIONS.find(l=>l.id==='primeval-isle'),route=islands.routes['primeval-isle'];
@@ -35,21 +37,21 @@ test('the island requires a real landing; shore/field/save/shore round trips pre
  assert.equal(worldAction(s,{action:'walk_location',location:'primeval-isle'},now).reason,'location_path_required');
  assert.equal(worldAction(s,{action:'ferry_walk',port:'primeval-rune'},now).reason,'location_path_required');
  now=sail(s,'rune-primeval',now);s=JSON.parse(JSON.stringify(s));
- assert.equal(s.game.world.mode,'native');assert.equal(s.game.world.nativeIsland,'primeval-isle');assert.deepEqual(s.game.world.nativePosition,shores.routes['primeval-rune'].to);
- let dto=worldState(s,now);assert.deepEqual(dto.nativeWalkCities,[]);assert.deepEqual(dto.ferries.map(p=>p.id),['primeval-rune']);assert.equal(dto.nativeWalk['primeval-isle'].enabled,true);assert.equal(dto.nativeWalk['angel-waterfall'].enabled,false);
+ assert.equal(s.game.world.mode,'location');assert.equal(s.game.world.nativeIsland,'primeval-isle');assert.deepEqual(nativeWorldPoint(s),shores.routes['primeval-rune'].to);quiet(s.game.hunt.field);
+ let dto=worldState(s,now);assert.deepEqual(dto.nativeWalkCities,[]);assert.deepEqual(dto.ferries.map(p=>p.id),['primeval-rune']);assert.equal(dto.nativeWalk['primeval-isle'].enabled,false);assert.equal(dto.nativeWalk['angel-waterfall'].enabled,false);
  assert.equal(worldAction(s,{action:'native_walk_city',city:'rune'},now).reason,'location_path_required');
  assert.equal(worldAction(s,{action:'walk_location',location:'beast-farm'},now).reason,'location_path_required');
  assert.equal(worldAction(s,{action:'ferry_walk',port:'rune'},now).reason,'location_path_required');
  assert.equal(worldAction(s,{action:'native_move',point:{x:43824,y:-47664}},now).ok,false);
- now=walk(s,{action:'walk_location',location:'primeval-isle'},now);assert.equal(s.game.world.mode,'location');assert.equal(s.game.hunt.zone,'primeval-isle');
+ now=walk(s,{action:'native_move',point:islands.routes['primeval-isle'].to},now);assert.equal(s.game.world.mode,'location');assert.equal(s.game.hunt.zone,'primeval-isle');
  await getHuntState(s,now);quiet(s.game.hunt.field);let field=s.game.hunt.field;const mob=field.mobs[0];assert.ok(mob);mob.currentHp--;const id=mob.instanceId,hp=mob.currentHp;
- Object.assign(field,{room:'r0c0',floor:1,x:.1,y:.1});assert.equal(worldAction(s,{action:'walk_exit'},now).reason,'entrance_required');
- Object.assign(field,{x:.5,y:.95});now=walk(s,{action:'walk_exit'},now);assert.equal(s.game.world.mode,'native');assert.deepEqual(s.game.world.nativePosition,shores.routes['primeval-rune'].vendor);assert.equal(s.game.world.nativeIsland,'primeval-isle');
- assert.ok(s.game.world.nativeFields['primeval-isle']);s=JSON.parse(JSON.stringify(s));
- now=walk(s,{action:'walk_location',location:'primeval-isle'},now);await getHuntState(s,now);quiet(s.game.hunt.field);field=s.game.hunt.field;
- assert.equal(field.mobs.find(m=>m.instanceId===id)?.currentHp,hp);Object.assign(field,{room:'r0c0',floor:1,x:.5,y:.95});
+ now=walk(s,{action:'walk_exit'},now);assert.deepEqual(nativeWorldPoint(s),shores.routes['primeval-rune'].vendor);assert.equal(s.game.world.nativeIsland,'primeval-isle');
+ s=JSON.parse(JSON.stringify(s));
+ now=walk(s,{action:'native_move',point:islands.routes['primeval-isle'].to},now);await getHuntState(s,now);quiet(s.game.hunt.field);field=s.game.hunt.field;
+ assert.equal(nativeFieldBuckets(field).flatMap(b=>b.mobs||[]).find(m=>m.instanceId===id)?.currentHp,hp);
  now=walk(s,{action:'walk_exit'},now);now=sail(s,'primeval-rune',now);
  assert.equal(s.game.world.nativeIsland,null);assert.equal(s.game.world.mode,'native');assert.deepEqual(s.game.world.nativePosition,shores.routes['rune-primeval'].to);
+ assert.ok(s.game.world.nativeFields['primeval-isle'],'departure retains the island bank');
  now=walk(s,{action:'native_walk_city',city:'rune'},now);assert.equal(s.game.world.mode,'city');assert.equal(s.game.world.city,'rune');assert.equal(s.game.inventory.gold,925000);
  assert.equal(s.game.inventory.materials.l2_8924,0);assert.equal(s.game.inventory.materials.l2_8925,0);
 });
