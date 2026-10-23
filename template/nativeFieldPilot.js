@@ -699,6 +699,72 @@ export default {
     ]
   },
   "fields": {
+    "alligator-beach": {
+      "city": "heine",
+      "sourceGaps": [
+        {
+          "kind": "territory",
+          "zone": "alligator-beach",
+          "npcId": "20314",
+          "count": 3,
+          "sourceFile": "spawns/Innadril/AlligatorBeach.xml",
+          "sourceGroup": "innadril01_qm2324_01",
+          "polygon": [
+            [
+              106252,
+              197068
+            ],
+            [
+              106452,
+              197068
+            ],
+            [
+              106452,
+              197268
+            ],
+            [
+              106252,
+              197268
+            ]
+          ],
+          "minZ": -4236,
+          "maxZ": -4036,
+          "rejected": {
+            "swimming_required": 100
+          },
+          "issues": [
+            "swimming_required"
+          ]
+        }
+      ],
+      "fixedCount": 0,
+      "territoryCount": 141,
+      "randomGroupCount": 0,
+      "initialCapacity": 141,
+      "unavailableCount": 3,
+      "availableCapacity": 138,
+      "npcIds": [
+        "20135",
+        "20314",
+        "20784",
+        "20785",
+        "20786",
+        "20787",
+        "20789",
+        "20790",
+        "20791",
+        "20792",
+        "20793",
+        "21639",
+        "21640",
+        "21642",
+        "21643",
+        "21644",
+        "21645"
+      ],
+      "count": 141,
+      "unportedMinionTemplates": []
+    },
     "field-of-silence": {
       "city": "heine",
       "sourceGaps": [
@@ -1895,12 +1961,14 @@ export default {
       "stats/npcs/21200-21299.xml": "b81ef77a5bf329d25289d900577e0b577ce5f0d64e6b0477c19df81a8ffd4dc4",
       "stats/npcs/21300-21399.xml": "c29ed0ab6ffe217c9a9fb1daf2d19f72490ed02a9f9311f77637ea66ea5901c9",
       "stats/npcs/21500-21599.xml": "2e3d3d1519d13f1bfbbf4a2bdbba852cda25912d384021ae9d099462c7ba5645",
+      "stats/npcs/21600-21699.xml": "59863b0873fb8dbd1a1d3cdc129322b524b08cc26ae5eb5b753f6db21a5a5169",
       "stats/npcs/22000-22099.xml": "99c9046f0c240f8de7fd4ed5737b65db17b8ee049aa6a496d09ce60be506e624",
       "stats/npcs/22100-22199.xml": "301a34e4583c40d825dcde4c5e5feaaed6e55545be6c562f6b94e3537dd46a8b",
       "stats/npcs/22200-22299.xml": "4337264b4357a8f29568b11cedac58d030bfee7f2f0a3e91b69fc74ef43464b3",
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Innadril/AlligatorBeach.xml": "7cd9c497405ec5931dd94f40ce5a9eddfcf094298b740d01ae71a9b8c53d7991",
       "spawns/Oren/SelMahums.xml": "dc73abf212503f4bcd5e2e9dc70ac00c16cd85370b4b337d712ddf67dd77384e",
       "spawns/Rune/PrimevalIsle.xml": "83b56f39ab13c0c29f7ff35f1b2424251e8d5ae4ed93b168b9ad219397a80c8b",
       "spawns/Goddard/VarkaSlenosOutpost.xml": "d21b21092a5eff89e7d1960db16c825438bb110230104382b86a99e67b0b1629",
@@ -2127,6 +2195,10 @@ export default {
       "runSpeed": 174.0,
       "attackRange": 40.0
     },
+    "20135": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
     "20146": {
       "runSpeed": 174.0,
       "attackRange": 40.0
@@ -2281,6 +2353,10 @@ export default {
     },
     "20308": {
       "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "20314": {
+      "runSpeed": 174.0,
       "attackRange": 40.0
     },
     "20321": {
@@ -2672,6 +2748,42 @@ export default {
       "attackRange": 40.0
     },
     "20781": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20784": {
+      "runSpeed": 140.0,
+      "attackRange": 1100.0
+    },
+    "20785": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "20786": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "20787": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20789": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20790": {
+      "runSpeed": 174.0,
+      "attackRange": 1100.0
+    },
+    "20791": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20792": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20793": {
       "runSpeed": 174.0,
       "attackRange": 40.0
     },
@@ -3269,6 +3381,30 @@ export default {
     },
     "21544": {
       "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "21639": {
+      "runSpeed": 140.0,
+      "attackRange": 1100.0
+    },
+    "21640": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "21642": {
+      "runSpeed": 140.0,
+      "attackRange": 1100.0
+    },
+    "21643": {
+      "runSpeed": 140.0,
+      "attackRange": 1100.0
+    },
+    "21644": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "21645": {
+      "runSpeed": 174.0,
       "attackRange": 40.0
     },
     "22080": {
