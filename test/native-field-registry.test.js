@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {worldAction,advanceWorld,worldState} from '../functions/game/world/world.js';
-import {nativeFieldBuckets,nativeActorPoint,placeNativeActor} from '../functions/game/world/nativeFieldSpace.js';
+import {nativeFieldBuckets,nativeActorPoint,placeNativeActor,nativeSourceGap} from '../functions/game/world/nativeFieldSpace.js';
 import {sampleNativeTerritory,nativeTerritorySource} from '../functions/game/world/nativeSpawnTerritory.js';
 import {pointInPolygon} from '../functions/game/world/navigation.js';
 import {LOCATION_LEVELS} from '../template/locationLevels.js';
@@ -31,7 +31,8 @@ for(const [zone,meta]of Object.entries(registry.fields)){
  test(`${zone}: source ground spawns, bounded DTO, saved ownership and physical city return`,()=>{
   const slots=LOCATION_LEVELS[zone].floors[0].rooms.flatMap(r=>r.spawns||[]);
   assert.equal(slots.reduce((n,s)=>n+s.count,0),meta.count);
-  for(const slot of slots){const actor={},position=slot.coordinateSource==='point'?slot:sampleNativeTerritory(nativeTerritorySource(zone,slot));assert.ok(position);assert.equal(placeNativeActor(actor,position),true,`${zone} ${slot.id} ${slot.x},${slot.y},${slot.z}`);
+  assert.equal(slots.filter(s=>nativeSourceGap(zone,s)).reduce((n,s)=>n+s.count,0),meta.unavailableCount||0);
+  for(const slot of slots){const actor={},position=slot.coordinateSource==='point'?slot:sampleNativeTerritory(nativeTerritorySource(zone,slot));if(nativeSourceGap(zone,slot)){assert.equal(Boolean(position&&placeNativeActor(actor,position)),false,'documented gaps must still fail closed');continue;}assert.ok(position);assert.equal(placeNativeActor(actor,position),true,`${zone} ${slot.id} ${slot.x},${slot.y},${slot.z}`);
    const point=nativeActorPoint(actor);if(slot.coordinateSource==='point'){assert.equal(point.x,slot.x);assert.equal(point.y,slot.y);assert.ok(Math.abs(point.z-slot.z)<300);}
    else {assert.ok(pointInPolygon(point,slot.polygon));assert.ok(point.z<=slot.maxZ);}
    assert.ok(registry.actors[slot.id].runSpeed>0);assert.ok(registry.actors[slot.id].attackRange>0);

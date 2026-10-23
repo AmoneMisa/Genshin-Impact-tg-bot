@@ -11,6 +11,8 @@ import {nativeSpawnDistance,sampleNativeTerritory} from './nativeSpawnTerritory.
 // A residency budget, not a monster aggression/leash range. Public DTOs are capped separately.
 export const NATIVE_FIELD_RADIUS=8192;
 export const nativeFieldSupported=id=>Object.hasOwn(pilot.fields,id);
+/** A documented source gap is never a permission to move or replace that spawn. */
+export const nativeSourceGap=(zone,spawn)=>pilot.fields[zone]?.sourceGaps?.find(g=>g.npcId===spawn.id&&(g.kind==='point'?spawn.coordinateSource==='point'&&['x','y','z'].every(k=>g.source[k]===spawn[k]):spawn.coordinateSource!=='point'&&g.sourceGroup===spawn.sourceGroup&&g.sourceFile===(spawn.sourceFile||spawn.file)))||null;
 const sourceSpawns=Object.fromEntries(Object.keys(pilot.fields).map(id=>[id,LOCATION_LEVELS[id].floors[0].rooms.flatMap(r=>r.spawns||[])]));
 const allSourceSpawns=Object.values(sourceSpawns).flat();
 export const nativeFieldNear=(point,id)=>Boolean(point&&(id?sourceSpawns[id]||[]:allSourceSpawns).some(s=>nativeSpawnDistance(point,s)<=NATIVE_FIELD_RADIUS));

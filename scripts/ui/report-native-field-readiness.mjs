@@ -32,18 +32,19 @@ const rows=zones.map(zone=>{
   blocked.push({zone:zone.id,npcId:source.id,source:{x:source.x,y:source.y,z:source.z},sourceFile:source.file||source.sourceFile||null,ground,issues:[...new Set(issues.filter(Boolean))]});
  }
  const supported=Object.hasOwn(registry.fields,zone.id),route=Boolean(routes.routes[zone.id]?.available);
- const state=supported?'Мировой бой подключён':!route?'Нужен отдельный островной или сценарный вход':invalid.length?'Есть неподтверждённые наземные спавны':blockedAreas.some(a=>a.zone===zone.id)?'Ограниченный поиск наземных точек не прошёл проверку':areas.length?'Проверка и перенос исходного населения':unknown.length||!slots.length?'Нет подтверждённого исходного размещения':'Фиксированные точки готовы к переносу';
+ const state=supported?(registry.fields[zone.id].unavailableCount?'Подключён частично: недоступно '+registry.fields[zone.id].unavailableCount+' исходных мест':'Мировой бой подключён'):!route?'Нужен отдельный островной или сценарный вход':invalid.length?'Есть неподтверждённые наземные спавны':blockedAreas.some(a=>a.zone===zone.id)?'Ограниченный поиск наземных точек не прошёл проверку':areas.length?'Проверка и перенос исходного населения':unknown.length||!slots.length?'Нет подтверждённого исходного размещения':'Фиксированные точки готовы к переносу';
  return {id:zone.id,name:zone.title||zone.name||zone.id,route,islandRoute:Boolean(islands.routes[zone.id]?.available),fixed:count(fixed),validFixed:count(fixed)-count(invalid),areas:count(areas),unknown:count(unknown),state};
 });
 const issues=Object.fromEntries(Object.keys(names).map(key=>[key,blocked.filter(b=>b.issues.includes(key)).length]).filter(([,n])=>n));
-fs.writeFileSync('docs/native-field-readiness.json',JSON.stringify({sourceCommit:registry.source.commit,geodataCommit:worldGeodata.manifest.commit,zoneCount:zones.length,nativeFieldCount:Object.keys(registry.fields).length,zones:rows,blocked,blockedAreas},null,2)+'\n');
+const partial=Object.values(registry.fields).filter(f=>f.unavailableCount).length;
+fs.writeFileSync('docs/native-field-readiness.json',JSON.stringify({sourceCommit:registry.source.commit,geodataCommit:worldGeodata.manifest.commit,zoneCount:zones.length,nativeFieldCount:Object.keys(registry.fields).length,partialNativeFieldCount:partial,zones:rows,blocked,blockedAreas},null,2)+'\n');
 fs.writeFileSync('docs/native-field-readiness.md',[
  '# Следующие участки мировой карты','',
- `Аудит **${zones.length}** наземных зон текущего каталога. Мировой бой подключён у **${Object.keys(registry.fields).length}** участков; [реестр и проверенные позиции](native-field-registry.md). Наличие адаптированных комнат, картинки или дороги не считается переносом населения в мировые координаты.`, '',
+ `Аудит **${zones.length}** наземных зон текущего каталога. Мировой бой подключён у **${Object.keys(registry.fields).length}** участков, из них **${partial}** частично, с явно перечисленными недоступными спавнами; [реестр и проверенные позиции](native-field-registry.md). Наличие адаптированных комнат, картинки или дороги не считается переносом населения в мировые координаты.`, '',
  '| Зона | Наземный подход | Подтверждено фиксированных позиций | Количество в исходных областях | Без подтверждённого размещения | Следующий этап |','| --- | --- | ---: | ---: | ---: | --- |',
  ...rows.map(r=>`| ${r.name} | ${r.islandRoute?'От островного причала':r.route?'Да':'Нет'} | ${r.validFixed}/${r.fixed} | ${r.areas} | ${r.unknown} | ${r.state} |`),'',
  '## Фиксированные точки, не допускаемые текущим наземным движком','',
- `В ещё не перенесённых зонах обнаружено **${blocked.length}** таких записей. Все исходные XYZ, NPC, файлы, найденные слои и причины доступны в [машиночитаемой сверке](native-field-readiness.json). Одна запись может иметь несколько причин.`, '',
+ `Обнаружено **${blocked.length}** таких исходных записей, включая частично подключённые зоны. Все исходные XYZ, NPC, файлы, найденные слои и причины доступны в [машиночитаемой сверке](native-field-readiness.json). Одна запись может иметь несколько причин.`, '',
  '| Причина | Записей |','| --- | ---: |',...Object.entries(issues).map(([key,n])=>`| ${names[key]} | ${n} |`),'',
  '## Области с исчерпанным наземным поиском','',
  '| Зона / исходная группа | NPC | Мест | Причины отклонённых геопроб |','| --- | ---: | ---: | --- |',

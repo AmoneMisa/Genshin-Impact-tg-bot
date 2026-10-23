@@ -699,6 +699,113 @@ export default {
     ]
   },
   "fields": {
+    "sel-mahums": {
+      "city": "oren",
+      "sourceGaps": [
+        {
+          "kind": "point",
+          "zone": "sel-mahums",
+          "npcId": "22788",
+          "source": {
+            "x": 78990,
+            "y": 62250,
+            "z": -3335
+          },
+          "sourceFile": "spawns/Oren/SelMahums.xml",
+          "ground": {
+            "x": 78990,
+            "y": 62250,
+            "z": -3648,
+            "nswe": 15
+          },
+          "issues": [
+            "spawn_height_gap"
+          ]
+        },
+        {
+          "kind": "point",
+          "zone": "sel-mahums",
+          "npcId": "22787",
+          "source": {
+            "x": 84698,
+            "y": 61874,
+            "z": -3148
+          },
+          "sourceFile": "spawns/Oren/SelMahums.xml",
+          "ground": {
+            "x": 84698,
+            "y": 61874,
+            "z": -3448,
+            "nswe": 15
+          },
+          "issues": [
+            "spawn_height_gap"
+          ]
+        },
+        {
+          "kind": "point",
+          "zone": "sel-mahums",
+          "npcId": "22786",
+          "source": {
+            "x": 86075,
+            "y": 67510,
+            "z": -3375
+          },
+          "sourceFile": "spawns/Oren/SelMahums.xml",
+          "ground": {
+            "x": 86075,
+            "y": 67510,
+            "z": -3072,
+            "nswe": 15
+          },
+          "issues": [
+            "spawn_height_gap"
+          ]
+        },
+        {
+          "kind": "point",
+          "zone": "sel-mahums",
+          "npcId": "22787",
+          "source": {
+            "x": 82730,
+            "y": 69303,
+            "z": -3576
+          },
+          "sourceFile": "spawns/Oren/SelMahums.xml",
+          "ground": {
+            "x": 82730,
+            "y": 69303,
+            "z": -3120,
+            "nswe": 15
+          },
+          "issues": [
+            "spawn_height_gap"
+          ]
+        }
+      ],
+      "fixedCount": 868,
+      "territoryCount": 0,
+      "randomGroupCount": 0,
+      "initialCapacity": 868,
+      "unavailableCount": 4,
+      "availableCapacity": 864,
+      "npcIds": [
+        "18908",
+        "22775",
+        "22776",
+        "22778",
+        "22780",
+        "22782",
+        "22783",
+        "22784",
+        "22785",
+        "22786",
+        "22787",
+        "22788"
+      ],
+      "count": 868,
+      "unportedMinionTemplates": []
+    },
     "primeval-isle": {
       "city": "rune",
       "island": "primeval-isle",
@@ -706,6 +813,8 @@ export default {
       "territoryCount": 710,
       "randomGroupCount": 22,
       "initialCapacity": 672,
+      "unavailableCount": 0,
+      "availableCapacity": 672,
       "npcIds": [
         "18344",
         "18345",
@@ -754,6 +863,8 @@ export default {
       "territoryCount": 275,
       "randomGroupCount": 0,
       "initialCapacity": 275,
+      "unavailableCount": 0,
+      "availableCapacity": 275,
       "npcIds": [
         "21350",
         "21351",
@@ -791,6 +902,8 @@ export default {
       "territoryCount": 393,
       "randomGroupCount": 0,
       "initialCapacity": 393,
+      "unavailableCount": 0,
+      "availableCapacity": 393,
       "npcIds": [
         "21324",
         "21325",
@@ -828,6 +941,8 @@ export default {
       "territoryCount": 321,
       "randomGroupCount": 0,
       "initialCapacity": 321,
+      "unavailableCount": 0,
+      "availableCapacity": 321,
       "npcIds": [
         "21294",
         "21295",
@@ -860,6 +975,8 @@ export default {
       "territoryCount": 175,
       "randomGroupCount": 0,
       "initialCapacity": 175,
+      "unavailableCount": 0,
+      "availableCapacity": 175,
       "npcIds": [
         "21314",
         "21315",
@@ -881,6 +998,8 @@ export default {
       "territoryCount": 490,
       "randomGroupCount": 0,
       "initialCapacity": 490,
+      "unavailableCount": 0,
+      "availableCapacity": 490,
       "npcIds": [
         "21508",
         "21509",
@@ -905,6 +1024,8 @@ export default {
       "territoryCount": 385,
       "randomGroupCount": 0,
       "initialCapacity": 385,
+      "unavailableCount": 0,
+      "availableCapacity": 385,
       "npcIds": [
         "20676",
         "20677",
@@ -930,6 +1051,8 @@ export default {
       "territoryCount": 460,
       "randomGroupCount": 0,
       "initialCapacity": 460,
+      "unavailableCount": 0,
+      "availableCapacity": 460,
       "npcIds": [
         "20674",
         "20974",
@@ -955,6 +1078,8 @@ export default {
       "territoryCount": 39,
       "randomGroupCount": 0,
       "initialCapacity": 543,
+      "unavailableCount": 0,
+      "availableCapacity": 543,
       "npcIds": [
         "18001",
         "20134",
@@ -997,6 +1122,8 @@ export default {
       "territoryCount": 200,
       "randomGroupCount": 0,
       "initialCapacity": 200,
+      "unavailableCount": 0,
+      "availableCapacity": 200,
       "npcIds": [
         "20965",
         "20966",
@@ -1017,6 +1144,8 @@ export default {
       "territoryCount": 387,
       "randomGroupCount": 0,
       "initialCapacity": 558,
+      "unavailableCount": 0,
+      "availableCapacity": 558,
       "npcIds": [
         "20003",
         "20004",
@@ -1049,6 +1178,8 @@ export default {
       "territoryCount": 861,
       "randomGroupCount": 0,
       "initialCapacity": 861,
+      "unavailableCount": 0,
+      "availableCapacity": 861,
       "npcIds": [
         "20013",
         "20019",
@@ -1080,6 +1211,8 @@ export default {
       "territoryCount": 442,
       "randomGroupCount": 0,
       "initialCapacity": 442,
+      "unavailableCount": 0,
+      "availableCapacity": 442,
       "npcIds": [
         "20006",
         "20016",
@@ -1112,6 +1245,8 @@ export default {
       "territoryCount": 276,
       "randomGroupCount": 0,
       "initialCapacity": 276,
+      "unavailableCount": 0,
+      "availableCapacity": 276,
       "npcIds": [
         "20494",
         "20495",
@@ -1132,6 +1267,8 @@ export default {
       "territoryCount": 311,
       "randomGroupCount": 0,
       "initialCapacity": 311,
+      "unavailableCount": 0,
+      "availableCapacity": 311,
       "npcIds": [
         "21520",
         "21521",
@@ -1163,6 +1300,8 @@ export default {
       "territoryCount": 383,
       "randomGroupCount": 0,
       "initialCapacity": 383,
+      "unavailableCount": 0,
+      "availableCapacity": 383,
       "npcIds": [
         "20589",
         "20590",
@@ -1185,6 +1324,8 @@ export default {
       "territoryCount": 392,
       "randomGroupCount": 0,
       "initialCapacity": 392,
+      "unavailableCount": 0,
+      "availableCapacity": 392,
       "npcIds": [
         "20666",
         "20668",
@@ -1206,6 +1347,8 @@ export default {
       "territoryCount": 255,
       "randomGroupCount": 0,
       "initialCapacity": 255,
+      "unavailableCount": 0,
+      "availableCapacity": 255,
       "npcIds": [
         "20161",
         "20241",
@@ -1224,6 +1367,8 @@ export default {
       "territoryCount": 173,
       "randomGroupCount": 0,
       "initialCapacity": 173,
+      "unavailableCount": 0,
+      "availableCapacity": 173,
       "npcIds": [
         "20681",
         "20682",
@@ -1241,6 +1386,8 @@ export default {
       "territoryCount": 206,
       "randomGroupCount": 0,
       "initialCapacity": 206,
+      "unavailableCount": 0,
+      "availableCapacity": 206,
       "npcIds": [
         "20555",
         "20556",
@@ -1260,6 +1407,8 @@ export default {
       "territoryCount": 266,
       "randomGroupCount": 0,
       "initialCapacity": 266,
+      "unavailableCount": 0,
+      "availableCapacity": 266,
       "npcIds": [
         "20583",
         "20584",
@@ -1280,6 +1429,8 @@ export default {
       "territoryCount": 369,
       "randomGroupCount": 0,
       "initialCapacity": 369,
+      "unavailableCount": 0,
+      "availableCapacity": 369,
       "npcIds": [
         "20928",
         "20929",
@@ -1299,6 +1450,8 @@ export default {
       "territoryCount": 107,
       "randomGroupCount": 0,
       "initialCapacity": 107,
+      "unavailableCount": 0,
+      "availableCapacity": 107,
       "npcIds": [
         "20199",
         "20267",
@@ -1316,6 +1469,8 @@ export default {
       "territoryCount": 0,
       "randomGroupCount": 0,
       "initialCapacity": 75,
+      "unavailableCount": 0,
+      "availableCapacity": 75,
       "npcIds": [
         "20009",
         "20011",
@@ -1332,6 +1487,8 @@ export default {
       "territoryCount": 0,
       "randomGroupCount": 0,
       "initialCapacity": 49,
+      "unavailableCount": 0,
+      "availableCapacity": 49,
       "npcIds": [
         "20643",
         "20644",
@@ -1346,6 +1503,8 @@ export default {
       "territoryCount": 0,
       "randomGroupCount": 0,
       "initialCapacity": 375,
+      "unavailableCount": 0,
+      "availableCapacity": 375,
       "npcIds": [
         "20015",
         "20020",
@@ -1364,6 +1523,8 @@ export default {
       "territoryCount": 0,
       "randomGroupCount": 0,
       "initialCapacity": 222,
+      "unavailableCount": 0,
+      "availableCapacity": 222,
       "npcIds": [
         "22703",
         "22704",
@@ -1379,6 +1540,8 @@ export default {
       "territoryCount": 0,
       "randomGroupCount": 0,
       "initialCapacity": 237,
+      "unavailableCount": 0,
+      "availableCapacity": 237,
       "npcIds": [
         "22691",
         "22692",
@@ -1405,6 +1568,8 @@ export default {
       "territoryCount": 0,
       "randomGroupCount": 0,
       "initialCapacity": 283,
+      "unavailableCount": 0,
+      "availableCapacity": 283,
       "npcIds": [
         "22080",
         "22081",
@@ -1436,6 +1601,8 @@ export default {
       "territoryCount": 0,
       "randomGroupCount": 0,
       "initialCapacity": 311,
+      "unavailableCount": 0,
+      "availableCapacity": 311,
       "npcIds": [
         "22768",
         "22769",
@@ -1454,6 +1621,8 @@ export default {
       "territoryCount": 0,
       "randomGroupCount": 0,
       "initialCapacity": 594,
+      "unavailableCount": 0,
+      "availableCapacity": 594,
       "npcIds": [
         "22650",
         "22651",
@@ -1473,6 +1642,8 @@ export default {
       "territoryCount": 0,
       "randomGroupCount": 0,
       "initialCapacity": 355,
+      "unavailableCount": 0,
+      "availableCapacity": 355,
       "npcIds": [
         "18873",
         "18880",
@@ -1490,6 +1661,8 @@ export default {
       "territoryCount": 414,
       "randomGroupCount": 0,
       "initialCapacity": 414,
+      "unavailableCount": 0,
+      "availableCapacity": 414,
       "npcIds": [
         "20157",
         "20225",
@@ -1512,6 +1685,8 @@ export default {
       "territoryCount": 268,
       "randomGroupCount": 0,
       "initialCapacity": 268,
+      "unavailableCount": 0,
+      "availableCapacity": 268,
       "npcIds": [
         "20068",
         "20168",
@@ -1555,6 +1730,7 @@ export default {
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Oren/SelMahums.xml": "dc73abf212503f4bcd5e2e9dc70ac00c16cd85370b4b337d712ddf67dd77384e",
       "spawns/Rune/PrimevalIsle.xml": "83b56f39ab13c0c29f7ff35f1b2424251e8d5ae4ed93b168b9ad219397a80c8b",
       "spawns/Goddard/VarkaSlenosOutpost.xml": "d21b21092a5eff89e7d1960db16c825438bb110230104382b86a99e67b0b1629",
       "spawns/Goddard/KetraOrcOutpost.xml": "5323860f03a61278f7e5bdc03867099d1d341456f61ab1dfafbda797e71fcd87",
@@ -1630,6 +1806,10 @@ export default {
     },
     "18907": {
       "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "18908": {
+      "runSpeed": 120.0,
       "attackRange": 40.0
     },
     "20003": {
@@ -3145,6 +3325,50 @@ export default {
       "attackRange": 40.0
     },
     "22774": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22775": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22776": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22778": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22780": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22782": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22783": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22784": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22785": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22786": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22787": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22788": {
       "runSpeed": 150.0,
       "attackRange": 40.0
     },

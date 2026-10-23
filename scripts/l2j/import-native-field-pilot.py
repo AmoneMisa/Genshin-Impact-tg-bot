@@ -8,6 +8,7 @@ from pathlib import Path
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
 fields={
+    'sel-mahums': {'city': 'oren', 'sourceGaps': [{'kind': 'point', 'zone': 'sel-mahums', 'npcId': '22788', 'source': {'x': 78990, 'y': 62250, 'z': -3335}, 'sourceFile': 'spawns/Oren/SelMahums.xml', 'ground': {'x': 78990, 'y': 62250, 'z': -3648, 'nswe': 15}, 'issues': ['spawn_height_gap']}, {'kind': 'point', 'zone': 'sel-mahums', 'npcId': '22787', 'source': {'x': 84698, 'y': 61874, 'z': -3148}, 'sourceFile': 'spawns/Oren/SelMahums.xml', 'ground': {'x': 84698, 'y': 61874, 'z': -3448, 'nswe': 15}, 'issues': ['spawn_height_gap']}, {'kind': 'point', 'zone': 'sel-mahums', 'npcId': '22786', 'source': {'x': 86075, 'y': 67510, 'z': -3375}, 'sourceFile': 'spawns/Oren/SelMahums.xml', 'ground': {'x': 86075, 'y': 67510, 'z': -3072, 'nswe': 15}, 'issues': ['spawn_height_gap']}, {'kind': 'point', 'zone': 'sel-mahums', 'npcId': '22787', 'source': {'x': 82730, 'y': 69303, 'z': -3576}, 'sourceFile': 'spawns/Oren/SelMahums.xml', 'ground': {'x': 82730, 'y': 69303, 'z': -3120, 'nswe': 15}, 'issues': ['spawn_height_gap']}]},
     'primeval-isle': {'city': 'rune', 'island': 'primeval-isle'},
     'varka-outpost': {'city': 'goddard'},
     'ketra-outpost': {'city': 'goddard'},
@@ -71,6 +72,12 @@ for id,field in fields.items():
                 key=room['id']+':'+s['randomGroup'];random_groups[key]=max(random_groups.get(key,0),s['count'])
             else:capacity+=s['count']
     field['randomGroupCount']=len(random_groups);field['initialCapacity']=capacity+sum(random_groups.values())
+    field['unavailableCount']=0
+    for gap in field.get('sourceGaps',[]):
+        matches=[s for s in slots if s['id']==gap['npcId'] and ((s['coordinateSource']=='point' and all(s[k]==gap['source'][k] for k in ['x','y','z'])) if gap['kind']=='point' else s.get('sourceGroup')==gap['sourceGroup'] and (s.get('sourceFile') or s.get('file'))==gap['sourceFile'])]
+        assert len(matches)==1,'Source gap must identify one exact original record'
+        field['unavailableCount']+=matches[0]['count']
+    field['availableCapacity']=field['initialCapacity']-field['unavailableCount']
     field['npcIds']=sorted({s['id'] for s in slots});field['count']=sum(s['count'] for s in slots);ids.update(field['npcIds'])
 actors={};files={};minions={}
 for file in sorted({f'stats/npcs/{int(id)//100*100}-{int(id)//100*100+99}.xml' for id in ids}):
