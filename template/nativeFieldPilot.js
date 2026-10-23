@@ -699,6 +699,113 @@ export default {
     ]
   },
   "fields": {
+    "forsaken-plains": {
+      "city": "aden",
+      "sourceGaps": [
+        {
+          "kind": "point",
+          "zone": "forsaken-plains",
+          "npcId": "21017",
+          "source": {
+            "x": 166634,
+            "y": 34096,
+            "z": -4044
+          },
+          "sourceFile": "spawns/Others/25_19.xml",
+          "ground": {
+            "x": 166634,
+            "y": 34096,
+            "z": -3376,
+            "nswe": 7
+          },
+          "issues": [
+            "spawn_height_gap"
+          ]
+        },
+        {
+          "kind": "point",
+          "zone": "forsaken-plains",
+          "npcId": "20679",
+          "source": {
+            "x": 165042,
+            "y": 44228,
+            "z": -3860
+          },
+          "sourceFile": "spawns/Others/25_19.xml",
+          "ground": {
+            "x": 165042,
+            "y": 44228,
+            "z": -3544,
+            "nswe": 15
+          },
+          "issues": [
+            "spawn_height_gap"
+          ]
+        },
+        {
+          "kind": "point",
+          "zone": "forsaken-plains",
+          "npcId": "21018",
+          "source": {
+            "x": 165713,
+            "y": 50008,
+            "z": -4216
+          },
+          "sourceFile": "spawns/Others/25_19.xml",
+          "ground": {
+            "x": 165713,
+            "y": 50008,
+            "z": -3808,
+            "nswe": 15
+          },
+          "issues": [
+            "spawn_height_gap"
+          ]
+        },
+        {
+          "kind": "point",
+          "zone": "forsaken-plains",
+          "npcId": "21020",
+          "source": {
+            "x": 186579,
+            "y": 37084,
+            "z": -4059
+          },
+          "sourceFile": "spawns/Others/25_19.xml",
+          "ground": {
+            "x": 186579,
+            "y": 37084,
+            "z": -4152,
+            "nswe": 15
+          },
+          "issues": [
+            "holding_region_required"
+          ]
+        }
+      ],
+      "fixedCount": 132,
+      "territoryCount": 125,
+      "randomGroupCount": 0,
+      "initialCapacity": 257,
+      "unavailableCount": 4,
+      "availableCapacity": 253,
+      "npcIds": [
+        "20675",
+        "20676",
+        "20677",
+        "20678",
+        "20679",
+        "20680",
+        "21017",
+        "21018",
+        "21019",
+        "21020",
+        "21021",
+        "21022"
+      ],
+      "count": 257,
+      "unportedMinionTemplates": []
+    },
     "sel-mahums": {
       "city": "oren",
       "sourceGaps": [
@@ -2460,6 +2567,14 @@ export default {
       "runSpeed": 174.0,
       "attackRange": 40.0
     },
+    "20679": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20680": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
     "20681": {
       "runSpeed": 174.0,
       "attackRange": 40.0
@@ -2621,6 +2736,30 @@ export default {
       "attackRange": 80.0
     },
     "21010": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21017": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21018": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21019": {
+      "runSpeed": 174.0,
+      "attackRange": 1100.0
+    },
+    "21020": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21021": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21022": {
       "runSpeed": 174.0,
       "attackRange": 40.0
     },

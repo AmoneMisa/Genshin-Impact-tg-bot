@@ -2,8 +2,8 @@
   "sourceCommit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
   "zoneCount": 39,
-  "nativeFieldCount": 35,
-  "partialNativeFieldCount": 1,
+  "nativeFieldCount": 36,
+  "partialNativeFieldCount": 2,
   "zones": [
     {
       "id": "talking-island",
@@ -212,7 +212,7 @@
       "validFixed": 128,
       "areas": 125,
       "unknown": 0,
-      "state": "Есть неподтверждённые наземные спавны"
+      "state": "Подключён частично: недоступно 4 исходных мест"
     },
     {
       "id": "frozen-labyrinth",
