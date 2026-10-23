@@ -2,4 +2,4 @@
 *.sh text eol=lf
 
 # Pinned Java references retain original SHA-256 bytes, including trailing spaces.
-art-source/geodata/**/*.java text eol=lf whitespace=-blank-at-eol
+art-source/geodata/**/*.java -text whitespace=-blank-at-eol
