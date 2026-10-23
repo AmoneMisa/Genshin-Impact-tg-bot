@@ -699,6 +699,70 @@ export default {
     ]
   },
   "fields": {
+    "field-of-silence": {
+      "city": "heine",
+      "sourceGaps": [
+        {
+          "kind": "point",
+          "zone": "field-of-silence",
+          "npcId": "22651",
+          "source": {
+            "x": 75897,
+            "y": 189168,
+            "z": -3448
+          },
+          "sourceFile": "spawns/Innadril/FieldOfSilence.xml",
+          "ground": {
+            "x": 75897,
+            "y": 189168,
+            "z": -3448,
+            "nswe": 7
+          },
+          "issues": [
+            "holding_region_required"
+          ]
+        },
+        {
+          "kind": "point",
+          "zone": "field-of-silence",
+          "npcId": "22651",
+          "source": {
+            "x": 78995,
+            "y": 190581,
+            "z": -3784
+          },
+          "sourceFile": "spawns/Innadril/FieldOfSilence.xml",
+          "ground": {
+            "x": 78995,
+            "y": 190581,
+            "z": -3784,
+            "nswe": 15
+          },
+          "issues": [
+            "swimming_required"
+          ]
+        }
+      ],
+      "fixedCount": 514,
+      "territoryCount": 0,
+      "randomGroupCount": 0,
+      "initialCapacity": 514,
+      "unavailableCount": 2,
+      "availableCapacity": 512,
+      "npcIds": [
+        "20781",
+        "22650",
+        "22651",
+        "22652",
+        "22653",
+        "22654",
+        "22655",
+        "22656",
+        "22657"
+      ],
+      "count": 514,
+      "unportedMinionTemplates": []
+    },
     "forsaken-plains": {
       "city": "aden",
       "sourceGaps": [
@@ -2607,6 +2671,10 @@ export default {
       "runSpeed": 174.0,
       "attackRange": 40.0
     },
+    "20781": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
     "20928": {
       "runSpeed": 120.0,
       "attackRange": 40.0
@@ -3361,6 +3429,14 @@ export default {
     },
     "22655": {
       "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "22656": {
+      "runSpeed": 185.0,
+      "attackRange": 40.0
+    },
+    "22657": {
+      "runSpeed": 185.0,
       "attackRange": 40.0
     },
     "22658": {

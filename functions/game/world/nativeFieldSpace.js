@@ -112,7 +112,7 @@ export function moveNativeActor(actor,target,now,speed){
  // XY, so a client cannot choose a floor by supplying a height.
  const goal={x:target.x*ROOM_SIZE,y:target.y*ROOM_SIZE,z:Number.isFinite(target.native?.z)?target.native.z:from.z};
  if(Math.hypot(goal.x-from.x,goal.y-from.y)>8192)return {ok:false,reason:'path_blocked'};
- const plan=findNativePath(from,goal,{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true});
+ const plan=findNativePath(from,goal,{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true,heuristicWeight:2});
  if(!plan.ok)return plan;
  const trip=createNativeJourney(plan.start,plan.path,{now,speed});
  if(!trip)return {ok:false,reason:'path_blocked'};
