@@ -48,6 +48,17 @@ export class L2jRegion{
   }
   return result;
  }
+ losCell(x,y,z){
+  const raw=this.cell(x,y,z);if(!raw)return null;
+  const offset=this.offsets[Math.floor(x/8)*256+Math.floor(y/8)];
+  if(this.bytes[offset]!==2)return {z:raw.z,nswe:raw.nswe,higherZ:Math.max(z,raw.z)};
+  // Match the core's virtual-height fallback for visibility only. Ground
+  // placement continues to use cell(), which always returns a stored layer.
+  const pos=this.layerOffsets.get(Math.floor(x/8)*256+Math.floor(y/8))[(x%8)*8+y%8];
+  const count=this.bytes[pos];let lower=-Infinity,higher=Infinity;
+  for(let i=0;i<count;i++){const h=height(this.bytes.readUInt16LE(pos+1+i*2));if(h<=z)lower=Math.max(lower,h);if(h>=z)higher=Math.min(higher,h);}
+  return {z:raw.z-z>1000?(Number.isFinite(lower)?lower:z):raw.z,nswe:raw.nswe,higherZ:Number.isFinite(higher)?higher:z};
+ }
 }
 
 /** Server-only, bounded region cache. Missing or corrupt data never means free passage. */
@@ -75,5 +86,11 @@ export class L2jGeodata{
   return region?.cell((gx%2048+2048)%2048,(gy%2048+2048)%2048,z)||null;
  }
  point({x,y,z}){if(![x,y,z].every(Number.isFinite))return null;const cell=this.cell(geoCell(x),geoCell(y),z);return cell?{x,y,...cell}:null;}
+ losCell(gx,gy,z,regionAt=null){
+  if(![gx,gy,z].every(Number.isFinite))return null;
+  const id=geoRegionId((regionAt?.gx??gx)*16,(regionAt?.gy??gy)*16);let region;
+  try{region=this.region(id);this.errors.delete(id);}catch(error){this.errors.set(id,error.message);return null;}
+  return region?.losCell((gx%2048+2048)%2048,(gy%2048+2048)%2048,z)||null;
+ }
 }
 export const worldGeodata=new L2jGeodata();

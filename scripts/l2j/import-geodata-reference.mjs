@@ -1,8 +1,8 @@
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 const commit='9fb01cb20513e55190cdde8d91e41be2c0914f84',repository='https://gitlab.com/MobiusDevelopment/L2J_Mobius';
-const prefix='L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/geoengine/';
-const paths=['geodata/Cell.java','geodata/IBlock.java','geodata/blocks/FlatBlock.java','geodata/blocks/ComplexBlock.java','geodata/blocks/MultilayerBlock.java','GeoEngine.java'];
+const prefix='L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/';
+const paths=['geoengine/geodata/Cell.java','geoengine/geodata/IBlock.java','geoengine/geodata/blocks/FlatBlock.java','geoengine/geodata/blocks/ComplexBlock.java','geoengine/geodata/blocks/MultilayerBlock.java','geoengine/GeoEngine.java','geoengine/util/GridLineIterator3D.java','util/GeoUtils.java'];
 const folder='art-source/geodata/engine';fs.mkdirSync(folder,{recursive:true});
 const files={};
 for(const suffix of paths){

@@ -3,7 +3,8 @@ import {LOCATION_LEVELS} from '../../../template/locationLevels.js';
 import {ROOM_SIZE} from './navigation.js';
 import {worldGeodata} from './l2jGeodata.js';
 import {nativeGroundAllowed} from './nativeGround.js';
-import {findNativePath,nativeSegment} from './nativeNavigation.js';
+import {findNativePath} from './nativeNavigation.js';
+import {nativeStaticSight} from './nativeVisibility.js';
 import {createNativeJourney,advanceNativeJourney} from './nativeJourney.js';
 import {rememberNativeTrail} from './nativeTrail.js';
 import {nativeSpawnDistance,sampleNativeTerritory} from './nativeSpawnTerritory.js';
@@ -131,10 +132,10 @@ export function stopNativeActor(actor){
  if(actor.native?.version===1)rememberNativeTrail(actor.native,actor.native.journey);
  if(actor.native)delete actor.native.journey;actor.path=[];
 }
-/** Conservative native obstruction check; no ray may pass an unverified ground layer. */
+/** Original static H5 sight plus conservative door/water/holding vetoes. */
 export function nativeCombatLine(a,b){
  const from=nativeActorPoint(a),to=nativeActorPoint(b);
- return Boolean(from&&to&&nativeSegment(from,to,{allowed:nativeGroundAllowed,reversible:true,maxCells:512}));
+ return Boolean(from&&to&&nativeStaticSight(from,to,{allowed:nativeGroundAllowed}));
 }
 export const nativeMobMovement=mob=>pilot.actors[mob.mobId]||null;
 export function nativeFieldDto(session){

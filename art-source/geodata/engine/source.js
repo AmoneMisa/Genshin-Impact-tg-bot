@@ -32,6 +32,16 @@ export default {
       "file": "L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/geoengine/GeoEngine.java",
       "sha256": "41e5565696f977f5633e3a151facf6ee25c01baf40b7b149ed4ce4f1851144fd",
       "url": "https://gitlab.com/MobiusDevelopment/L2J_Mobius/-/blob/9fb01cb20513e55190cdde8d91e41be2c0914f84/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/geoengine/GeoEngine.java"
+    },
+    "GridLineIterator3D.java": {
+      "file": "L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/geoengine/util/GridLineIterator3D.java",
+      "sha256": "f16c315a2640d20f0205fa49412b2baff8c70096326275a9dc4a0fb35a7f7e31",
+      "url": "https://gitlab.com/MobiusDevelopment/L2J_Mobius/-/blob/9fb01cb20513e55190cdde8d91e41be2c0914f84/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/geoengine/util/GridLineIterator3D.java"
+    },
+    "GeoUtils.java": {
+      "file": "L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/util/GeoUtils.java",
+      "sha256": "4d7de5f3c1894812eea5acbb907a50b20cd4ad56a2fe289618a3a9a4a896d3f2",
+      "url": "https://gitlab.com/MobiusDevelopment/L2J_Mobius/-/blob/9fb01cb20513e55190cdde8d91e41be2c0914f84/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/util/GeoUtils.java"
     }
   }
 };
