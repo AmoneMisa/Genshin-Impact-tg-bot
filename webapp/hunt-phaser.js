@@ -10,10 +10,10 @@ const loadRuntime=()=>runtime??=import('/vendor/phaser/phaser.esm.min.js');
 /** A room-scoped renderer. HTML keeps accessible hit areas, labels and shared controls.
  * No physics or game rules run here. One existing hunt clock drives on-demand frames.
  */
-export function createHuntRenderer(){
+export function createHuntRenderer({lightweight=false}={}){
   const host=document.createElement('div');
   host.className='hunt-phaser';host.setAttribute('aria-hidden','true');
-  let game,scene,world,field,viewport,disposed=false,failed=false,starting=false,dirty=true;
+  let game,scene,world,field,viewport,disposed=false,failed=lightweight,starting=false,dirty=true;
   const actors=new Map(),textures=new Map();
   let terrainKey='',nextTexture=0;
   const terrain=[];let terrainTextures=[],terrainRevision=0,scenery=[];

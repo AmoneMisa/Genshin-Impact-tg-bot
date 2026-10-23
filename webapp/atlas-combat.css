@@ -12,4 +12,10 @@
 .atlas-map-unavailable:has(.atlas-combat:not([hidden])) .atlas-stage{display:none}
 .atlas-map-unavailable:has(.atlas-combat:not([hidden])) .atlas-panel{height:auto;max-height:calc(100dvh - 24px);overflow:auto}
 .atlas-map-unavailable .atlas-combat{max-height:none;overflow:visible}
+.atlas-room-host{min-width:0;min-height:0;flex:1;overflow:auto;padding:var(--space-2)}
+.atlas-room-host[hidden],.atlas-has-room .atlas-stage{display:none}
+.atlas-room-combat,.atlas-room-combat>.hunt-panel{position:relative;min-width:0;width:100%;max-width:none;max-height:none;margin:0}
+.atlas-room-combat>.hunt-panel{padding:0;overflow:visible}
+.atlas-has-room .atlas-panel{overflow:hidden}
+.atlas-has-room .atlas-footer{flex:none}
 @media(max-width:400px){.atlas-combat-target{grid-template-columns:1fr}.atlas-combat-meters{grid-template-columns:1fr}}

@@ -140,7 +140,7 @@ test('hunting areas join through their source town hub and retain HP, IDs, visit
 });
 test('native departure still requires the actual entrance, no aggro, the right region and existing access rules',async()=>{
  const s=hero();assert.equal(worldAction(s,{action:'walk_location',location:'devils-isle'},NOW).ok,false);
- assert.ok(worldAction(s,{action:'walk_location',location:'forsaken-plains'},NOW).ok);finish(s,NOW+1000000);
+ assert.ok(worldAction(s,{action:'walk_location',location:'tower-of-insolence'},NOW).ok);finish(s,NOW+1000000);
  await getHuntState(s,NOW+1000000);const f=s.game.hunt.field;quiet(f);Object.assign(f,{x:.2,y:.2});
  assert.equal(worldAction(s,{action:'walk_location',location:'silent-valley'},NOW+1000000).reason,'entrance_required');
  Object.assign(f,{x:.5,y:.95});
@@ -178,20 +178,20 @@ test('escape scroll stops native walking, a new move interrupts the cast, and a 
 
 test('escape and paid travel preserve the canonical field bank, consume snapshots on entry, and arrive at the real entrance',async()=>{
  const s=hero();s.game.inventory.materials.scroll_escape=1;
- assert.ok(worldAction(s,{action:'walk_location',location:'forsaken-plains'},NOW).ok);finish(s,NOW+1000000);
+ assert.ok(worldAction(s,{action:'walk_location',location:'tower-of-insolence'},NOW).ok);finish(s,NOW+1000000);
  await getHuntState(s,NOW+1000000);quiet(s.game.hunt.field);
  const all=()=>[s.game.hunt.field,...Object.values(s.game.hunt.field.rooms||{})].flatMap(r=>r.mobs||[]);
  const mob=all()[0],id=mob.instanceId;mob.currentHp=7;
  assert.ok(moveHuntField(s,'room:r0c1',NOW+1000000).ok);advanceHunt(s,NOW+1030000);quiet(s.game.hunt.field);
  assert.equal(s.game.hunt.field.room,'r0c1');
  assert.ok(worldAction(s,{action:'escape'},NOW+1030000).ok);advanceWorld(s,NOW+1045000);
- assert.equal(s.game.world.mode,'city');assert.ok(s.game.world.nativeFields['forsaken-plains']);
- assert.ok(worldAction(s,{action:'walk_location',location:'forsaken-plains'},NOW+1045000).ok);finish(s,NOW+2045000);
+ assert.equal(s.game.world.mode,'city');assert.ok(s.game.world.nativeFields['tower-of-insolence']);
+ assert.ok(worldAction(s,{action:'walk_location',location:'tower-of-insolence'},NOW+1045000).ok);finish(s,NOW+2045000);
  assert.equal(s.game.hunt.field.room,'r0c0');assert.equal(s.game.hunt.field.x,.5);assert.equal(s.game.hunt.field.y,.95);
- assert.equal(all().find(m=>m.instanceId===id).currentHp,7);assert.equal(s.game.world.nativeFields['forsaken-plains'],undefined);
+ assert.equal(all().find(m=>m.instanceId===id).currentHp,7);assert.equal(s.game.world.nativeFields['tower-of-insolence'],undefined);
  assert.equal(new Set(all().map(m=>m.instanceId)).size,all().length,'one canonical owner after changing arrival room');
  quiet(s.game.hunt.field);all().find(m=>m.instanceId===id).currentHp=3;
- assert.ok(worldAction(s,{action:'quick_travel',city:'aden'},NOW+2045000).ok);assert.ok(s.game.world.nativeFields['forsaken-plains']);
- assert.ok(worldAction(s,{action:'quick_travel',location:'forsaken-plains'},NOW+2045000).ok);
- assert.equal(all().find(m=>m.instanceId===id).currentHp,3);assert.equal(s.game.world.nativeFields['forsaken-plains'],undefined);
+ assert.ok(worldAction(s,{action:'quick_travel',city:'aden'},NOW+2045000).ok);assert.ok(s.game.world.nativeFields['tower-of-insolence']);
+ assert.ok(worldAction(s,{action:'quick_travel',location:'tower-of-insolence'},NOW+2045000).ok);
+ assert.equal(all().find(m=>m.instanceId===id).currentHp,3);assert.equal(s.game.world.nativeFields['tower-of-insolence'],undefined);
 });

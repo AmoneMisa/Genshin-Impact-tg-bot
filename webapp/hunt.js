@@ -33,15 +33,16 @@ import {visibleFieldMobs,visibleFieldPlayers} from './hunt-visible-actors.js';
 const ELEMENT_ICONS = Object.fromEntries(['fire','water','wind','earth','holy','dark'].map(element=>[element,elementIcon(element)]));
 const CHAMPION = { blue: { icon: championIcon('blue'), label: 'Синий чемпион' }, red: { icon: championIcon('red'), label: 'Красный чемпион' } };
 
-export async function openHuntGame({ api, renderState, haptic, statusElement,initialZoneKind='field',onOpenAtlas }) {
-  let state = await api('/api/hunt');
-  if(!state.field||state.field.native){const {openWorldMap}=await import('./world-map.js');return openWorldMap({api,renderState,haptic,statusElement,initialLayer:initialZoneKind==='catacomb'?'dungeons':'hunt'});}
+export async function openHuntGame({ api, renderState=()=>{}, haptic=()=>{}, statusElement={textContent:''},initialZoneKind='field',onOpenAtlas,mount=null,initialState=null,onWorldChange,onBusy }) {
+  let state = initialState||await api('/api/hunt');
+  if(!state.field||state.field.native){if(mount)return null;const {openWorldMap}=await import('./world-map.js');return openWorldMap({api,renderState,haptic,statusElement,initialLayer:initialZoneKind==='catacomb'?'dungeons':'hunt'});}
   let zoneKind=initialZoneKind==='catacomb'?'catacomb':'field';
   let skillTab = 'skills'; let editBar = false; let barDraft = [];
   let draggedSlot=null;
   let shotsCollapsed=false;
   try{shotsCollapsed=(localStorage.getItem('hunt:supplies-collapsed')??localStorage.getItem('hunt:shots-collapsed'))==='1';}catch{}
   let pending = false;
+  function setPending(value){pending=value;onBusy?.(value);}
   let openingWindow=false;
   let travelDialog=null;
   let feedback = '';
@@ -53,39 +54,39 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   let viewport={width:320,height:400},camera={zoom:1,x:0,y:0},labelOffsets=new Map(),drag=null,ignoreMapClick=false;
   let displayedRoom=null;
   let followedPoint=null,followedSpace=null;
-  const fieldRenderer=createHuntRenderer();
-  const mapObserver=new ResizeObserver(entries=>{const box=entries[0]?.contentRect;if(box&&Math.abs(box.width-viewport.width)+Math.abs(box.height-viewport.height)>2){viewport={width:box.width,height:box.height};followedPoint=null;render();}});
+  const fieldRenderer=createHuntRenderer({lightweight:Boolean(mount)});
+  const mapObserver=new ResizeObserver(entries=>{const box=entries[0]?.contentRect;if(box?.width>0&&Math.abs(box.width-viewport.width)+Math.abs(box.height-viewport.height)>2){viewport={width:box.width,height:box.height};followedPoint=null;render();}});
   const detailsOpen=new Set();
   installOverlayA11y();installGameRules();
 
   const overlay = document.createElement('section');
-  overlay.className = 'game-overlay hunt-overlay';
+  overlay.className = mount?'atlas-room-combat':'game-overlay hunt-overlay';
   overlay.innerHTML = `
-    <div class="overlay-backdrop"></div>
-    <div class="overlay-panel game-dialog-panel combat-dialog hunt-panel" role="dialog" aria-modal="true" aria-labelledby="hunt-heading">
-      ${dialogHeading('Бой',{id:'hunt-heading',compact:true,rules:'Нажми на противника, чтобы выбрать цель. Атака — подойти и атаковать оружием; повторное нажатие выключает автоатаку. Нажатие на своего персонажа останавливает движение и применение умения. Умение — подойти на его дальность и применить. Нажатие на землю отменяет действие и ведёт к точке. Выходы на краях поля ведут в соседние комнаты. Tab — следующая цель, Escape — остановиться. Массовые атаки зависят от оружия и самого умения.'})}
+    ${mount?'':'<div class="overlay-backdrop"></div>'}
+    <div class="${mount?'':'overlay-panel game-dialog-panel '}combat-dialog hunt-panel" ${mount?'':'role="dialog" aria-modal="true" aria-labelledby="hunt-heading"'}>
+      ${dialogHeading('Бой',{id:'hunt-heading',compact:true,dismissible:!mount,rules:'Нажми на противника, чтобы выбрать цель. Атака — подойти и атаковать оружием; повторное нажатие выключает автоатаку. Нажатие на своего персонажа останавливает движение и применение умения. Умение — подойти на его дальность и применить. Нажатие на землю отменяет действие и ведёт к точке. Выходы на краях поля ведут в соседние комнаты. Tab — следующая цель, Escape — остановиться. Массовые атаки зависят от оружия и самого умения.'})}
       <div data-hunt-content></div>
       <div class="boss-feedback" data-hunt-feedback aria-live="polite"></div>
     </div>`;
+  const escapeRoot=mount?.closest('.game-overlay')||overlay;
   const content = overlay.querySelector('[data-hunt-content]');
   const feedbackNode = overlay.querySelector('[data-hunt-feedback]');
   let animation=0,receivedAt=Date.now();
   let timer = 0;
-  let pollTimer = 0;
+  let pollTimer = null;
   const close = () => {
-    if(closed)return;closed=true;
+    if(closed)return;closed=true;onBusy?.(false);
     travelDialog?.close();
     cancelAnimationFrame(animation);window.clearInterval(timer);mapObserver.disconnect();fieldRenderer.destroy();
     document.removeEventListener('visibilitychange',visibility);
     overlay.removeEventListener('keydown',keyboard);
-    overlay.removeEventListener('overlay-escape',escapeAction);
+    escapeRoot.removeEventListener('overlay-escape',escapeAction);
     pollTimer?.stop();
     social.destroy();
-    overlay.classList.add('closing');
-    window.setTimeout(() => overlay.remove(), 180);
+    if(mount)overlay.remove();else{overlay.classList.add('closing');window.setTimeout(() => overlay.remove(), 180);}
   };
-  overlay.querySelector('[data-dismiss]').addEventListener('click', close);
-  overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
+  overlay.querySelector('[data-dismiss]')?.addEventListener('click', close);
+  overlay.querySelector('.overlay-backdrop')?.addEventListener('click', close);
 
   // the system chat floats over the screen instead of taking room in the page
   const say = text => { feedback = ''; social.notice(text); };
@@ -113,14 +114,14 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   }
 
   function take(payload) {
-    if (payload?.hunt){state = payload.hunt;receivedAt=Date.now();}
+    if (payload?.hunt){state = payload.hunt;receivedAt=Date.now();if(mount&&(!state.field||state.field.native))onWorldChange?.();}
     if (payload?.state) renderState(payload.state);
   }
 
   async function run(path, body, { heavy = false } = {}) {
     if (pending) return null;
     pollTimer?.invalidate();
-    pending = true;
+    setPending(true);
     overlay.classList.add('busy');
     haptic(heavy ? 'heavy' : 'light');
     try {
@@ -135,7 +136,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       haptic('light');
       return null;
     } finally {
-      pending = false;
+      setPending(false);
       overlay.classList.remove('busy');
     }
   }
@@ -166,7 +167,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   }
 
   async function start(zone) {
-    if(state.world?.mode){close();if(onOpenAtlas)onOpenAtlas();else{const {openWorldMap}=await import('./world-map.js');openWorldMap({api,renderState,haptic,statusElement});}return;}
+    if(state.world?.mode){if(!mount)close();if(onOpenAtlas)onOpenAtlas();else{const {openWorldMap}=await import('./world-map.js');openWorldMap({api,renderState,haptic,statusElement});}return;}
     const payload = await run('/api/hunt/start', { zone }, { heavy: true });
     if (payload) say('Ты на поле боя. Выбери цель и используй навык, либо подойди к монстрам.');
     render();
@@ -192,7 +193,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   async function drink(key) {
     if (pending) return;
     pollTimer?.invalidate();
-    pending = true;
+    setPending(true);
     try {
       haptic('light');
       const payload = await api('/api/inventory/use', { method: 'POST', body: JSON.stringify({ key }) });
@@ -202,7 +203,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     } catch (error) {
       say(POTION_REASONS[error.payload?.reason] || error.message);
     } finally {
-      pending = false;
+      setPending(false);
       render();
     }
   }
@@ -367,7 +368,7 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
       const button=event.target.closest('[data-vortex-summon],[data-vortex-join]');if(!button)return;
       dialog.close();const result=await run('/api/world/action',{action:'dragon_vortex',vortex:id,encounter:button.dataset.vortexJoin});
       if(!result?.ok||closed)return;
-      const {openBossGame}=await import('./boss.js');await openBossGame({api,renderState,haptic,statusElement,initialBoss:result.bossName,fromLocation:true});close();
+      const {openBossGame}=await import('./boss.js');await openBossGame({api,renderState,haptic,statusElement,initialBoss:result.bossName,fromLocation:true});leaveForBoss();
     });
   }
   function showLevelTravel(){
@@ -527,7 +528,8 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
   }
 
   function render() {
-    if(closed)return;
+    if(closed||overlay.hidden)return;
+    if(mount&&(!state.field||state.field.native)){onWorldChange?.();return;}
     const player = state.player;
     const dead = player.hp<=0 || player.respawnRemainMs > 0;
     updateDeathPopup({dead:player.hp<=0,world:state.world,api,onResolved:next=>{if(next.hunt)state=next.hunt;render();}});
@@ -685,8 +687,8 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     content.querySelectorAll('[data-ship-candle]').forEach(b=>b.addEventListener('click',async()=>{const c=state.field.ship.candles.find(c=>c.id===Number(b.dataset.shipCandle));if(c.state!=='unlit')return;if(c.near)await run('/api/world/action',{action:'ship_candle',candle:c.id});else await run('/api/hunt/move',{point:{x:c.x,y:c.y}});render();}));
     content.querySelectorAll('[data-location-boss]').forEach(b=>b.addEventListener('click',async()=>{
       if(Math.hypot(state.field.x-.5,state.field.y-.5)>.1){await run('/api/hunt/move',{point:{x:.5,y:.5}});render();return;}
-      if(pending)return;pending=true;
-      try{const {openBossGame}=await import('./boss.js');await openBossGame({api,renderState,haptic,statusElement,initialBoss:b.dataset.locationBoss,fromLocation:true});close();}catch(error){say(error.message);}finally{pending=false;}
+      if(pending)return;setPending(true);
+      try{const {openBossGame}=await import('./boss.js');await openBossGame({api,renderState,haptic,statusElement,initialBoss:b.dataset.locationBoss,fromLocation:true});leaveForBoss();}catch(error){say(error.message);}finally{setPending(false);}
     }));
     content.querySelectorAll('[data-world-stairs]').forEach(b=>b.addEventListener('click',async()=>{await run('/api/world/action',{action:'floor',floor:(state.field?.floor||1)+Number(b.dataset.worldStairs)});render();}));
     content.querySelectorAll('[data-zone-kind]').forEach(b=>b.addEventListener('click',()=>{zoneKind=b.dataset.zoneKind;render();}));
@@ -824,26 +826,29 @@ export async function openHuntGame({ api, renderState, haptic, statusElement,ini
     playerTarget=null;forceAttack=false;await run('/api/hunt/target',{targetId:next.id});render();
   }
 
-  function escapeAction(event){if(social.closeChat()){event.preventDefault();return;}if(state.field?.autoAttack||state.field?.action||state.field?.path?.length){event.preventDefault();stop();}}
+  function leaveForBoss(){if(mount){onOpenAtlas?.();}else close();}
+
+  function escapeAction(event){if(overlay.hidden)return;if(social.closeChat()){event.preventDefault();return;}if(state.field?.autoAttack||state.field?.action||state.field?.path?.length){event.preventDefault();stop();}}
   function keyboard(event){
     if(event.target.closest('input,select,textarea,[contenteditable]'))return;
     if(event.key==='Escape'&&(state.field?.autoAttack||state.field?.action||state.field?.path?.length)){event.preventDefault();event.stopPropagation();stop();}
     if(event.key==='Tab'&&event.target.closest('.hunt-ground')){event.preventDefault();nextTarget();}
   }
   function animate(at){
-    if(closed||document.hidden)return;
+    if(closed||document.hidden||overlay.hidden||mount&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
     if(!overlay.isConnected){close();return;}
     if(at-lastFrame>=50&&state.field){lastFrame=at;const actor=displayedPosition(state.field,Date.now()-receivedAt),point=isoPoint(actor,viewport);if(state.field.continuous){followContinuous(actor);applyCamera();}const node=content.querySelector('.hunt-hero-marker');if(node){node.style.left=point.x+'px';node.style.top=point.y+'px';node.style.zIndex=10+Math.round((actor.x+actor.y)*10);fieldRenderer.moveSelf();}}
     animation=requestAnimationFrame(animate);
   }
   function visibility(){
     cancelAnimationFrame(animation);window.clearInterval(timer);overlay.classList.toggle('paused',document.hidden);
-    if(!document.hidden&&!closed){fieldRenderer.refresh();animation=requestAnimationFrame(animate);timer=window.setInterval(tick,200);}
+    if(!document.hidden&&!closed&&!overlay.hidden){fieldRenderer.refresh();animation=requestAnimationFrame(animate);timer=window.setInterval(tick,200);}
   }
   render();
-  document.body.appendChild(overlay);animation=requestAnimationFrame(animate);
-  document.addEventListener('visibilitychange',visibility);overlay.addEventListener('keydown',keyboard);overlay.addEventListener('overlay-escape',escapeAction);
+  (mount||document.body).appendChild(overlay);animation=requestAnimationFrame(animate);
+  document.addEventListener('visibilitychange',visibility);overlay.addEventListener('keydown',keyboard);escapeRoot.addEventListener('overlay-escape',escapeAction);
   requestAnimationFrame(() => overlay.classList.add('visible'));
   timer = window.setInterval(tick, 200);
-  pollTimer = createPoller(poll, {interval:700,enabled:()=>!pending && overlay.isConnected && !overlay.classList.contains('closing')});
+  if(!mount)pollTimer = createPoller(poll, {interval:700,enabled:()=>!pending && overlay.isConnected && !overlay.classList.contains('closing')});
+  return {close,update(next){if(closed)return;state=next;receivedAt=Date.now();render();},setVisible(visible){if(closed||overlay.hidden===!visible)return;if(!visible){travelDialog?.close();social.closeChat();}overlay.hidden=!visible;visibility();if(visible)render();}};
 }
