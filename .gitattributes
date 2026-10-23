@@ -1,5 +1,5 @@
 # Shell scripts run inside Linux containers: always LF.
 *.sh text eol=lf
 
-# Pinned Java references are checked against original SHA-256 bytes.
-art-source/geodata/**/*.java text eol=lf
+# Pinned Java references retain original SHA-256 bytes, including trailing spaces.
+art-source/geodata/**/*.java text eol=lf whitespace=-blank-at-eol
