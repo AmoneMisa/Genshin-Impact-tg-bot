@@ -1,6 +1,7 @@
 import locations from './uz-world-locations.js';
 // Atlas, world encounters and High Five equipment messages.
 const phrases={
+ 'Не удалось обновить локацию.':'Hududni yangilab bo‘lmadi.',
  'Игрок уже жив.':'O‘yinchi allaqachon tirik.','Навык ещё не изучен.':'Ko‘nikma hali o‘rganilmagan.','Не хватает MP.':'MP yetarli emas.',
  'Ожидание воскрешения':'Tirilishni kutish','Подойди ближе к погибшему игроку.':'Halok bo‘lgan o‘yinchiga yaqinlashing.',
  'Владение клана':'Klan mulki',
