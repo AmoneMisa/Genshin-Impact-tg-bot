@@ -2,7 +2,7 @@ import data from '../../../template/nativeMinions.js';
 import {nativeActorPoint,nativeFieldBuckets,placeNativeActor} from './nativeFieldSpace.js';
 import {buildMob,getZone} from '../hunt/huntMobs.js';
 import {nativeStaticSight} from './nativeVisibility.js';
-import {nativeGroundAllowed} from './nativeGround.js';
+import {nativeGroundFor} from './nativeGround.js';
 
 const owner=m=>m.sourceMinion?.owner||`${m.sourceRoom}:${m.sourceSlot}`;
 export const sameNativeFamily=(a,b)=>Boolean((a.sourceMinion||b.sourceMinion)&&owner(a)===owner(b));
@@ -21,7 +21,7 @@ export function nativeMinionProposal(master,radius,random=Math.random){
  * remains an explicit omission, never a made-up nearby replacement or reroll. */
 export function syncNativeMinions(session,now,random=Math.random){
  const hunt=session.game.hunt,field=hunt?.field,ids=data.zones[hunt?.zone];if(!field?.native||!ids)return;
- const families=field.native.minionFamilies||={},buckets=nativeFieldBuckets(field),actors=buckets.flatMap(b=>b.mobs||[]);
+ const allowed=nativeGroundFor(session),families=field.native.minionFamilies||={},buckets=nativeFieldBuckets(field),actors=buckets.flatMap(b=>b.mobs||[]);
  for(const master of actors){
   if(master.sourceMinion||master.currentHp<=0||!ids.includes(master.mobId))continue;
   const key=owner(master),config=data.masters[master.mobId];let family=families[key];
@@ -33,10 +33,11 @@ export function syncNativeMinions(session,now,random=Math.random){
    const point=nativeMinionProposal(nativeActorPoint(master),config.collisionRadius,random);
    const actor=buildMob(getZone(hunt.zone),data.actors[entry.id].definition,{now,random,champion:null,className:session.game.gameClass.stats.name});
    Object.assign(actor,{instanceId:`${master.instanceId}:private:${slot}`,sourceRoom:master.sourceRoom,sourceFloor:master.sourceFloor,sourceSlot:`private:${key}:${slot}`,sourceMinion:{owner:key,slot,masterId:master.mobId},sourcePosition:point,sourcePlacement:'minion',sourceRespawnMs:entry.respawnMs,sourceRespawnRandomMs:0,ai:null,aggro:false,buffs:[]});
-   if(!placeNativeActor(actor,point)){family.missing[slot]='source_minion_ground_unavailable';continue;}
+   if(!placeNativeActor(actor,point,{allowed})){family.missing[slot]='source_minion_ground_unavailable';continue;}
    // initializeNpc calls spawnMe directly, bypassing Spawn.java's correction.
    actor.native.z=point.z;
-   if(!nativeStaticSight(nativeActorPoint(master),nativeActorPoint(actor),{allowed:nativeGroundAllowed})){family.missing[slot]='source_minion_ground_unavailable';continue;}
+   if(hunt.zone==='hellbound')actor.native.hellboundStage=field.populationStage;
+   if(!nativeStaticSight(nativeActorPoint(master),nativeActorPoint(actor),{allowed})){family.missing[slot]='source_minion_ground_unavailable';continue;}
    bucket.mobs.push(actor);actors.push(actor);
   }
  }

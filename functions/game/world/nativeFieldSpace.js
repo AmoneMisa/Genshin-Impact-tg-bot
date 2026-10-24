@@ -58,13 +58,13 @@ export function nativeFieldActors(hunt){
  const f=hunt?.field;if(!f?.native)return [];
  return nativeFieldBuckets(f).flatMap(b=>b.mobs||[]).filter(m=>m.currentHp>0&&m.native&&Math.hypot(m.x-f.x,m.y-f.y)*ROOM_SIZE<=NATIVE_FIELD_RADIUS);
 }
-export function placeNativeActor(actor,source){
+export function placeNativeActor(actor,source,{allowed=nativeGroundAllowed}={}){
  if(!source||!['x','y','z'].every(k=>Number.isFinite(source[k])))return false;
  const point=worldGeodata.point(source);
  // Preserve original coordinates. An absent layer still cannot prove placement.
  // Spawn.java corrects grounded, non-water monsters only when |geoZ-sourceZ| < 300.
  // The 40-unit movement step limit is a different rule.
- if(!point?.nswe||!nativeGroundAllowed(source)||!nativeGroundAllowed(point))return false;
+ if(!point?.nswe||!allowed(source)||!allowed(point))return false;
  const z=Math.abs(point.z-source.z)<pilot.groundSpawnHeight.maxCorrectionExclusive?point.z:source.z;
  Object.assign(actor,{x:source.x/ROOM_SIZE,y:source.y/ROOM_SIZE,native:{z},path:[]});
  return true;
