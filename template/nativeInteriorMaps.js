@@ -65,6 +65,27 @@ export default {
       "files": {
         "spawns/Others/25_14.xml": "ee5e6564a38b4778cce668a88da2f36498bb17acfb3ea2eb8cdfa71c10675c8d"
       }
+    },
+    "monastery-of-silence": {
+      "asset": "/art/world/native/monastery-of-silence.svg",
+      "regions": {
+        "23_15": "24e8164944b5ef547e9f45a59807de955bd66a732e5e9523339f98824937e281"
+      },
+      "bounds": {
+        "x": 106144,
+        "y": -89664,
+        "w": 13440,
+        "h": 18240
+      },
+      "cells": 336841,
+      "layerCells": 375280,
+      "contours": 64,
+      "corners": 6590,
+      "bytes": 53441,
+      "sha256": "749d30a5ba293dfe77291ca113fecbd376c2daf199cecea9a4a083141de32baa",
+      "files": {
+        "spawns/Others/23_15.xml": "fb6905618e655ed6258b6104967b89d33344ee8d35bb383c61b9f2012d8700cb"
+      }
     }
   }
 };

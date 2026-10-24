@@ -829,6 +829,33 @@ export default {
     ]
   },
   "fields": {
+    "monastery-of-silence": {
+      "city": "rune",
+      "interior": true,
+      "floors": [
+        1,
+        2
+      ],
+      "fixedCount": 202,
+      "territoryCount": 0,
+      "randomGroupCount": 0,
+      "initialCapacity": 202,
+      "unavailableCount": 0,
+      "availableCapacity": 202,
+      "npcIds": [
+        "22789",
+        "22790",
+        "22791",
+        "22793",
+        "22794",
+        "22795",
+        "22796",
+        "22797",
+        "22798"
+      ],
+      "count": 202,
+      "unportedMinionTemplates": []
+    },
     "forge-of-the-gods": {
       "city": "goddard",
       "interior": true,
@@ -2140,6 +2167,7 @@ export default {
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Others/23_15.xml": "fb6905618e655ed6258b6104967b89d33344ee8d35bb383c61b9f2012d8700cb",
       "spawns/Others/25_14.xml": "ee5e6564a38b4778cce668a88da2f36498bb17acfb3ea2eb8cdfa71c10675c8d",
       "spawns/Others/22_16.xml": "36cdf2361c2f13aee757f269e3b39b64946f89b1eaf2641b8598310de93f35a3",
       "spawns/Others/24_21.xml": "81239336cf56c7e81009f63ccc09684c34c47e51f89e2cab1ddd217830eecd62",
@@ -4140,6 +4168,42 @@ export default {
       "attackRange": 40.0
     },
     "22788": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22789": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22790": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22791": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22793": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22794": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22795": {
+      "runSpeed": 170.0,
+      "attackRange": 80.0
+    },
+    "22796": {
+      "runSpeed": 220.0,
+      "attackRange": 80.0
+    },
+    "22797": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22798": {
       "runSpeed": 150.0,
       "attackRange": 40.0
     },

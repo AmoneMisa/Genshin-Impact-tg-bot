@@ -7,9 +7,9 @@ import {worldAction,advanceWorld,worldState} from '../functions/game/world/world
 import {getHuntState} from '../miniapp/hunt.js';import {nativeSegment} from '../functions/game/world/nativeNavigation.js';import {nativeGroundAllowed} from '../functions/game/world/nativeGround.js';
 import change from '../functions/game/player/changePlayerGameClass.js';import update from '../functions/game/player/updatePlayerStats.js';
 const START=1800000000000,id='forge-of-the-gods',source=levels.zones[id],actors=s=>nativeFieldBuckets(s.game.hunt?.field).flatMap(b=>b.mobs||[]);
-function hero(){const s={userId:1,userChatData:{user:{id:1,first_name:'Test'}},game:{stats:{lvl:85,currentExp:0},inventory:{gold:1e6,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:'goddard',x:.5,y:.5,path:[],moveAt:START,locks:{}}}};const chat={game:{},members:[s]};s.ownerDocument=()=>chat;change(s,'humanFighter');update(s);return s;}
+function hero(city='goddard'){const s={userId:1,userChatData:{user:{id:1,first_name:'Test'}},game:{stats:{lvl:85,currentExp:0},inventory:{gold:1e6,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city,x:.5,y:.5,path:[],moveAt:START,locks:{}}}};const chat={game:{},members:[s]};s.ownerDocument=()=>chat;change(s,'humanFighter');update(s);return s;}
 const quiet=s=>{for(const m of actors(s))Object.assign(m,{aggressive:false,aggro:false,nextAttackAt:START+1e12});};
-function enter(s){assert.equal(worldAction(s,{action:'walk_location',location:id},START).ok,true);const now=s.game.world.walkHome.until+1;advanceWorld(s,now);quiet(s);return now;}
+function enter(s,zone=id){assert.equal(worldAction(s,{action:'walk_location',location:zone},START).ok,true);const now=s.game.world.walkHome.until+1;advanceWorld(s,now);quiet(s);return now;}
 function walk(s,floor,now){assert.equal(worldAction(s,{action:'native_floor',floor,z:999999,point:{x:0,y:0}},now).ok,true);const trip=s.game.hunt.field.native.journey;now=trip.until+1;advanceWorld(s,now);quiet(s);return now;}
 test('Forge registers 460 upper and 264 lower source slots with independent room keys',()=>{
  assert.deepEqual(policy.fields[id].floors,[1,2]);assert.equal(policy.fields[id].fixedCount,724);
@@ -67,4 +67,16 @@ test('all 724 reviewed source slots fit one saved bank and survive departure wit
  assert.ok(Buffer.byteLength(JSON.stringify(s.game.hunt.field))<2*1024*1024);
  assert.equal(worldAction(s,{action:'quick_travel',city:'goddard'},now+1).ok,true);assert.equal(worldAction(s,{action:'walk_location',location:id},now+2).ok,true);advanceWorld(s,s.game.world.walkHome.until+1);quiet(s);
  const restored=new Map(actors(s).map(m=>[m.instanceId,m]));assert.equal(restored.size,724);for(const m of remembered){assert.equal(restored.get(m.id).sourceRoom,m.room);assert.equal(restored.get(m.id).sourceSlot,m.slot);}assert.equal(restored.get(marked.instanceId).currentHp,hp);
+});
+
+test('Monastery source provenance, physical ascent, saved banks and return stay in one world space',async()=>{
+ const zone='monastery-of-silence',model=levels.zones[zone],file='spawns/Others/23_15.xml',rooms=nativeFieldRooms(zone);
+ assert.equal(policy.source.files[file],'fb6905618e655ed6258b6104967b89d33344ee8d35bb383c61b9f2012d8700cb');assert.equal(policy.fields[zone].fixedCount,202);
+ for(const floor of [1,2]){const slots=rooms.filter(r=>r.sourceFloor===floor).flatMap(r=>r.spawns);assert.equal(slots.reduce((n,s)=>n+s.count,0),floor===1?130:72);assert.ok(slots.every(s=>s.file===file));}
+ let before=model.root;for(const p of model.levels[2].path){assert.ok(nativeSegment(before,p,{allowed:nativeGroundAllowed,reversible:true}));before=p;}assert.deepEqual(before,model.levels[2].to);assert.ok(before.z-model.root.z>1700);
+ let s=hero('rune'),now=enter(s,zone);const marked=actors(s).find(m=>m.sourceFloor===1);marked.currentHp=Math.floor(marked.hp/2);const kept={id:marked.instanceId,hp:marked.currentHp};
+ const point=nativeActorPoint(s.game.hunt.field);assert.equal(worldAction(s,{action:'floor',floor:2},now).ok,false);assert.deepEqual(nativeActorPoint(s.game.hunt.field),point);
+ assert.equal(worldAction(s,{action:'native_floor',floor:2},now).ok,true);const end=s.game.hunt.field.native.journey.until+1;s=JSON.parse(JSON.stringify(s));advanceWorld(s,end);quiet(s);assert.deepEqual(nativeActorPoint(s.game.hunt.field),model.levels[2].to);assert.equal((await getHuntState(s,end)).field.native.floor,2);
+ now=walk(s,1,end+1);assert.deepEqual(nativeActorPoint(s.game.hunt.field),model.root);assert.equal(actors(s).find(m=>m.instanceId===kept.id).currentHp,kept.hp);assert.equal(s.game.inventory.gold,1e6);
+ const keys=actors(s).map(m=>m.sourceRoom+':'+m.sourceSlot);assert.equal(new Set(keys).size,keys.length);
 });

@@ -1,8 +1,12 @@
+import {nativeRoute} from '../functions/game/world/nativeTravel.js';
+import {nativeActorPoint,nativeFieldBuckets} from '../functions/game/world/nativeFieldSpace.js';
+import {nativeSegment} from '../functions/game/world/nativeNavigation.js';
+import {nativeGroundAllowed} from '../functions/game/world/nativeGround.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {pruneNativeLoops,createNativeJourney,nativeDistance} from '../functions/game/world/nativeJourney.js';
 import {worldAction,advanceWorld} from '../functions/game/world/world.js';
-import {nativeTownHub,nativeTownEdges} from '../functions/game/world/nativeTownGraph.js';
+import {nativeTownHub,nativeTownEdges,nativeCityAt} from '../functions/game/world/nativeTownGraph.js';
 import {getHuntState} from '../miniapp/hunt.js';
 import routes from '../template/nativeRoutes.js';
 import change from '../functions/game/player/changePlayerGameClass.js';
@@ -24,13 +28,19 @@ test('Monastery and Labyrinth join at their shared road without detouring throug
  const road=nativeTownEdges().find(r=>r.fromCity==='goddard'&&r.toCity==='schuttgart'),vertices=[road.from,...road.path];
  const begin=vertices.findIndex(p=>same(p,routes.routes['monastery-of-silence'].to)),end=vertices.findIndex(p=>same(p,routes.routes['frozen-labyrinth'].to));assert.ok(begin>=0&&end>begin);
  const expected=vertices.slice(begin+1,end+1).reduce((n,p,i)=>n+nativeDistance(vertices[begin+i],p),0);
- assert.ok(Math.abs(trip.native.remaining-expected)<1e-6,'use only the verified branch between those entrances');
+ const cave=nativeRoute('monastery-of-silence');let previous=cave.entry,caveDistance=0;for(const p of cave.path.slice(routes.routes['monastery-of-silence'].path.length)){caveDistance+=nativeDistance(previous,p);previous=p;}
+ assert.ok(trip.native.remaining<=expected+caveDistance+8192,'reconnecting from inside the cave must stay within one local join of the shared road');
+ previous=trip.native.point;for(const p of trip.native.path){assert.equal(nativeCityAt(p),null,'a cave road must not enter a town');assert.ok(nativeSegment(previous,p,{allowed:nativeGroundAllowed,reversible:true}));previous=p;}
  s=JSON.parse(JSON.stringify(s));advanceWorld(s,NOW+2e7);assert.equal(s.game.world.location,'frozen-labyrinth');await getHuntState(s,NOW+2e7);quiet(s);
  assert.equal(worldAction(s,{action:'walk_location',location:'monastery-of-silence'},NOW+2e7).ok,true);advanceWorld(s,NOW+3e7);quiet(s);
- assert.equal(s.game.hunt.field.mobs.find(m=>m.instanceId===id)?.currentHp,2);assert.equal(s.game.inventory.gold,1000000);
+ assert.equal(nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.instanceId===id)?.currentHp,2);assert.equal(s.game.inventory.gold,1000000);
 });
-test('a character standing at the original entrance can enter without a loop or a coordinate change',()=>{
+test('a character at the checked inside endpoint attaches the cave bank without another walk',()=>{
+ const s=hero(),point=nativeRoute('monastery-of-silence').to;s.game.world.mode='native';s.game.world.nativePosition={...point};
+ advanceWorld(s,NOW);assert.equal(s.game.world.location,'monastery-of-silence');assert.deepEqual(nativeActorPoint(s.game.hunt.field),point);assert.equal(s.game.hunt.field.native.journey,undefined);assert.equal(s.game.inventory.gold,1000000);
+});
+test('the original outside Monastery anchor starts a real cave approach without granting distance',()=>{
  const s=hero(),point=routes.routes['monastery-of-silence'].to;s.game.world.mode='native';s.game.world.nativePosition={...point};
- assert.equal(worldAction(s,{action:'walk_location',location:'monastery-of-silence'},NOW).ok,true);assert.equal(s.game.world.walkHome.native.remaining,0);assert.ok(same(s.game.world.walkHome.native.point,point));
- advanceWorld(s,NOW+1);assert.equal(s.game.world.location,'monastery-of-silence');assert.equal(s.game.inventory.gold,1000000);
+ assert.equal(worldAction(s,{action:'walk_location',location:'monastery-of-silence'},NOW).ok,true);const trip=s.game.world.walkHome||s.game.hunt.field.native.journey;assert.ok(trip.native.remaining>0);assert.ok(same(trip.native.point,point));
+ advanceWorld(s,trip.until+1);assert.equal(s.game.world.location,'monastery-of-silence');assert.deepEqual(nativeActorPoint(s.game.hunt.field),nativeRoute('monastery-of-silence').to);assert.equal(s.game.inventory.gold,1000000);
 });
