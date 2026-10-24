@@ -1,0 +1,1985 @@
+{
+  "sourceCommit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+  "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
+  "totals": {
+    "catalogZones": 72,
+    "nativePopulationZones": 48,
+    "adaptedPopulationZones": 24,
+    "reviewedFloors": 71,
+    "deferredFloors": 78,
+    "partialPopulationZones": 4,
+    "guardedScenarioRoutes": 1
+  },
+  "globalPending": [
+    "Общий серверный банк населения для нескольких игроков",
+    "Специальный AI и динамические миньоны по исходным скриптам",
+    "Плавание и исходная вертикальная физика",
+    "Приватные и эпические сценарии с проверками доступа и выхода"
+  ],
+  "zones": [
+    {
+      "id": "tower-of-insolence",
+      "name": "Башня Наглости",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "reviewedFloors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "deferredFloors": [
+        {
+          "floor": 14,
+          "title": "Покои Баюма",
+          "boss": "baium",
+          "reason": "epic_admission_and_instance"
+        }
+      ],
+      "catalogSourcePlaces": 418,
+      "nativeSourcePlaces": 418,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "cruma-tower",
+      "name": "Башня Крумы",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1,
+        2,
+        3
+      ],
+      "reviewedFloors": [
+        1,
+        2,
+        3
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 330,
+      "nativeSourcePlaces": 330,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [
+        {
+          "npcId": 31843,
+          "list": "OTHER",
+          "index": 1,
+          "scenario": "core",
+          "source": {
+            "file": "teleporters/others/31843.xml",
+            "sha256": "02033b2cefe1467124820520012bc588fa6a3fac1d21fcac63fa02590ebb6b45"
+          }
+        }
+      ],
+      "groundApproach": true
+    },
+    {
+      "id": "ivory-tower",
+      "name": "Башня Слоновой Кости",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "reviewedFloors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 355,
+      "nativeSourcePlaces": 355,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "garden-of-eva",
+      "name": "Сад Евы",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Сад Евы · 1 ярус",
+          "boss": null,
+          "reason": "swimming_and_vertical_routes"
+        },
+        {
+          "floor": 2,
+          "title": "Сад Евы · 2 ярус",
+          "boss": null,
+          "reason": "swimming_and_vertical_routes"
+        },
+        {
+          "floor": 3,
+          "title": "Сад Евы · 3 ярус",
+          "boss": null,
+          "reason": "swimming_and_vertical_routes"
+        },
+        {
+          "floor": 4,
+          "title": "Сад Евы · 4 ярус",
+          "boss": null,
+          "reason": "swimming_and_vertical_routes"
+        },
+        {
+          "floor": 5,
+          "title": "Сад Евы · 5 ярус",
+          "boss": null,
+          "reason": "swimming_and_vertical_routes"
+        }
+      ],
+      "catalogSourcePlaces": 259,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "giants-cave",
+      "name": "Пещера Гигантов",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1,
+        2
+      ],
+      "reviewedFloors": [
+        1,
+        2
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 426,
+      "nativeSourcePlaces": 426,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "monastery-of-silence",
+      "name": "Монастырь Безмолвия",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1,
+        2
+      ],
+      "reviewedFloors": [
+        1,
+        2
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 202,
+      "nativeSourcePlaces": 202,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "imperial-tomb",
+      "name": "Имперская гробница",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1,
+        2
+      ],
+      "reviewedFloors": [
+        1,
+        2
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 476,
+      "nativeSourcePlaces": 476,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "pagan-temple",
+      "name": "Храм Язычников",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Храм Язычников · Галереи",
+          "boss": null,
+          "reason": "church_drop_mirrors_and_doors"
+        },
+        {
+          "floor": 2,
+          "title": "Храм Язычников · Ритуальные залы",
+          "boss": null,
+          "reason": "church_drop_mirrors_and_doors"
+        },
+        {
+          "floor": 3,
+          "title": "Церковь Руны",
+          "boss": null,
+          "reason": "church_drop_mirrors_and_doors"
+        },
+        {
+          "floor": 4,
+          "title": "Под церковью Руны · Зеркало Триола",
+          "boss": null,
+          "reason": "church_drop_mirrors_and_doors"
+        }
+      ],
+      "catalogSourcePlaces": 364,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "devils-isle",
+      "name": "Остров Дьявола",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Остров Дьявола · Подводный проход",
+          "boss": null,
+          "reason": "swimming_ship_and_zaken_scenario"
+        },
+        {
+          "floor": 2,
+          "title": "Остров Дьявола · Пещеры пиратов",
+          "boss": null,
+          "reason": "swimming_ship_and_zaken_scenario"
+        },
+        {
+          "floor": 3,
+          "title": "Остров Дьявола · Путь к кораблю",
+          "boss": null,
+          "reason": "swimming_ship_and_zaken_scenario"
+        },
+        {
+          "floor": 4,
+          "title": "Корабль Закена · 1 палуба",
+          "boss": null,
+          "reason": "swimming_ship_and_zaken_scenario"
+        },
+        {
+          "floor": 5,
+          "title": "Корабль Закена · 2 палуба",
+          "boss": null,
+          "reason": "swimming_ship_and_zaken_scenario"
+        },
+        {
+          "floor": 6,
+          "title": "Корабль Закена · 3 палуба",
+          "boss": null,
+          "reason": "swimming_ship_and_zaken_scenario"
+        }
+      ],
+      "catalogSourcePlaces": 799,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "angel-waterfall",
+      "name": "Водопад Ангелов",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 49,
+      "nativeSourcePlaces": 49,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "dragon-valley",
+      "name": "Долина Драконов",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 543,
+      "nativeSourcePlaces": 543,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "antharas-lair",
+      "name": "Логово Антараса",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 713,
+      "nativeSourcePlaces": 713,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "forge-of-the-gods",
+      "name": "Кузня Богов",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1,
+        2
+      ],
+      "reviewedFloors": [
+        1,
+        2
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 724,
+      "nativeSourcePlaces": 724,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "enchanted-valley",
+      "name": "Зачарованная долина",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 383,
+      "nativeSourcePlaces": 383,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "silent-valley",
+      "name": "Тихая долина",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 200,
+      "nativeSourcePlaces": 200,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "forsaken-plains",
+      "name": "Забытые равнины",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 257,
+      "nativeSourcePlaces": 257,
+      "unavailablePlaces": 1,
+      "sourceGaps": [
+        {
+          "kind": "point",
+          "zone": "forsaken-plains",
+          "npcId": "21020",
+          "source": {
+            "x": 186579,
+            "y": 37084,
+            "z": -4059
+          },
+          "sourceFile": "spawns/Others/25_19.xml",
+          "ground": {
+            "x": 186579,
+            "y": 37084,
+            "z": -4152,
+            "nswe": 15
+          },
+          "issues": [
+            "holding_region_required"
+          ]
+        }
+      ],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "beast-farm",
+      "name": "Ферма зверей",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 355,
+      "nativeSourcePlaces": 355,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "plains-of-the-lizardmen",
+      "name": "Равнины Ящеров",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 311,
+      "nativeSourcePlaces": 311,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "den-of-evil",
+      "name": "Логово Зла",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 237,
+      "nativeSourcePlaces": 237,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "crypts-of-disgrace",
+      "name": "Склепы Позора",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 222,
+      "nativeSourcePlaces": 222,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "stakato-nest",
+      "name": "Гнездо Стакато",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 151,
+      "nativeSourcePlaces": 151,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "frozen-labyrinth",
+      "name": "Ледяной лабиринт",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 283,
+      "nativeSourcePlaces": 283,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "field-of-silence",
+      "name": "Поле Безмолвия",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 514,
+      "nativeSourcePlaces": 514,
+      "unavailablePlaces": 2,
+      "sourceGaps": [
+        {
+          "kind": "point",
+          "zone": "field-of-silence",
+          "npcId": "22651",
+          "source": {
+            "x": 75897,
+            "y": 189168,
+            "z": -3448
+          },
+          "sourceFile": "spawns/Innadril/FieldOfSilence.xml",
+          "ground": {
+            "x": 75897,
+            "y": 189168,
+            "z": -3448,
+            "nswe": 7
+          },
+          "issues": [
+            "holding_region_required"
+          ]
+        },
+        {
+          "kind": "point",
+          "zone": "field-of-silence",
+          "npcId": "22651",
+          "source": {
+            "x": 78995,
+            "y": 190581,
+            "z": -3784
+          },
+          "sourceFile": "spawns/Innadril/FieldOfSilence.xml",
+          "ground": {
+            "x": 78995,
+            "y": 190581,
+            "z": -3784,
+            "nswe": 15
+          },
+          "issues": [
+            "swimming_required"
+          ]
+        }
+      ],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "steel-citadel",
+      "name": "Стальная цитадель",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1,
+        2
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Стальная цитадель · 1 уровень",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 2,
+          "title": "Стальная цитадель · 2 уровень",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        }
+      ],
+      "catalogSourcePlaces": 140,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "tower-of-infinitum",
+      "name": "Башня Бесконечности",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Башня Бесконечности · 1 уровень",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 2,
+          "title": "Башня Бесконечности · 2 уровень",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 3,
+          "title": "Башня Бесконечности · 3 уровень",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 4,
+          "title": "Башня Бесконечности · 4 уровень",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 5,
+          "title": "Башня Бесконечности · 5 уровень",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        }
+      ],
+      "catalogSourcePlaces": 120,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "tully-workshop",
+      "name": "Мастерская Тулли",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Мастерская Тулли · 1 этаж",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 2,
+          "title": "Мастерская Тулли · 2 этаж",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 3,
+          "title": "Мастерская Тулли · 3 этаж",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 4,
+          "title": "Мастерская Тулли · 4 этаж",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 5,
+          "title": "Мастерская Тулли · 5 этаж",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 6,
+          "title": "Мастерская Тулли · 6 этаж",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 7,
+          "title": "Мастерская Тулли · 7 этаж",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 8,
+          "title": "Мастерская Тулли · 8 этаж",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        }
+      ],
+      "catalogSourcePlaces": 190,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "tower-of-naia",
+      "name": "Башня Найи",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Башня Найи · Комната 1",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 2,
+          "title": "Башня Найи · Комната 2",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 3,
+          "title": "Башня Найи · Комната 3",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 4,
+          "title": "Башня Найи · Комната 4",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 5,
+          "title": "Башня Найи · Комната 5",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 6,
+          "title": "Башня Найи · Комната 6",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 7,
+          "title": "Башня Найи · Комната 7",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 8,
+          "title": "Башня Найи · Комната 8",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 9,
+          "title": "Башня Найи · Комната 9",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 10,
+          "title": "Башня Найи · Комната 10",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 11,
+          "title": "Башня Найи · Комната 11",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        },
+        {
+          "floor": 12,
+          "title": "Башня Найи · Комната 12",
+          "boss": null,
+          "reason": "hellbound_private_scenario"
+        }
+      ],
+      "catalogSourcePlaces": 68,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "seed-of-annihilation",
+      "name": "Семя Уничтожения",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1,
+        2,
+        3
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Семя Уничтожения · Бистаконы",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 2,
+          "title": "Семя Уничтожения · Рептиликоны",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 3,
+          "title": "Семя Уничтожения · Кокраконы",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        }
+      ],
+      "catalogSourcePlaces": 209,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "seed-of-destruction",
+      "name": "Семя Разрушения",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Семя Разрушения · Вход",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 2,
+          "title": "Семя Разрушения · Входной зал",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 3,
+          "title": "Семя Разрушения · Площадь",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 4,
+          "title": "Семя Разрушения · Обелиск",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 5,
+          "title": "Семя Разрушения · Коридоры",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 6,
+          "title": "Семя Разрушения · Крепость",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 7,
+          "title": "Семя Разрушения · Трон Тиат",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        }
+      ],
+      "catalogSourcePlaces": 501,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "seed-of-infinity",
+      "name": "Семя Бессмертия",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Семя Бессмертия · Вход",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 2,
+          "title": "Семя Бессмертия · Зал Страданий · 1",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 3,
+          "title": "Семя Бессмертия · Зал Страданий · 2",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 4,
+          "title": "Семя Бессмертия · Зал Страданий · 3",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 5,
+          "title": "Семя Бессмертия · Зал Страданий · 4",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 6,
+          "title": "Семя Бессмертия · Зал Страданий · 5",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 7,
+          "title": "Семя Бессмертия · Зал Страданий · Близнецы",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 8,
+          "title": "Семя Бессмертия · Зал Гибели",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 9,
+          "title": "Семя Бессмертия · Зал Гибели · Кохеменес",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 10,
+          "title": "Семя Бессмертия · Сердце Бессмертия",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        },
+        {
+          "floor": 11,
+          "title": "Семя Бессмертия · Сердце Бессмертия · Экимус",
+          "boss": null,
+          "reason": "gracia_private_scenario"
+        }
+      ],
+      "catalogSourcePlaces": 171,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "plains-of-dion",
+      "name": "Равнины Диона",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 268,
+      "nativeSourcePlaces": 268,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "cruma-marshlands",
+      "name": "Болота Крумы",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 414,
+      "nativeSourcePlaces": 414,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "turek-orcs",
+      "name": "Лагерь орков Турек",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 276,
+      "nativeSourcePlaces": 276,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "brekas-stronghold",
+      "name": "Крепость Брека",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 107,
+      "nativeSourcePlaces": 107,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "alligator-beach",
+      "name": "Берег Аллигаторов",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 141,
+      "nativeSourcePlaces": 141,
+      "unavailablePlaces": 3,
+      "sourceGaps": [
+        {
+          "kind": "territory",
+          "zone": "alligator-beach",
+          "npcId": "20314",
+          "count": 3,
+          "sourceFile": "spawns/Innadril/AlligatorBeach.xml",
+          "sourceGroup": "innadril01_qm2324_01",
+          "polygon": [
+            [
+              106252,
+              197068
+            ],
+            [
+              106452,
+              197068
+            ],
+            [
+              106452,
+              197268
+            ],
+            [
+              106252,
+              197268
+            ]
+          ],
+          "minZ": -4236,
+          "maxZ": -4036,
+          "rejected": {
+            "swimming_required": 100
+          },
+          "issues": [
+            "swimming_required"
+          ]
+        }
+      ],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "sea-of-spores",
+      "name": "Море Спор",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 206,
+      "nativeSourcePlaces": 206,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "timak-outpost",
+      "name": "Застава Тимак",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 266,
+      "nativeSourcePlaces": 266,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "plains-of-glory",
+      "name": "Равнины Славы",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 173,
+      "nativeSourcePlaces": 173,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "outlaw-forest",
+      "name": "Лес Изгоев",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 255,
+      "nativeSourcePlaces": 255,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "fields-of-massacre",
+      "name": "Поля Резни",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 460,
+      "nativeSourcePlaces": 460,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "cemetery",
+      "name": "Кладбище Адена",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 392,
+      "nativeSourcePlaces": 392,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "valley-of-saints",
+      "name": "Долина Святых",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 311,
+      "nativeSourcePlaces": 311,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "blazing-swamp",
+      "name": "Пылающее болото",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 385,
+      "nativeSourcePlaces": 385,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "swamp-of-screams",
+      "name": "Болото Криков",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 490,
+      "nativeSourcePlaces": 490,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "hot-springs",
+      "name": "Горячие источники",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 175,
+      "nativeSourcePlaces": 175,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "wall-of-argos",
+      "name": "Стена Аргоса",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 321,
+      "nativeSourcePlaces": 321,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "ketra-outpost",
+      "name": "Застава орков Кетра",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 393,
+      "nativeSourcePlaces": 393,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "varka-outpost",
+      "name": "Лагерь силеносов Варка",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 275,
+      "nativeSourcePlaces": 275,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "sel-mahums",
+      "name": "Лагерь Сел Махум",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 868,
+      "nativeSourcePlaces": 868,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "field-of-whispers",
+      "name": "Поле Шёпота",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 594,
+      "nativeSourcePlaces": 594,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "talking-island",
+      "name": "Окрестности Острова Говорящих",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 442,
+      "nativeSourcePlaces": 442,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "elven-fields",
+      "name": "Эльфийские луга",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 861,
+      "nativeSourcePlaces": 861,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "bee-hive",
+      "name": "Улей",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 369,
+      "nativeSourcePlaces": 369,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "catacomb-heretic",
+      "name": "Катакомбы Еретиков",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Катакомбы Еретиков",
+          "boss": null,
+          "reason": "sevensigns_access_and_entrance"
+        }
+      ],
+      "catalogSourcePlaces": 224,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "catacomb-branded",
+      "name": "Катакомбы Отлучённых",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Катакомбы Отлучённых",
+          "boss": null,
+          "reason": "sevensigns_access_and_entrance"
+        }
+      ],
+      "catalogSourcePlaces": 228,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "catacomb-apostate",
+      "name": "Катакомбы Отступников",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Катакомбы Отступников",
+          "boss": null,
+          "reason": "sevensigns_access_and_entrance"
+        }
+      ],
+      "catalogSourcePlaces": 224,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "catacomb-witch",
+      "name": "Катакомбы Ведьм",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Катакомбы Ведьм",
+          "boss": null,
+          "reason": "sevensigns_access_and_entrance"
+        }
+      ],
+      "catalogSourcePlaces": 224,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "catacomb-dark-omens",
+      "name": "Катакомбы Тёмных Знамений",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Катакомбы Тёмных Знамений",
+          "boss": null,
+          "reason": "sevensigns_access_and_entrance"
+        }
+      ],
+      "catalogSourcePlaces": 176,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "necropolis-sacrifice",
+      "name": "Некрополь Жертвоприношений",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Некрополь Жертвоприношений",
+          "boss": null,
+          "reason": "sevensigns_access_and_entrance"
+        }
+      ],
+      "catalogSourcePlaces": 232,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "necropolis-pilgrims",
+      "name": "Некрополь Пилигримов",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Некрополь Пилигримов",
+          "boss": null,
+          "reason": "sevensigns_access_and_entrance"
+        }
+      ],
+      "catalogSourcePlaces": 176,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "necropolis-worship",
+      "name": "Некрополь Поклонения",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Некрополь Поклонения",
+          "boss": null,
+          "reason": "sevensigns_access_and_entrance"
+        }
+      ],
+      "catalogSourcePlaces": 168,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "necropolis-patriots",
+      "name": "Некрополь Патриотов",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Некрополь Патриотов",
+          "boss": null,
+          "reason": "sevensigns_access_and_entrance"
+        }
+      ],
+      "catalogSourcePlaces": 188,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "necropolis-devotion",
+      "name": "Некрополь Посвящения",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Некрополь Посвящения",
+          "boss": null,
+          "reason": "sevensigns_access_and_entrance"
+        }
+      ],
+      "catalogSourcePlaces": 168,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "necropolis-martyrdom",
+      "name": "Некрополь Мучеников",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Некрополь Мучеников",
+          "boss": null,
+          "reason": "sevensigns_access_and_entrance"
+        }
+      ],
+      "catalogSourcePlaces": 116,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "necropolis-saints",
+      "name": "Некрополь Святых",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Некрополь Святых",
+          "boss": null,
+          "reason": "sevensigns_access_and_entrance"
+        }
+      ],
+      "catalogSourcePlaces": 176,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "necropolis-disciples",
+      "name": "Некрополь Учеников",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Некрополь Учеников",
+          "boss": null,
+          "reason": "sevensigns_access_and_entrance"
+        }
+      ],
+      "catalogSourcePlaces": 208,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "catacomb-forbidden-path",
+      "name": "Катакомбы Запретного Пути",
+      "nativePopulation": false,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [],
+      "deferredFloors": [
+        {
+          "floor": 1,
+          "title": "Катакомбы Запретного Пути",
+          "boss": null,
+          "reason": "sevensigns_access_and_entrance"
+        }
+      ],
+      "catalogSourcePlaces": 112,
+      "nativeSourcePlaces": 0,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "marsh-zombies",
+      "name": "Топи зомби",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 375,
+      "nativeSourcePlaces": 375,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "dark-forest",
+      "name": "Тёмный лес",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 558,
+      "nativeSourcePlaces": 558,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "vuku-lands",
+      "name": "Земли орков Вуку",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 75,
+      "nativeSourcePlaces": 75,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": true
+    },
+    {
+      "id": "primeval-isle",
+      "name": "Первобытный остров",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 710,
+      "nativeSourcePlaces": 710,
+      "unavailablePlaces": 0,
+      "sourceGaps": [],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    },
+    {
+      "id": "hellbound",
+      "name": "Хеллбаунд",
+      "nativePopulation": true,
+      "catalogFloors": [
+        1
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "deferredFloors": [],
+      "catalogSourcePlaces": 457,
+      "nativeSourcePlaces": 457,
+      "unavailablePlaces": 1,
+      "sourceGaps": [
+        {
+          "kind": "point",
+          "zone": "hellbound",
+          "npcId": "22320",
+          "source": {
+            "x": -10315,
+            "y": 237442,
+            "z": -3850
+          },
+          "sourceFile": "scripts/ai/areas/Hellbound/hellboundSpawns.xml",
+          "issues": [
+            "swimming_required"
+          ]
+        }
+      ],
+      "guardedScenarioRoutes": [],
+      "groundApproach": false
+    }
+  ]
+}
