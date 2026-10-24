@@ -3,7 +3,7 @@
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
   "zoneCount": 39,
   "nativeFieldCount": 38,
-  "partialNativeFieldCount": 4,
+  "partialNativeFieldCount": 3,
   "zones": [
     {
       "id": "talking-island",
@@ -209,10 +209,10 @@
       "route": true,
       "islandRoute": false,
       "fixed": 132,
-      "validFixed": 128,
+      "validFixed": 131,
       "areas": 125,
       "unknown": 0,
-      "state": "Подключён частично: недоступно 4 исходных мест"
+      "state": "Подключён частично: недоступно 1 исходных мест"
     },
     {
       "id": "frozen-labyrinth",
@@ -407,10 +407,10 @@
       "route": true,
       "islandRoute": false,
       "fixed": 868,
-      "validFixed": 864,
+      "validFixed": 868,
       "areas": 0,
       "unknown": 0,
-      "state": "Подключён частично: недоступно 4 исходных мест"
+      "state": "Мировой бой подключён"
     },
     {
       "id": "field-of-whispers",
@@ -436,63 +436,6 @@
     }
   ],
   "blocked": [
-    {
-      "zone": "forsaken-plains",
-      "npcId": "21017",
-      "source": {
-        "x": 166634,
-        "y": 34096,
-        "z": -4044
-      },
-      "sourceFile": "spawns/Others/25_19.xml",
-      "ground": {
-        "x": 166634,
-        "y": 34096,
-        "z": -3376,
-        "nswe": 7
-      },
-      "issues": [
-        "spawn_height_gap"
-      ]
-    },
-    {
-      "zone": "forsaken-plains",
-      "npcId": "20679",
-      "source": {
-        "x": 165042,
-        "y": 44228,
-        "z": -3860
-      },
-      "sourceFile": "spawns/Others/25_19.xml",
-      "ground": {
-        "x": 165042,
-        "y": 44228,
-        "z": -3544,
-        "nswe": 15
-      },
-      "issues": [
-        "spawn_height_gap"
-      ]
-    },
-    {
-      "zone": "forsaken-plains",
-      "npcId": "21018",
-      "source": {
-        "x": 165713,
-        "y": 50008,
-        "z": -4216
-      },
-      "sourceFile": "spawns/Others/25_19.xml",
-      "ground": {
-        "x": 165713,
-        "y": 50008,
-        "z": -3808,
-        "nswe": 15
-      },
-      "issues": [
-        "spawn_height_gap"
-      ]
-    },
     {
       "zone": "forsaken-plains",
       "npcId": "21020",
@@ -528,7 +471,6 @@
         "nswe": 15
       },
       "issues": [
-        "spawn_height_gap",
         "swimming_required"
       ]
     },
@@ -569,82 +511,6 @@
       "issues": [
         "swimming_required"
       ]
-    },
-    {
-      "zone": "sel-mahums",
-      "npcId": "22788",
-      "source": {
-        "x": 78990,
-        "y": 62250,
-        "z": -3335
-      },
-      "sourceFile": "spawns/Oren/SelMahums.xml",
-      "ground": {
-        "x": 78990,
-        "y": 62250,
-        "z": -3648,
-        "nswe": 15
-      },
-      "issues": [
-        "spawn_height_gap"
-      ]
-    },
-    {
-      "zone": "sel-mahums",
-      "npcId": "22787",
-      "source": {
-        "x": 84698,
-        "y": 61874,
-        "z": -3148
-      },
-      "sourceFile": "spawns/Oren/SelMahums.xml",
-      "ground": {
-        "x": 84698,
-        "y": 61874,
-        "z": -3448,
-        "nswe": 15
-      },
-      "issues": [
-        "spawn_height_gap"
-      ]
-    },
-    {
-      "zone": "sel-mahums",
-      "npcId": "22786",
-      "source": {
-        "x": 86075,
-        "y": 67510,
-        "z": -3375
-      },
-      "sourceFile": "spawns/Oren/SelMahums.xml",
-      "ground": {
-        "x": 86075,
-        "y": 67510,
-        "z": -3072,
-        "nswe": 15
-      },
-      "issues": [
-        "spawn_height_gap"
-      ]
-    },
-    {
-      "zone": "sel-mahums",
-      "npcId": "22787",
-      "source": {
-        "x": 82730,
-        "y": 69303,
-        "z": -3576
-      },
-      "sourceFile": "spawns/Oren/SelMahums.xml",
-      "ground": {
-        "x": 82730,
-        "y": 69303,
-        "z": -3120,
-        "nswe": 15
-      },
-      "issues": [
-        "spawn_height_gap"
-      ]
     }
   ],
   "blockedAreas": [
@@ -677,6 +543,136 @@
       "rejected": {
         "swimming_required": 100
       }
+    }
+  ],
+  "retainedSourceHeights": [
+    {
+      "zone": "forsaken-plains",
+      "npcId": "21017",
+      "source": {
+        "x": 166634,
+        "y": 34096,
+        "z": -4044
+      },
+      "ground": {
+        "x": 166634,
+        "y": 34096,
+        "z": -3376,
+        "nswe": 7
+      },
+      "available": true
+    },
+    {
+      "zone": "forsaken-plains",
+      "npcId": "20679",
+      "source": {
+        "x": 165042,
+        "y": 44228,
+        "z": -3860
+      },
+      "ground": {
+        "x": 165042,
+        "y": 44228,
+        "z": -3544,
+        "nswe": 15
+      },
+      "available": true
+    },
+    {
+      "zone": "forsaken-plains",
+      "npcId": "21018",
+      "source": {
+        "x": 165713,
+        "y": 50008,
+        "z": -4216
+      },
+      "ground": {
+        "x": 165713,
+        "y": 50008,
+        "z": -3808,
+        "nswe": 15
+      },
+      "available": true
+    },
+    {
+      "zone": "hellbound",
+      "npcId": "22320",
+      "source": {
+        "x": -10315,
+        "y": 237442,
+        "z": -3850
+      },
+      "ground": {
+        "x": -10315,
+        "y": 237442,
+        "z": -3144,
+        "nswe": 15
+      },
+      "available": false
+    },
+    {
+      "zone": "sel-mahums",
+      "npcId": "22788",
+      "source": {
+        "x": 78990,
+        "y": 62250,
+        "z": -3335
+      },
+      "ground": {
+        "x": 78990,
+        "y": 62250,
+        "z": -3648,
+        "nswe": 15
+      },
+      "available": true
+    },
+    {
+      "zone": "sel-mahums",
+      "npcId": "22787",
+      "source": {
+        "x": 84698,
+        "y": 61874,
+        "z": -3148
+      },
+      "ground": {
+        "x": 84698,
+        "y": 61874,
+        "z": -3448,
+        "nswe": 15
+      },
+      "available": true
+    },
+    {
+      "zone": "sel-mahums",
+      "npcId": "22786",
+      "source": {
+        "x": 86075,
+        "y": 67510,
+        "z": -3375
+      },
+      "ground": {
+        "x": 86075,
+        "y": 67510,
+        "z": -3072,
+        "nswe": 15
+      },
+      "available": true
+    },
+    {
+      "zone": "sel-mahums",
+      "npcId": "22787",
+      "source": {
+        "x": 82730,
+        "y": 69303,
+        "z": -3576
+      },
+      "ground": {
+        "x": 82730,
+        "y": 69303,
+        "z": -3120,
+        "nswe": 15
+      },
+      "available": true
     }
   ]
 }

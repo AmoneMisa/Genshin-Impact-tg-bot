@@ -36,11 +36,12 @@ export function nativeFieldActors(hunt){
 export function placeNativeActor(actor,source){
  if(!source||!['x','y','z'].every(k=>Number.isFinite(source[k])))return false;
  const point=worldGeodata.point(source);
- // Preserve the source XY; an unavailable layer must never become a guessed spawn.
+ // Preserve original coordinates. An absent layer still cannot prove placement.
  // Spawn.java corrects grounded, non-water monsters only when |geoZ-sourceZ| < 300.
  // The 40-unit movement step limit is a different rule.
- if(!point?.nswe||Math.abs(point.z-source.z)>=pilot.groundSpawnHeight.maxCorrectionExclusive||!nativeGroundAllowed(source)||!nativeGroundAllowed(point))return false;
- Object.assign(actor,{x:source.x/ROOM_SIZE,y:source.y/ROOM_SIZE,native:{z:point.z},path:[]});
+ if(!point?.nswe||!nativeGroundAllowed(source)||!nativeGroundAllowed(point))return false;
+ const z=Math.abs(point.z-source.z)<pilot.groundSpawnHeight.maxCorrectionExclusive?point.z:source.z;
+ Object.assign(actor,{x:source.x/ROOM_SIZE,y:source.y/ROOM_SIZE,native:{z},path:[]});
  return true;
 }
 export function placeNativeSpawn(actor,random=Math.random){
@@ -82,10 +83,15 @@ export function activateNativeField(hunt,point,now){
 export function syncNativePopulation(hunt,layout,now,populate,random=Math.random){
  const f=hunt?.field;if(!f?.native)return false;
  const pending=new Set((f.respawns||[]).map(r=>r.room+':'+r.sourceSlot));
+ const upgradePlacement=f.native.placementPolicyVersion!==pilot.groundSpawnHeight.version;
  for(const room of layout.rooms){
   let slot=0;
   for(const [entryIndex,source] of (room.spawns||[]).entries())for(let i=0;i<source.count;i++,slot++){
    const key=room.id+':'+slot;
+   if(upgradePlacement&&f.native.missing[key]&&source.coordinateSource==='point'){
+    const ground=worldGeodata.point(source);
+    if(ground&&Math.abs(ground.z-source.z)>=pilot.groundSpawnHeight.maxCorrectionExclusive&&placeNativeActor({},source))delete f.native.missing[key];
+   }
    if(f.native.loaded[key]||f.native.missing[key]||pending.has(key))continue;
    if(nativeSpawnDistance({x:f.x*ROOM_SIZE,y:f.y*ROOM_SIZE},source)>NATIVE_FIELD_RADIUS)continue;
    if(source.randomGroup){
@@ -100,6 +106,7 @@ export function syncNativePopulation(hunt,layout,now,populate,random=Math.random
    f.native.loaded[key]=true;bank.mobs.push(mob);
   }
  }
+ f.native.placementPolicyVersion=pilot.groundSpawnHeight.version;
  const visible=new Set(nativeFieldActors(hunt).map(m=>m.instanceId));
  for(const bank of nativeFieldBuckets(f))for(const m of bank.mobs||[])if(!visible.has(m.instanceId)){
   m.aggro=false;m.path=[];delete m.native?.journey;m.lastMoveAt=now;m.nextAttackAt=now+m.attackMs;

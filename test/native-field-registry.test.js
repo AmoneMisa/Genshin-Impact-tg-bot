@@ -1,3 +1,4 @@
+import {worldGeodata} from '../functions/game/world/l2jGeodata.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {worldAction,advanceWorld,worldState} from '../functions/game/world/world.js';
@@ -33,7 +34,7 @@ for(const [zone,meta]of Object.entries(registry.fields)){
   assert.equal(slots.reduce((n,s)=>n+s.count,0),meta.count);
   assert.equal(slots.filter(s=>nativeSourceGap(zone,s)).reduce((n,s)=>n+s.count,0),meta.unavailableCount||0);
   for(const slot of slots){const actor={},position=slot.coordinateSource==='point'?slot:sampleNativeTerritory(nativeTerritorySource(zone,slot));if(nativeSourceGap(zone,slot)){assert.equal(Boolean(position&&placeNativeActor(actor,position)),false,'documented gaps must still fail closed');continue;}assert.ok(position);assert.equal(placeNativeActor(actor,position),true,`${zone} ${slot.id} ${slot.x},${slot.y},${slot.z}`);
-   const point=nativeActorPoint(actor);if(slot.coordinateSource==='point'){assert.equal(point.x,slot.x);assert.equal(point.y,slot.y);assert.ok(Math.abs(point.z-slot.z)<300);}
+   const point=nativeActorPoint(actor);if(slot.coordinateSource==='point'){assert.equal(point.x,slot.x);assert.equal(point.y,slot.y);const ground=worldGeodata.point(slot);assert.equal(point.z,Math.abs(ground.z-slot.z)<300?ground.z:slot.z);}
    else {assert.ok(pointInPolygon(point,slot.polygon));assert.ok(point.z<=slot.maxZ);}
    assert.ok(registry.actors[slot.id].runSpeed>0);assert.ok(registry.actors[slot.id].attackRange>0);
   }

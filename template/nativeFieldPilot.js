@@ -176,6 +176,7 @@ export default {
     "geodataAttempts": 100,
     "sources": {
       "NpcSpawnTerritory.java": "9e4eaba64093bb3d22086836af977cac6640388bf65a902f2d9ea8cdeed69202",
+      "Spawn.java": "42307eac0dd6bb2661e9b069d39a0fad67c62a466bf0ab520cac6a39fbd0b045",
       "SpawnGroup.java": "c9a7b607ace3ab4e331ffa57ab3733d5aa0607332c109bd0cb4ea903e63cde89",
       "ZoneCuboid.java": "b29bf540fd2d88688eb7281171c8159bced21eb7c27786cd9565ade002c6aad1",
       "ZoneNPoly.java": "30529890245243bf606c16684449b7fc7ba52e047f93575b6037f294d0d75319"
@@ -835,66 +836,6 @@ export default {
         {
           "kind": "point",
           "zone": "forsaken-plains",
-          "npcId": "21017",
-          "source": {
-            "x": 166634,
-            "y": 34096,
-            "z": -4044
-          },
-          "sourceFile": "spawns/Others/25_19.xml",
-          "ground": {
-            "x": 166634,
-            "y": 34096,
-            "z": -3376,
-            "nswe": 7
-          },
-          "issues": [
-            "spawn_height_gap"
-          ]
-        },
-        {
-          "kind": "point",
-          "zone": "forsaken-plains",
-          "npcId": "20679",
-          "source": {
-            "x": 165042,
-            "y": 44228,
-            "z": -3860
-          },
-          "sourceFile": "spawns/Others/25_19.xml",
-          "ground": {
-            "x": 165042,
-            "y": 44228,
-            "z": -3544,
-            "nswe": 15
-          },
-          "issues": [
-            "spawn_height_gap"
-          ]
-        },
-        {
-          "kind": "point",
-          "zone": "forsaken-plains",
-          "npcId": "21018",
-          "source": {
-            "x": 165713,
-            "y": 50008,
-            "z": -4216
-          },
-          "sourceFile": "spawns/Others/25_19.xml",
-          "ground": {
-            "x": 165713,
-            "y": 50008,
-            "z": -3808,
-            "nswe": 15
-          },
-          "issues": [
-            "spawn_height_gap"
-          ]
-        },
-        {
-          "kind": "point",
-          "zone": "forsaken-plains",
           "npcId": "21020",
           "source": {
             "x": 186579,
@@ -917,8 +858,8 @@ export default {
       "territoryCount": 125,
       "randomGroupCount": 0,
       "initialCapacity": 257,
-      "unavailableCount": 4,
-      "availableCapacity": 253,
+      "unavailableCount": 1,
+      "availableCapacity": 256,
       "npcIds": [
         "20675",
         "20676",
@@ -938,94 +879,13 @@ export default {
     },
     "sel-mahums": {
       "city": "oren",
-      "sourceGaps": [
-        {
-          "kind": "point",
-          "zone": "sel-mahums",
-          "npcId": "22788",
-          "source": {
-            "x": 78990,
-            "y": 62250,
-            "z": -3335
-          },
-          "sourceFile": "spawns/Oren/SelMahums.xml",
-          "ground": {
-            "x": 78990,
-            "y": 62250,
-            "z": -3648,
-            "nswe": 15
-          },
-          "issues": [
-            "spawn_height_gap"
-          ]
-        },
-        {
-          "kind": "point",
-          "zone": "sel-mahums",
-          "npcId": "22787",
-          "source": {
-            "x": 84698,
-            "y": 61874,
-            "z": -3148
-          },
-          "sourceFile": "spawns/Oren/SelMahums.xml",
-          "ground": {
-            "x": 84698,
-            "y": 61874,
-            "z": -3448,
-            "nswe": 15
-          },
-          "issues": [
-            "spawn_height_gap"
-          ]
-        },
-        {
-          "kind": "point",
-          "zone": "sel-mahums",
-          "npcId": "22786",
-          "source": {
-            "x": 86075,
-            "y": 67510,
-            "z": -3375
-          },
-          "sourceFile": "spawns/Oren/SelMahums.xml",
-          "ground": {
-            "x": 86075,
-            "y": 67510,
-            "z": -3072,
-            "nswe": 15
-          },
-          "issues": [
-            "spawn_height_gap"
-          ]
-        },
-        {
-          "kind": "point",
-          "zone": "sel-mahums",
-          "npcId": "22787",
-          "source": {
-            "x": 82730,
-            "y": 69303,
-            "z": -3576
-          },
-          "sourceFile": "spawns/Oren/SelMahums.xml",
-          "ground": {
-            "x": 82730,
-            "y": 69303,
-            "z": -3120,
-            "nswe": 15
-          },
-          "issues": [
-            "spawn_height_gap"
-          ]
-        }
-      ],
+      "sourceGaps": [],
       "fixedCount": 868,
       "territoryCount": 0,
       "randomGroupCount": 0,
       "initialCapacity": 868,
-      "unavailableCount": 4,
-      "availableCapacity": 864,
+      "unavailableCount": 0,
+      "availableCapacity": 868,
       "npcIds": [
         "18908",
         "22775",
@@ -2002,6 +1862,8 @@ export default {
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
   },
   "groundSpawnHeight": {
+    "version": 2,
+    "retainSourceZOutsideCorrection": true,
     "maxCorrectionExclusive": 300,
     "file": "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/spawns/Spawn.java",
     "sha256": "42307eac0dd6bb2661e9b069d39a0fad67c62a466bf0ab520cac6a39fbd0b045"

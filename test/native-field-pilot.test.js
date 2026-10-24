@@ -112,7 +112,7 @@ test('ground monster spawn height follows the original Spawn.java threshold rath
  const source={x:161746,y:83536,z:-2864},actor={};
  assert.equal(placeNativeActor(actor,source),true);assert.equal(nativeActorPoint(actor).z,-2704);
  assert.deepEqual(source,{x:161746,y:83536,z:-2864});
- assert.equal(placeNativeActor({}, {...source,z:-3004}),false,'exactly 300 units is not corrected');
+ const boundary={};assert.equal(placeNativeActor(boundary,{...source,z:-3004}),true,'exactly 300 units retains original Z');assert.equal(nativeActorPoint(boundary).z,-3004);
  assert.equal(pilot.groundSpawnHeight.maxCorrectionExclusive,300);assert.match(pilot.groundSpawnHeight.sha256,/^[a-f0-9]{64}$/);
 });
 test('Angel Waterfall walks from Aden into native combat while its noblesse teleport remains restricted',()=>{

@@ -10,11 +10,12 @@ import {placeNativeActor} from '../../functions/game/world/nativeFieldSpace.js';
 import {worldGeodata} from '../../functions/game/world/l2jGeodata.js';
 import {nativeGroundBlock} from '../../functions/game/world/nativeGround.js';
 import {sampleNativeTerritory,nativeTerritorySource} from '../../functions/game/world/nativeSpawnTerritory.js';
-const zones=getZones().filter(z=>!z.instance&&continuousField(z,roomLayout(z))),blocked=[],blockedAreas=[],count=a=>a.reduce((n,s)=>n+s.count,0);
+const zones=getZones().filter(z=>!z.instance&&continuousField(z,roomLayout(z))),blocked=[],blockedAreas=[],retainedSourceHeights=[],count=a=>a.reduce((n,s)=>n+s.count,0);
 const names={geodata_missing:'Нет подтверждённого слоя геодаты',nswe_blocked:'Закрытый слой NSWE',swimming_required:'Требуется плавание',door_state_required:'Нужно состояние двери',holding_region_required:'Территория владения',spawn_height_gap:'Расхождение высоты не допускает коррекцию Spawn.java (< 300)'};
 const rows=zones.map(zone=>{
  const slots=LOCATION_LEVELS[zone.id]?.floors.flatMap(f=>f.rooms.flatMap(r=>r.spawns||[]))||[];
  const fixed=slots.filter(s=>s.coordinateSource==='point'),areas=slots.filter(s=>s.coordinateSource!=='point'&&s.polygon?.length>=3&&Number.isFinite(s.minZ)&&Number.isFinite(s.maxZ));
+ for(const source of fixed){const ground=worldGeodata.point(source);if(ground&&Math.abs(ground.z-source.z)>=registry.groundSpawnHeight.maxCorrectionExclusive)retainedSourceHeights.push({zone:zone.id,npcId:source.id,source:{x:source.x,y:source.y,z:source.z},ground,available:placeNativeActor({},source)});}
  const unknown=slots.filter(s=>!fixed.includes(s)&&!areas.includes(s)),invalid=fixed.filter(s=>!placeNativeActor({},s));
  let seed=42;const random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
  for(const source of areas){
@@ -27,7 +28,7 @@ const rows=zones.map(zone=>{
  for(const source of invalid){
   const ground=worldGeodata.point(source),issues=[];
   if(!ground)issues.push('geodata_missing');
-  else {if(!ground.nswe)issues.push('nswe_blocked');if(Math.abs(ground.z-source.z)>=300)issues.push('spawn_height_gap');}
+  else {if(!ground.nswe)issues.push('nswe_blocked');}
   issues.push(nativeGroundBlock(source));if(ground)issues.push(nativeGroundBlock(ground));
   blocked.push({zone:zone.id,npcId:source.id,source:{x:source.x,y:source.y,z:source.z},sourceFile:source.file||source.sourceFile||null,ground,issues:[...new Set(issues.filter(Boolean))]});
  }
@@ -37,12 +38,15 @@ const rows=zones.map(zone=>{
 });
 const issues=Object.fromEntries(Object.keys(names).map(key=>[key,blocked.filter(b=>b.issues.includes(key)).length]).filter(([,n])=>n));
 const partial=Object.values(registry.fields).filter(f=>f.unavailableCount).length;
-fs.writeFileSync('docs/native-field-readiness.json',JSON.stringify({sourceCommit:registry.source.commit,geodataCommit:worldGeodata.manifest.commit,zoneCount:zones.length,nativeFieldCount:Object.keys(registry.fields).length,partialNativeFieldCount:partial,zones:rows,blocked,blockedAreas},null,2)+'\n');
+fs.writeFileSync('docs/native-field-readiness.json',JSON.stringify({sourceCommit:registry.source.commit,geodataCommit:worldGeodata.manifest.commit,zoneCount:zones.length,nativeFieldCount:Object.keys(registry.fields).length,partialNativeFieldCount:partial,zones:rows,blocked,blockedAreas,retainedSourceHeights},null,2)+'\n');
 fs.writeFileSync('docs/native-field-readiness.md',[
  '# Следующие участки мировой карты','',
  `Аудит **${zones.length}** наземных зон текущего каталога. Мировой бой подключён у **${Object.keys(registry.fields).length}** участков, из них **${partial}** частично, с явно перечисленными недоступными спавнами; [реестр и проверенные позиции](native-field-registry.md). Наличие адаптированных комнат, картинки или дороги не считается переносом населения в мировые координаты.`, '',
  '| Зона | Наземный подход | Подтверждено фиксированных позиций | Количество в исходных областях | Без подтверждённого размещения | Следующий этап |','| --- | --- | ---: | ---: | ---: | --- |',
  ...rows.map(r=>`| ${r.name} | ${r.islandRoute?'От островного причала':r.route?'Да':'Нет'} | ${r.validFixed}/${r.fixed} | ${r.areas} | ${r.unknown} | ${r.state} |`),'',
+ '## Исходная высота без коррекции','',
+ 'Порог 300 в Spawn.java ограничивает коррекцию Z, а не разрешение появления NPC. При большем расхождении сохраняется исходный Z. Это не подтверждает совпадение слоёв геодаты и не разрешает проход через них. [Правило и миграция](native-spawn-height.md).','',
+ '| Зона | NPC | Исходный XYZ | Ближайший Z геодаты | Разрешено размещение |','| --- | ---: | --- | ---: | --- |',...retainedSourceHeights.map(r=>`| ${r.zone} | ${r.npcId} | ${r.source.x}, ${r.source.y}, ${r.source.z} | ${r.ground.z} | ${r.available?'Да, с исходным Z':'Нет, отдельное ограничение'} |`),'',
  '## Фиксированные точки, не допускаемые текущим наземным движком','',
  `Обнаружено **${blocked.length}** таких исходных записей, включая частично подключённые зоны. Все исходные XYZ, NPC, файлы, найденные слои и причины доступны в [машиночитаемой сверке](native-field-readiness.json). Одна запись может иметь несколько причин.`, '',
  '| Причина | Записей |','| --- | ---: |',...Object.entries(issues).map(([key,n])=>`| ${names[key]} | ${n} |`),'',
