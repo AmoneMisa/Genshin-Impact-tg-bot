@@ -266,6 +266,88 @@ export default {
         ]
       }
     ],
+    "20983": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "21074",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "20984",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "20985",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "21075": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "21076",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "21077",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "21078": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "21079",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "21080",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "21081": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "21082",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "21083",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
     "21312": [
       {
         "name": "Privates",
@@ -899,6 +981,72 @@ export default {
     ]
   },
   "fields": {
+    "tower-of-insolence": {
+      "city": "aden",
+      "interior": true,
+      "floors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "sequentialFloors": true,
+      "fixedCount": 0,
+      "territoryCount": 418,
+      "randomGroupCount": 0,
+      "initialCapacity": 418,
+      "unavailableCount": 0,
+      "availableCapacity": 418,
+      "npcIds": [
+        "20809",
+        "20810",
+        "20811",
+        "20812",
+        "20813",
+        "20814",
+        "20815",
+        "20816",
+        "20817",
+        "20818",
+        "20819",
+        "20820",
+        "20821",
+        "20822",
+        "20823",
+        "20824",
+        "20825",
+        "20826",
+        "20827",
+        "20828",
+        "20829",
+        "20983",
+        "21061",
+        "21064",
+        "21065",
+        "21066",
+        "21069",
+        "21072",
+        "21075",
+        "21078",
+        "21081"
+      ],
+      "count": 418,
+      "unportedMinionTemplates": [
+        "20983",
+        "21075",
+        "21078",
+        "21081"
+      ]
+    },
     "imperial-tomb": {
       "city": "goddard",
       "interior": true,
@@ -2318,6 +2466,7 @@ export default {
       "stats/npcs/20500-20599.xml": "0e8754e0c30d847352021fb458bdcee7089b135adb4d94bcf80ee6f4c6b4eec4",
       "stats/npcs/20600-20699.xml": "a39a79946ab71daea2d4492ef334a9e3f4cd5d3560e7c484cae39d9d4b9b6997",
       "stats/npcs/20700-20799.xml": "ee0c2bd8d88c1925e6c56baa4766df44092bbd3518311b7b68c2dcf54aff2fab",
+      "stats/npcs/20800-20899.xml": "4b21d3298aad7648cbdc556d35b9f626b371ec931d81469d4aff712229079843",
       "stats/npcs/20900-20999.xml": "6a01623585dd2d7df3beb8d348865c3e1eb48f394564e2980b76e402d8351b9b",
       "stats/npcs/21000-21099.xml": "63aa0be0a7e73013ab7c4c774df6af9b18475cfd484cd9519230e9e85dd5ab5a",
       "stats/npcs/21100-21199.xml": "287edf9c857311c30873682e0b7f3db1ab756800b708b5d8c8db9f8625feccab",
@@ -2336,6 +2485,7 @@ export default {
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Aden/TowerOfInsolence.xml": "06d8c63c7f15dd8f34aa0aeb269e33b3de88863cf34600d02250e889f46d653e",
       "spawns/Goddard/ImperialTomb.xml": "85df4c0d480833505a8d6318231350cce6a24cf7a8d23e5500f776f3f062e024",
       "spawns/Aden/GiantsCave.xml": "93fa79905f99141c77672133e0b5d3e38afc2d8b793b654282160902b81a6680",
       "spawns/Others/23_15.xml": "fb6905618e655ed6258b6104967b89d33344ee8d35bb383c61b9f2012d8700cb",
@@ -3186,6 +3336,90 @@ export default {
       "runSpeed": 174.0,
       "attackRange": 40.0
     },
+    "20809": {
+      "runSpeed": 143.0,
+      "attackRange": 40.0
+    },
+    "20810": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "20811": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "20812": {
+      "runSpeed": 160.0,
+      "attackRange": 1100.0
+    },
+    "20813": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "20814": {
+      "runSpeed": 143.0,
+      "attackRange": 80.0
+    },
+    "20815": {
+      "runSpeed": 165.0,
+      "attackRange": 40.0
+    },
+    "20816": {
+      "runSpeed": 164.0,
+      "attackRange": 40.0
+    },
+    "20817": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "20818": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "20819": {
+      "runSpeed": 165.0,
+      "attackRange": 1100.0
+    },
+    "20820": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "20821": {
+      "runSpeed": 165.0,
+      "attackRange": 40.0
+    },
+    "20822": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "20823": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "20824": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "20825": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "20826": {
+      "runSpeed": 160.0,
+      "attackRange": 1100.0
+    },
+    "20827": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "20828": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "20829": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
     "20928": {
       "runSpeed": 120.0,
       "attackRange": 40.0
@@ -3256,6 +3490,10 @@ export default {
     },
     "20974": {
       "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20983": {
+      "runSpeed": 170.0,
       "attackRange": 40.0
     },
     "20996": {
@@ -3339,6 +3577,42 @@ export default {
       "attackRange": 40.0
     },
     "21022": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21061": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21064": {
+      "runSpeed": 174.0,
+      "attackRange": 1100.0
+    },
+    "21065": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21066": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21069": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21072": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21075": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21078": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21081": {
       "runSpeed": 174.0,
       "attackRange": 40.0
     },

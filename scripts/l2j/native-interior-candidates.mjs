@@ -1,10 +1,11 @@
 import {MISSING_WORLD_SOURCE} from '../../docs/missing-world-sources.js';
 import {nativeTerritorySource,sampleNativeTerritory} from '../../functions/game/world/nativeSpawnTerritory.js';
+import landmarks from '../../template/nativeInteriorLandmarks.js';
 
 /** Offline witnesses only: fixed source NPCs or reproducible original placement
  * proposals. A sampled witness is neither an original entrance nor a fixed NPC. */
 export function nativeInteriorCandidates(id,model,from){
- const candidates=[],areas=new Set();
+ const landmark=landmarks.zones[id]?.[model.number],candidates=landmark?[landmark]:[],areas=new Set();
  for(const slot of model.rooms.flatMap(r=>r.spawns||[])){
   const file=slot.file||slot.sourceFile,sha256=MISSING_WORLD_SOURCE.files[file];
   if(!sha256)throw Error('Missing pinned interior provenance: '+file);

@@ -143,3 +143,24 @@ test('legacy Imperial alternatives retain an existing variant and pending timer 
  migrateNativeRandomGroups(field,zone);assert.deepEqual(field.mobs,[{instanceId:'kept',sourceRoom:room.id,sourceSlot:first.slot,currentHp:17,sourceRandomGroup:group}]);assert.deepEqual(field.respawns,[{room:room.id,sourceSlot:first.slot+1,at:START+12345}]);
  field.mobs.push({instanceId:'new-respawn',sourceRoom:room.id,sourceSlot:other.slot,currentHp:11,sourceRandomGroup:group});const saved=structuredClone(field);migrateNativeRandomGroups(field,zone);assert.deepEqual(field,saved);
 });
+
+test('Tower of Insolence climbs all thirteen public landings, survives saves and excludes Baium admission',async()=>{
+ const zone='tower-of-insolence',model=levels.zones[zone],meta=policy.fields[zone],rooms=nativeFieldRooms(zone),counts=[48,65,60,56,50,40,20,17,24,10,20,8,0];
+ assert.equal(meta.count,418);assert.equal(meta.initialCapacity,418);assert.deepEqual(meta.floors,Array.from({length:13},(_,i)=>i+1));
+ for(const floor of meta.floors){assert.equal(rooms.filter(r=>r.sourceFloor===floor).flatMap(r=>r.spawns).reduce((n,s)=>n+s.count,0),counts[floor-1]);let before=model.root;for(const p of model.levels[floor].path){assert.ok(nativeSegment(before,p,{allowed:nativeGroundAllowed,reversible:true}));before=p;}assert.deepEqual(before,model.levels[floor].to);}
+ assert.ok(rooms.every(r=>r.sourceFloor!==14));const vortex=model.levels[13].source;assert.equal(vortex.id,31862);assert.deepEqual([vortex.x,vortex.y,vortex.z],[112624,14032,10080]);assert.equal(vortex.sha256,'bd9dd19f54063bcde4703b26a351f93596b94786388a60d3a72b733dc63e52c6');
+ let s=hero('aden'),now=enter(s,zone);const marked=actors(s)[0];marked.currentHp=Math.floor(marked.hp/2);const kept={id:marked.instanceId,hp:marked.currentHp};
+ for(let floor=2;floor<=13;floor++){
+  const from=nativeActorPoint(s.game.hunt.field);const result=worldAction(s,{action:'native_floor',floor,z:1e9},now);assert.equal(result.ok,true,'floor '+floor+' '+JSON.stringify(result));assert.deepEqual(nativeActorPoint(s.game.hunt.field),from);const trip=s.game.hunt.field.native.journey;
+  s=JSON.parse(JSON.stringify(s));now=trip.until+1;advanceWorld(s,now);quiet(s);assert.deepEqual(nativeActorPoint(s.game.hunt.field),model.levels[floor].to);assert.equal((await getHuntState(s,now)).field.native.floor,floor);
+ }
+ assert.equal(nativeTerritoryFloorRoom(zone,rooms,nativeActorPoint(s.game.hunt.field))?.sourceFloor,13);
+ assert.equal(worldAction(s,{action:'native_floor',floor:14},now).reason,'invalid_floor');assert.equal(worldAction(s,{action:'floor',floor:14},now).ok,false);assert.equal(s.game.world.instanceId,undefined);assert.equal(s.game.world.mode,'location');
+ // A neighboring-floor return must retrace shared stair vertices, not score a
+ // spurious root detour that exhausts the bounded local rejoin search.
+ now=walk(s,12,now+1);assert.equal((await getHuntState(s,now)).field.native.floor,12);
+ now=walk(s,1,now+1);assert.deepEqual(nativeActorPoint(s.game.hunt.field),model.root);
+ now=walk(s,13,now+1);assert.deepEqual(nativeActorPoint(s.game.hunt.field),model.levels[13].to);now=walk(s,1,now+1);
+ assert.equal(actors(s).find(m=>m.instanceId===kept.id)?.currentHp,kept.hp);assert.equal(s.game.inventory.gold,1e6);
+ const keys=actors(s).map(m=>m.sourceRoom+':'+m.sourceSlot);assert.equal(new Set(keys).size,keys.length);
+});

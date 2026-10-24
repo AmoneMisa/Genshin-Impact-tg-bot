@@ -43,6 +43,13 @@ test('surface entry keeps its original world tile; stored roofs select cave foot
  assert.equal(nativeInteriorMap('antharas-lair',{x:143544,y:110356,z:160}),null);
  assert.ok(nativeInteriorMap('antharas-lair',{x:143544,y:110356,z:-3944}));assert.equal(nativeInteriorMap('vuku-lands',{x:0,y:0,z:0}),null);
 });
+
+test('the original thirteenth-floor Angelic Vortex selects the tower footprint at its own height',()=>{
+ const original={x:112624,y:14032,z:10080},point=worldGeodata.point(original);assert.equal(point.z,10072);
+ assert.equal(nativeInteriorMap('tower-of-insolence',point)?.asset,maps.maps['tower-of-insolence'].asset);
+ // The same XY on the actual roof must not be treated as the covered landing.
+ const roof=worldGeodata.point({...point,z:32767});assert.equal(nativeInteriorMap('tower-of-insolence',roof),null);
+});
 test('an unavailable cave image still covers the surface with a lightweight floor backdrop',()=>{
  const operations=[],ctx={save(){},restore(){},fillRect(...v){operations.push(['fill',...v]);},drawImage(...v){operations.push(['image',...v]);}},map=maps.maps['stakato-nest'];
  assert.equal(drawNativeInteriorMap(ctx,map,{width:320,height:240,project:p=>p,pic:()=>({complete:true,naturalWidth:0})}),true);

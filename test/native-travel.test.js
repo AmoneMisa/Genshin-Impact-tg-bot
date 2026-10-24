@@ -5,6 +5,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {worldAction,worldState,advanceWorld} from '../functions/game/world/world.js';
 import {nativeRoute,nativeWorldPoint} from '../functions/game/world/nativeTravel.js';
+import {nativeActorPoint,nativeFieldBuckets} from '../functions/game/world/nativeFieldSpace.js';
 import {nativeSegment} from '../functions/game/world/nativeNavigation.js';
 import {nativeGroundAllowed} from '../functions/game/world/nativeGround.js';
 import {createNativeJourney,advanceNativeJourney,nativeJourneyDto} from '../functions/game/world/nativeJourney.js';
@@ -149,9 +150,9 @@ test('hunting areas join through their source town hub and retain HP, IDs, visit
  assert.equal(returned.currentHp,1);assert.deepEqual(field.visited,visits);assert.ok(field.respawns.some(r=>r.sourceSlot===999999));
  assert.equal(s.game.hunt.kills,0);assert.equal(JSON.stringify(worldState(s,NOW+5000000)).includes('nativeFields'),false);
 });
-test('native departure still requires the actual entrance, no aggro, the right region and existing access rules',async()=>{
- const s=hero();assert.equal(worldAction(s,{action:'walk_location',location:'devils-isle'},NOW).ok,false);
- assert.ok(worldAction(s,{action:'walk_location',location:'tower-of-insolence'},NOW).ok);finish(s,NOW+1000000);
+test('adapted field departure still requires the actual entrance, no aggro, the right region and existing access rules',async()=>{
+ const s=hero();s.game.world.city='dion';assert.equal(worldAction(s,{action:'walk_location',location:'devils-isle'},NOW).ok,false);
+ assert.ok(worldAction(s,{action:'walk_location',location:'cruma-tower'},NOW).ok);finish(s,NOW+1000000);
  await getHuntState(s,NOW+1000000);const f=s.game.hunt.field;quiet(f);Object.assign(f,{x:.2,y:.2});
  assert.equal(worldAction(s,{action:'walk_location',location:'silent-valley'},NOW+1000000).reason,'entrance_required');
  Object.assign(f,{x:.5,y:.95});
@@ -187,22 +188,24 @@ test('escape scroll stops native walking, a new move interrupts the cast, and a 
  assert.equal(s.game.world.nativePosition,undefined);assert.equal(s.game.world.walkHome,undefined);
 });
 
-test('escape and paid travel preserve the canonical field bank, consume snapshots on entry, and arrive at the real entrance',async()=>{
+test('escape and paid travel preserve the native tower bank and use their own original arrival points',async()=>{
  const s=hero();s.game.inventory.materials.scroll_escape=1;
  assert.ok(worldAction(s,{action:'walk_location',location:'tower-of-insolence'},NOW).ok);finish(s,NOW+1000000);
  await getHuntState(s,NOW+1000000);quiet(s.game.hunt.field);
- const all=()=>[s.game.hunt.field,...Object.values(s.game.hunt.field.rooms||{})].flatMap(r=>r.mobs||[]);
+ const all=()=>nativeFieldBuckets(s.game.hunt.field).flatMap(r=>r.mobs||[]);
  const mob=all()[0],id=mob.instanceId;mob.currentHp=7;
- assert.ok(moveHuntField(s,'room:r0c1',NOW+1000000).ok);advanceHunt(s,NOW+1030000);quiet(s.game.hunt.field);
- assert.equal(s.game.hunt.field.room,'r0c1');
- assert.ok(worldAction(s,{action:'escape'},NOW+1030000).ok);advanceWorld(s,NOW+1045000);
+ assert.ok(worldAction(s,{action:'native_floor',floor:2},NOW+1000000).ok);
+ const climbed=s.game.hunt.field.native.journey.until+1;advanceWorld(s,climbed);quiet(s.game.hunt.field);assert.equal(s.game.hunt.field.native.sourceFloor,2);
+ assert.ok(worldAction(s,{action:'escape'},climbed).ok);advanceWorld(s,climbed+15000);
  assert.equal(s.game.world.mode,'city');assert.ok(s.game.world.nativeFields['tower-of-insolence']);
- assert.ok(worldAction(s,{action:'walk_location',location:'tower-of-insolence'},NOW+1045000).ok);finish(s,NOW+2045000);
- assert.equal(s.game.hunt.field.room,'r0c0');assert.equal(s.game.hunt.field.x,.5);assert.equal(s.game.hunt.field.y,.95);
+ assert.equal(s.game.inventory.materials.scroll_escape,0);
+ assert.ok(worldAction(s,{action:'walk_location',location:'tower-of-insolence'},climbed+15001).ok);finish(s,climbed+1015001);
+ assert.deepEqual(nativeActorPoint(s.game.hunt.field),nativeRoute('tower-of-insolence').to);
  assert.equal(all().find(m=>m.instanceId===id).currentHp,7);assert.equal(s.game.world.nativeFields['tower-of-insolence'],undefined);
  assert.equal(new Set(all().map(m=>m.instanceId)).size,all().length,'one canonical owner after changing arrival room');
  quiet(s.game.hunt.field);all().find(m=>m.instanceId===id).currentHp=3;
- assert.ok(worldAction(s,{action:'quick_travel',city:'aden'},NOW+2045000).ok);assert.ok(s.game.world.nativeFields['tower-of-insolence']);
- assert.ok(worldAction(s,{action:'quick_travel',location:'tower-of-insolence'},NOW+2045000).ok);
+ assert.ok(worldAction(s,{action:'quick_travel',city:'aden'},climbed+1015001).ok);assert.ok(s.game.world.nativeFields['tower-of-insolence']);
+ assert.ok(worldAction(s,{action:'quick_travel',location:'tower-of-insolence'},climbed+1015001).ok);
+ assert.deepEqual(nativeActorPoint(s.game.hunt.field),routes.routes['tower-of-insolence'].to);
  assert.equal(all().find(m=>m.instanceId===id).currentHp,3);assert.equal(s.game.world.nativeFields['tower-of-insolence'],undefined);
 });

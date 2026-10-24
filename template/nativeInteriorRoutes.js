@@ -1265,6 +1265,115 @@ export default {
         "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
       },
       "visited": 606
+    },
+    "tower-of-insolence": {
+      "from": {
+        "x": 114649,
+        "y": 11115,
+        "z": -5120,
+        "nswe": 15
+      },
+      "to": {
+        "x": 115550,
+        "y": 13866,
+        "z": -5096
+      },
+      "path": [
+        {
+          "x": 114776,
+          "y": 15016,
+          "z": -5096
+        },
+        {
+          "x": 115416,
+          "y": 15272,
+          "z": -5096
+        },
+        {
+          "x": 115544,
+          "y": 15016,
+          "z": -5096
+        },
+        {
+          "x": 115550,
+          "y": 13866,
+          "z": -5096
+        }
+      ],
+      "returnPath": [
+        {
+          "x": 115544,
+          "y": 15016,
+          "z": -5096
+        },
+        {
+          "x": 115416,
+          "y": 15272,
+          "z": -5096
+        },
+        {
+          "x": 114776,
+          "y": 15016,
+          "z": -5096
+        },
+        {
+          "x": 114649,
+          "y": 11115,
+          "z": -5120,
+          "nswe": 15
+        }
+      ],
+      "sourceEntry": {
+        "file": "teleporters/town/30848.xml",
+        "npcId": 30848,
+        "name": "Tower of Insolence",
+        "type": "NORMAL",
+        "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+        "sha256": "3457ecb3855741d523d960755b9f2c8a1db3bba15d6d53dd2245d6c7a5f8ac24"
+      },
+      "sourceSpawn": {
+        "type": "TERRITORY_SAMPLE",
+        "originalEntrance": null,
+        "sourceGroup": "aden33_2318_02",
+        "polygon": [
+          [
+            115159,
+            13688
+          ],
+          [
+            116005,
+            14066
+          ],
+          [
+            116634,
+            14726
+          ],
+          [
+            116953,
+            15467
+          ],
+          [
+            115980,
+            15715
+          ],
+          [
+            115077,
+            14717
+          ]
+        ],
+        "minZ": -5103,
+        "maxZ": -4903,
+        "seed": 42,
+        "point": {
+          "x": 115550,
+          "y": 13866,
+          "z": -5096
+        },
+        "file": "spawns/Aden/TowerOfInsolence.xml",
+        "sha256": "06d8c63c7f15dd8f34aa0aeb269e33b3de88863cf34600d02250e889f46d653e",
+        "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+      },
+      "visited": 5154
     }
   }
 };

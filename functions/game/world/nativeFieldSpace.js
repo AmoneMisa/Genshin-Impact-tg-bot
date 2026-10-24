@@ -1,5 +1,6 @@
 import {nativeFieldRooms,migrateNativeRoomBanks,migrateNativeRandomGroups} from './nativeFieldRooms.js';
 import pilot from '../../../template/nativeFieldPilot.js';
+import landmarks from '../../../template/nativeInteriorLandmarks.js';
 import {nativeInteriorMap} from './nativeInteriorMap.js';
 import {ROOM_SIZE} from './navigation.js';
 import {worldGeodata} from './l2jGeodata.js';
@@ -162,6 +163,11 @@ export function nativeTerritoryFloorRoom(zone,rooms,point){
   if(slot.coordinateSource==='point'||!room.sourceFloor)continue;
   const key=room.sourceFloor+':'+(slot.file||slot.sourceFile)+':'+slot.sourceGroup;if(seen.has(key))continue;seen.add(key);
   if(nativeTerritoryGround(nativeTerritorySource(zone,slot),point))matches.set(room.sourceFloor,room);
+ }
+ for(const [floor,landmark] of Object.entries(landmarks.zones[zone]||{})){
+  const room=rooms.find(r=>r.sourceFloor===Number(floor));if(!room)continue;
+  const ground=worldGeodata.point(landmark.point);
+  if(ground&&Math.hypot(ground.x-point.x,ground.y-point.y,ground.z-point.z)<=NATIVE_FIELD_RADIUS&&nativeStaticSight(point,ground,{allowed:nativeGroundAllowed}))matches.set(Number(floor),room);
  }
  return matches.size===1?matches.values().next().value:null;
 }

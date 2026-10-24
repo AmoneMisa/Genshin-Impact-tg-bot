@@ -24,27 +24,34 @@ export function nativeLevelTravel(session,floor,now,speed){
  }
  const allowed=nativeGroundFor(session);
  function rejoin(at){
- const candidates=[];
+ const joins=new Map();
+ function candidate(point,suffix){
+  const near=distance(at,point);if(near>8192)return;
+  // Shared tower stair prefixes otherwise look like a detour via the root.
+  // Remove only exact XYZ loops before scoring, preserving stacked landings.
+  suffix=pruneNativeLoops(point,suffix);let length=0,previous=point;
+  for(const p of suffix){length+=Math.hypot(p.x-previous.x,p.y-previous.y);previous=p;}
+  const key=`${point.x},${point.y},${point.z}`,score=near+length;
+  if(!joins.has(key)||score<joins.get(key).score)joins.set(key,{point,suffix,near,score});
+ }
  for(const route of Object.values(source.levels)){
   const vertices=[source.root,...route.path];
   for(let i=0;i<vertices.length;i++){
-   const point=vertices[i],near=distance(at,point);if(near>8192)continue;
+   const point=vertices[i];
    const suffix=route===target?vertices.slice(i+1):[...vertices.slice(0,i).reverse(),...target.path];
-   let length=0,previous=point;for(const p of suffix){length+=Math.hypot(p.x-previous.x,p.y-previous.y);previous=p;}
-   candidates.push({point,suffix,score:near+length});
+   candidate(point,suffix);
   }
  }
  const approach=approaches.geodataCommit===data.geodataCommit&&approaches.barriersSha256===data.barriersSha256&&approaches.routes[hunt.zone];
  if(approach&&distance(approach.to,source.root)<1e-7){
   const vertices=[approach.from,...approach.path];
   for(let i=0;i<vertices.length;i++){
-   const point=vertices[i],near=distance(at,point);if(near>8192)continue;
-   const suffix=[...vertices.slice(i+1),...target.path];let length=0,previous=point;
-   for(const p of suffix){length+=Math.hypot(p.x-previous.x,p.y-previous.y);previous=p;}
-   candidates.push({point,suffix,score:near+length});
+   candidate(vertices[i],[...vertices.slice(i+1),...target.path]);
   }
  }
- candidates.sort((a,b)=>a.score-b.score);
+ // Rejoin the local stair network before optimizing its remaining route.
+ // A stacked upper landing can look close in XY while its join is blocked.
+ const candidates=[...joins.values()].sort((a,b)=>a.near-b.near||a.score-b.score);
  let plan;
  for(const c of candidates.slice(0,64))if(nativeSegment(at,c.point,{allowed,reversible:true})){plan={start:at,path:[c.point,...c.suffix]};break;}
  if(!plan)for(const c of candidates.slice(0,6)){

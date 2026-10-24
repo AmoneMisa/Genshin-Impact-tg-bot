@@ -5,18 +5,19 @@ import {nativeInteriorCandidates} from './native-interior-candidates.mjs';
 const file='template/nativeLevelRoutes.js',previous=fs.existsSync(file)?(await import(new URL('../../template/nativeLevelRoutes.js',import.meta.url))).default:null,zones={...previous?.zones};
 for(const id of process.argv.slice(2).length?process.argv.slice(2):['forge-of-the-gods']){
  const root=approaches.routes[id];if(!root||!pilot.fields[id]?.floors)throw Error('Missing cave approach or reviewed floors');
- const levels={};
+ const levels={};let previousLevel;
  for(const floor of pilot.fields[id].floors){
-  const model=LOCATION_LEVELS[id].floors.find(f=>f.number===floor),candidates=nativeInteriorCandidates(id,model,root.to);
-  if(floor===1){levels[floor]={title:model.title,to:root.to,path:[],source:root.sourceSpawn};continue;}
+  const base=pilot.fields[id].sequentialFloors&&previousLevel?previousLevel:{to:root.to,path:[]};
+  const model=LOCATION_LEVELS[id].floors.find(f=>f.number===floor),candidates=nativeInteriorCandidates(id,model,base.to);
+  if(floor===1){previousLevel=levels[floor]={title:model.title,to:root.to,path:[],source:root.sourceSpawn};continue;}
   let result;
   for(const source of candidates){
-   const plan=findNativePath(root.to,source.point,{allowed:nativeGroundAllowed,stride:4,maxNodes:200000,margin:2048,heuristicWeight:2,reversible:true});
-   if(!plan.ok||plan.path.length>128)continue;
+   const plan=findNativePath(base.to,source.point,{allowed:nativeGroundAllowed,stride:4,maxNodes:200000,margin:2048,heuristicWeight:2,reversible:true});
+   if(!plan.ok||base.path.length+plan.path.length>384)continue;
    let before=plan.start;for(const p of plan.path){if(!nativeSegment(before,p,{allowed:nativeGroundAllowed,reversible:true}))throw Error('Invalid level route');before=p;}
-   result={title:model.title,to:plan.path.at(-1),path:plan.path,source:source.source,visited:plan.visited};break;
+   result={title:model.title,to:plan.path.at(-1),path:[...base.path,...plan.path],source:source.source,visited:plan.visited};break;
   }
-  if(!result)throw Error('No reversible level path: '+id+' '+floor);levels[floor]=result;
+  if(!result)throw Error('No reversible level path: '+id+' '+floor);previousLevel=levels[floor]=result;
  }
  zones[id]={root:root.to,levels};console.log(id,Object.keys(levels).length+' connected native levels');
 }

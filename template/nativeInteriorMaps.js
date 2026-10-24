@@ -128,6 +128,28 @@ export default {
       "files": {
         "spawns/Goddard/ImperialTomb.xml": "85df4c0d480833505a8d6318231350cce6a24cf7a8d23e5500f776f3f062e024"
       }
+    },
+    "tower-of-insolence": {
+      "asset": "/art/world/native/tower-of-insolence.svg",
+      "regions": {
+        "23_18": "f9fdd9a44bf0da1fb4c54d7b8fce1d18fd717e57717d3ddaf82ce226a217c656"
+      },
+      "bounds": {
+        "x": 111600,
+        "y": 10848,
+        "w": 6096,
+        "h": 8304
+      },
+      "cells": 129919,
+      "layerCells": 1320582,
+      "contours": 16,
+      "corners": 2663,
+      "bytes": 20712,
+      "sha256": "68035d18951c9830c57a333aa35c9872d2ef8c3c5a462967c9e44a5f26d17e4d",
+      "files": {
+        "spawns/Aden/TowerOfInsolence.xml": "06d8c63c7f15dd8f34aa0aeb269e33b3de88863cf34600d02250e889f46d653e",
+        "spawns/Others/23_18.xml": "bd9dd19f54063bcde4703b26a351f93596b94786388a60d3a72b733dc63e52c6"
+      }
     }
   }
 };

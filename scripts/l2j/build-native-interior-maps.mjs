@@ -7,14 +7,16 @@ import {createHash} from 'node:crypto';
 import {LOCATIONS} from '../../template/worldMap.js';
 import {MISSING_WORLD_SOURCE} from '../../docs/missing-world-sources.js';
 import approaches from '../../template/nativeInteriorRoutes.js';
+import landmarks from '../../template/nativeInteriorLandmarks.js';
 import {geoCell,geoRegionId,worldGeodata} from '../../functions/game/world/l2jGeodata.js';
 import {nativeStep} from '../../functions/game/world/nativeNavigation.js';
 const file='template/nativeInteriorMaps.js',previous=fs.existsSync(file)?(await import(new URL('../../template/nativeInteriorMaps.js',import.meta.url))).default:null;
 const requested=process.argv.slice(2),ids=requested.length?requested:['antharas-lair','stakato-nest'],maps={...previous?.maps};
 for(const id of ids){
  const slots=nativeFieldRooms(id).flatMap(r=>r.spawns||[]),fixed=slots.filter(s=>s.coordinateSource==='point'),areas=slots.filter(s=>s.coordinateSource!=='point');
- const files=Object.fromEntries([...new Set(slots.map(s=>s.file||s.sourceFile))].map(f=>{if(!MISSING_WORLD_SOURCE.files[f])throw Error('Missing source provenance');return [f,MISSING_WORLD_SOURCE.files[f]];}));
- const anchors=[...fixed,...areas.flatMap(s=>s.polygon.map(([x,y])=>({x,y}))),LOCATIONS.find(l=>l.id===id),...(approaches.routes[id]?.path||[])];
+ const markers=Object.values(landmarks.zones[id]||{});
+ const files=Object.fromEntries([...new Set([...slots.map(s=>s.file||s.sourceFile),...markers.map(m=>m.source.file)])].map(f=>{if(!MISSING_WORLD_SOURCE.files[f])throw Error('Missing source provenance');return [f,MISSING_WORLD_SOURCE.files[f]];}));
+ const anchors=[...fixed,...markers.map(m=>m.point),...areas.flatMap(s=>s.polygon.map(([x,y])=>({x,y}))),LOCATIONS.find(l=>l.id===id),...(approaches.routes[id]?.path||[])];
  // Presentation crop only. It never participates in movement or placement.
  const left=geoCell(Math.min(...anchors.map(s=>s.x)))-16,top=geoCell(Math.min(...anchors.map(s=>s.y)))-16,right=geoCell(Math.max(...anchors.map(s=>s.x)))+16,bottom=geoCell(Math.max(...anchors.map(s=>s.y)))+16;
  const width=right-left+1,height=bottom-top+1,roof=new Int16Array(width*height);roof.fill(32767);
@@ -22,7 +24,7 @@ for(const id of ids){
  const covered=n=>{const i=index(n.gx,n.gy);if(roof[i]===32767)roof[i]=worldGeodata.cell(n.gx,n.gy,32767)?.z??-32768;return roof[i]>n.z;};
  const queue=[],seen=new Set(),mask=new Set();
  function add(n){if(!n?.nswe||!inside(n)||!covered(n))return;const i=index(n.gx,n.gy),key=i+':'+n.z;if(seen.has(key))return;seen.add(key);mask.add(i);queue.push(n);if(seen.size>1500000)throw Error('Cave footprint node budget');}
- for(const s of fixed)add({gx:geoCell(s.x),gy:geoCell(s.y),...worldGeodata.point(s)});
+ for(const s of [...fixed,...markers.map(m=>m.point)])add({gx:geoCell(s.x),gy:geoCell(s.y),...worldGeodata.point(s)});
  const territories=new Set();
  for(const area of areas){
   const key=(area.file||area.sourceFile)+':'+area.sourceGroup;if(territories.has(key))continue;territories.add(key);

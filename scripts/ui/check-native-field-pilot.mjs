@@ -123,15 +123,16 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  await page.locator('.atlas-combat details:has([data-native-supplies])>summary').click();assert.equal(await page.locator('.atlas-combat .ui-combat-supply').count(),6);
  assert.equal(await page.locator('.atlas-combat .ui-combat-supply[data-supply="hp"]').isDisabled(),true);await page.locator('.atlas-combat details:has([data-native-supplies])>summary').click();
  if(pilot.fields[zone].floors){
+  const targetFloor=Number(process.env.NATIVE_FLOOR||2);
   const {default:levels}=await import('../../template/nativeLevelRoutes.js'),model=levels.zones[zone],beforeFloor=worldState(s,now).nativeField.point;
-  const kept=nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.sourceFloor===2&&m.currentHp>0);assert.ok(kept);kept.currentHp=Math.floor(kept.hp/2);const remembered={id:kept.instanceId,hp:kept.currentHp};
+  const kept=nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.sourceFloor!==1&&m.currentHp>0);assert.ok(kept);kept.currentHp=Math.floor(kept.hp/2);const remembered={id:kept.instanceId,hp:kept.currentHp};
   await page.locator('[data-native-levels]>summary').click();
-  const down=page.locator('[data-native-floor="2"]');assert.equal(await down.isEnabled(),true);await down.focus();assert.equal(await down.evaluate(n=>n===document.activeElement),true);
+  const down=page.locator(`[data-native-floor="${targetFloor}"]`);assert.equal(await down.isEnabled(),true);await down.focus();assert.equal(await down.evaluate(n=>n===document.activeElement),true);
   await down.click();assert.deepEqual(worldState(s,now).nativeField.point,beforeFloor);assert.ok(s.game.hunt.field.native.journey?.native.remaining>0);
   s.game=JSON.parse(JSON.stringify(s.game));finishRoad=true;
-  await page.waitForResponse(async r=>{if(!r.url().includes('/api/world?live=1'))return false;const p=(await r.json()).world.nativeField?.point;return p&&['x','y','z'].every(k=>p[k]===model.levels[2].to[k]);});
-  await page.waitForFunction(()=>document.querySelector('[data-native-floor="2"]')?.disabled);
-  assert.equal(s.game.hunt.field.native.sourceFloor,2);assert.equal(nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.instanceId===remembered.id)?.currentHp,remembered.hp);
+  await page.waitForResponse(async r=>{if(!r.url().includes('/api/world?live=1'))return false;const p=(await r.json()).world.nativeField?.point;return p&&['x','y','z'].every(k=>p[k]===model.levels[targetFloor].to[k]);});
+  await page.waitForFunction(n=>document.querySelector(`[data-native-floor="${n}"]`)?.disabled,targetFloor);
+  assert.equal(s.game.hunt.field.native.sourceFloor,targetFloor);assert.equal(nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.instanceId===remembered.id)?.currentHp,remembered.hp);
   await page.screenshot({path:path.join(out,`native-levels-${width}${noCanvas?'-no-canvas':noImages?'-no-images':''}.png`)});
   await page.locator('[data-native-floor="1"]').click();finishRoad=true;
   await page.waitForResponse(async r=>{if(!r.url().includes('/api/world?live=1'))return false;const p=(await r.json()).world.nativeField?.point;return p&&['x','y','z'].every(k=>p[k]===model.root[k]);});

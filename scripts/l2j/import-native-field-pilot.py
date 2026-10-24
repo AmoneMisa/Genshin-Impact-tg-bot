@@ -8,6 +8,7 @@ from pathlib import Path
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
 fields={
+    "tower-of-insolence": {"city":"aden","interior":True,"floors":list(range(1,14)),"sequentialFloors":True},
     "imperial-tomb": {"city":"goddard","interior":True,"floors":[1,2]},
     "giants-cave": {"city":"aden","interior":True,"floors":[1,2]},
     "monastery-of-silence": {"city":"rune","interior":True,"floors":[1,2]},
