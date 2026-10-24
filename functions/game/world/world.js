@@ -1,3 +1,4 @@
+import {nativeLevelTravel} from './nativeLevelTravel.js';
 import {findCityPath,advanceCityPath,ensureCityOrigin} from './cityNavigation.js';
 import {CITIES, REGIONS, LOCATIONS, CITY_NPCS} from '../../../template/worldMap.js';
 import {teleportPrice} from '../runes/labRunes.js';
@@ -242,6 +243,13 @@ export function worldAction(session,body,now=Date.now()){
     if(body.action==='quick_travel')return quickTravel(session,body,now);
     const w=advanceWorld(session,now);
     if(!alive(session))return {ok:false,reason:'dead'};
+    if(body.action==='native_floor'){
+        const f=session.game.hunt?.field;
+        if(w.mode!=='location'||!f?.native||w.instanceId||session.game.hunt.zone!==w.location)return {ok:false,reason:'invalid_floor'};
+        const blocked=l2ActionBlock(session,{move:true},now);if(blocked)return {ok:false,reason:blocked};
+        const result=nativeLevelTravel(session,Number(body.floor),now,getSpeed(session)*l2MoveMultiplier(session,now));if(!result.ok)return result;
+        stopHuntAction(f,now);f.native.journey=result.trip;f.seenAt=now;w.channel=null;return {ok:true};
+    }
     if(body.action==='hellbound_route'){
         if(hellboundNpc(body.npc)?.npcId!==30612)return {ok:false,reason:'unknown_npc'};
         const denied=quickTravelBlock(session,now);if(denied)return {ok:false,reason:denied};

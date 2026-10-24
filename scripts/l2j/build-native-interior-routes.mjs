@@ -4,6 +4,7 @@ import {LOCATION_LEVELS} from '../../template/locationLevels.js';
 import {LOCATIONS} from '../../template/worldMap.js';
 import {MISSING_WORLD_SOURCE} from '../../docs/missing-world-sources.js';
 import routes from '../../template/nativeRoutes.js';
+import pilot from '../../template/nativeFieldPilot.js';
 import {worldGeodata} from '../../functions/game/world/l2jGeodata.js';
 import {findNativePath,nativeSegment} from '../../functions/game/world/nativeNavigation.js';
 import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';
@@ -12,7 +13,7 @@ const barriersSha256=createHash('sha256').update(fs.readFileSync('template/nativ
 const requested=process.argv.slice(2),ids=requested.length?requested:['stakato-nest'],compiled={...previous?.routes};
 for(const id of ids){
  const entry=LOCATIONS.find(l=>l.id===id),route=routes.routes[id],model=LOCATION_LEVELS[id];
- if(!entry?.entrySource||!route?.available||!route.returnPath||model.floors.length!==1)throw Error('Unverified single-floor approach: '+id);
+ if(!entry?.entrySource||!route?.available||!route.returnPath||(model.floors.length!==1&&!pilot.fields[id]?.floors))throw Error('Unverified single-floor approach: '+id);
  if(routes.geodataCommit!==worldGeodata.manifest.commit||routes.barriersSha256!==barriersSha256)throw Error('Stale outside route');
  const candidates=model.floors[0].rooms.flatMap(r=>r.spawns||[]).filter(s=>s.coordinateSource==='point').sort((a,b)=>Math.hypot(a.x-entry.x,a.y-entry.y)-Math.hypot(b.x-entry.x,b.y-entry.y)).slice(0,8);
  let result=null;
@@ -27,4 +28,4 @@ for(const id of ids){
  if(!result)throw Error('No reversible cave approach: '+id);
  compiled[id]=result;console.log(id,result.path.length+' cave segments',result.visited+' search nodes');
 }
-fs.writeFileSync(file,'// Checked ground approaches from original outside entries to original cave NPCs.\n// These are derived walking routes, never teleport destinations.\nexport default '+JSON.stringify({geodataCommit:worldGeodata.manifest.commit,barriersSha256,routes:compiled},null,2)+';\n');
+fs.writeFileSync(file,'// Derived from L2J High Five geodata (GPL-3.0); see data/l2j-geodata/LICENSE.\n// Checked ground approaches from original outside entries to original cave NPCs.\n// These are derived walking routes, never teleport destinations.\nexport default '+JSON.stringify({geodataCommit:worldGeodata.manifest.commit,barriersSha256,routes:compiled},null,2)+';\n');

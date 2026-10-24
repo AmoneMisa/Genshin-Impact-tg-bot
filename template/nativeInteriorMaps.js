@@ -44,6 +44,27 @@ export default {
       "files": {
         "spawns/Others/22_16.xml": "36cdf2361c2f13aee757f269e3b39b64946f89b1eaf2641b8598310de93f35a3"
       }
+    },
+    "forge-of-the-gods": {
+      "asset": "/art/world/native/forge-of-the-gods.svg",
+      "regions": {
+        "25_14": "29db19d522c6a539025da34d86907659ed6152efe820248063514dd22c52cc57"
+      },
+      "bounds": {
+        "x": 168752,
+        "y": -121728,
+        "w": 22464,
+        "h": 15968
+      },
+      "cells": 541007,
+      "layerCells": 660409,
+      "contours": 231,
+      "corners": 17209,
+      "bytes": 142415,
+      "sha256": "f9a16e799827bfb7c16069a732aa4fb472282588562ced7b347404053c3ff5a8",
+      "files": {
+        "spawns/Others/25_14.xml": "ee5e6564a38b4778cce668a88da2f36498bb17acfb3ea2eb8cdfa71c10675c8d"
+      }
     }
   }
 };

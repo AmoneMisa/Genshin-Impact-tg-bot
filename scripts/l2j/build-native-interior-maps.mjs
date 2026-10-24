@@ -1,3 +1,4 @@
+import {nativeFieldRooms} from '../../functions/game/world/nativeFieldRooms.js';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 import {LOCATION_LEVELS} from '../../template/locationLevels.js';
@@ -9,7 +10,7 @@ import {nativeStep} from '../../functions/game/world/nativeNavigation.js';
 const file='template/nativeInteriorMaps.js',previous=fs.existsSync(file)?(await import(new URL('../../template/nativeInteriorMaps.js',import.meta.url))).default:null;
 const requested=process.argv.slice(2),ids=requested.length?requested:['antharas-lair','stakato-nest'],maps={...previous?.maps};
 for(const id of ids){
- const slots=LOCATION_LEVELS[id].floors[0].rooms.flatMap(r=>r.spawns||[]);if(slots.some(s=>s.coordinateSource!=='point'))throw Error('Fixed source seeds required');
+ const slots=nativeFieldRooms(id).flatMap(r=>r.spawns||[]);if(slots.some(s=>s.coordinateSource!=='point'))throw Error('Fixed source seeds required');
  const anchors=[...slots,LOCATIONS.find(l=>l.id===id),...(approaches.routes[id]?.path||[])];
  // Presentation crop only. It never participates in movement or placement.
  const left=geoCell(Math.min(...anchors.map(s=>s.x)))-16,top=geoCell(Math.min(...anchors.map(s=>s.y)))-16,right=geoCell(Math.max(...anchors.map(s=>s.x)))+16,bottom=geoCell(Math.max(...anchors.map(s=>s.y)))+16;
@@ -47,7 +48,7 @@ for(const id of ids){
   }while(at!==first);
   commands.push('M'+points.map(([x,y])=>x+' '+y).join('L')+'Z');contours++;corners+=points.length;
  }
- const color=id==='stakato-nest'?'#51573f':'#5e5143',svg=`<!-- Derived from L2J High Five geodata ${worldGeodata.manifest.commit}, GPL-3.0. Source: scripts/l2j/build-native-interior-maps.mjs; license: data/l2j-geodata/LICENSE. -->\n<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><path fill="${color}" stroke="#a9a48c" stroke-width=".5" fill-rule="evenodd" d="${commands.join('')}"/></svg>\n`,asset=`/art/world/native/${id}.svg`;
+ const color=id==='stakato-nest'?'#51573f':id==='forge-of-the-gods'?'#674536':'#5e5143',svg=`<!-- Derived from L2J High Five geodata ${worldGeodata.manifest.commit}, GPL-3.0. Source: scripts/l2j/build-native-interior-maps.mjs; license: data/l2j-geodata/LICENSE. -->\n<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><path fill="${color}" stroke="#a9a48c" stroke-width=".5" fill-rule="evenodd" d="${commands.join('')}"/></svg>\n`,asset=`/art/world/native/${id}.svg`;
  fs.mkdirSync('webapp/art/world/native',{recursive:true});fs.writeFileSync('webapp'+asset,svg);
  const files=Object.fromEntries([...new Set(slots.map(s=>s.file||s.sourceFile))].map(f=>{if(!MISSING_WORLD_SOURCE.files[f])throw Error('Missing source provenance');return [f,MISSING_WORLD_SOURCE.files[f]];}));
  const regions={};for(let x=left;x<=right;x+=2048)for(let y=top;y<=bottom;y+=2048){const region=geoRegionId(x*16,y*16);regions[region]=worldGeodata.manifest.regions[region]?.sha256;}

@@ -705,6 +705,19 @@ export default {
         ]
       }
     ],
+    "22647": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "21391",
+            "count": "5",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
     "22693": [
       {
         "name": "Privates1",
@@ -816,6 +829,42 @@ export default {
     ]
   },
   "fields": {
+    "forge-of-the-gods": {
+      "city": "goddard",
+      "interior": true,
+      "floors": [
+        1,
+        2
+      ],
+      "fixedCount": 724,
+      "territoryCount": 0,
+      "randomGroupCount": 0,
+      "initialCapacity": 724,
+      "unavailableCount": 0,
+      "availableCapacity": 724,
+      "npcIds": [
+        "22634",
+        "22635",
+        "22636",
+        "22637",
+        "22638",
+        "22639",
+        "22640",
+        "22641",
+        "22642",
+        "22643",
+        "22644",
+        "22645",
+        "22646",
+        "22647",
+        "22648",
+        "22649"
+      ],
+      "count": 724,
+      "unportedMinionTemplates": [
+        "22647"
+      ]
+    },
     "stakato-nest": {
       "city": "rune",
       "interior": true,
@@ -2091,6 +2140,7 @@ export default {
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Others/25_14.xml": "ee5e6564a38b4778cce668a88da2f36498bb17acfb3ea2eb8cdfa71c10675c8d",
       "spawns/Others/22_16.xml": "36cdf2361c2f13aee757f269e3b39b64946f89b1eaf2641b8598310de93f35a3",
       "spawns/Others/24_21.xml": "81239336cf56c7e81009f63ccc09684c34c47e51f89e2cab1ddd217830eecd62",
       "scripts/ai/areas/Hellbound/hellboundSpawns.xml": "7a940814df23cfae17baaa41e6381b610b2595cd0fc379a9bbab5f37aa8cc5b2",
@@ -3846,6 +3896,70 @@ export default {
       "attackRange": 40.0
     },
     "22633": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22634": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22635": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22636": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22637": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22638": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22639": {
+      "runSpeed": 145.0,
+      "attackRange": 40.0
+    },
+    "22640": {
+      "runSpeed": 165.0,
+      "attackRange": 80.0
+    },
+    "22641": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22642": {
+      "runSpeed": 40.0,
+      "attackRange": 40.0
+    },
+    "22643": {
+      "runSpeed": 60.0,
+      "attackRange": 40.0
+    },
+    "22644": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22645": {
+      "runSpeed": 150.0,
+      "attackRange": 80.0
+    },
+    "22646": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22647": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22648": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22649": {
       "runSpeed": 170.0,
       "attackRange": 40.0
     },

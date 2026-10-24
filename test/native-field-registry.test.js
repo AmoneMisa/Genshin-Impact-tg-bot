@@ -1,3 +1,4 @@
+import {nativeFieldRooms} from '../functions/game/world/nativeFieldRooms.js';
 import {worldGeodata} from '../functions/game/world/l2jGeodata.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -30,7 +31,7 @@ function hero(zone){
 for(const [zone,meta]of Object.entries(registry.fields)){
  if(meta.island)continue; // Island travel and source quotas: primeval-navigation and native-random-population.
  test(`${zone}: source ground spawns, bounded DTO, saved ownership and physical city return`,()=>{
-  const slots=LOCATION_LEVELS[zone].floors[0].rooms.flatMap(r=>r.spawns||[]);
+  const slots=nativeFieldRooms(zone).flatMap(r=>r.spawns||[]);
   assert.equal(slots.reduce((n,s)=>n+s.count,0),meta.count);
   assert.equal(slots.filter(s=>nativeSourceGap(zone,s)).reduce((n,s)=>n+s.count,0),meta.unavailableCount||0);
   for(const slot of slots){const actor={},position=slot.coordinateSource==='point'?slot:sampleNativeTerritory(nativeTerritorySource(zone,slot));if(nativeSourceGap(zone,slot)){assert.equal(Boolean(position&&placeNativeActor(actor,position)),false,'documented gaps must still fail closed');continue;}assert.ok(position);assert.equal(placeNativeActor(actor,position),true,`${zone} ${slot.id} ${slot.x},${slot.y},${slot.z}`);

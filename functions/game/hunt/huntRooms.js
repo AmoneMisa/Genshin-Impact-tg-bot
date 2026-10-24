@@ -1,3 +1,4 @@
+import {nativeSourceRoom} from '../world/nativeFieldRooms.js';
 import {explorationZone,explorationSection} from '../../../template/huntExploration.js';
 import {locationLevel} from './locationLevels.js';
 // Rooms of a zone. A catacomb is a grid of rooms (columns x rows, like a dungeon map): the hero walks between
@@ -99,7 +100,7 @@ export function roomLayout(zone,floor=1) {
     return layout;
 }
 
-export const roomById = (zone, id,floor=1) => roomLayout(zone,floor).rooms.find(room => room.id === id) || null;
+export const roomById = (zone, id,floor=1) => nativeSourceRoom(zone?.id,id)||roomLayout(zone,floor).rooms.find(room => room.id === id) || null;
 
 /** True when the two rooms share a wall (one step along a row or a column). */
 export const adjacent = (a, b) => Boolean(a && b) && Math.abs(a.row - b.row) + Math.abs(a.col - b.col) === 1;

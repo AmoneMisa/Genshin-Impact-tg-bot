@@ -1,4 +1,6 @@
 export default {
+ 'Уровни локации':'Hudud qavatlari',
+ 'Уровни локации ·':'Hudud qavatlari ·',
  'Бой на местности':'Ochiq hududdagi jang',
  'Цель рядом':'Yaqindagi nishon',
  'Выберите цель':'Nishonni tanlang',

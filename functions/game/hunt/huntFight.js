@@ -1,3 +1,4 @@
+import {nativeFieldRooms} from '../world/nativeFieldRooms.js';
 import {recordSeedKill} from '../world/seedInstances.js';
 import {recordDeath} from '../player/deathPenalties.js';
 import {playerName} from '../player/playerName.js';
@@ -125,7 +126,7 @@ export function ensureHunt(session, now = Date.now(),random=Math.random) {
 
 /** Keeps the 3x3 window of cells populated; population itself stays in populateRoom. */
 function syncResident(session,hunt,now,random){
-    if(hunt.field?.native)return syncNativePopulation(hunt,roomLayout(getZone(hunt.zone),1),now,(room,slot,prefix)=>populateRoom(session,getZone(hunt.zone),room,{now,random,count:1,sourceSlot:slot,prefix}),random);
+    if(hunt.field?.native)return syncNativePopulation(hunt,{rooms:nativeFieldRooms(hunt.zone)},now,(room,slot,prefix)=>populateRoom(session,getZone(hunt.zone),room,{now,random,count:1,sourceSlot:slot,prefix}),random);
     return syncResidentRooms(hunt,now,(zone,room,prefix)=>populateRoom(session,zone,room,{now,random,prefix}));
 }
 
@@ -431,7 +432,7 @@ function populateRoom(session, zone, room, {now, random, count = room.cap, prefi
         const placement=source?.[index];
         const def=placement?getMobDef(zone,placement.id):pool[(offset + index) % pool.length];
         const mob = buildMob(zone, def, {now, random,champion:def.rewardless?null:undefined, className: session.game.gameClass.stats.name});
-        if(placement)Object.assign(mob,{sourceRoom:room.id,sourceSlot:placement.slot,sourceRandomGroup:placement.randomGroup,sourceNativeRespawn:Boolean(locationLevels(zone.id)?.population),sourcePosition:placement.coordinateSource==='point'?{x:placement.x,y:placement.y,z:placement.z}:null,sourceTerritory:nativeTerritorySource(zone.id,placement),sourceRespawnMs:placement.respawnMs,sourceRespawnRandomMs:placement.respawnRandomMs});
+        if(placement)Object.assign(mob,{sourceRoom:room.id,...(room.sourceFloor?{sourceFloor:room.sourceFloor}:{}),sourceSlot:placement.slot,sourceRandomGroup:placement.randomGroup,sourceNativeRespawn:Boolean(locationLevels(zone.id)?.population),sourcePosition:placement.coordinateSource==='point'?{x:placement.x,y:placement.y,z:placement.z}:null,sourceTerritory:nativeTerritorySource(zone.id,placement),sourceRespawnMs:placement.respawnMs,sourceRespawnRandomMs:placement.respawnRandomMs});
         const actor={...mob, instanceId: `${prefix}:${index}`, ai: AI_ROLES[index % AI_ROLES.length],
             aggro: false, ...nearestOpenPoint(slot,room.walls), buffs: []};
         if(session.game.hunt?.field?.native){placeNativeSpawn(actor,random);actor.ai=null;}
@@ -561,6 +562,7 @@ export function resetInstanceRoom(session,roomId,now=Date.now(),floor=1){
 export function changeHuntFloor(session,floor,{now=Date.now(),random=Math.random,arrival=null}={}){
  const hunt=ensureHunt(session,now,random),field=hunt.field,zone=getZone(hunt.zone);
  if(!field||!Number.isInteger(floor)||floor<1||floor>(zone.floors||1))return {ok:false,reason:'invalid_floor'};
+ if(field.native)return {ok:false,reason:'path_blocked'};
  const previous=field.floor||1;
  if(previous===floor)return {ok:false,reason:'invalid_floor'};
  const banks=field.floorStates||={};

@@ -1,11 +1,11 @@
 {
   "npcSourceCommit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
-  "zoneCount": 31,
-  "floorCount": 108,
+  "zoneCount": 30,
+  "floorCount": 106,
   "counts": {
-    "fixed": 3194,
-    "validFixed": 3194,
+    "fixed": 2470,
+    "validFixed": 2470,
     "territory": 5178,
     "unknown": 0
   },
@@ -1754,44 +1754,6 @@
               }
             }
           ]
-        }
-      ]
-    },
-    {
-      "id": "forge-of-the-gods",
-      "name": "Кузня Богов",
-      "native": false,
-      "entry": {
-        "x": 169018,
-        "y": -116303,
-        "z": -2432,
-        "source": {
-          "file": "teleporters/town/31275.xml",
-          "npcId": 31275,
-          "name": "Entrance to the Forge of the Gods",
-          "type": "NORMAL",
-          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
-          "sha256": "812a374e2a26cd653f9139c2e5835d84f486d585d40b80045e4a6980f413a8d2"
-        }
-      },
-      "floors": [
-        {
-          "floor": 1,
-          "title": "Кузня Богов · 1 уровень",
-          "fixed": 460,
-          "valid": 460,
-          "territory": 0,
-          "unknown": 0,
-          "destinations": []
-        },
-        {
-          "floor": 2,
-          "title": "Кузня Богов · 2 уровень",
-          "fixed": 264,
-          "valid": 264,
-          "territory": 0,
-          "unknown": 0,
-          "destinations": []
         }
       ]
     },

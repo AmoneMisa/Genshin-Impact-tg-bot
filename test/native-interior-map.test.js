@@ -1,3 +1,4 @@
+import {nativeFieldRooms} from '../functions/game/world/nativeFieldRooms.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -14,7 +15,7 @@ for(const [id,map] of Object.entries(maps.maps))test(`${id}: vector cave footpri
  assert.equal(createHash('sha256').update(text).digest('hex'),map.sha256);assert.equal(Buffer.byteLength(text),map.bytes);assert.ok(map.bytes<200000);assert.equal(maps.geodataCommit,worldGeodata.manifest.commit);
  for(const [file,sha] of Object.entries(map.files))assert.equal(sha,MISSING_WORLD_SOURCE.files[file]);
  const inside=point=>polygons.reduce((yes,polygon)=>yes!==pointInPolygon({x:(point.x-map.bounds.x)/16,y:(point.y-map.bounds.y)/16},polygon),false);
- const slots=LOCATION_LEVELS[id].floors[0].rooms.flatMap(r=>r.spawns||[]);let checked=0;
+ const slots=nativeFieldRooms(id).flatMap(r=>r.spawns||[]);let checked=0;
  for(const slot of slots){const floor=worldGeodata.point(slot),roof=worldGeodata.point({...slot,z:32767});if(roof.z<=floor.z)continue;assert.equal(inside(slot),true,`${id} ${slot.id} ${slot.x},${slot.y}`);checked++;}
  // Independent raw-layer check at deterministic vector samples. A filled
  // pixel must correspond to a real NSWE cell beneath another stored layer.

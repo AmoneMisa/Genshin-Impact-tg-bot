@@ -22,6 +22,7 @@ export function restoreNativeField(session,id,now){
  field.floorStates=publicFloors(id,field.floorStates);
  if(!roomById(getZone(id),field.room,field.floor||1))return false;
  const entry=session.game.hunt.field;
+ if(!field.native){
  if((field.floor||1)!==(entry.floor||1)){
   const snapshot=f=>Object.fromEntries(['mobs','room','rooms','respawns','visited','walls','target','seq','levelVersion'].map(k=>[k,f[k]]));
   const banks=field.floorStates||={};banks[field.floor||1]=snapshot(field);
@@ -33,6 +34,8 @@ export function restoreNativeField(session,id,now){
  }
  Object.assign(field,{room:entry.room,floor:entry.floor,x:entry.x,y:entry.y,walls:entry.walls});
  if(!field.visited.includes(entry.room))field.visited.push(entry.room);
+ }
+ if(field.native)delete field.native.journey;
  field.path=[];field.seenAt=now;field.moveAt=now;
  delete field.crossing;delete field.pendingRoom;delete field.action;delete field.autoAttack;
  for(const bank of [field,...Object.values(field.floorStates||{})])for(const mob of [bank,...Object.values(bank.rooms||{})].flatMap(r=>r.mobs||[])){

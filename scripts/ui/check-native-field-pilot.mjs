@@ -33,7 +33,7 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  let now=1800000000000,finishRoad=false;
  const s={userId:1,userChatData:{user:{id:1,first_name:'Test'}},game:{stats:{lvl:Math.min(85,Math.max(...LOCATION_LEVELS[zone].mobs.map(m=>m.level))+4),currentExp:0},inventory:{gold:1e6,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city,x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
  const chat={game:{},members:[s]};s.ownerDocument=()=>chat;change(s,'humanFighter');update(s);
- const quiet=()=>{const f=s.game.hunt?.field;if(f)for(const bank of nativeFieldBuckets(f))for(const mob of bank.mobs){mob.aggressive=false;mob.nextAttackAt=now+1e9;}};
+ const quiet=()=>{const f=s.game.hunt?.field;if(f)for(const bank of nativeFieldBuckets(f))for(const mob of bank.mobs){mob.aggressive=false;mob.aggro=false;mob.nextAttackAt=now+1e9;}};
  if(island){
   const port='rune-primeval';
   const walk=stop=>{assert.equal(worldAction(s,{action:'ferry_walk',port,stop},now).ok,true);now=s.game.world.walkHome.until+1;advanceWorld(s,now);quiet();};
@@ -120,8 +120,25 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  assert.ok((await page.locator('.loot-notice-panel').innerText()).includes('SP'));
  assert.equal(await page.locator('.loot-notice-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  await page.locator('.loot-notice-overlay [data-dismiss]').click();await page.waitForSelector('.loot-notice-overlay',{state:'detached'});
- await page.locator('.atlas-combat summary').click();assert.equal(await page.locator('.atlas-combat .ui-combat-supply').count(),6);
- assert.equal(await page.locator('.atlas-combat .ui-combat-supply[data-supply="hp"]').isDisabled(),true);await page.locator('.atlas-combat summary').click();
+ await page.locator('.atlas-combat details:has([data-native-supplies])>summary').click();assert.equal(await page.locator('.atlas-combat .ui-combat-supply').count(),6);
+ assert.equal(await page.locator('.atlas-combat .ui-combat-supply[data-supply="hp"]').isDisabled(),true);await page.locator('.atlas-combat details:has([data-native-supplies])>summary').click();
+ if(pilot.fields[zone].floors){
+  const {default:levels}=await import('../../template/nativeLevelRoutes.js'),model=levels.zones[zone],beforeFloor=worldState(s,now).nativeField.point;
+  const kept=nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.sourceFloor===2&&m.currentHp>0);assert.ok(kept);kept.currentHp=Math.floor(kept.hp/2);const remembered={id:kept.instanceId,hp:kept.currentHp};
+  await page.locator('[data-native-levels]>summary').click();
+  const down=page.locator('[data-native-floor="2"]');assert.equal(await down.isEnabled(),true);await down.focus();assert.equal(await down.evaluate(n=>n===document.activeElement),true);
+  await down.click();assert.deepEqual(worldState(s,now).nativeField.point,beforeFloor);assert.ok(s.game.hunt.field.native.journey?.native.remaining>0);
+  s.game=JSON.parse(JSON.stringify(s.game));finishRoad=true;
+  await page.waitForResponse(async r=>{if(!r.url().includes('/api/world?live=1'))return false;const p=(await r.json()).world.nativeField?.point;return p&&['x','y','z'].every(k=>p[k]===model.levels[2].to[k]);});
+  await page.waitForFunction(()=>document.querySelector('[data-native-floor="2"]')?.disabled);
+  assert.equal(s.game.hunt.field.native.sourceFloor,2);assert.equal(nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.instanceId===remembered.id)?.currentHp,remembered.hp);
+  await page.screenshot({path:path.join(out,`native-levels-${width}${noCanvas?'-no-canvas':noImages?'-no-images':''}.png`)});
+  await page.locator('[data-native-floor="1"]').click();finishRoad=true;
+  await page.waitForResponse(async r=>{if(!r.url().includes('/api/world?live=1'))return false;const p=(await r.json()).world.nativeField?.point;return p&&['x','y','z'].every(k=>p[k]===model.root[k]);});
+  await page.waitForFunction(()=>document.querySelector('[data-native-floor="1"]')?.disabled);
+  assert.equal(s.game.hunt.field.native.sourceFloor,1);await page.locator('[data-native-levels]>summary').click();
+  assert.equal(await page.locator('.hunt-overlay').count(),0);assert.equal(await page.locator('[data-native-levels]').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
+ }
  // Combat and world polling share the same saved actors, even when movement is requested again.
  const before=worldState(s,now).player.worldPoint;
  if(noCanvas){

@@ -8,6 +8,7 @@ from pathlib import Path
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
 fields={
+    "forge-of-the-gods": {"city":"goddard","interior":True,"floors":[1,2]},
     "stakato-nest": {"city":"rune","interior":True},
     "antharas-lair": {"city":"hunters","interior":True},
     'hellbound': {'city':'gludio','island':'hellbound','portalOnly':True,'sourceGaps':[{'kind':'point','zone':'hellbound','npcId':'22320','source':{'x':-10315,'y':237442,'z':-3850},'sourceFile':'scripts/ai/areas/Hellbound/hellboundSpawns.xml','issues':['swimming_required']}]},
@@ -54,8 +55,11 @@ catalog=json.loads(subprocess.check_output(['node','--input-type=module','-e',
     'import {LOCATION_LEVELS} from "./template/locationLevels.js";console.log(JSON.stringify(Object.fromEntries('+json.dumps(list(fields))+'.map(id=>[id,LOCATION_LEVELS[id]]))))'],encoding='utf-8'))
 ids=set();exclusions={}
 for id,field in fields.items():
-    model=catalog[id];assert (model.get('source',{}).get('coordinateSpace')=='surface' or field.get('interior')) and len(model['floors'])==1
-    slots=[s for r in model['floors'][0]['rooms'] for s in r['spawns']]
+    model=catalog[id];assert (model.get('source',{}).get('coordinateSpace')=='surface' or field.get('interior')) and (len(model['floors'])==1 or field.get('floors'))
+    levels=[f for f in model['floors'] if f['number'] in field.get('floors',[1])]
+    assert len(levels)==len(field.get('floors',[1]))
+    rooms=[{**r,'id':(f'f{f["number"]}/'+r['id'] if field.get('floors') else r['id'])} for f in levels for r in f['rooms']]
+    slots=[s for r in rooms for s in r['spawns']]
     assert all((s['coordinateSource']=='point' or (len(s.get('polygon',[]))>=3 and s.get('minZ') is not None and s.get('maxZ') is not None)) and (not s.get('randomGroup') or id=='primeval-isle') for s in slots)
     for slot in slots:
         if slot['coordinateSource']=='point':continue
@@ -77,7 +81,7 @@ for id,field in fields.items():
     field['fixedCount']=sum(s['count'] for s in slots if s['coordinateSource']=='point')
     field['territoryCount']=sum(s['count'] for s in slots if s['coordinateSource']!='point')
     random_groups={};capacity=0
-    for room in model['floors'][0]['rooms']:
+    for room in rooms:
         for s in room['spawns']:
             if s.get('randomGroup'):
                 key=room['id']+':'+s['randomGroup'];random_groups[key]=max(random_groups.get(key,0),s['count'])
