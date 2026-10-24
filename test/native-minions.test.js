@@ -3,7 +3,7 @@ import data from '../template/nativeMinions.js';
 import {nativeMinionProposal,syncNativeMinions} from '../functions/game/world/nativeMinions.js';
 import {nativeActorPoint,nativeFieldBuckets,activateNativeField,nativeMobMovement,placeNativeActor} from '../functions/game/world/nativeFieldSpace.js';
 import {worldAction,advanceWorld} from '../functions/game/world/world.js';
-import {ensureHunt} from '../functions/game/hunt/huntFight.js';
+import {ensureHunt,advanceHunt} from '../functions/game/hunt/huntFight.js';
 import {getMobDef,getZone,npcBehaviour,buildMob} from '../functions/game/hunt/huntMobs.js';
 import {provokeMob,pursuePlayer} from '../functions/game/hunt/huntAi.js';
 import {findNativePath} from '../functions/game/world/nativeNavigation.js';
@@ -49,6 +49,14 @@ test('striking a private alerts its living source family even without a shared s
  const s=hero(),master=actors(s).find(m=>m.mobId==='20751'&&!m.sourceMinion);activateNativeField(s.game.hunt,master.sourcePosition,NOW+1e7);syncNativeMinions(s,NOW+1e7,()=>.5);
  const key=`${master.sourceRoom}:${master.sourceSlot}`,family=actors(s).filter(m=>m===master||m.sourceMinion?.owner===key);assert.equal(family.length,4);
  for(const m of family){m.aggro=false;m.socialClans=[];m.clanHelpRange=0;}provokeMob(s.game.hunt,family.at(-1),NOW+1e7);assert.ok(family.every(m=>m.aggro));
+});
+test('live minions do not consume fixed source room capacity or prevent their master respawning with missing privates',()=>{
+ const s=hero(),master=actors(s).find(m=>m.mobId==='20751'&&!m.sourceMinion),field=s.game.hunt.field,key=`${master.sourceRoom}:${master.sourceSlot}`,family=()=>actors(s).filter(m=>m.sourceMinion?.owner===key);
+ const kept=family()[0];assert.ok(kept);kept.currentHp=2;const removed=family()[1];assert.ok(removed);
+ for(const b of nativeFieldBuckets(field))b.mobs=b.mobs.filter(m=>m!==master&&m!==removed);
+ const bucket=nativeFieldBuckets(field).find(b=>b.mobs.some(m=>m.instanceId===kept.instanceId)),room=nativeFieldRooms(zone).find(r=>r.id===master.sourceRoom);assert.ok(bucket.mobs.length>=room.cap,'fixture exceeds the original static quota');
+ field.respawns.push({at:NOW+1e7+100,room:master.sourceRoom,sourceSlot:master.sourceSlot});advanceHunt(s,NOW+1e7+101,()=>.5);
+ const fresh=actors(s).find(m=>!m.sourceMinion&&m.sourceRoom===master.sourceRoom&&m.sourceSlot===master.sourceSlot);assert.ok(fresh);assert.notEqual(fresh.instanceId,master.instanceId);assert.equal(family().length,3);assert.equal(family().find(m=>m.instanceId===kept.instanceId).currentHp,2);
 });
 test('private rewards use their own source SP, experience and drop rows',()=>{
  const s=hero(),def=getMobDef(getZone(zone),'20752');assert.ok(def);const child=actors(s).find(m=>m.mobId==='20752');assert.ok(child);const at=NOW+1e7,bonus=stageOf(readVitality(s,at).points).bonus;

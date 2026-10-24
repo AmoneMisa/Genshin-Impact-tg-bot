@@ -453,7 +453,11 @@ function settleRespawns(session, hunt, now, random) {
         const room = roomById(zone, entry.room,field.floor||1);
         if (!room) continue;
         const bucket = entry.room === field.room ? field.mobs : (field.rooms[entry.room] ||= {mobs: []}).mobs;
-        if(locationLevels(zone.id)?.population){if(Number.isInteger(entry.sourceSlot)&&occupiedPopulationSlots(field,room.id,{pending:false}).has(entry.sourceSlot))continue;}
+        if(field.native){
+            if(!Number.isInteger(entry.sourceSlot)){field.native.missing[`${room.id}:legacy-respawn:${entry.at}`]='legacy_respawn_source_slot_missing';continue;}
+            if(occupiedPopulationSlots(field,room.id,{pending:false}).has(entry.sourceSlot))continue;
+        }
+        else if(locationLevels(zone.id)?.population){if(Number.isInteger(entry.sourceSlot)&&occupiedPopulationSlots(field,room.id,{pending:false}).has(entry.sourceSlot))continue;}
         else if (bucket.length >= room.cap) continue;
         field.seq = number(field.seq) + 1;
         const [fresh] = populateRoom(session, zone, room, {now, random, count: 1,sourceSlot:entry.sourceSlot??null, prefix: `${now}:${room.id}:r${field.seq}`});
@@ -463,6 +467,7 @@ function settleRespawns(session, hunt, now, random) {
         else {fresh.x = .12 + random() * .76;fresh.y = .12 + random() * .43;Object.assign(fresh,nearestOpenPoint(fresh,room.walls));fresh.ai = AI_ROLES[Math.floor(random() * AI_ROLES.length)];}
         bucket.push(fresh);
     }
+    if(field.native)syncNativeMinions(session,now,random);
     if (!field.target && field.mobs.length) field.target = field.mobs[0].instanceId;
     hunt.mob = battleActor(hunt,field.target);
 }
