@@ -34,6 +34,12 @@ test('supplemental minion loot keeps original names, grades, prices and exact pu
  }
  for(const [id,parents] of Object.entries(data.zones))for(const parent of parents)for(const child of data.masters[parent].entries)assert.equal(getMobDef(getZone(id),child.id),data.actors[child.id].definition);
 });
+test('Timak XML holder respawnTime does not become an ordinary minion death timer',()=>{
+ assert.ok(data.zones['timak-outpost'].includes('20767'));
+ assert.deepEqual(data.masters['20767'].entries.map(e=>[e.id,e.count,e.sourceXmlRespawnTime,e.respawnMs]),[['20768',1,1200,0],['20769',1,1200,0],['20770',1,1200,0]]);
+ assert.ok(data.source.coreFiles['java/org/l2jmobius/gameserver/data/xml/NpcData.java']);
+ assert.ok(data.source.coreFiles['java/org/l2jmobius/gameserver/entity/actor/holders/npc/MinionHolder.java']);
+});
 for(const [id,masters] of Object.entries(data.zones))test(`${id}: all automatic source families keep exact quotas or explicit rejected proposals`,()=>{
  let seed=42;const random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
  for(const npcId of masters){

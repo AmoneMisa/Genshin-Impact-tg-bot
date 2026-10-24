@@ -20,6 +20,7 @@ parents=sorted({id for z in requested for id in registry['fields'][z].get('unpor
 exp={int(n.get('level')):int(n.get('tolevel')) for n in xml('stats/players/experience.xml').findall('experience')}
 pins={'Native-MinionList.java':'41a856a15b6b6c4bb43fb07240e21c7563c8cff60f02d226e06a1260bccfea72','Native-Spawn.java':'42307eac0dd6bb2661e9b069d39a0fad67c62a466bf0ab520cac6a39fbd0b045','Native-Npc.ini':'fb3319fb29eb957b98f300505617715fbf10fbfbeb96a2e458e9c6282cd5718b'}
 pins.update({'Native-AttackableAI.java':'92aa96d61b6f0f3de7b3f8184f640fdd1b4b1fca1744b3d3c0826bf92086607a','Native-Attackable.java':'97d5c07a5455776f55733c71dbc2117901027042a8b9d69f258b8674d2888fed','Native-NpcTemplate.java':'2db4b108e9e4c2b658e216775e0bc774ca8846785b5ed00e4de7e35b1f4fbd04'})
+pins.update({'Native-MinionHolder.java':'ba8ca6ad468642aa4e2a98176401a8c2801ced2c8c7d19a5c305ee809b541ffb','Native-NpcData.java':'0224364b1190b09e35f5b4fe207f2869237dbecde4c6dc127d3d6415206db64d'})
 for file,sha in pins.items():assert hashlib.sha256((Path('.tmp/geodata')/file).read_bytes()).hexdigest()==sha
 Path('art-source/geodata/minions').mkdir(parents=True,exist_ok=True)
 Path('art-source/geodata/minions/MinionList.java').write_bytes(Path('.tmp/geodata/Native-MinionList.java').read_bytes())
@@ -30,8 +31,12 @@ for id in parents:
  n=npc(id);assert n.get('type') in ['Monster','L2Monster'];radius=float(n.find('collision/radius').get('normal'));group=n.find('parameters/minions[@name="Privates"]');assert group is not None
  entries=[]
  for m in group.findall('npc'):
-  child=m.get('id');assert int(child) not in overrides and m.get('respawnTime')=='0'
+  # Ordinary death uses NPC.ini's override or -1, then MinionList disables
+  # respawn for a non-raid master. spawnMinions reads holder ID/count only;
+  # its XML respawnTime is preserved below, not treated as a live timer.
+  child=m.get('id');assert int(child) not in overrides
   entries.append({'id':child,'count':int(m.get('count')),'respawnMs':0})
+  if int(m.get('respawnTime')):entries[-1]['sourceXmlRespawnTime']=int(m.get('respawnTime'))
   c=npc(child);st=c.find('stats');ac=c.find('acquire');attack=st.find('attack');defence=st.find('defence');ad=st.find('attribute/defence');level=int(c.get('level'));ai=c.find('ai')
   drops=[];groups=[];gold=None
   for g in c.findall('dropLists/drop/group'):
@@ -45,6 +50,7 @@ for id in parents:
   actors[child]={'definition':{'id':child,'name':c.get('name'),'level':level,'hp':float(st.find('vitals').get('hp')),'pAtk':float(attack.get('physical')),'mAtk':float(attack.get('magical')),'pDef':float(defence.get('physical')),'mDef':float(defence.get('magical')),'accuracy':float(attack.get('accuracy','0')),'crit':float(attack.get('critical','0')),'attackSpeed':float(attack.get('attackSpeed','253')),'resist':{k:float(v) for k,v in ad.attrib.items()} if ad is not None else {},'expShare':float(ac.get('exp'))/(exp[level+1]-exp[level]),'rewardless':False,'gold':gold,'drops':[]},'movement':{'runSpeed':float(st.find('speed/run').get('ground')),'attackRange':float(attack.get('range'))},'ai':{'aggressive':ai.get('isAggressive','true')=='true','aggroRange':int(ai.get('aggroRange','0')),'clanHelpRange':int(ai.get('clanHelpRange','0')),'clans':[e.text for e in ai.findall('clanList/clan')],'ignoredIds':[e.text for e in ai.findall('clanList/ignoreNpcId')]},'loot':drops,'sourceGroups':groups,'sp':float(ac.get('sp'))}
  masters[id]={'collisionRadius':radius,'group':'Privates','entries':entries}
 core_paths={'Native-MinionList.java':'java/org/l2jmobius/gameserver/entity/actor/holders/npc/MinionList.java','Native-Spawn.java':'java/org/l2jmobius/gameserver/entity/spawns/Spawn.java','Native-Npc.ini':'dist/game/config/NPC.ini','Native-AttackableAI.java':'java/org/l2jmobius/gameserver/ai/AttackableAI.java','Native-Attackable.java':'java/org/l2jmobius/gameserver/entity/actor/Attackable.java','Native-NpcTemplate.java':'java/org/l2jmobius/gameserver/entity/actor/templates/NpcTemplate.java'}
+core_paths.update({'Native-MinionHolder.java':'java/org/l2jmobius/gameserver/entity/actor/holders/npc/MinionHolder.java','Native-NpcData.java':'java/org/l2jmobius/gameserver/data/xml/NpcData.java'})
 known_items=set(json.loads(subprocess.check_output(['node','--input-type=module','-e','import items from "./template/l2Items.js";console.log(JSON.stringify(Object.keys(items)))'],encoding='utf8')))
 items={};icons={};item_nodes={}
 for id in sorted({str(row[0]) for a in actors.values() for row in a['loot']}-known_items,key=int):
