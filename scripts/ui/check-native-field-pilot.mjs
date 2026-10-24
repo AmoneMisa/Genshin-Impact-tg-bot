@@ -66,7 +66,7 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
    quiet();return route.fulfill({status:result.ok?200:409,json:{...result,hunt:await getHuntState(s,now)}});
   }
   const bundle=assets.bundles?.find(b=>b.path===u);if(bundle)return route.fulfill({contentType:'text/css',body:bundle.css});
-  if(noImages&&/\.(webp|jpg|png)$/.test(u))return route.fulfill({status:404});
+  if(noImages&&(/\.(webp|jpg|png)$/.test(u)||u.startsWith('/art/world/native/')))return route.fulfill({status:404});
   const file=path.resolve(root,'.'+u);if(!file.startsWith(root+path.sep)||!fs.existsSync(file))return route.fulfill({status:404});
   return route.fulfill({contentType:({'.js':'text/javascript','.css':'text/css','.webp':'image/webp','.jpg':'image/jpeg','.svg':'image/svg+xml'})[path.extname(file)]||'application/octet-stream',body:fs.readFileSync(file)});
  });
@@ -144,6 +144,8 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  await page.waitForTimeout(2100);assert.equal(s.game.hunt.kills,1);assert.equal(await page.locator('.hunt-overlay').count(),0);
  const after=worldState(s,now).player.worldPoint;assert.ok(Math.hypot(after.x-before.x,after.y-before.y)>0);
  assert.equal(await page.locator('.atlas-combat').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
+ const ground=worldState(s,now).nativeField?.ground;
+ if(pilot.fields[zone].interior){assert.ok(ground?.asset);if(!noCanvas)assert.ok(requests.includes(ground.asset),'cave footprint requested at the underground point');}
  await page.screenshot({path:path.join(out,`native-field-${width}${noCanvas?'-no-canvas':noImages?'-no-images':''}.png`)});
  for(const bank of nativeFieldBuckets(s.game.hunt.field))for(const m of bank.mobs)m.aggro=false;
  await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.quickTravel.blocked===null);await page.waitForTimeout(100);

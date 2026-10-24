@@ -1,4 +1,5 @@
 import pilot from '../../../template/nativeFieldPilot.js';
+import {nativeInteriorMap} from './nativeInteriorMap.js';
 import {LOCATION_LEVELS} from '../../../template/locationLevels.js';
 import {ROOM_SIZE} from './navigation.js';
 import {worldGeodata} from './l2jGeodata.js';
@@ -172,7 +173,7 @@ export function nativeVisibleActors(hunt){
 }
 export function nativeFieldDto(session){
  const f=session.game.hunt?.field,point=nativeFieldPoint(session);if(!point)return null;
- return {zone:session.game.hunt.zone,point,target:f.target,...(session.game.hunt.zone==='hellbound'?{doors:nativeDoorStates(f.populationStage)}:{}),
+ return {zone:session.game.hunt.zone,point,target:f.target,ground:nativeInteriorMap(session.game.hunt.zone,point),...(session.game.hunt.zone==='hellbound'?{doors:nativeDoorStates(f.populationStage)}:{}),
   actors:nativeVisibleActors(session.game.hunt).map(m=>({
    ...nativeActorPoint(m),id:m.mobId,instanceId:m.instanceId,name:m.name,level:m.level,hp:m.hp,currentHp:m.currentHp,aggressive:Boolean(m.aggressive),social:Boolean(m.clanHelpRange&&m.socialClans?.length),aggro:Boolean(m.aggro)
   }))};
