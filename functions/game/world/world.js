@@ -60,9 +60,12 @@ function enterPublicField(session,id,{departure,...options}){
     const result=enterHuntField(session,id,{...(floor?{floor}:{}),...options});if(!result.ok)return result;
     session.game.world.nativeIsland=nativeRoute(id)?.island||null;delete session.game.world.nativeTrail;delete session.game.world.nativeResume;
     if(departure)saveNativeField(session,options.now,departure);
+    restoreNativeField(session,id,options.now);
+    if(options.targetMobId&&!nativeFieldSupported(id)){
+        const hunt=session.game.hunt,target=hunt.field.mobs.find(m=>String(m.mobId)===String(options.targetMobId)&&m.currentHp>0);
+        hunt.field.target=target?.instanceId||null;hunt.mob=target||null;
+    }
     if(nativeRoute(id)){
-        if(options.targetMobId&&!nativeFieldSupported(id)){if(session.game.world.nativeFields)delete session.game.world.nativeFields[id];}
-        else restoreNativeField(session,id,options.now);
         activateNativeField(session.game.hunt,nativeRoute(id).to,options.now);
     }
     return result;
@@ -406,7 +409,7 @@ export function worldAction(session,body,now=Date.now()){
             if(!peer?.near||member.game.world?.location!==w.location||!alive(member))return {ok:false,reason:'party_not_ready'};
             const denied=quickTravelBlock(member,now)||regionAccessBlock(member,l,{linked:true,now});if(denied)return {ok:false,reason:denied};
         }
-        for(const member of members){member.game.hunt=null;enterHuntField(member,l.id,{now});Object.assign(member.game.world,{location:l.id,city:l.region,instanceId:null,path:[],pending:null,channel:null});member.needsSave=true;}
+        for(const member of members){const previous=member.game.hunt;member.game.hunt=null;const entered=enterPublicField(member,l.id,{now,departure:previous});if(!entered.ok){member.game.hunt=previous;return entered;}Object.assign(member.game.world,{location:l.id,city:l.region,instanceId:null,path:[],pending:null,channel:null});member.needsSave=true;}
         return {ok:true};
     }
     if(body.action==='ship_candle'){
