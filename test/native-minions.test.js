@@ -1,7 +1,8 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import data from '../template/nativeMinions.js';
 import {nativeMinionProposal,syncNativeMinions} from '../functions/game/world/nativeMinions.js';
-import {nativeActorPoint,nativeFieldBuckets,activateNativeField,nativeMobMovement,placeNativeActor} from '../functions/game/world/nativeFieldSpace.js';
+import {nativeActorPoint,nativeFieldBuckets,activateNativeField,nativeMobMovement,placeNativeActor,syncNativePopulation} from '../functions/game/world/nativeFieldSpace.js';
+import levels from '../template/nativeLevelRoutes.js';
 import {worldAction,advanceWorld} from '../functions/game/world/world.js';
 import {ensureHunt,advanceHunt} from '../functions/game/hunt/huntFight.js';
 import {getMobDef,getZone,npcBehaviour,buildMob} from '../functions/game/hunt/huntMobs.js';
@@ -62,6 +63,13 @@ test('live minions do not consume fixed source room capacity or prevent their ma
 test('private rewards use their own source SP, experience and drop rows',()=>{
  const s=hero(),def=getMobDef(getZone(zone),'20752');assert.ok(def);const child=actors(s).find(m=>m.mobId==='20752');assert.ok(child);const at=NOW+1e7,bonus=stageOf(readVitality(s,at).points).bonus;
  const rewards=grantKillRewards(s,child,def,{now:at,random:()=>.999999});assert.ok(rewards.exp>0);assert.equal(rewards.sp,Math.round(npcSp['20752']*EXP_RATE*bonus));assert.ok(lootRows('20752').length>10);assert.equal(getMobDef(getZone('ivory-tower'),'20752'),null);
+});
+test('a wandering private cannot replace the actual floor witness with its original owning floor',()=>{
+ const id='tower-of-insolence',point=levels.zones[id].levels[13].to,rooms=nativeFieldRooms(id),upper=rooms.find(r=>r.sourceFloor===13),lower=rooms.find(r=>r.sourceFloor===12);
+ const child=buildMob(getZone(id),getMobDef(getZone(id),'21083'),{now:NOW,random:()=>.5,champion:null});assert.equal(placeNativeActor(child,point),true);
+ Object.assign(child,{instanceId:'wandering-private',sourceFloor:12,sourceRoom:lower.id,sourceSlot:'private:fixture:0',sourceMinion:{owner:`${lower.id}:0`,slot:0,masterId:'21081'}});
+ const hunt={zone:id,field:{native:{version:1,z:point.z,loaded:{},missing:{},randomGroups:{},sourceFloor:13},x:point.x/2000,y:point.y/2000,room:upper.id,mobs:[],rooms:{[lower.id]:{mobs:[child]}},respawns:[],visited:[upper.id],seq:0}};
+ syncNativePopulation(hunt,{rooms},NOW,()=>[],()=>.5);assert.equal(hunt.field.native.sourceFloor,13);assert.equal(hunt.field.room,upper.id);
 });
 test('an idle private follows its living master over real ground at source walk speed without teleporting or healing',()=>{
  const s=hero(),master=actors(s).find(m=>m.mobId==='20751'&&!m.sourceMinion);activateNativeField(s.game.hunt,master.sourcePosition,NOW);syncNativeMinions(s,NOW,()=>.5);

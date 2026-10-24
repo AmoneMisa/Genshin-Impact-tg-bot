@@ -139,7 +139,7 @@ export function syncNativePopulation(hunt,layout,now,populate,random=Math.random
  }
  if(pilot.fields[hunt.zone]?.floors){
   const distance=m=>Math.hypot((m.x-f.x)*ROOM_SIZE,(m.y-f.y)*ROOM_SIZE,m.native.z-f.native.z);
-  const floorActor=nativeVisibleActors(hunt).filter(m=>!m.sourceTerritory).sort((a,b)=>distance(a)-distance(b))[0];
+  const floorActor=nativeVisibleActors(hunt).filter(m=>!m.sourceTerritory&&!m.sourceMinion).sort((a,b)=>distance(a)-distance(b))[0];
   const territoryRoom=floorActor?null:nativeTerritoryFloorRoom(hunt.zone,layout.rooms,nativeActorPoint(f));
   const floor=floorActor?.sourceFloor||territoryRoom?.sourceFloor,room=floorActor?.sourceRoom||territoryRoom?.id;
   if(floor){
