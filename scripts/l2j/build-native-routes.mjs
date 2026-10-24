@@ -38,11 +38,11 @@ for(const target of candidates){
  // Reuse a published physical approach before declaring a gap. Only the final
  // branch needs bounded offline search; both directions are rechecked below.
  if(!result.ok&&previous?.geodataCommit===worldGeodata.manifest.commit&&previous.barriersSha256===barriersSha256){
-  const near=Object.entries(previous.routes).filter(([id,r])=>id!==target.id&&r.available&&r.returnPath&&r.city===target.region&&r.from.x===from?.x&&r.from.y===from?.y&&Math.hypot(r.to.x-to.x,r.to.y-to.y)<=32768).sort((a,b)=>Math.hypot(a[1].to.x-to.x,a[1].to.y-to.y)-Math.hypot(b[1].to.x-to.x,b[1].to.y-to.y)).slice(0,4);
+  const near=Object.entries(previous.routes).filter(([id,r])=>id!==target.id&&r.available&&r.returnPath&&r.city===target.region&&r.from.x===from?.x&&r.from.y===from?.y&&Math.hypot(r.to.x-to.x,r.to.y-to.y)<=65536).sort((a,b)=>Math.hypot(a[1].to.x-to.x,a[1].to.y-to.y)-Math.hypot(b[1].to.x-to.x,b[1].to.y-to.y)).slice(0,4);
   for(const [id,via] of near){
-   const start=performance.now(),branch=findNativePath(via.to,to,{allowed:nativeGroundAllowed,stride:8,maxNodes:30000,heuristicWeight:2,margin:1024,reversible:true});
+   const start=performance.now(),branch=findNativePath(via.to,to,{allowed:nativeGroundAllowed,stride:8,maxNodes:120000,heuristicWeight:2,margin:1024,reversible:true});
    const bounded=branch.ok&&via.path.length+branch.path.length<=512;
-   attempts.push({via:id,stride:8,maxNodes:30000,heuristicWeight:2,margin:1024,visited:branch.visited||0,reason:branch.ok&&!bounded?'route_vertex_limit':branch.reason||null});
+   attempts.push({via:id,stride:8,maxNodes:120000,heuristicWeight:2,margin:1024,visited:branch.visited||0,reason:branch.ok&&!bounded?'route_vertex_limit':branch.reason||null});
    console.log(target.id,'via',id,bounded,branch.reason||'',branch.visited,Math.round(performance.now()-start)+'ms');
    if(bounded){result={...branch,start:via.from,path:[...via.path,...branch.path]};break;}
   }

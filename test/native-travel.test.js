@@ -34,14 +34,20 @@ function hero(){
  change(s,'humanFighter');update(s);return s;
 }
 function quiet(field){for(const m of [field,...Object.values(field.rooms||{})].flatMap(r=>r.mobs||[]))Object.assign(m,{aggressive:false,aggro:false,aggroRange:0,nextAttackAt:NOW+1e12});}
-test('Imperial Tomb keeps its original noblesse-only teleport and never starts an unverified walk',()=>{
+test('Imperial Tomb keeps its noblesse-only teleport while publishing the checked Argos approach',()=>{
  const s=hero();s.game.world.city='goddard';const gold=s.game.inventory.gold;
  assert.equal(worldState(s,NOW).locationTravel['imperial-tomb'],null);
  assert.equal(worldAction(s,{action:'quick_travel',location:'imperial-tomb'},NOW).reason,'noblesse_required');
  assert.equal(s.game.inventory.gold,gold);assert.equal(s.game.world.mode,'city');
  s.game.isNoble=true;
  assert.equal(worldState(s,NOW).locationTravel['imperial-tomb'].gold,1000);
- assert.equal(worldAction(s,{action:'walk_location',location:'imperial-tomb'},NOW).reason,'location_path_required');
+ const walker=hero();walker.game.world.city='goddard';
+ assert.equal(worldState(walker,NOW).nativeWalk['imperial-tomb'].enabled,true);
+ assert.equal(worldAction(walker,{action:'walk_location',location:'imperial-tomb'},NOW).ok,true);
+ const trip=walker.game.world.walkHome;assert.ok(trip.native);assert.ok(routes.routes['imperial-tomb'].attempts.some(a=>a.via==='wall-of-argos'&&!a.reason));
+ assert.deepEqual(trip.native.path.at(-1),routes.routes['imperial-tomb'].to);
+ const saved=JSON.parse(JSON.stringify(walker));advanceWorld(saved,trip.until+1);
+ assert.equal(saved.game.world.location,'imperial-tomb');assert.equal(saved.game.hunt.field.floor,1);assert.equal(saved.game.inventory.gold,gold);
  assert.equal(s.game.world.walkHome,undefined);assert.equal(s.game.inventory.gold,gold);
 });
 function finish(s,now){const trip=s.game.world.walkHome;assert.ok(trip.native);advanceWorld(s,now);assert.equal(s.game.world.walkHome,undefined);}

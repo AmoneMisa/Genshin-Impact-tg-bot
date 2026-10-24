@@ -38,18 +38,18 @@ for(const zone of zones){
  rooms+=localRooms;transitions+=localTransitions;
  rows.push({zone,surface:continuousField(zone,roomLayout(zone)),floors:model.floors.length,rooms:localRooms,transitions:localTransitions});
 }
-const surface=rows.filter(r=>r.surface),separate=rows.filter(r=>!r.surface);
+const surface=rows.filter(r=>r.surface),native=rows.filter(r=>nativeFields.fields[r.zone.id]),separate=rows.filter(r=>!r.surface&&!nativeFields.fields[r.zone.id]);
 const lines=[
  '# Проверка обработки базовой карты','',
- 'Результаты последнего полного прогона: [проверка 20 октября 2026](map-processing-validation.md).', '',
+ 'Ранее завершённый прогон базовых комнат: [проверка 20 октября 2026](map-processing-validation.md).', '',
  `Проверены все **${zones.length}** неинстансовые зоны текущего Атласа: **${floors}** этажей/участков, **${rooms}** комнаты и **${transitions}** направленных переходов между этажами. Проверка не утверждает полноту всех территорий и сценариев оригинальной High Five.`, '',
- `Все **${surface.length}** наземных зон используют непрерывную ходьбу внутри локации, соседние банки NPC и общее отображение. Остальные **${separate.length}** зоны сохраняют отдельные комнаты, этажи и проверяемые входы. Для них отсутствие наземного потока является правилом разделения пространств, а не пропущенным подключением.`, '',
+ `Все **${surface.length}** поверхностных зон и **${native.length-surface.length}** подземных участка подключены к мировым XYZ и бою в Атласе. Ещё **${separate.length}** зон сохраняют адаптированные комнаты и этажи; для завершения бесшовной карты их исходные входы, межэтажные пути и население нужно перенести отдельно.`, '',
  `Проверены существование **${pictures.size}** вариантов окружения и ограничения размера: менее 180 КБ для мобильного изображения, 800 КБ для большого. На каждом этаже проверены уникальность комнат, достижимость от входа, существование целевого этажа и исходной комнаты локального перехода. Локальные сетки и точки переходов адаптированы и не выдаются за геодату.`, '',
  'Устранён цикл повторной загрузки тайлов Атласа при обзоре поселений: видимая детализация ограничена ёмкостью существующего кеша — 12 тайлов на узком экране, 24 на широком. Приоритет получают тайлы у центра; на краях остаётся обзорная карта. Отсутствующие исходные тайлы не подменяются новой географией. Проверка загрузки: `node --test test/atlas-map-art.test.js`; восемь мирных поселений и управление без Canvas: `node scripts/ui/check-world-settlements.mjs`; Грация и Ишума: `node scripts/ui/check-missing-world.mjs`.', '',
  '## Локации','',
  '| Локация | Пространство | Этажи/участки | Комнаты | Межэтажные переходы |',
  '| --- | --- | ---: | ---: | ---: |',
- ...rows.map(r=>`| ${r.zone.title} | ${r.surface?'Наземный поток':'Отдельное'} | ${r.floors} | ${r.rooms} | ${r.transitions} |`), '',
+ ...rows.map(r=>`| ${r.zone.title} | ${nativeFields.fields[r.zone.id]?'Мировые XYZ':r.surface?'Наземный поток':'Адаптированные комнаты'} | ${r.floors} | ${r.rooms} | ${r.transitions} |`), '',
  '## Что препятствует полной бесшовной карте','',
  `После базовой обработки подключён отдельный официальный набор геодаты L2J High Five. Локаций с проверенными наземными путями и связями через исходные городские точки: ${Object.values(nativeRoutes.routes).filter(r=>r.available).length}. Подробности: [геодата и первые связи](native-geodata.md). Высоты и NSWE проверяются по бинарным файлам; охват NPC и полигоны выбора Атласа не выдаются за геодату.`, '',
  `Региональная склейка остаётся частичной. **${Object.keys(nativeFields.fields).length}** участков перенесены в мировые координаты: исходные NPC появляются на подходе, бой и движение остаются в Атласе. [Реестр участков](native-field-registry.md). Остальные комнаты ещё не перенесены целиком в мировые клетки. [Ограничения мировой охоты](native-field-pilot.md).`, '',
@@ -61,4 +61,4 @@ const lines=[
  '`node scripts/ui/report-map-processing.mjs` проверяет структуру и обновляет этот отчёт. `node --test test/surface-location-coverage.test.js test/location-levels.test.js` проверяет серверное сохранение, исходное население и разделение пространств. `node scripts/ui/check-location-levels.mjs` проверяет реальные экраны всех этажей на 320/390/1100 px; отдельные режимы проверяют работу без WebGL, Phaser и рисунков окружения. Набор зон можно задать через `LOCATION_LEVEL_ZONE`.', ''
 ];
 fs.writeFileSync('docs/map-processing.md',lines.join('\n'));
-console.log(`${zones.length} zones; ${surface.length} continuous, ${separate.length} separate; ${floors} floors; ${rooms} rooms; ${transitions} floor transitions; ${pictures.size} pictures`);
+console.log(`${zones.length} zones; ${surface.length} continuous surface, ${native.length} native world, ${separate.length} adapted; ${floors} floors; ${rooms} rooms; ${transitions} floor transitions; ${pictures.size} pictures`);
