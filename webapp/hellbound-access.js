@@ -6,6 +6,7 @@ export const HELLBOUND_REASONS={
  hellbound_ground_required:'Сначала выйдите в город или на открытую местность материка.',
  hellbound_portal_required:'На Хеллбаунд ведут врата в Хейне и на западном побережье.',
  quest_completed:'Задание уже завершено.',quest_step_required:'Сначала выполните текущий этап задания.',quest_item_required:'В задании отсутствует нужный предмет.',
+ quest_npc_required:'К этому NPC нужно добраться и поговорить с ним.',
 };
 const gateName=n=>n.npcId===32314?(n.region==='heine'?'Врата · Хейн':'Врата · западное побережье'):n.name;
 export function hellboundNpcListHtml(state){

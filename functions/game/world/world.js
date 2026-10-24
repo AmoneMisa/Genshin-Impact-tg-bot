@@ -189,6 +189,7 @@ export function quickTravelBlock(session,now=Date.now()){
 export function quickTravel(session,body,now=Date.now()){
     const quest=body.quest&&questTargets(session,LOCATIONS).find(q=>q.id===body.quest);
     if(body.quest&&!quest)return {ok:false,reason:'unknown_zone'};
+    if(quest?.npcReference)return {ok:false,reason:'quest_npc_required'};
     if(quest)body={...body,location:quest.location};
     if(body.holding)return {ok:false,reason:'quick_travel_siege'};
     if(body.city&&body.location)return {ok:false,reason:'unknown_zone'};

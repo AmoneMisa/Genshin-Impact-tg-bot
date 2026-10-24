@@ -1547,3 +1547,6 @@ body .ui-card-table-window button.ui-dice:hover{border-color:var(--gold-bright);
 body .ui-card-table-window button.ui-dice:focus-visible{outline:2px solid var(--gold-bright);outline-offset:3px}
 body .ui-card-table-window button.ui-dice:disabled{opacity:var(--disabled-opacity,.55);filter:none}
 body .ui-card-table-window[aria-busy=true] button.ui-dice:disabled{opacity:1}
+
+/* Narrow navigation dialogs with back and dismiss actions. */
+body .game-dialog-panel .game-dialog-heading.has-small-title h2{font-size:20px}

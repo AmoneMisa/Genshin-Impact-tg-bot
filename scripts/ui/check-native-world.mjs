@@ -77,7 +77,7 @@ try{for(const {width,noCanvas=false} of configurations){
   await page.locator('[data-movement]').click();
   await page.getByRole('combobox',{name:'Разделы телепорта',exact:true}).click();
   const quest=questName&&name===zoneName(firstId);
-  await page.getByRole('option',{name:quest?'Квестовые монстры':'Охота',exact:true}).click();
+  await page.getByRole('option',{name:quest?'Цели квестов':'Охота',exact:true}).click();
   await page.locator('[data-quick-go]').filter({hasText:quest?questName:name}).click();
   const walk=page.locator('[data-native-walk]');assert.equal(await walk.isEnabled(),true);
   await walk.focus();assert.equal(await walk.evaluate(n=>n===document.activeElement),true);

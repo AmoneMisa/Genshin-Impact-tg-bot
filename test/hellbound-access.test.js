@@ -45,3 +45,12 @@ test('original Gludin Wastelands fare and verified walk reach Casian without a f
  const walk=worldAction(s,{action:'hellbound_walk',npc:casian.id},NOW+1);assert.equal(walk.ok,true,JSON.stringify(walk));const until=w.walkHome.until;advanceWorld(s,until+1);
  assert.equal(hellboundAccessDto(s,until+1).npcs.find(n=>n.id===casian.id).near,true);assert.equal(act(s,casian,'start').ok,true);
 });
+test('the shared Atlas quest filter follows the current original NPC and cannot teleport to it',()=>{
+ const s=hero(),target=()=>worldState(s,NOW).questTargets.filter(q=>q.npcReference);
+ assert.deepEqual(target(),[]);
+ for(const [n,event,next]of [[casian,'start',galate],[galate,'report',casian],[casian,'crystal',galate]]){
+  at(s,n);assert.ok(act(s,n,event).ok);const [q]=target();assert.equal(target().length,1);assert.equal(q.npcReference,next.id);assert.deepEqual({x:q.x,y:q.y,z:q.z},{x:next.x,y:next.y,z:next.z});
+  const before=JSON.stringify({world:s.game.world,gold:s.game.inventory.gold});assert.equal(worldAction(s,{action:'quick_travel',quest:q.id},NOW).reason,'quest_npc_required');assert.equal(JSON.stringify({world:s.game.world,gold:s.game.inventory.gold}),before);
+ }
+ at(s,galate);assert.ok(act(s,galate,'complete').ok);assert.deepEqual(target(),[]);
+});
