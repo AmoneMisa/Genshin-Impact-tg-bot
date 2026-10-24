@@ -3,3 +3,6 @@
 
 # Pinned Java references retain original SHA-256 bytes, including trailing spaces.
 art-source/geodata/**/*.java -text whitespace=-blank-at-eol
+
+# Generated cave vectors have recorded SHA-256 values; preserve LF on checkout.
+webapp/art/world/native/*.svg text eol=lf
