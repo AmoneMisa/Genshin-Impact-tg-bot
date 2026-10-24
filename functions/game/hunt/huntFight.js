@@ -84,15 +84,33 @@ export function ensureHunt(session, now = Date.now(),random=Math.random) {
             const zone=getZone(game.hunt.zone);
             const old=[...(field.mobs||[]),...Object.values(field.rooms||{}).flatMap(r=>r.mobs||[])];
             // HellboundEngine.doSpawn restores active actors on a stage change. Polling the same stage must not heal them.
-            for(const id of new Set([field.room,...Object.keys(field.rooms||{})])){
-                const room=roomById(zone,id,field.floor||1);if(!room)continue;
-                const mobs=populateRoom(session,zone,room,{now,random:Math.random,prefix:`${now}:hb${field.populationRevision}:${id}`}).map(fresh=>{
-                    const saved=old.find(m=>m.sourceRoom===id&&m.sourceSlot===fresh.sourceSlot);
-                    return saved?{...fresh,instanceId:saved.instanceId}:fresh;
-                });
-                if(id===field.room)field.mobs=mobs;else field.rooms[id]={...field.rooms[id],mobs};
+            if(field.native){
+                // Rebuild only the current world residency window. Room-wide
+                // population would create distant actors and adapted positions
+                // where original ground placement failed.
+                field.mobs=[];field.rooms={};field.respawns=[];
+                field.native.loaded={};field.native.missing={};field.native.randomGroups={};
+                stopHuntAction(field,now);syncResident(session,game.hunt,now,random);
+                const previous=new Map(old.map(m=>[m.sourceRoom+':'+m.sourceSlot,m]));
+                for(const bank of [field,...Object.values(field.rooms)])for(const m of bank.mobs){
+                    const saved=previous.get(m.sourceRoom+':'+m.sourceSlot);if(!saved)continue;
+                    if(field.target===m.instanceId)field.target=saved.instanceId;m.instanceId=saved.instanceId;
+                    // doSpawn restores HP/MP but does not teleport an existing
+                    // NPC back to its spawn point when the island phase changes.
+                    if(saved.native){m.x=saved.x;m.y=saved.y;m.native.z=saved.native.z;}
+                    if(saved.currentHp>0)m.buffs=saved.buffs;
+                }
+            }else{
+                for(const id of new Set([field.room,...Object.keys(field.rooms||{})])){
+                    const room=roomById(zone,id,field.floor||1);if(!room)continue;
+                    const mobs=populateRoom(session,zone,room,{now,random:Math.random,prefix:`${now}:hb${field.populationRevision}:${id}`}).map(fresh=>{
+                        const saved=old.find(m=>m.sourceRoom===id&&m.sourceSlot===fresh.sourceSlot);
+                        return saved?{...fresh,instanceId:saved.instanceId}:fresh;
+                    });
+                    if(id===field.room)field.mobs=mobs;else field.rooms[id]={...field.rooms[id],mobs};
+                }
+                field.respawns=[];field.target=field.mobs[0]?.instanceId||null;stopHuntAction(field,now);
             }
-            field.respawns=[];field.target=field.mobs[0]?.instanceId||null;stopHuntAction(field,now);
         }
     }
     syncResident(session,game.hunt,now,random);

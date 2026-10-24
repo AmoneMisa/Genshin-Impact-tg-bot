@@ -1,9 +1,10 @@
 /** Population conditions use trusted server state; no request-body stage is read. */
 export function hellboundStage(session){return Math.max(0,Math.trunc(Number(session.ownerDocument?.()?.game?.hellbound?.level)||0));}
+export const sourcePopulationActive=(entry,stage)=>stage===null||stage>=(entry.hellboundMin??1)&&stage<=(entry.hellboundMax??100);
 export function populationSlots(room,session,zoneId){
  let slot=0;const stage=zoneId==='hellbound'?hellboundStage(session):null;
  return (room.spawns||[]).flatMap((entry,entryIndex)=>Array.from({length:entry.count},()=>({...entry,entryIndex,slot:slot++})))
-  .filter(s=>stage===null||stage>=(s.hellboundMin??1)&&stage<=(s.hellboundMax??100));
+  .filter(s=>sourcePopulationActive(s,stage));
 }
 export function initialPopulationSlots(room,session,zoneId,random=Math.random){
  const slots=populationSlots(room,session,zoneId),groups=new Map();

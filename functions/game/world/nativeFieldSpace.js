@@ -8,6 +8,7 @@ import {nativeStaticSight} from './nativeVisibility.js';
 import {createNativeJourney,advanceNativeJourney} from './nativeJourney.js';
 import {rememberNativeTrail} from './nativeTrail.js';
 import {nativeSpawnDistance,sampleNativeTerritory} from './nativeSpawnTerritory.js';
+import {sourcePopulationActive} from '../hunt/sourcePopulation.js';
 
 // A residency budget, not a monster aggression/leash range. Public DTOs are capped separately.
 export const NATIVE_FIELD_RADIUS=8192;
@@ -87,6 +88,9 @@ export function syncNativePopulation(hunt,layout,now,populate,random=Math.random
  for(const room of layout.rooms){
   let slot=0;
   for(const [entryIndex,source] of (room.spawns||[]).entries())for(let i=0;i<source.count;i++,slot++){
+   // Inactive source slots are neither loaded nor missing. A later world phase
+   // may activate the same stable room/slot without retrying invalid ground.
+   if(!sourcePopulationActive(source,hunt.zone==='hellbound'?f.populationStage:null))continue;
    const key=room.id+':'+slot;
    if(upgradePlacement&&f.native.missing[key]&&source.coordinateSource==='point'){
     const ground=worldGeodata.point(source);
