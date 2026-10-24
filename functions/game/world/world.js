@@ -33,7 +33,7 @@ import {ROOM_SIZE} from './navigation.js';
 import {hellboundNpcAction,hellboundAccessDto,hellboundNpc,hellboundPlayerPoint,hellboundApproachQuote,hellboundEscapePoint} from './hellboundAccess.js';
 import HELLBOUND_ACCESS from '../../../template/hellboundAccess.js';
 import {findNativePath} from './nativeNavigation.js';
-import {nativeGroundAllowed} from './nativeGround.js';
+import {nativeGroundFor} from './nativeGround.js';
 import {createNativeJourney} from './nativeJourney.js';
 
 export {CITIES,REGIONS,LOCATIONS,CITY_NPCS};
@@ -86,7 +86,7 @@ export function advanceWorld(session,now=Date.now()) {
     if(!alive(session)){markWorldDeath(session,now);return w;}
     advanceFerry(session,now);
     let nativeDone=false;
-    if(w.mode==='road'&&w.walkHome?.native)nativeDone=advanceNativeJourney(w.walkHome,now,l2ActionBlock(session,{move:true},now)?0:getSpeed(session)*l2MoveMultiplier(session,now));
+    if(w.mode==='road'&&w.walkHome?.native)nativeDone=advanceNativeJourney(w.walkHome,now,l2ActionBlock(session,{move:true},now)?0:getSpeed(session)*l2MoveMultiplier(session,now),{allowed:nativeGroundFor(session)});
     // Stream the pilot's source population as the walking camera approaches it.
     // Carry the very same remaining journey: entering the field grants no movement.
     if(w.mode==='road'&&!nativeDone&&w.walkHome?.native&&!w.walkHome.city&&!w.walkHome.port&&(!w.walkHome.location||nativeFieldSupported(w.walkHome.location))){
@@ -242,8 +242,8 @@ export function worldAction(session,body,now=Date.now()){
         if(!npc)return {ok:false,reason:'unknown_npc'};
         if(!from||nativeIsland(session))return {ok:false,reason:'hellbound_ground_required'};
         const blocked=l2ActionBlock(session,{move:true},now);if(blocked)return {ok:false,reason:blocked};
-        const plan=findNativePath(from,npc,{allowed:nativeGroundAllowed,maxNodes:12000,stride:8,reversible:true,heuristicWeight:2});if(!plan.ok)return plan;
-        const trip=createNativeJourney(plan.start,plan.path,{now,speed:getSpeed(session)*l2MoveMultiplier(session,now)});if(!trip)return {ok:false,reason:'path_blocked'};
+        const allowed=nativeGroundFor(session),plan=findNativePath(from,npc,{allowed,maxNodes:12000,stride:8,reversible:true,heuristicWeight:2});if(!plan.ok)return plan;
+        const trip=createNativeJourney(plan.start,plan.path,{now,speed:getSpeed(session)*l2MoveMultiplier(session,now),allowed});if(!trip)return {ok:false,reason:'path_blocked'};
         trip.npc=npc.id;trip.native.historyStart={...plan.start};
         w.channel=null;w.pending=null;w.path=[];
         if(nativeFieldPoint(session)){const field=session.game.hunt.field;stopHuntAction(field,now);field.native.journey=trip;field.seenAt=now;}

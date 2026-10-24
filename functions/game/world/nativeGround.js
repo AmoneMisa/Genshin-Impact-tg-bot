@@ -1,8 +1,11 @@
 import nativeWorld from '../../../template/nativeWorld.js';
 import holdings from '../../../template/worldHoldings.js';
 import {pointInPolygon} from './navigation.js';
+import hellbound from '../../../template/hellboundAccess.js';
+import {hellboundStage} from '../hunt/sourcePopulation.js';
 
 const SIZE=4096,index=new Map();
+const hellboundDoors=hellbound.doors.map(d=>({...d,geometry:nativeWorld.doors.find(g=>g.id===String(d.id))}));
 function add(record){
  const xs=record.polygon.map(p=>p[0]),ys=record.polygon.map(p=>p[1]),padding=record.kind==='water'?0:16;
  Object.assign(record,{left:Math.min(...xs)-padding,right:Math.max(...xs)+padding,top:Math.min(...ys)-padding,bottom:Math.max(...ys)+padding});
@@ -10,18 +13,26 @@ function add(record){
   const key=x+':'+y,list=index.get(key)||[];list.push(record);index.set(key,list);
  }
 }
-// Ground trails cannot open an unimplemented door, swim, or enter a holding through its walls.
+// Without a trusted script state, doors remain closed. Water and holdings keep their own vetoes.
 for(const door of nativeWorld.doors)add({...door,kind:'door',minZ:door.minZ-16,maxZ:door.maxZ+16});
 for(const zone of nativeWorld.water)add({...zone,kind:'water'});
 for(const holding of holdings.filter(h=>h.kind==='castle'||h.kind==='fort'))add({...holding,kind:'holding',minZ:-Infinity,maxZ:Infinity});
 
-export function nativeGroundBlock(point){
+export function nativeGroundBlock(point,{openDoors=null}={}){
  if(![point?.x,point?.y,point?.z].every(Number.isFinite))return 'geodata_missing';
  for(const r of index.get(Math.floor(point.x/SIZE)+':'+Math.floor(point.y/SIZE))||[]){
   if(point.x<r.left||point.x>r.right||point.y<r.top||point.y>r.bottom||point.z<r.minZ||point.z>r.maxZ)continue;
+  if(r.kind==='door'&&openDoors?.has(String(r.id)))continue;
   if(r.kind==='water'&&r.shape!=='Cuboid'&&!pointInPolygon(point,r.polygon))continue;
   return r.kind==='water'?'swimming_required':r.kind==='door'?'door_state_required':'holding_region_required';
  }
  return null;
 }
 export const nativeGroundAllowed=point=>!nativeGroundBlock(point);
+/** Only pinned engine thresholds and trusted server phases can open doors. */
+export function nativeGroundAtStage(stage){
+ const openDoors=new Set(hellbound.doors.filter(d=>Number.isFinite(stage)&&stage>=d.minimumStage).map(d=>String(d.id)));
+ return point=>!nativeGroundBlock(point,{openDoors});
+}
+export const nativeGroundFor=session=>nativeGroundAtStage(hellboundStage(session));
+export const nativeDoorStates=stage=>hellboundDoors.filter(d=>d.geometry).map(d=>({id:String(d.id),polygon:d.geometry.polygon,open:Number.isFinite(stage)&&stage>=d.minimumStage}));

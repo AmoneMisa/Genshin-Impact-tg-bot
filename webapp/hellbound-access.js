@@ -11,7 +11,8 @@ export const HELLBOUND_REASONS={
 const gateName=n=>n.npcId===32314?(n.region==='heine'?'Врата · Хейн':'Врата · западное побережье'):n.name;
 export function hellboundNpcListHtml(state){
  if(!state.hellbound)return '';
- return '<details class="ui-disclosure"><summary>Путь на Хеллбаунд</summary><p>'+esc(state.hellbound.quest.text)+'</p>'+state.hellbound.npcs.map(n=>'<button type="button" class="ui-button" data-hellbound-show="'+esc(n.id)+'">'+esc(gateName(n))+'</button>').join('')+'</details>';
+ const doors=state.nativeField?.doors||[];
+ return '<details class="ui-disclosure"><summary>Путь на Хеллбаунд</summary><p>'+esc(state.hellbound.quest.text)+'</p>'+state.hellbound.npcs.map(n=>'<button type="button" class="ui-button" data-hellbound-show="'+esc(n.id)+'">'+esc(gateName(n))+'</button>').join('')+(doors.length?'<details class="ui-disclosure" data-hellbound-doors><summary>Ворота острова</summary>'+doors.map((d,i)=>'<p class="ui-inset-row"><span>'+esc('Ворота')+' '+(i+1)+'</span><span>'+esc(d.open?'Открыты':'Закрыты')+'</span></p>').join('')+'</details>':'')+'</details>';
 }
 export function hellboundNpcHtml(n,state){
  const reasons=[...new Set(n.actions.map(a=>a.reason).filter(Boolean))];

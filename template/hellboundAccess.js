@@ -35,6 +35,10 @@ export default {
       "miscs.xml": {
         "file": "mapregion/miscs.xml",
         "sha256": "eca4a72e2283b5e720773642a8964d97f734a68626347c0489203431402a6099"
+      },
+      "HellboundEngine.java": {
+        "file": "scripts/ai/areas/Hellbound/HellboundEngine.java",
+        "sha256": "690c0879d41c0357c96f46fd3d30d819fe5639622122a88bbc9b080c230046ef"
       }
     }
   },
@@ -138,6 +142,24 @@ export default {
       }
     ]
   },
+  "doors": [
+    {
+      "id": 19250001,
+      "minimumStage": 5
+    },
+    {
+      "id": 19250002,
+      "minimumStage": 5
+    },
+    {
+      "id": 20250001,
+      "minimumStage": 9
+    },
+    {
+      "id": 20250002,
+      "minimumStage": 7
+    }
+  ],
   "approach": {
     "city": "gludin",
     "npcId": 30320,

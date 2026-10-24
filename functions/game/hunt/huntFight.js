@@ -114,6 +114,11 @@ export function ensureHunt(session, now = Date.now(),random=Math.random) {
         }
     }
     syncResident(session,game.hunt,now,random);
+    if(field?.native&&game.hunt.zone==='hellbound'){
+        // Refresh from trusted world state before path advancement or combat.
+        field.native.hellboundStage=field.populationStage;
+        for(const bank of [field,...Object.values(field.rooms||{})])for(const m of bank.mobs||[])if(m.native)m.native.hellboundStage=field.populationStage;
+    }
     if (game.hunt.field) game.hunt.mob = battleActor(game.hunt,game.hunt.field.target);
     return game.hunt;
 }

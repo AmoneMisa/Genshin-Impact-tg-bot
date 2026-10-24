@@ -16,15 +16,15 @@ export function pruneNativeLoops(from,path){
  // Preserve a zero-distance arrival at an entrance already reached on foot.
  return points.length>1?points.slice(1):path.length?[path.at(-1)]:[];
 }
-export function createNativeJourney(from,path,{now,speed,location=null,city=null}={}){
+export function createNativeJourney(from,path,{now,speed,location=null,city=null,allowed=nativeGroundAllowed}={}){
  if(!path.length||path.length>512||![from,...path].every(p=>[p?.x,p?.y,p?.z].every(Number.isFinite)))return null;
  let point=from,distance=0;
- for(const next of path){if(!nativeSegment(point,next,{allowed:nativeGroundAllowed}))return null;distance+=nativeDistance(point,next);point=next;}
+ for(const next of path){if(!nativeSegment(point,next,{allowed}))return null;distance+=nativeDistance(point,next);point=next;}
  return {kind:'walk',routeGeometry:'l2j-geodata',location,city,until:now+Math.ceil(distance/Math.max(1,speed)*1000),native:{commit:source.commit,point:{x:from.x,y:from.y,z:from.z},legStart:{x:from.x,y:from.y,z:from.z},path:path.map(p=>({x:p.x,y:p.y,z:p.z})),index:0,moveAt:now,remaining:distance}};
 }
 
 /** Walk saved, source-verified segments with one distance budget across all region boundaries. */
-export function advanceNativeJourney(trip,now,speed){
+export function advanceNativeJourney(trip,now,speed,{allowed=nativeGroundAllowed}={}){
  const route=trip?.native;if(!route)return false;
  const elapsed=Math.max(0,now-route.moveAt);route.moveAt=Math.max(now,route.moveAt);
  if(route.commit!==source.commit){route.blocked='geodata_revision_changed';return false;}
@@ -33,7 +33,7 @@ export function advanceNativeJourney(trip,now,speed){
  let budget=elapsed/1000*Math.max(0,speed);
  while(route.index<route.path.length&&budget>0){
   const next=route.path[route.index],distance=nativeDistance(route.point,next);
-  const cells=nativeSegment(route.legStart,next,{allowed:nativeGroundAllowed});
+  const cells=nativeSegment(route.legStart,next,{allowed});
   if(!cells){route.blocked='path_blocked';return false;}
   if(distance<=budget+1e-9){route.point={...next};route.legStart={...next};budget-=distance;route.remaining=Math.max(0,route.remaining-distance);route.index++;}
   else{
@@ -42,7 +42,7 @@ export function advanceNativeJourney(trip,now,speed){
    // each shortened remainder can select a different side of a diagonal obstacle.
    const nearest=cells.reduce((best,p)=>nativeDistance(p,point)<nativeDistance(best,point)?p:best,route.legStart);
    const surface=worldGeodata.point({...point,z:nearest.z});
-   if(!surface?.nswe||!nativeGroundAllowed(surface)){route.blocked='path_blocked';return false;}
+   if(!surface?.nswe||!allowed(surface)){route.blocked='path_blocked';return false;}
    route.point={x:surface.x,y:surface.y,z:surface.z};route.remaining=Math.max(0,route.remaining-budget);budget=0;
   }
  }

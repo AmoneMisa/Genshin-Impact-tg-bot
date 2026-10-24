@@ -2,7 +2,7 @@ import pilot from '../../../template/nativeFieldPilot.js';
 import {LOCATION_LEVELS} from '../../../template/locationLevels.js';
 import {ROOM_SIZE} from './navigation.js';
 import {worldGeodata} from './l2jGeodata.js';
-import {nativeGroundAllowed} from './nativeGround.js';
+import {nativeGroundAllowed,nativeGroundAtStage,nativeDoorStates} from './nativeGround.js';
 import {findNativePath} from './nativeNavigation.js';
 import {nativeStaticSight} from './nativeVisibility.js';
 import {createNativeJourney,advanceNativeJourney} from './nativeJourney.js';
@@ -125,9 +125,10 @@ export function moveNativeActor(actor,target,now,speed){
  // XY, so a client cannot choose a floor by supplying a height.
  const goal={x:target.x*ROOM_SIZE,y:target.y*ROOM_SIZE,z:Number.isFinite(target.native?.z)?target.native.z:from.z};
  if(Math.hypot(goal.x-from.x,goal.y-from.y)>8192)return {ok:false,reason:'path_blocked'};
- const plan=findNativePath(from,goal,{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true,heuristicWeight:2});
+ const allowed=nativeGroundAtStage(actor.native?.hellboundStage??target.native?.hellboundStage);
+ const plan=findNativePath(from,goal,{allowed,maxNodes:6000,stride:2,reversible:true,heuristicWeight:2});
  if(!plan.ok)return plan;
- const trip=createNativeJourney(plan.start,plan.path,{now,speed});
+ const trip=createNativeJourney(plan.start,plan.path,{now,speed,allowed});
  if(!trip)return {ok:false,reason:'path_blocked'};
  trip.native.historyStart={...plan.start};
  actor.native.journey=trip;actor.moveAt=now;actor.path=trip.native.path.slice(0,16).map(p=>({x:p.x/ROOM_SIZE,y:p.y/ROOM_SIZE,z:p.z}));
@@ -135,7 +136,7 @@ export function moveNativeActor(actor,target,now,speed){
 }
 export function advanceNativeActor(actor,now,speed){
  const trip=actor.native?.journey;if(!trip){actor.path=[];actor.moveAt=now;return;}
- const done=advanceNativeJourney(trip,now,speed),p=trip.native.point;
+ const done=advanceNativeJourney(trip,now,speed,{allowed:nativeGroundAtStage(actor.native?.hellboundStage)}),p=trip.native.point;
  actor.x=p.x/ROOM_SIZE;actor.y=p.y/ROOM_SIZE;actor.native.z=p.z;actor.moveAt=now;
  actor.path=trip.native.blocked?[]:trip.native.path.slice(trip.native.index,trip.native.index+16).map(p=>({x:p.x/ROOM_SIZE,y:p.y/ROOM_SIZE,z:p.z}));
  if(done||trip.native.blocked)stopNativeActor(actor);
@@ -147,12 +148,12 @@ export function stopNativeActor(actor){
 /** Original static H5 sight plus conservative door/water/holding vetoes. */
 export function nativeCombatLine(a,b){
  const from=nativeActorPoint(a),to=nativeActorPoint(b);
- return Boolean(from&&to&&nativeStaticSight(from,to,{allowed:nativeGroundAllowed}));
+ return Boolean(from&&to&&nativeStaticSight(from,to,{allowed:nativeGroundAtStage(a.native?.hellboundStage??b.native?.hellboundStage)}));
 }
 export const nativeMobMovement=mob=>pilot.actors[mob.mobId]||null;
 export function nativeFieldDto(session){
  const f=session.game.hunt?.field,point=nativeFieldPoint(session);if(!point)return null;
- return {zone:session.game.hunt.zone,point,target:f.target,
+ return {zone:session.game.hunt.zone,point,target:f.target,...(session.game.hunt.zone==='hellbound'?{doors:nativeDoorStates(f.populationStage)}:{}),
   actors:nativeFieldActors(session.game.hunt).sort((a,b)=>Number(b.instanceId===f.target)-Number(a.instanceId===f.target)||Math.hypot(a.x-f.x,a.y-f.y)-Math.hypot(b.x-f.x,b.y-f.y)).slice(0,48).map(m=>({
    ...nativeActorPoint(m),id:m.mobId,instanceId:m.instanceId,name:m.name,level:m.level,hp:m.hp,currentHp:m.currentHp,aggressive:Boolean(m.aggressive),social:Boolean(m.clanHelpRange&&m.socialClans?.length),aggro:Boolean(m.aggro)
   }))};

@@ -36,6 +36,9 @@ for(const level of [23,26,33,36,43,46,53,56,63,66,73])phrases['Камалока 
 for(const level of [29,39,49,59,69,78,81,83])phrases['Лабиринт Бездны · '+level]='Tubsizlik labirinti · '+level;
 for(let n=1;n<=6;n++)phrases['Разлом Измерений · '+n]='O‘lchovlar yorig‘i · '+n;
 Object.assign(phrases,{
+ 'Ворота острова':'Orol darvozalari',
+ 'Закрыты':'Yopiq',
+ 'Открыты':'Ochiq',
  'Цели квестов':'Topshiriq maqsadlari',
  'Показать цель':'Maqsadni ko‘rsatish',
  'К этому NPC нужно добраться и поговорить с ним.':'Bu NPCga yetib borib, u bilan gaplashish kerak.',

@@ -1,3 +1,4 @@
+import {drawNativeDoors} from './native-doors.js';
 import {HELLBOUND_REASONS,hellboundNpcListHtml,hellboundNpcHtml} from './hellbound-access.js';
 import {quantityControlHtml,bindQuantityControl} from './stock-quantity.js';
 import {playMusic} from './audio.js';
@@ -86,6 +87,7 @@ export async function openWorldMap(options){
         const p={...state.player,...displayedPosition(state.player,Date.now()-receivedAt,{size:state.player.areaSize||cityScale(state.cities.find(c=>c.id===state.player.city))})};if(p.worldPoint||(mode==='city'&&['city','entrance'].includes(p.mode)&&p.city===region)||(mode!=='city'&&(mode==='world'||p.city===region))){const playerCity=state.cities.find(c=>c.id===p.city)||view.city,place=state.locations.find(l=>l.id===p.location);const point=p.worldPoint||(p.mode==='boss'&&p.bossPosition?p.bossPosition:mode!=='city'&&place?{x:place.x,y:place.y}:{x:(p.entryOrigin||playerCity).x+(p.x-.5)*(p.areaSize||cityScale(playerCity)),y:(p.entryOrigin||playerCity).y+(p.y-.5)*(p.areaSize||cityScale(playerCity))}),q=project(point);ctx.fillStyle='#78e3d6';ctx.beginPath();ctx.arc(q.x,q.y,9,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff0cf';ctx.lineWidth=2;ctx.stroke();ctx.font='bold 12px system-ui';ctx.fillStyle='#fff0cf';ctx.textAlign='center';ctx.fillText('Вы',q.x,q.y-15);if(mode==='city'&&p.path?.length){ctx.strokeStyle='#78e3d6';ctx.beginPath();ctx.moveTo(q.x,q.y);for(const n of p.path){const t=project({x:(p.entryOrigin||view.city).x+(n.x-.5)*(p.areaSize||cityScale(view.city)),y:(p.entryOrigin||view.city).y+(n.y-.5)*(p.areaSize||cityScale(view.city))});ctx.lineTo(t.x,t.y);}ctx.stroke();}}
         if(p.worldPoint&&p.worldPath?.length){ctx.strokeStyle='#78e3d6';ctx.lineWidth=2;ctx.beginPath();const start=project(p.worldPoint);ctx.moveTo(start.x,start.y);for(const node of p.worldPath){const q=project(node);ctx.lineTo(q.x,q.y);}ctx.stroke();}
         if(state.nativeField&&mode==='city'&&region===state.player.city){
+            drawNativeDoors(ctx,state.nativeField.doors,project);
             const actors=state.nativeField.actors.slice(0,w<700?8:16),target=actors.find(a=>a.instanceId===state.nativeField.target),labels=target?[project(target)]:[];
             for(const actor of [...actors.filter(a=>a!==target).reverse(),...(target?[target]:[])]){
                 const q=project(actor),color=actor.aggressive?'#ef7373':actor.social?'#76bfff':'#fff0cf',label=actor===target||!labels.some(p=>Math.abs(p.x-q.x)<130&&Math.abs(p.y-q.y)<36);

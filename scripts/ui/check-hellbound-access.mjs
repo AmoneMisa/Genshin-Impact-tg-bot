@@ -57,6 +57,12 @@ try{for(const {width,noCanvas=false,noImages=false}of cases){
  await openNpc('heine-gate');const gold=s.game.inventory.gold;await action('heine-gate','enter');await page.locator('.atlas-combat:not([hidden])').waitFor();assert.equal(s.game.world.location,'hellbound');assert.equal(s.game.inventory.gold,gold);assert.equal(await page.locator('.hunt-overlay,.atlas-room-host:not([hidden]) .hunt-ground').count(),0);await same();
  const initial=worldState(s,now).nativeField;assert.deepEqual(initial.point,source.entry);assert.ok(initial.actors.length>0);
  assert.ok((await page.getByRole('combobox',{name:'Регион',exact:true}).innerText()).includes(worldState(s,now).cities.find(c=>c.id===s.game.world.city).name));
+ async function doors(open){
+  await closePopup();await page.locator('[data-movement]').click();await page.locator('.atlas-popup > details').filter({has:page.locator('[data-hellbound-doors]')}).locator(':scope > summary').click();await page.locator('[data-hellbound-doors] > summary').click();
+  assert.equal(await page.locator('[data-hellbound-doors] p').count(),4);assert.equal((await page.locator('[data-hellbound-doors]').innerText()).split(open?'Открыты':'Закрыты').length-1,4);assert.equal(await page.locator('.atlas-popup').evaluate(p=>p.scrollWidth<=p.clientWidth+1),true);await closePopup();
+ }
+ await doors(false);chat.game.hellbound.level=9;await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.nativeField?.doors?.filter(d=>d.open).length===4);await doors(true);
+ chat.game.hellbound.level=1;await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.nativeField?.doors?.filter(d=>!d.open).length===4);await doors(false);
  if(noCanvas){const direction=[['east',200,0],['west',-200,0],['south',0,200],['north',0,-200]].find(([,x,y])=>findNativePath(initial.point,{x:initial.point.x+x,y:initial.point.y+y,z:initial.point.z},{allowed:nativeGroundAllowed,maxNodes:6000,reversible:true}).ok);assert.ok(direction);await page.locator(`[data-native-step="${direction[0]}"]`).click();}
  else{
   const box=await page.locator('.atlas-stage canvas').boundingBox(),scale=box.width/14000,visible=initial.actors.slice(0,width<700?8:16);

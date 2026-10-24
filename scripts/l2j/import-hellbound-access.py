@@ -47,6 +47,11 @@ keep(respawn_file, (base / respawn_file).read_bytes())
 respawn = next(n for n in ET.parse(base / respawn_file).findall('region') if n.get('name') == 'southern_wasteland')
 escape = {'file':respawn_file,'regions':[n.get('X')+'_'+n.get('Y') for n in respawn.findall('map')], 'points':[{k.lower():int(n.get(k)) for k in ['X','Y','Z']} for n in respawn.findall('respawnPoint') if n.get('isChaotic') != 'true']}
 assert len(escape['points']) == 6 and escape['regions'] == ['19_25','20_25']
+engine_file = 'scripts/ai/areas/Hellbound/HellboundEngine.java'
+engine = keep(engine_file, (base / engine_file).read_bytes())
+door_list = re.search(r'DOOR_LIST =\s*\{(.*?)\};',engine,re.S).group(1)
+doors = [{'id':int(n),'minimumStage':int(stage)} for n,stage in re.findall(r'\{\s*(\d+),\s*(\d+)\s*\}',door_list)]
+assert len(doors) == 4
 
 def location(name):
     values = re.search(r'\b' + name + r' = new Location\((-?\d+), (-?\d+), (-?\d+)\)', gate).groups()
@@ -57,7 +62,7 @@ data = {
     'quest': {'id': 130, 'name': 'Path to Hellbound', 'minimumLevel': int(re.search(r'MIN_LEVEL = (\d+)', quest).group(1)), 'itemId': int(re.search(r'CASIANS_BLUE_CRYSTAL = (\d+)', quest).group(1)), 'itemName': "Casian's Blue Crystal"},
     'requiresQuest': not without_quest,
     'interactionDistance': int(re.search(r'INTERACTION_DISTANCE = (\d+)', npc_code).group(1)),
-    'entry': location('ENTER_LOC'), 'remove': location('REMOVE_LOC'), 'npcs': points, 'escape':escape,
+    'entry': location('ENTER_LOC'), 'remove': location('REMOVE_LOC'), 'npcs': points, 'escape':escape, 'doors':doors,
     'approach': {'city': 'gludin', 'npcId': 30320, 'name': row.get('name'), 'fee': int(row.get('feeCount')), **{k: int(row.get(k)) for k in ['x', 'y', 'z']}, 'file': file},
 }
 Path('template/hellboundAccess.js').write_text('// Pinned High Five quest 130, Warpgate and original fixed NPC positions.\nexport default ' + json.dumps(data, indent=2) + ';\n', encoding='utf-8')
