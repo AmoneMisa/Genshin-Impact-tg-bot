@@ -26,7 +26,7 @@ config=Path('.tmp/geodata/Native-Npc.ini').read_text();assert 'ForceDeleteMinion
 overrides=dict((int(i),int(t)*1000) for i,t in re.findall(r'(\d+),(\d+)',re.search(r'^CustomMinionsRespawnTime\s*=\s*(.*)',config,re.M).group(1)))
 masters={};actors={}
 for id in parents:
- n=npc(id);radius=float(n.find('collision/radius').get('normal'));group=n.find('parameters/minions[@name="Privates"]');assert group is not None
+ n=npc(id);assert n.get('type') in ['Monster','L2Monster'];radius=float(n.find('collision/radius').get('normal'));group=n.find('parameters/minions[@name="Privates"]');assert group is not None
  entries=[]
  for m in group.findall('npc'):
   child=m.get('id');assert int(child) not in overrides and m.get('respawnTime')=='0'
