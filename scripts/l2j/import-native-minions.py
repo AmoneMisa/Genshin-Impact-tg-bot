@@ -21,7 +21,8 @@ exp={int(n.get('level')):int(n.get('tolevel')) for n in xml('stats/players/exper
 pins={'Native-MinionList.java':'41a856a15b6b6c4bb43fb07240e21c7563c8cff60f02d226e06a1260bccfea72','Native-Spawn.java':'42307eac0dd6bb2661e9b069d39a0fad67c62a466bf0ab520cac6a39fbd0b045','Native-Npc.ini':'fb3319fb29eb957b98f300505617715fbf10fbfbeb96a2e458e9c6282cd5718b'}
 pins.update({'Native-AttackableAI.java':'92aa96d61b6f0f3de7b3f8184f640fdd1b4b1fca1744b3d3c0826bf92086607a','Native-Attackable.java':'97d5c07a5455776f55733c71dbc2117901027042a8b9d69f258b8674d2888fed','Native-NpcTemplate.java':'2db4b108e9e4c2b658e216775e0bc774ca8846785b5ed00e4de7e35b1f4fbd04'})
 for file,sha in pins.items():assert hashlib.sha256((Path('.tmp/geodata')/file).read_bytes()).hexdigest()==sha
-Path('art-source/geodata/spawns/MinionList.java').write_bytes(Path('.tmp/geodata/Native-MinionList.java').read_bytes())
+Path('art-source/geodata/minions').mkdir(parents=True,exist_ok=True)
+Path('art-source/geodata/minions/MinionList.java').write_bytes(Path('.tmp/geodata/Native-MinionList.java').read_bytes())
 config=Path('.tmp/geodata/Native-Npc.ini').read_text();assert 'ForceDeleteMinions = False' in config
 overrides=dict((int(i),int(t)*1000) for i,t in re.findall(r'(\d+),(\d+)',re.search(r'^CustomMinionsRespawnTime\s*=\s*(.*)',config,re.M).group(1)))
 masters={};actors={}
