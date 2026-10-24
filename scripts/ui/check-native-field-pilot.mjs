@@ -12,7 +12,7 @@ import {findNativePath,nativeSegment} from '../../functions/game/world/nativeNav
 import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';
 import change from '../../functions/game/player/changePlayerGameClass.js';
 import update from '../../functions/game/player/updatePlayerStats.js';
-import routes from '../../template/nativeRoutes.js';
+import {nativeRoute} from '../../functions/game/world/nativeTravel.js';
 import islands from '../../template/nativeIslandRoutes.js';
 import shores from '../../template/nativePortRoutes.js';
 import {ferryDock} from '../../functions/game/world/ferryTravel.js';
@@ -21,7 +21,7 @@ import {LOCATIONS,CITIES} from '../../template/worldMap.js';
 import {LOCATION_LEVELS} from '../../template/locationLevels.js';
 import {WORLD_EXTENSION} from '../../template/worldExtension.js';
 const zone=process.env.NATIVE_PILOT_ZONE||'vuku-lands',city=pilot.fields[zone].city;
-const fieldRoute=islands.routes[zone]||routes.routes[zone],island=pilot.fields[zone].island;
+const fieldRoute=nativeRoute(zone),island=pilot.fields[zone].island;
 const zoneName=WORLD_EXTENSION.find(r=>r.zone.id===zone)?.zone.title||LOCATIONS.find(l=>l.id===zone)?.name||zone,cityName=CITIES.find(c=>c.id===city).name,endpoint=island?shores.routes[fieldRoute.isolatedPort].to:fieldRoute.to;
 const {chromium}=createRequire('C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json')('playwright');
 const root=path.resolve('webapp'),out=path.resolve('.tmp/native-field-pilot-ui',zone);fs.mkdirSync(out,{recursive:true});
@@ -39,6 +39,10 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
   const walk=stop=>{assert.equal(worldAction(s,{action:'ferry_walk',port,stop},now).ok,true);now=s.game.world.walkHome.until+1;advanceWorld(s,now);quiet();};
   walk('vendor');assert.equal(worldAction(s,{action:'ferry_ticket',port},now).ok,true);walk('boarding');
   now=ferryDock(port,now).dockAt+1000;assert.equal(worldAction(s,{action:'ferry_board',port},now).ok,true);now=s.game.world.walkHome.until;advanceWorld(s,now);quiet();
+ }
+ if(process.env.NATIVE_OUTSIDE_TELEPORT){
+  assert.ok(fieldRoute.interiorApproach);assert.equal(worldAction(s,{action:'quick_travel',location:zone},now).ok,true);
+  assert.deepEqual(nativeActorPoint(s.game.hunt.field),fieldRoute.entry);assert.equal(worldState(s,now).nativeField.actors.length,0);
  }
  const startingGold=s.game.inventory.gold;
  const dto=()=>{const trip=s.game.world.walkHome||s.game.hunt?.field?.native?.journey;if(finishRoad&&trip?.native){now=trip.until+1;finishRoad=false;}advanceWorld(s,now);quiet();return {world:{...worldState(s,now),holdings:[],corpses:[]}};};
@@ -76,9 +80,9 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  if(!island){
  await page.locator('[data-movement]').click();await page.getByRole('combobox',{name:'Разделы телепорта',exact:true}).click();await page.getByRole('option',{name:'Охота',exact:true}).click();
  await page.locator('[data-quick-go]').filter({hasText:zoneName}).click();assert.equal(await page.locator('[data-native-walk]').isEnabled(),true);
- await page.locator('[data-native-walk]').click();assert.equal(s.game.world.mode,'road');
+ await page.locator('[data-native-walk]').click();assert.equal(s.game.world.mode,process.env.NATIVE_OUTSIDE_TELEPORT?'location':'road');
  if(pilot.fields[zone].interior){
-  const trip=s.game.world.walkHome;let previous=trip.native.point,distance=0,entryAt=null;
+  const trip=s.game.world.walkHome||s.game.hunt?.field?.native?.journey;let previous=trip.native.point,distance=0,entryAt=null;
   for(const p of trip.native.path){
    const cells=nativeSegment(previous,p,{allowed:nativeGroundAllowed,reversible:true});assert.ok(cells);
    for(let i=0;i<cells.length;i+=16){const cell=cells[i];if(nativeFieldZone(cell,zone)){entryAt=now+Math.ceil((distance+Math.hypot(cell.x-previous.x,cell.y-previous.y))/trip.native.remaining*(trip.until-now))+100;break;}}

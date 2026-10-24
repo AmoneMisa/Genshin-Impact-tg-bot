@@ -1,4 +1,5 @@
 import routes from '../../../template/nativeRoutes.js';
+import interiors from '../../../template/nativeInteriorRoutes.js';
 import {CITIES,LOCATIONS} from '../../../template/worldMap.js';
 import {findNativePath,nativeSegment} from './nativeNavigation.js';
 import {nativeGroundAllowed,nativeGroundFor} from './nativeGround.js';
@@ -11,7 +12,15 @@ import islands from '../../../template/nativeIslandRoutes.js';
 import {nativeTrailBack,resumeNativeJourney,rememberNativeTrail} from './nativeTrail.js';
 import {nativeFieldPoint,nativeFieldIsland} from './nativeFieldSpace.js';
 
-export const nativeRoute=id=>islands.routes[id]?.available?islands.routes[id]:routes.routes[id]?.available?routes.routes[id]:null;
+// Walking may continue through a checked cave approach. Paid teleports retain
+// the original outside entry, carried separately on the server-owned route.
+const physicalRoutes=Object.fromEntries(Object.entries(routes.routes).map(([id,route])=>{
+ const cave=interiors.geodataCommit===routes.geodataCommit&&interiors.barriersSha256===routes.barriersSha256&&interiors.routes[id];
+ if(!cave||!route.available||!route.returnPath||!['x','y','z'].every(k=>cave.from[k]===route.to[k]))return [id,route];
+ let distance=route.distance,previous=cave.from;for(const p of cave.path){distance+=Math.hypot(p.x-previous.x,p.y-previous.y);previous=p;}
+ return [id,{...route,entry:route.to,to:cave.to,path:[...route.path,...cave.path],returnPath:[...cave.returnPath,...route.returnPath],distance,interiorApproach:true}];
+}));
+export const nativeRoute=id=>islands.routes[id]?.available?islands.routes[id]:physicalRoutes[id]?.available?physicalRoutes[id]:null;
 export const nativeIsland=session=>session.game.world.mode==='location'?nativeFieldIsland(session.game.world.location)||nativeRoute(session.game.world.location)?.island||null:session.game.world.nativeIsland||null;
 export const nativeIslandPort=session=>Object.values(islands.routes).find(r=>r.island===nativeIsland(session))?.isolatedPort||null;
 export function nativePortRoute(id,stop='vendor'){
@@ -21,7 +30,7 @@ export function nativePortRoute(id,stop='vendor'){
 /** Rejoin an already verified trail locally instead of searching a whole long valley again. */
 function reconnectNativeTrail(from,to,city,search=true){
  const candidates=[],destination=to?.city||city;
- for(const route of Object.values(routes.routes)){
+ for(const route of Object.values(physicalRoutes)){
   if(!route.available)continue;
   const link=nativeTownPath(route.city,destination);if(!link)continue;
   const vertices=[route.from,...route.path];
@@ -80,7 +89,7 @@ export function nativeTravel(session,target,now,speed){
  if(island&&(to?.island!==island||arrivalCity))return {ok:false,reason:'location_path_required'};
  const point=nativeFieldPoint(session),resumeWorld=point?{...w,mode:'native',nativePosition:point}:w;
  const resumed=resumeNativeJourney(resumeWorld,target,now,speed);if(resumed){delete w.nativeResume;return {ok:true,trip:resumed};}
- if(target?.location&&target.location===w.location&&w.mode==='location')return {ok:false,reason:'location_path_required'};
+ if(target?.location&&target.location===w.location&&w.mode==='location'&&(!to?.interiorApproach||!nativeFieldPoint(session)||Math.hypot(nativeFieldPoint(session).x-to.to.x,nativeFieldPoint(session).y-to.to.y)<=16))return {ok:false,reason:'location_path_required'};
  if(island){
   if(to?.island!==island||arrivalCity)return {ok:false,reason:'location_path_required'};
   if(w.mode==='location'&&point&&from?.island===island){
@@ -146,10 +155,10 @@ export function nativeFreeWalk(session,point,now,speed){
 export function nativeWalkOptions(session){
  const w=session.game.world,exit=nativeExit(session);
  const island=nativeIsland(session);
- return Object.fromEntries(Object.entries({...routes.routes,...islands.routes}).filter(([,r])=>r.available).map(([id,r])=>{
+ return Object.fromEntries(Object.entries({...physicalRoutes,...islands.routes}).filter(([,r])=>r.available).map(([id,r])=>{
   if(island||r.island)return [id,{enabled:Boolean(island===r.island&&(w.mode==='native'||nativeFieldPoint(session)&&w.nativeResume?.target?.location===id)),viaCity:null,exitRequired:w.mode==='location'&&!exit?.near}];
   const origin=w.mode==='location'?exit?.city:w.city,link=origin&&nativeTownPath(origin,r.city);
-  return [id,{enabled:w.mode==='city'?Boolean(link):w.mode==='location'?Boolean(exit&&link&&(id!==w.location||nativeFieldPoint(session)&&w.nativeResume?.target?.location===id)):w.mode==='native',viaCity:null,exitRequired:w.mode==='location'&&!exit?.near}];
+  return [id,{enabled:w.mode==='city'?Boolean(link):w.mode==='location'?Boolean(exit&&link&&(id!==w.location||r.interiorApproach&&nativeFieldPoint(session)&&Math.hypot(nativeFieldPoint(session).x-r.to.x,nativeFieldPoint(session).y-r.to.y)>16||nativeFieldPoint(session)&&w.nativeResume?.target?.location===id)):w.mode==='native',viaCity:null,exitRequired:w.mode==='location'&&!exit?.near}];
  }));
 }
 export function nativeWalkCities(session){

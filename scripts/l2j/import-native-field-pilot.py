@@ -8,6 +8,7 @@ from pathlib import Path
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
 fields={
+    "stakato-nest": {"city":"rune","interior":True},
     "antharas-lair": {"city":"hunters","interior":True},
     'hellbound': {'city':'gludio','island':'hellbound','portalOnly':True,'sourceGaps':[{'kind':'point','zone':'hellbound','npcId':'22320','source':{'x':-10315,'y':237442,'z':-3850},'sourceFile':'scripts/ai/areas/Hellbound/hellboundSpawns.xml','issues':['swimming_required']}]},
     "alligator-beach": {"city":"heine","sourceGaps":[{"kind":"territory","zone":"alligator-beach","npcId":"20314","count":3,"sourceFile":"spawns/Innadril/AlligatorBeach.xml","sourceGroup":"innadril01_qm2324_01","polygon":[[106252,197068],[106452,197068],[106452,197268],[106252,197268]],"minZ":-4236,"maxZ":-4036,"rejected":{"swimming_required":100},"issues":["swimming_required"]}]},

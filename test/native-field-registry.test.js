@@ -7,7 +7,7 @@ import {sampleNativeTerritory,nativeTerritorySource} from '../functions/game/wor
 import {pointInPolygon} from '../functions/game/world/navigation.js';
 import {LOCATION_LEVELS} from '../template/locationLevels.js';
 import registry from '../template/nativeFieldPilot.js';
-import routes from '../template/nativeRoutes.js';
+import {nativeRoute} from '../functions/game/world/nativeTravel.js';
 import change from '../functions/game/player/changePlayerGameClass.js';
 import update from '../functions/game/player/updatePlayerStats.js';
 const START=1800000000000;
@@ -46,7 +46,7 @@ for(const [zone,meta]of Object.entries(registry.fields)){
    if(step===10)s=JSON.parse(JSON.stringify(s));
   }
   advanceWorld(s,arrival);quiet(s,arrival);
-  const dto=worldState(s,arrival);assert.equal(dto.nativeField.zone,zone);for(const key of ['x','y','z'])assert.equal(dto.nativeField.point[key],routes.routes[zone].to[key]);
+  const dto=worldState(s,arrival);assert.equal(dto.nativeField.zone,zone);for(const key of ['x','y','z'])assert.equal(dto.nativeField.point[key],nativeRoute(zone).to[key]);
   assert.ok(dto.nativeField.actors.length>0&&dto.nativeField.actors.length<=48);
   const mobs=actors(s),keys=mobs.map(m=>m.sourceRoom+':'+m.sourceSlot);assert.equal(new Set(keys).size,keys.length);
   assert.ok(mobs.every(m=>meta.npcIds.includes(m.mobId)));

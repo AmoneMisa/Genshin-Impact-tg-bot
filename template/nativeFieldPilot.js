@@ -666,6 +666,45 @@ export default {
         ]
       }
     ],
+    "22621": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "22620",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "22625": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "22624",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "22630": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "22632",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
     "22693": [
       {
         "name": "Privates1",
@@ -777,6 +816,33 @@ export default {
     ]
   },
   "fields": {
+    "stakato-nest": {
+      "city": "rune",
+      "interior": true,
+      "fixedCount": 151,
+      "territoryCount": 0,
+      "randomGroupCount": 0,
+      "initialCapacity": 151,
+      "unavailableCount": 0,
+      "availableCapacity": 151,
+      "npcIds": [
+        "22617",
+        "22618",
+        "22621",
+        "22623",
+        "22625",
+        "22627",
+        "22628",
+        "22630",
+        "22633"
+      ],
+      "count": 151,
+      "unportedMinionTemplates": [
+        "22621",
+        "22625",
+        "22630"
+      ]
+    },
     "antharas-lair": {
       "city": "hunters",
       "interior": true,
@@ -2025,6 +2091,7 @@ export default {
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Others/22_16.xml": "36cdf2361c2f13aee757f269e3b39b64946f89b1eaf2641b8598310de93f35a3",
       "spawns/Others/24_21.xml": "81239336cf56c7e81009f63ccc09684c34c47e51f89e2cab1ddd217830eecd62",
       "scripts/ai/areas/Hellbound/hellboundSpawns.xml": "7a940814df23cfae17baaa41e6381b610b2595cd0fc379a9bbab5f37aa8cc5b2",
       "scripts/ai/areas/Hellbound/HellboundSpawns.java": "f1ef4cadab00817a417548fa57d148bab7433563b5e7b1b77b463dc7e972bb5f",
@@ -3744,6 +3811,42 @@ export default {
     },
     "22448": {
       "runSpeed": 100.0,
+      "attackRange": 40.0
+    },
+    "22617": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22618": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22621": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22623": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22625": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22627": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22628": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22630": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22633": {
+      "runSpeed": 170.0,
       "attackRange": 40.0
     },
     "22650": {

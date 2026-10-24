@@ -60,7 +60,7 @@ export function terrainAt(x,y){const point={x,y};return {location:LOCATIONS.find
 const cityTarget=(city,npc)=>({...cityPoint(city,npc),...(Number.isFinite(npc.z)?{z:npc.z}:{})});
 export function cityPoint(city,npc){return {x:.5+(npc.x-city.x)/citySize(city),y:.5+(npc.y-city.y)/citySize(city)};}
 function arriveCity(session,world,now=Date.now()){if(world.mode==='location')saveNativeField(session,now);world.mode='city';world.location=null;world.holding=null;world.instanceId=null;world.entryOrigin=null;delete world.holdingReturn;delete world.walkHome;delete world.nativePosition;delete world.nativeIsland;delete world.nativeTrail;delete world.nativeResume;delete world.cityWalk;delete world.z;world.x=.5;world.y=.5;world.path=[];world.channel=null;world.pending=null;world.readyHolding=null;session.game.hunt&&(session.game.hunt.field=null,session.game.hunt.mob=null);}
-function enterPublicField(session,id,{departure,...options}){
+function enterPublicField(session,id,{departure,entryPoint,...options}){
     const floor=LOCATIONS.find(l=>l.id===id)?.nativeEntryFloor;
     const result=enterHuntField(session,id,{...(floor?{floor}:{}),...options});if(!result.ok)return result;
     session.game.world.nativeIsland=nativeFieldIsland(id)||nativeRoute(id)?.island||null;delete session.game.world.nativeTrail;delete session.game.world.nativeResume;
@@ -71,7 +71,7 @@ function enterPublicField(session,id,{departure,...options}){
         hunt.field.target=target?.instanceId||null;hunt.mob=target||null;
     }
     if(nativeRoute(id)){
-        activateNativeField(session.game.hunt,nativeRoute(id).to,options.now);
+        activateNativeField(session.game.hunt,entryPoint||nativeRoute(id).entry||nativeRoute(id).to,options.now);
     }
     return result;
 }
@@ -104,7 +104,7 @@ export function advanceWorld(session,now=Date.now()) {
         if(trip.holding){const h=holdings.find(h=>h.id===trip.holding);if(h)arriveHoldingEntrance(session,h,now);}
         else if(trip.location){
             const l=LOCATIONS.find(l=>l.id===trip.location);
-            if(l&&!regionAccessBlock(session,l,{walking:true,now})&&enterPublicField(session,l.id,{now}).ok){
+            if(l&&!regionAccessBlock(session,l,{walking:true,now})&&enterPublicField(session,l.id,{now,entryPoint:trip.native?.point}).ok){
                 Object.assign(w,{city:l.region,mode:'location',location:l.id,path:[],pending:null,channel:null});
             }else arriveCity(session,w,now);
         }else if(trip.native&&!trip.city){

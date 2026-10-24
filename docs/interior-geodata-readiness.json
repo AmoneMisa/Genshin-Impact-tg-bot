@@ -1,11 +1,11 @@
 {
   "npcSourceCommit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
-  "zoneCount": 32,
-  "floorCount": 109,
+  "zoneCount": 31,
+  "floorCount": 108,
   "counts": {
-    "fixed": 3345,
-    "validFixed": 3345,
+    "fixed": 3194,
+    "validFixed": 3194,
     "territory": 5178,
     "unknown": 0
   },
@@ -2034,35 +2034,6 @@
           "fixed": 69,
           "valid": 69,
           "territory": 50,
-          "unknown": 0,
-          "destinations": []
-        }
-      ]
-    },
-    {
-      "id": "stakato-nest",
-      "name": "Гнездо Стакато",
-      "native": false,
-      "entry": {
-        "x": 89513,
-        "y": -44800,
-        "z": -2136,
-        "source": {
-          "file": "teleporters/town/31320.xml",
-          "npcId": 31320,
-          "name": "Stakato Nest",
-          "type": "NORMAL",
-          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
-          "sha256": "188bc55efcd72b8e655f4fa22ecc6b91a704f5cb4915f89856af1eb880f53c98"
-        }
-      },
-      "floors": [
-        {
-          "floor": 1,
-          "title": "Гнездо Стакато",
-          "fixed": 151,
-          "valid": 151,
-          "territory": 0,
           "unknown": 0,
           "destinations": []
         }
