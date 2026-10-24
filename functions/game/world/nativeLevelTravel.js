@@ -6,11 +6,15 @@ import {nativeActorPoint} from './nativeFieldSpace.js';
 import {nativeSegment,findNativePath} from './nativeNavigation.js';
 import {nativeGroundFor} from './nativeGround.js';
 import {createNativeJourney,pruneNativeLoops,advanceNativeJourney} from './nativeJourney.js';
+import {nativePortOptions,nativeFloorPort} from './nativeFloorTransports.js';
+import {worldGeodata} from './l2jGeodata.js';
 const model=id=>data.geodataCommit===world.geodataCommit&&data.barriersSha256===world.barriersSha256?data.zones[id]:null;
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
 export function nativeLevelOptions(hunt){
  const source=model(hunt?.zone),point=nativeActorPoint(hunt?.field);if(!source||!point)return [];
- return Object.entries(source.levels).map(([floor,l])=>({floor:Number(floor),title:l.title,enabled:distance(point,l.to)>16}));
+ const port=nativeFloorPort(hunt),portals=nativePortOptions(hunt),choices=new Map(portals.map(p=>[p.floor,p]));
+ for(const [floor,l] of Object.entries(source.levels))if(!choices.has(Number(floor))&&(!port||source.levels[hunt.field.native.sourceFloor]))choices.set(Number(floor),{floor:Number(floor),title:l.title,enabled:distance(point,l.to)>16});
+ return [...choices.values()].sort((a,b)=>a.floor-b.floor);
 }
 /** Rejoin only verified vertices. An inaccessible join never grants a floor switch. */
 export function nativeLevelTravel(session,floor,now,speed){
@@ -67,7 +71,11 @@ export function nativeLevelTravel(session,floor,now,speed){
   if(back)plan={start:from,path:[...trail.path,...back.path]};
  }
  if(!plan)return {ok:false,reason:'path_blocked'};
- const trip=createNativeJourney(plan.start,pruneNativeLoops(plan.start,plan.path),{now,speed,allowed});if(!trip)return {ok:false,reason:'path_blocked'};
- trip.native.historyStart={...plan.start};trip.native.floorTarget=floor;
+ // Teleports retain original source Z. Walking uses the selected ground layer,
+ // as findNativePath does, so its saved breadcrumbs contain actual ground.
+ const start=worldGeodata.point(plan.start),path=plan.path.map(p=>worldGeodata.point(p));
+ if(!start||path.some(p=>!p))return {ok:false,reason:'path_blocked'};
+ const trip=createNativeJourney(start,pruneNativeLoops(start,path),{now,speed,allowed});if(!trip)return {ok:false,reason:'path_blocked'};
+ trip.native.historyStart={...start};trip.native.floorTarget=floor;
  return {ok:true,trip};
 }

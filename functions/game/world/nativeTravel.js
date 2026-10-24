@@ -11,6 +11,7 @@ import ports from '../../../template/nativePortRoutes.js';
 import islands from '../../../template/nativeIslandRoutes.js';
 import {nativeTrailBack,resumeNativeJourney,rememberNativeTrail} from './nativeTrail.js';
 import {nativeFieldPoint,nativeFieldIsland} from './nativeFieldSpace.js';
+import {nativeWalkingExitAvailable} from './nativeFloorTransports.js';
 
 // Walking may continue through a checked cave approach. Paid teleports retain
 // the original outside entry, carried separately on the server-owned route.
@@ -83,6 +84,7 @@ export function nativeExit(session){
 
 /** Original entry/gatekeeper anchors bind local artwork to the native coordinate space. */
 export function nativeTravel(session,target,now,speed){
+ if(session.game.world.mode==='location'&&!nativeWalkingExitAvailable(session.game.hunt))return {ok:false,reason:'npc_floor_exit_required'};
  const w=session.game.world,to=target?.port?nativePortRoute(target.port,target.stop):target?.location&&nativeRoute(target.location),from=w.mode==='location'&&nativeRoute(w.location);
  let start,path,arrivalCity=target?.city||null;
  const island=to?.island||from?.island||nativeIsland(session);
@@ -153,6 +155,7 @@ export function nativeFreeWalk(session,point,now,speed){
 }
 
 export function nativeWalkOptions(session){
+ if(session.game.world.mode==='location'&&!nativeWalkingExitAvailable(session.game.hunt))return {};
  const w=session.game.world,exit=nativeExit(session);
  const island=nativeIsland(session);
  return Object.fromEntries(Object.entries({...physicalRoutes,...islands.routes}).filter(([,r])=>r.available).map(([id,r])=>{
@@ -163,6 +166,7 @@ export function nativeWalkOptions(session){
 }
 export function nativeWalkCities(session){
  const w=session.game.world;
+ if(w.mode==='location'&&!nativeWalkingExitAvailable(session.game.hunt))return [];
  if(nativeIsland(session))return [];
  if(w.mode==='location'){const exit=nativeExit(session);return exit?.near?nativeTownCities(exit.city):[];}
  if(w.mode==='city')return nativeTownCities(w.city).filter(id=>id!==w.city);

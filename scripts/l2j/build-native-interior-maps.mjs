@@ -8,15 +8,18 @@ import {LOCATIONS} from '../../template/worldMap.js';
 import {MISSING_WORLD_SOURCE} from '../../docs/missing-world-sources.js';
 import approaches from '../../template/nativeInteriorRoutes.js';
 import landmarks from '../../template/nativeInteriorLandmarks.js';
+import pilot from '../../template/nativeFieldPilot.js';
 import {geoCell,geoRegionId,worldGeodata} from '../../functions/game/world/l2jGeodata.js';
 import {nativeStep} from '../../functions/game/world/nativeNavigation.js';
 const file='template/nativeInteriorMaps.js',previous=fs.existsSync(file)?(await import(new URL('../../template/nativeInteriorMaps.js',import.meta.url))).default:null;
 const requested=process.argv.slice(2),ids=requested.length?requested:['antharas-lair','stakato-nest'],maps={...previous?.maps};
-for(const id of ids){
- const slots=nativeFieldRooms(id).flatMap(r=>r.spawns||[]),fixed=slots.filter(s=>s.coordinateSource==='point'),areas=slots.filter(s=>s.coordinateSource!=='point');
- const markers=Object.values(landmarks.zones[id]||{});
+const requests=ids.flatMap(id=>[{id,key:id},...(pilot.fields[id]?.separateFloorMaps?Object.keys(landmarks.zones[id]||{}).map(floor=>({id,key:id+':f'+floor,sourceFloor:Number(floor)})):[])]);
+for(const {id,key,sourceFloor} of requests){
+ const allSlots=nativeFieldRooms(id).flatMap(r=>r.spawns||[]),allMarkers=Object.values(landmarks.zones[id]||{});
+ const slots=nativeFieldRooms(id).filter(r=>!sourceFloor||r.sourceFloor===sourceFloor).flatMap(r=>r.spawns||[]),fixed=slots.filter(s=>s.coordinateSource==='point'),areas=slots.filter(s=>s.coordinateSource!=='point');
+ const markers=sourceFloor?[landmarks.zones[id][sourceFloor]]:allMarkers;
  const files=Object.fromEntries([...new Set([...slots.map(s=>s.file||s.sourceFile),...markers.map(m=>m.source.file)])].map(f=>{if(!MISSING_WORLD_SOURCE.files[f])throw Error('Missing source provenance');return [f,MISSING_WORLD_SOURCE.files[f]];}));
- const anchors=[...fixed,...markers.map(m=>m.point),...areas.flatMap(s=>s.polygon.map(([x,y])=>({x,y}))),LOCATIONS.find(l=>l.id===id),...(approaches.routes[id]?.path||[])];
+ const anchors=[...allSlots.filter(s=>s.coordinateSource==='point'),...allMarkers.map(m=>m.point),...allSlots.filter(s=>s.coordinateSource!=='point').flatMap(s=>s.polygon.map(([x,y])=>({x,y}))),LOCATIONS.find(l=>l.id===id),...(approaches.routes[id]?.path||[])];
  // Presentation crop only. It never participates in movement or placement.
  const left=geoCell(Math.min(...anchors.map(s=>s.x)))-16,top=geoCell(Math.min(...anchors.map(s=>s.y)))-16,right=geoCell(Math.max(...anchors.map(s=>s.x)))+16,bottom=geoCell(Math.max(...anchors.map(s=>s.y)))+16;
  const width=right-left+1,height=bottom-top+1,roof=new Int16Array(width*height);roof.fill(32767);
@@ -68,13 +71,13 @@ for(const id of ids){
   }while(at!==first);
   commands.push('M'+points.map(([x,y])=>x+' '+y).join('L')+'Z');contours++;corners+=points.length;
  }
- const color=id==='stakato-nest'?'#51573f':id==='forge-of-the-gods'?'#674536':'#5e5143',svg=`<!-- Derived from L2J High Five geodata ${worldGeodata.manifest.commit}, GPL-3.0. Source: scripts/l2j/build-native-interior-maps.mjs; license: data/l2j-geodata/LICENSE. -->\n<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><path fill="${color}" stroke="#a9a48c" stroke-width=".5" fill-rule="evenodd" d="${commands.join('')}"/></svg>\n`,asset=`/art/world/native/${id}.svg`;
+ const color=id==='stakato-nest'?'#51573f':id==='forge-of-the-gods'?'#674536':'#5e5143',svg=`<!-- Derived from L2J High Five geodata ${worldGeodata.manifest.commit}, GPL-3.0. Source: scripts/l2j/build-native-interior-maps.mjs; license: data/l2j-geodata/LICENSE. -->\n<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><path fill="${color}" stroke="#a9a48c" stroke-width=".5" fill-rule="evenodd" d="${commands.join('')}"/></svg>\n`,asset=`/art/world/native/${id}${sourceFloor?'-floor-'+sourceFloor:''}.svg`;
  fs.mkdirSync('webapp/art/world/native',{recursive:true});fs.writeFileSync('webapp'+asset,svg);
 
  const regions={};for(let x=left;x<=right;x+=2048)for(let y=top;y<=bottom;y+=2048){const region=geoRegionId(x*16,y*16);regions[region]=worldGeodata.manifest.regions[region]?.sha256;}
  for(const p of [{x:left,y:bottom},{x:right,y:top},{x:right,y:bottom}]){const region=geoRegionId(p.x*16,p.y*16);regions[region]=worldGeodata.manifest.regions[region]?.sha256;}
  if(Object.values(regions).some(sha=>!sha))throw Error('Missing source region');
- maps[id]={asset,regions,bounds:{x:left*16,y:top*16,w:width*16,h:height*16},cells:mask.size,layerCells:seen.size,contours,corners,bytes:Buffer.byteLength(svg),sha256:createHash('sha256').update(svg).digest('hex'),files};
- console.log(id,mask.size+' cells',seen.size+' layer cells',contours+' contours',maps[id].bytes+' SVG bytes');
+ maps[key]={...(sourceFloor?{zone:id,sourceFloor}:{}),asset,regions,bounds:{x:left*16,y:top*16,w:width*16,h:height*16},cells:mask.size,layerCells:seen.size,contours,corners,bytes:Buffer.byteLength(svg),sha256:createHash('sha256').update(svg).digest('hex'),files};
+ console.log(key,mask.size+' cells',seen.size+' layer cells',contours+' contours',maps[key].bytes+' SVG bytes');
 }
 fs.writeFileSync(file,'// Static covered-cell footprints from original L2J geodata; display crop is not collision.\nexport default '+JSON.stringify({geodataCommit:worldGeodata.manifest.commit,npcSourceCommit:MISSING_WORLD_SOURCE.commit,maps},null,2)+';\n');

@@ -1,4 +1,5 @@
 import {nativeLevelTravel} from './nativeLevelTravel.js';
+import {nativeFloorTeleport,nativeGuideTravel} from './nativeFloorTransports.js';
 import {findCityPath,advanceCityPath,ensureCityOrigin} from './cityNavigation.js';
 import {CITIES, REGIONS, LOCATIONS, CITY_NPCS} from '../../../template/worldMap.js';
 import {teleportPrice} from '../runes/labRunes.js';
@@ -246,8 +247,16 @@ export function worldAction(session,body,now=Date.now()){
     if(body.action==='native_floor'){
         const f=session.game.hunt?.field;
         if(w.mode!=='location'||!f?.native||w.instanceId||session.game.hunt.zone!==w.location)return {ok:false,reason:'invalid_floor'};
-        const blocked=l2ActionBlock(session,{move:true},now);if(blocked)return {ok:false,reason:blocked};
+        const teleport=nativeFloorTeleport(session,Number(body.floor),now);
+        const blocked=l2ActionBlock(session,{move:!teleport},now);if(blocked)return {ok:false,reason:blocked};
+        if(teleport){if(!teleport.ok)return teleport;stopHuntAction(f,now);activateNativeField(session.game.hunt,teleport.point,now);f.native.sourceFloor=teleport.floor;w.channel=null;delete w.nativeResume;session.needsSave=true;return {ok:true};}
         const result=nativeLevelTravel(session,Number(body.floor),now,getSpeed(session)*l2MoveMultiplier(session,now));if(!result.ok)return result;
+        stopHuntAction(f,now);f.native.journey=result.trip;f.seenAt=now;w.channel=null;return {ok:true};
+    }
+    if(body.action==='native_guide'){
+        const f=session.game.hunt?.field;if(w.mode!=='location'||!f?.native||w.instanceId)return {ok:false,reason:'unknown_npc'};
+        const blocked=l2ActionBlock(session,{move:true},now);if(blocked)return {ok:false,reason:blocked};
+        const result=nativeGuideTravel(session,now,getSpeed(session)*l2MoveMultiplier(session,now));if(!result.ok)return result;
         stopHuntAction(f,now);f.native.journey=result.trip;f.seenAt=now;w.channel=null;return {ok:true};
     }
     if(body.action==='hellbound_route'){
@@ -300,6 +309,11 @@ export function worldAction(session,body,now=Date.now()){
     if(body.action==='native_stop'){
         if(nativeFieldPoint(session)&&session.game.hunt.field.native.journey){rememberNativeResume(w,session.game.hunt.field.native.journey);stopHuntAction(session.game.hunt.field,now);return {ok:true};}
         return stopNativeWalk(w)?{ok:true}:{ok:false,reason:'no_field'};
+    }
+    if(body.action==='native_step'){
+        const point=nativeFieldPoint(session),step={north:[0,-200],south:[0,200],west:[-200,0],east:[200,0]}[body.direction];
+        if(!point||!step)return {ok:false,reason:'invalid_move'};
+        delete w.nativeResume;return moveHuntField(session,{x:(point.x+step[0])/ROOM_SIZE,y:(point.y+step[1])/ROOM_SIZE},now);
     }
     if(body.action==='native_move'){
         if(nativeFieldPoint(session)){delete w.nativeResume;return moveHuntField(session,{x:Number(body.point?.x)/ROOM_SIZE,y:Number(body.point?.y)/ROOM_SIZE},now);}

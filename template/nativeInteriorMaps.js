@@ -150,6 +150,161 @@ export default {
         "spawns/Aden/TowerOfInsolence.xml": "06d8c63c7f15dd8f34aa0aeb269e33b3de88863cf34600d02250e889f46d653e",
         "spawns/Others/23_18.xml": "bd9dd19f54063bcde4703b26a351f93596b94786388a60d3a72b733dc63e52c6"
       }
+    },
+    "ivory-tower": {
+      "asset": "/art/world/native/ivory-tower.svg",
+      "regions": {
+        "22_17": "b5bf773f441480ddb74d9cfdaeb73327e791f816ed2d51f00623fcd1f4892d7c",
+        "22_18": "0e3817095c151d76cb7b0ed1ee3db15f0c103546e903f2beecbf0a6e6c2c625a",
+        "23_17": "a34be6498c87404f99e266f0ebd074570548310b3e551637d1822567500771d3",
+        "23_18": "f9fdd9a44bf0da1fb4c54d7b8fce1d18fd717e57717d3ddaf82ce226a217c656"
+      },
+      "bounds": {
+        "x": 73216,
+        "y": -224,
+        "w": 25168,
+        "h": 30576
+      },
+      "cells": 21434,
+      "layerCells": 33944,
+      "contours": 105,
+      "corners": 3774,
+      "bytes": 32936,
+      "sha256": "f81c907cefc91b9458be4e3b44f8132728a0ae46d21da8912d3187ec05b0c4b4",
+      "files": {
+        "spawns/Oren/IvoryTower.xml": "cfbccd749dccb65226faff639603fc6de1b2e358b42389b9b03ee8c4581f607e",
+        "spawns/Others/22_18.xml": "574125cae6f6af87df71e964fe0dc8260fa576e25202e7da3b9a55d5f454d41c"
+      }
+    },
+    "ivory-tower:f2": {
+      "zone": "ivory-tower",
+      "sourceFloor": 2,
+      "asset": "/art/world/native/ivory-tower-floor-2.svg",
+      "regions": {
+        "22_17": "b5bf773f441480ddb74d9cfdaeb73327e791f816ed2d51f00623fcd1f4892d7c",
+        "22_18": "0e3817095c151d76cb7b0ed1ee3db15f0c103546e903f2beecbf0a6e6c2c625a",
+        "23_17": "a34be6498c87404f99e266f0ebd074570548310b3e551637d1822567500771d3",
+        "23_18": "f9fdd9a44bf0da1fb4c54d7b8fce1d18fd717e57717d3ddaf82ce226a217c656"
+      },
+      "bounds": {
+        "x": 73216,
+        "y": -224,
+        "w": 25168,
+        "h": 30576
+      },
+      "cells": 5842,
+      "layerCells": 5842,
+      "contours": 12,
+      "corners": 365,
+      "bytes": 3557,
+      "sha256": "eaba119f0e6fbf92c44f25fb7b91c5d48b3a89a6a64738dacf2659002cb78194",
+      "files": {
+        "spawns/Others/22_18.xml": "574125cae6f6af87df71e964fe0dc8260fa576e25202e7da3b9a55d5f454d41c"
+      }
+    },
+    "ivory-tower:f3": {
+      "zone": "ivory-tower",
+      "sourceFloor": 3,
+      "asset": "/art/world/native/ivory-tower-floor-3.svg",
+      "regions": {
+        "22_17": "b5bf773f441480ddb74d9cfdaeb73327e791f816ed2d51f00623fcd1f4892d7c",
+        "22_18": "0e3817095c151d76cb7b0ed1ee3db15f0c103546e903f2beecbf0a6e6c2c625a",
+        "23_17": "a34be6498c87404f99e266f0ebd074570548310b3e551637d1822567500771d3",
+        "23_18": "f9fdd9a44bf0da1fb4c54d7b8fce1d18fd717e57717d3ddaf82ce226a217c656"
+      },
+      "bounds": {
+        "x": 73216,
+        "y": -224,
+        "w": 25168,
+        "h": 30576
+      },
+      "cells": 4147,
+      "layerCells": 4147,
+      "contours": 5,
+      "corners": 369,
+      "bytes": 3646,
+      "sha256": "7e5af05b48bd5b48d6d4170f5aab4d2e4d31b1ef1c06cbf7fb4f78c343d893cc",
+      "files": {
+        "spawns/Others/22_18.xml": "574125cae6f6af87df71e964fe0dc8260fa576e25202e7da3b9a55d5f454d41c"
+      }
+    },
+    "ivory-tower:f4": {
+      "zone": "ivory-tower",
+      "sourceFloor": 4,
+      "asset": "/art/world/native/ivory-tower-floor-4.svg",
+      "regions": {
+        "22_17": "b5bf773f441480ddb74d9cfdaeb73327e791f816ed2d51f00623fcd1f4892d7c",
+        "22_18": "0e3817095c151d76cb7b0ed1ee3db15f0c103546e903f2beecbf0a6e6c2c625a",
+        "23_17": "a34be6498c87404f99e266f0ebd074570548310b3e551637d1822567500771d3",
+        "23_18": "f9fdd9a44bf0da1fb4c54d7b8fce1d18fd717e57717d3ddaf82ce226a217c656"
+      },
+      "bounds": {
+        "x": 73216,
+        "y": -224,
+        "w": 25168,
+        "h": 30576
+      },
+      "cells": 3092,
+      "layerCells": 3092,
+      "contours": 4,
+      "corners": 175,
+      "bytes": 1911,
+      "sha256": "fa904efd7e5132c871aa4c21b4213247db19ee33d710d466cc24fd2702bb694a",
+      "files": {
+        "spawns/Others/22_18.xml": "574125cae6f6af87df71e964fe0dc8260fa576e25202e7da3b9a55d5f454d41c"
+      }
+    },
+    "ivory-tower:f5": {
+      "zone": "ivory-tower",
+      "sourceFloor": 5,
+      "asset": "/art/world/native/ivory-tower-floor-5.svg",
+      "regions": {
+        "22_17": "b5bf773f441480ddb74d9cfdaeb73327e791f816ed2d51f00623fcd1f4892d7c",
+        "22_18": "0e3817095c151d76cb7b0ed1ee3db15f0c103546e903f2beecbf0a6e6c2c625a",
+        "23_17": "a34be6498c87404f99e266f0ebd074570548310b3e551637d1822567500771d3",
+        "23_18": "f9fdd9a44bf0da1fb4c54d7b8fce1d18fd717e57717d3ddaf82ce226a217c656"
+      },
+      "bounds": {
+        "x": 73216,
+        "y": -224,
+        "w": 25168,
+        "h": 30576
+      },
+      "cells": 3099,
+      "layerCells": 3099,
+      "contours": 4,
+      "corners": 185,
+      "bytes": 1999,
+      "sha256": "d8443b08b06735bb8b4ef29fb314e12094fd78eb4eeb7c715b860cf9b7c761e3",
+      "files": {
+        "spawns/Others/22_18.xml": "574125cae6f6af87df71e964fe0dc8260fa576e25202e7da3b9a55d5f454d41c"
+      }
+    },
+    "ivory-tower:f6": {
+      "zone": "ivory-tower",
+      "sourceFloor": 6,
+      "asset": "/art/world/native/ivory-tower-floor-6.svg",
+      "regions": {
+        "22_17": "b5bf773f441480ddb74d9cfdaeb73327e791f816ed2d51f00623fcd1f4892d7c",
+        "22_18": "0e3817095c151d76cb7b0ed1ee3db15f0c103546e903f2beecbf0a6e6c2c625a",
+        "23_17": "a34be6498c87404f99e266f0ebd074570548310b3e551637d1822567500771d3",
+        "23_18": "f9fdd9a44bf0da1fb4c54d7b8fce1d18fd717e57717d3ddaf82ce226a217c656"
+      },
+      "bounds": {
+        "x": 73216,
+        "y": -224,
+        "w": 25168,
+        "h": 30576
+      },
+      "cells": 3085,
+      "layerCells": 3085,
+      "contours": 4,
+      "corners": 180,
+      "bytes": 1956,
+      "sha256": "bdd71d46c83b0ed6209f325d78f666dd19e64d4b41de60263fbd9db15c8ad31e",
+      "files": {
+        "spawns/Others/22_18.xml": "574125cae6f6af87df71e964fe0dc8260fa576e25202e7da3b9a55d5f454d41c"
+      }
     }
   }
 };

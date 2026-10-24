@@ -10,6 +10,7 @@ import {weaponSpatial} from '../../functions/game/hunt/huntSpatial.js';
 import {nativeFieldBuckets,nativeActorPoint,nativeFieldZone} from '../../functions/game/world/nativeFieldSpace.js';
 import {findNativePath,nativeSegment} from '../../functions/game/world/nativeNavigation.js';
 import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';
+import {withTeleportSieges} from '../../functions/game/world/teleportSieges.js';
 import change from '../../functions/game/player/changePlayerGameClass.js';
 import update from '../../functions/game/player/updatePlayerStats.js';
 import {nativeRoute} from '../../functions/game/world/nativeTravel.js';
@@ -57,7 +58,7 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
   if(u==='/api/hunt'){quiet();return route.fulfill({json:await getHuntState(s,now)});}
   if(u==='/api/world/action'){
    now+=100;const body=route.request().postDataJSON();calls.push(body);
-   const result=worldAction(s,body,now);quiet();return route.fulfill({status:result.ok?200:409,json:{...result,...dto(),hunt:await getHuntState(s,now)}});
+   const result=await withTeleportSieges(s,[],()=>worldAction(s,body,now));quiet();return route.fulfill({status:result.ok?200:409,json:{...result,...dto(),hunt:await getHuntState(s,now)}});
   }
   if(u.startsWith('/api/hunt/')){
    now+=100;const body=route.request().postDataJSON();calls.push({action:u,...body});
@@ -103,11 +104,19 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  finishRoad=true;
  await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.nativeField?.point.x===endpoint.x);
  }else await page.locator('.atlas-combat:not([hidden])').waitFor();
+ if(pilot.fields[zone].peacefulEntry){
+  const {default:levels}=await import('../../template/nativeLevelRoutes.js');
+  await page.locator('[data-native-levels]>summary').click();await page.locator('[data-native-floor="1"]').click();finishRoad=true;
+  await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.nativeField?.point.x===levels.zones[zone].levels[1].to.x);
+  await page.locator('[data-native-levels]>summary').click();
+ }
  await page.waitForTimeout(100);
  assert.equal(s.game.world.mode,'location');assert.equal(s.game.world.location,zone);assert.equal(s.game.inventory.gold,startingGold);
  assert.equal(await page.locator('.hunt-overlay').count(),0);assert.equal(await page.evaluate(()=>window.originalAtlas===document.querySelector('.atlas-panel')&&window.originalCanvas===document.querySelector('canvas')),true);
  assert.equal(await page.locator('.atlas-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
- const initial=worldState(s,now).nativeField,atPlayer=[...initial.actors].sort((a,b)=>Math.hypot(a.x-initial.point.x,a.y-initial.point.y)-Math.hypot(b.x-initial.point.x,b.y-initial.point.y)).find(m=>{const share=Math.min(1,weaponSpatial(s,now).range*.85/Math.max(1,Math.hypot(m.x-initial.point.x,m.y-initial.point.y)));return findNativePath(initial.point,{x:m.x+(initial.point.x-m.x)*share,y:m.y+(initial.point.y-m.y)*share,z:m.z},{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true,heuristicWeight:2}).ok;});assert.ok(atPlayer);
+ await page.waitForFunction(()=>document.querySelector('[data-native-target]')?.options.length>1);
+ const targetIds=new Set(await page.locator('[data-native-target]').evaluate(n=>[...n.options].map(o=>o.value)));
+ const initial=worldState(s,now).nativeField,atPlayer=[...initial.actors].filter(m=>targetIds.has(m.instanceId)).sort((a,b)=>Math.hypot(a.x-initial.point.x,a.y-initial.point.y)-Math.hypot(b.x-initial.point.x,b.y-initial.point.y)).find(m=>{const share=Math.min(1,weaponSpatial(s,now).range*.85/Math.max(1,Math.hypot(m.x-initial.point.x,m.y-initial.point.y)));return findNativePath(initial.point,{x:m.x+(initial.point.x-m.x)*share,y:m.y+(initial.point.y-m.y)*share,z:m.z},{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true,heuristicWeight:2}).ok;});assert.ok(atPlayer);
  if(!noCanvas&&zone==='vuku-lands'){const box=await page.locator('canvas').boundingBox();await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/hunt/target')),page.locator('canvas').click({position:{x:box.width/2,y:box.height/2}})]);}
  else {const index=await page.locator('[data-native-target]').evaluate((n,id)=>[...n.options].findIndex(o=>o.value===id),atPlayer.instanceId);assert.ok(index>=0);await page.getByRole('combobox',{name:'Цель рядом',exact:true}).click();await page.getByRole('option').nth(index).click();await page.waitForTimeout(100);}
  assert.ok(calls.some(c=>c.action==='/api/hunt/target'));
@@ -122,7 +131,34 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  await page.locator('.loot-notice-overlay [data-dismiss]').click();await page.waitForSelector('.loot-notice-overlay',{state:'detached'});
  await page.locator('.atlas-combat details:has([data-native-supplies])>summary').click();assert.equal(await page.locator('.atlas-combat .ui-combat-supply').count(),6);
  assert.equal(await page.locator('.atlas-combat .ui-combat-supply[data-supply="hp"]').isDisabled(),true);await page.locator('.atlas-combat details:has([data-native-supplies])>summary').click();
- if(pilot.fields[zone].floors){
+ if(pilot.fields[zone].peacefulEntry){
+  const {default:levels}=await import('../../template/nativeLevelRoutes.js'),{default:ports}=await import('../../template/nativeFloorTransports.js');
+  const teleportGold=s.game.inventory.gold;
+  const kept=nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.currentHp>0);kept.currentHp=Math.floor(kept.hp/2);const remembered={id:kept.instanceId,hp:kept.currentHp};
+  await page.locator('[data-native-levels]>summary').click();await page.locator('[data-native-floor="3"]').click();finishRoad=true;
+  await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.nativeField?.point.x===levels.zones[zone].root.x);
+  for(const floor of [2,4,5,6,3]){
+   const from=s.game.hunt.field.native.sourceFloor,target=ports.zones[zone][from].targets.find(t=>t.floor===floor),button=page.locator(`[data-native-floor="${floor}"]`);
+   assert.equal(await button.isEnabled(),true);await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.floor===floor),button.click()]);
+   assert.deepEqual(worldState(s,now).nativeField.point,target.point);assert.equal(s.game.hunt.field.native.journey,undefined);assert.equal(s.game.inventory.gold,teleportGold);
+   await page.waitForFunction(n=>document.querySelector(`[data-native-floor="${n}"]`)?.disabled,floor);
+  }
+  assert.equal(await page.locator('button[data-native-guide]').isDisabled(),true);
+  const lobbyPoint=worldState(s,now).nativeField.point;
+  const away=[[400,0],[-400,0],[0,400],[0,-400]].map(([x,y])=>({x:lobbyPoint.x+x,y:lobbyPoint.y+y,z:lobbyPoint.z})).find(p=>findNativePath(lobbyPoint,p,{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true,heuristicWeight:2}).ok);assert.ok(away);
+  assert.equal(worldAction(s,{action:'native_move',point:away},++now).ok,true);now=s.game.hunt.field.native.journey.until+1;advanceWorld(s,now);quiet();
+  await page.waitForFunction(()=>document.querySelector('button[data-native-guide]')?.disabled===false);
+  const guideButton=page.locator('button[data-native-guide]');await guideButton.focus();assert.equal(await guideButton.evaluate(n=>n===document.activeElement),true);
+  const [guideResponse]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_guide'),guideButton.click()]);assert.equal(guideResponse.status(),200);assert.ok(s.game.hunt.field.native.journey.native.remaining>0);
+  const guideEnd=s.game.hunt.field.native.journey.native.path.at(-1);s.game=JSON.parse(JSON.stringify(s.game));finishRoad=true;
+  await page.waitForResponse(async r=>{if(!r.url().includes('/api/world?live=1'))return false;const p=(await r.json()).world.nativeField?.point;return p&&['x','y','z'].every(k=>p[k]===guideEnd[k]);});
+  await page.waitForFunction(()=>document.querySelector('button[data-native-guide]')?.disabled===true);
+  await page.screenshot({path:path.join(out,`native-levels-${width}${noCanvas?'-no-canvas':noImages?'-no-images':''}.png`)});
+  assert.equal(nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.instanceId===remembered.id).currentHp,remembered.hp);
+  await page.locator('[data-native-floor="1"]').click();finishRoad=true;
+  await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.nativeField?.point.x===levels.zones[zone].levels[1].to.x);
+  await page.locator('[data-native-levels]>summary').click();
+ }else if(pilot.fields[zone].floors){
   const targetFloor=Number(process.env.NATIVE_FLOOR||2);
   const {default:levels}=await import('../../template/nativeLevelRoutes.js'),model=levels.zones[zone],beforeFloor=worldState(s,now).nativeField.point;
   const kept=nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.sourceFloor!==1&&m.currentHp>0);assert.ok(kept);kept.currentHp=Math.floor(kept.hp/2);const remembered={id:kept.instanceId,hp:kept.currentHp};
@@ -143,8 +179,8 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  // Combat and world polling share the same saved actors, even when movement is requested again.
  const before=worldState(s,now).player.worldPoint;
  if(noCanvas){
-  const direction=[['east',200,0],['west',-200,0],['south',0,200],['north',0,-200]].find(([,x,y])=>findNativePath(before,{x:before.x+x,y:before.y+y,z:before.z},{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true}).ok);assert.ok(direction);
-  await page.locator(`[data-native-step="${direction[0]}"]`).click();assert.ok(s.game.hunt.field.native.journey);now+=2000;
+  const direction=[['east',200,0],['west',-200,0],['south',0,200],['north',0,-200]].find(([,x,y])=>findNativePath(before,{x:before.x+x,y:before.y+y,z:before.z},{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true,heuristicWeight:2}).ok);assert.ok(direction);
+  const [stepResponse]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_step'),page.locator(`[data-native-step="${direction[0]}"]`).click()]);const stepResult=await stepResponse.json();assert.equal(stepResponse.status(),200,JSON.stringify({reason:stepResult.reason,visited:stepResult.visited}));assert.ok(s.game.hunt.field.native.journey);now+=2000;
  }
  else {
   const box=await page.locator('canvas').boundingBox(),actors=worldState(s,now).nativeField.actors;
@@ -163,13 +199,13 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  const after=worldState(s,now).player.worldPoint;assert.ok(Math.hypot(after.x-before.x,after.y-before.y)>0);
  assert.equal(await page.locator('.atlas-combat').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  const ground=worldState(s,now).nativeField?.ground;
- if(pilot.fields[zone].interior){assert.ok(ground?.asset);if(!noCanvas)assert.ok(requests.includes(ground.asset),'cave footprint requested at the underground point');}
+ if(pilot.fields[zone].peacefulEntry){assert.equal(ground,null);}else if(pilot.fields[zone].interior){assert.ok(ground?.asset);if(!noCanvas)assert.ok(requests.includes(ground.asset),'cave footprint requested at the underground point');}
  await page.screenshot({path:path.join(out,`native-field-${width}${noCanvas?'-no-canvas':noImages?'-no-images':''}.png`)});
  for(const bank of nativeFieldBuckets(s.game.hunt.field))for(const m of bank.mobs)m.aggro=false;
  await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.quickTravel.blocked===null);await page.waitForTimeout(100);
  if(!island){
  await page.locator('[data-movement]').click();await page.getByRole('combobox',{name:'Разделы телепорта',exact:true}).click();await page.getByRole('option',{name:'Города',exact:true}).click();
- await page.getByRole('button',{name:cityName,exact:true}).click();assert.equal(await page.locator('[data-native-city]').isEnabled(),true,JSON.stringify({mode:s.game.world.mode,zone:s.game.world.location,blocked:worldState(s,now).quickTravel.blocked,cities:worldState(s,now).nativeWalkCities}));await page.locator('[data-native-city]').click();assert.equal(s.game.world.mode,'road');finishRoad=true;
+ await page.getByRole('button',{name:cityName,exact:true}).click();assert.equal(await page.locator('[data-native-city]').isEnabled(),true,JSON.stringify({mode:s.game.world.mode,zone:s.game.world.location,blocked:worldState(s,now).quickTravel.blocked,cities:worldState(s,now).nativeWalkCities}));const [cityResponse]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_walk_city'),page.locator('[data-native-city]').click()]);const cityResult=await cityResponse.json();assert.equal(cityResponse.status(),200,JSON.stringify({reason:cityResult.reason,visited:cityResult.visited,point:cityResult.world?.nativeField?.point,history:s.game.hunt?.field?.native?.nativeTrail}));assert.equal(s.game.world.mode,'road');finishRoad=true;
  await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.player.mode==='city');
  assert.equal(await page.locator('.atlas-combat').isHidden(),true);assert.equal(s.game.world.mode,'city');assert.ok(s.game.world.nativeFields[zone]);
  }else{

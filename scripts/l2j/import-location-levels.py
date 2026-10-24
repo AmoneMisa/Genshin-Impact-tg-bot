@@ -92,7 +92,8 @@ for floor in floors:
  for npc in floor['npcs']:
   if npc['type']!='L2Teleporter':continue
   for path in (DATA/'teleporters').rglob(npc['id']+'.xml'):
-   for loc in read_source(str(path.relative_to(DATA)).replace('\\','/')).findall('.//location'):
+   list_type='OTHER' if npc['id']=='30727' else 'NORMAL'
+   for loc in read_source(str(path.relative_to(DATA)).replace('\\','/')).findall(f'.//teleport[@type="{list_type}"]/location'):
     x,y,z=[int(loc.get(k,'0')) for k in ['x','y','z']]
     if not (84000<x<87000 and 15000<y<18000):continue
     target=min(floors[1:],key=lambda f:abs(z-next(n['source']['z'] for n in f['npcs'] if n['type']=='L2Teleporter')))

@@ -981,6 +981,50 @@ export default {
     ]
   },
   "fields": {
+    "ivory-tower": {
+      "city": "oren",
+      "interior": true,
+      "floors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "entryFloor": 3,
+      "peacefulEntry": true,
+      "separateFloorMaps": true,
+      "peacefulViewSize": 3000,
+      "walkingFloors": [
+        3,
+        1
+      ],
+      "fixedCount": 0,
+      "territoryCount": 355,
+      "randomGroupCount": 0,
+      "initialCapacity": 355,
+      "unavailableCount": 0,
+      "availableCapacity": 355,
+      "npcIds": [
+        "20235",
+        "20241",
+        "20563",
+        "20564",
+        "20565",
+        "20566",
+        "20567",
+        "20568",
+        "20569",
+        "20570",
+        "20571",
+        "20572",
+        "20573",
+        "20574"
+      ],
+      "count": 355,
+      "unportedMinionTemplates": []
+    },
     "tower-of-insolence": {
       "city": "aden",
       "interior": true,
@@ -2485,6 +2529,7 @@ export default {
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Oren/IvoryTower.xml": "cfbccd749dccb65226faff639603fc6de1b2e358b42389b9b03ee8c4581f607e",
       "spawns/Aden/TowerOfInsolence.xml": "06d8c63c7f15dd8f34aa0aeb269e33b3de88863cf34600d02250e889f46d653e",
       "spawns/Goddard/ImperialTomb.xml": "85df4c0d480833505a8d6318231350cce6a24cf7a8d23e5500f776f3f062e024",
       "spawns/Aden/GiantsCave.xml": "93fa79905f99141c77672133e0b5d3e38afc2d8b793b654282160902b81a6680",
@@ -3126,6 +3171,46 @@ export default {
     },
     "20562": {
       "runSpeed": 15.0,
+      "attackRange": 40.0
+    },
+    "20563": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20564": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20565": {
+      "runSpeed": 23.0,
+      "attackRange": 40.0
+    },
+    "20566": {
+      "runSpeed": 20.0,
+      "attackRange": 40.0
+    },
+    "20567": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20568": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20569": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20570": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20571": {
+      "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "20572": {
+      "runSpeed": 174.0,
       "attackRange": 40.0
     },
     "20573": {

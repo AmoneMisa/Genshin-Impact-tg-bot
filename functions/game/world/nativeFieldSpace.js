@@ -36,6 +36,7 @@ export function nativeFieldZone(point,preferred=null){
  */
 export function nativeFieldEntryVisible(point,id){
  if(!pilot.fields[id]?.interior)return true;
+ if(Object.values(landmarks.zones[id]||{}).some(m=>Math.hypot(m.point.x-point.x,m.point.y-point.y,m.point.z-point.z)<=NATIVE_FIELD_RADIUS&&nativeStaticSight(point,m.point,{allowed:nativeGroundAllowed})))return true;
  const height=s=>s.coordinateSource==='point'?s.z:Math.trunc((s.minZ+s.maxZ)/2);
  return (sourceSpawns[id]||[]).filter(s=>nativeSpawnDistance(point,s)<=NATIVE_FIELD_RADIUS).sort((a,b)=>Math.hypot(nativeSpawnDistance(point,a),height(a)-point.z)-Math.hypot(nativeSpawnDistance(point,b),height(b)-point.z)).slice(0,48).some(s=>{
   if(s.coordinateSource==='point')return nativeStaticSight(point,s,{allowed:nativeGroundAllowed});
@@ -175,7 +176,7 @@ export function moveNativeActor(actor,target,now,speed){
  const from=nativeActorPoint(actor);if(!from||!target||![target.x,target.y].every(Number.isFinite))return {ok:false,reason:'invalid_move'};
  // Combat targets are server-owned actors. Plain walking commands carry only
  // XY, so a client cannot choose a floor by supplying a height.
- const goal={x:target.x*ROOM_SIZE,y:target.y*ROOM_SIZE,z:Number.isFinite(target.native?.z)?target.native.z:from.z};
+ const goal={x:worldAxis(target.x),y:worldAxis(target.y),z:Number.isFinite(target.native?.z)?target.native.z:from.z};
  if(Math.hypot(goal.x-from.x,goal.y-from.y)>8192)return {ok:false,reason:'path_blocked'};
  const allowed=nativeGroundAtStage(actor.native?.hellboundStage??target.native?.hellboundStage);
  const plan=findNativePath(from,goal,{allowed,maxNodes:6000,stride:2,reversible:true,heuristicWeight:2});
@@ -214,7 +215,7 @@ export function nativeVisibleActors(hunt){
 }
 export function nativeFieldDto(session){
  const f=session.game.hunt?.field,point=nativeFieldPoint(session);if(!point)return null;
- return {zone:session.game.hunt.zone,point,target:f.target,ground:nativeInteriorMap(session.game.hunt.zone,point),...(session.game.hunt.zone==='hellbound'?{doors:nativeDoorStates(f.populationStage)}:{}),
+ return {zone:session.game.hunt.zone,point,target:f.target,ground:nativeInteriorMap(session.game.hunt.zone,point,f.native.sourceFloor),...(pilot.fields[session.game.hunt.zone]?.peacefulViewSize&&f.native.sourceFloor!==1?{viewSize:pilot.fields[session.game.hunt.zone].peacefulViewSize}:{}),...(session.game.hunt.zone==='hellbound'?{doors:nativeDoorStates(f.populationStage)}:{}),
   actors:nativeVisibleActors(session.game.hunt).map(m=>({
    ...nativeActorPoint(m),id:m.mobId,instanceId:m.instanceId,name:m.name,level:m.level,hp:m.hp,currentHp:m.currentHp,aggressive:Boolean(m.aggressive),social:Boolean(m.clanHelpRange&&m.socialClans?.length),aggro:Boolean(m.aggro)
   }))};

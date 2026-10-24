@@ -19,6 +19,93 @@ export default {
           "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
         }
       }
+    },
+    "ivory-tower": {
+      "2": {
+        "point": {
+          "x": 84814,
+          "y": 15886,
+          "z": -4291
+        },
+        "source": {
+          "type": "SOURCE_NPC",
+          "id": 30162,
+          "x": 84814,
+          "y": 15886,
+          "z": -4291,
+          "file": "spawns/Others/22_18.xml",
+          "sha256": "574125cae6f6af87df71e964fe0dc8260fa576e25202e7da3b9a55d5f454d41c",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+        }
+      },
+      "3": {
+        "point": {
+          "x": 85336,
+          "y": 16194,
+          "z": -3664
+        },
+        "source": {
+          "type": "SOURCE_NPC",
+          "id": 30727,
+          "x": 85336,
+          "y": 16194,
+          "z": -3664,
+          "file": "spawns/Others/22_18.xml",
+          "sha256": "574125cae6f6af87df71e964fe0dc8260fa576e25202e7da3b9a55d5f454d41c",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+        }
+      },
+      "4": {
+        "point": {
+          "x": 85336,
+          "y": 16194,
+          "z": -2799
+        },
+        "source": {
+          "type": "SOURCE_NPC",
+          "id": 30716,
+          "x": 85336,
+          "y": 16194,
+          "z": -2799,
+          "file": "spawns/Others/22_18.xml",
+          "sha256": "574125cae6f6af87df71e964fe0dc8260fa576e25202e7da3b9a55d5f454d41c",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+        }
+      },
+      "5": {
+        "point": {
+          "x": 85336,
+          "y": 16194,
+          "z": -2285
+        },
+        "source": {
+          "type": "SOURCE_NPC",
+          "id": 30719,
+          "x": 85336,
+          "y": 16194,
+          "z": -2285,
+          "file": "spawns/Others/22_18.xml",
+          "sha256": "574125cae6f6af87df71e964fe0dc8260fa576e25202e7da3b9a55d5f454d41c",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+        }
+      },
+      "6": {
+        "point": {
+          "x": 85336,
+          "y": 16194,
+          "z": -1769
+        },
+        "source": {
+          "type": "SOURCE_NPC",
+          "id": 30722,
+          "x": 85336,
+          "y": 16194,
+          "z": -1769,
+          "file": "spawns/Others/22_18.xml",
+          "sha256": "574125cae6f6af87df71e964fe0dc8260fa576e25202e7da3b9a55d5f454d41c",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+        }
+      }
     }
   }
 };

@@ -1,4 +1,9 @@
 export default {
+ 'Подойти к {1}':'{1} yoniga borish',
+ 'Вы уже рядом с хранителем портала.':'Siz allaqachon darvozabon yonidasiz.',
+ 'Завершите текущее действие перед разговором.':'Suhbatdan oldin joriy amalni yakunlang.',
+ 'Сначала вернитесь в холл через хранителя портала.':'Avval darvozabon orqali zalga qayting.',
+ 'Хранитель портала отказывается помогать персонажу с кармой.':'Darvozabon karmasi bor qahramonga yordam berishdan bosh tortadi.',
  'Уровни локации':'Hudud qavatlari',
  'Уровни локации ·':'Hudud qavatlari ·',
  'Бой на местности':'Ochiq hududdagi jang',

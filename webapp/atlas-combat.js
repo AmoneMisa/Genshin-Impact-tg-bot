@@ -12,7 +12,7 @@ export function createAtlasCombat(root,action,{mapAvailable=true}={}){
  host.innerHTML='<div class="atlas-combat-meters"></div><div class="atlas-combat-target"></div><div class="atlas-combat-controls"><label>Цель рядом<select aria-label="Цель рядом" data-native-target></select></label><div data-native-attack></div></div><div data-native-skills></div>';
  const select=host.querySelector('select');enhanceSelects(host);
  host.insertAdjacentHTML('beforeend','<details class="ui-disclosure"><summary>Расходники</summary><div data-native-supplies></div></details>');
- host.insertAdjacentHTML('beforeend','<details class="ui-disclosure" data-native-levels hidden><summary>Уровни локации</summary><div class="ui-control-row" data-native-level-buttons></div></details>');
+ host.insertAdjacentHTML('beforeend','<details class="ui-disclosure" data-native-levels hidden><summary>Уровни локации</summary><div class="ui-action-stack"><div data-native-guide hidden></div><div class="ui-control-row" data-native-level-buttons></div></div></details>');
  host.insertAdjacentHTML('beforeend','<button type="button" class="ui-button ui-compact" data-last-loot hidden>Последняя добыча</button>');
  if(!mapAvailable)host.insertAdjacentHTML('beforeend','<div class="atlas-combat-directions" role="group" aria-label="Шаг по местности">'+[['north','На север'],['west','На запад'],['east','На восток'],['south','На юг']].map(([id,label])=>`<button type="button" class="ui-button" data-native-step="${id}">${label}</button>`).join('')+'</div>');
  select.onchange=()=>{if(select.value)action('/api/hunt/target',{targetId:select.value});};
@@ -21,10 +21,10 @@ export function createAtlasCombat(root,action,{mapAvailable=true}={}){
   if(button.hasAttribute('data-attack'))action('/api/hunt/attack',{enabled:!state?.field?.autoAttack});
   else if(button.hasAttribute('data-skill'))action('/api/hunt/skill',{skillIndex:Number(button.dataset.skill)});
   else if(button.hasAttribute('data-native-step')&&state?.field?.native){
-   const [dx,dy]={north:[0,-200],south:[0,200],east:[200,0],west:[-200,0]}[button.dataset.nativeStep],p=state.field.native.point;
-   action('/api/world/action',{action:'native_move',point:{x:p.x+dx,y:p.y+dy}});
+   action('/api/world/action',{action:'native_step',direction:button.dataset.nativeStep});
   }
   else if(button.hasAttribute('data-native-floor'))action('/api/world/action',{action:'native_floor',floor:Number(button.dataset.nativeFloor)});
+  else if(button.hasAttribute('data-native-guide'))action('/api/world/action',{action:'native_guide'});
   else if(button.hasAttribute('data-shots'))action('/api/shots/auto',{kind:button.dataset.shots,enabled:button.dataset.shots!==state.shots.selected||!state.shots.enabled});
   else if(button.hasAttribute('data-supply')){
    const item=state.supplies.rows.find(p=>p.slot===button.dataset.supply);
@@ -51,6 +51,9 @@ export function createAtlasCombat(root,action,{mapAvailable=true}={}){
   host.querySelector('[data-native-skills]').innerHTML=hotbar(p.skills,{className:p.className,chosen:p.hotbar.filter(i=>typeof i==='number').slice(0,8)});
   host.querySelector('[data-native-supplies]').innerHTML=combatSuppliesHtml(state,{idPrefix:'atlas'});
   const routes=state.field.native.levels||[],levels=host.querySelector('[data-native-levels]'),buttons=host.querySelector('[data-native-level-buttons]');
+  const guide=state.field.native.guide,guideHost=host.querySelector('[data-native-guide]');guideHost.hidden=!guide;guideHost.className=guide?'ui-control-row':'';
+  const guideKey=guide?guide.name+':'+guide.near+':'+alive:'';
+  if(guideHost.dataset.key!==guideKey){if(guideHost.contains(document.activeElement))levels.querySelector('summary').focus({preventScroll:true});guideHost.innerHTML=guide?`<button type="button" class="ui-button" data-native-guide ${guide.near||!alive?'disabled':''}>Подойти к ${escapeHtml(guide.name)}</button>`:'';guideHost.dataset.key=guideKey;}
   levels.hidden=routes.length<2;if(levels.hidden)levels.open=false;levels.querySelector('summary').textContent='Уровни локации · '+state.field.native.floor;
   const routeKey=routes.map(r=>r.floor+':'+r.title+':'+r.enabled+':'+alive).join('|');
   if(routeKey!==levelsKey){if(buttons.contains(document.activeElement))levels.querySelector('summary').focus({preventScroll:true});buttons.innerHTML=routes.map(r=>`<button type="button" class="ui-button" data-native-floor="${r.floor}" ${!alive||!r.enabled?'disabled':''}>${escapeHtml(r.title)}</button>`).join('');levelsKey=routeKey;}

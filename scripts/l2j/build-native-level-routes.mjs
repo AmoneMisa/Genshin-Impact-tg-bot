@@ -2,14 +2,17 @@ import fs from 'node:fs';import {createHash} from 'node:crypto';
 import {LOCATION_LEVELS} from '../../template/locationLevels.js';import pilot from '../../template/nativeFieldPilot.js';import approaches from '../../template/nativeInteriorRoutes.js';
 import {findNativePath,nativeSegment} from '../../functions/game/world/nativeNavigation.js';import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';import {worldGeodata} from '../../functions/game/world/l2jGeodata.js';
 import {nativeInteriorCandidates} from './native-interior-candidates.mjs';
+import outside from '../../template/nativeRoutes.js';
+import {LOCATIONS} from '../../template/worldMap.js';
 const file='template/nativeLevelRoutes.js',previous=fs.existsSync(file)?(await import(new URL('../../template/nativeLevelRoutes.js',import.meta.url))).default:null,zones={...previous?.zones};
 for(const id of process.argv.slice(2).length?process.argv.slice(2):['forge-of-the-gods']){
- const root=approaches.routes[id];if(!root||!pilot.fields[id]?.floors)throw Error('Missing cave approach or reviewed floors');
+ const meta=pilot.fields[id],entry=LOCATIONS.find(l=>l.id===id);
+ const root=approaches.routes[id]||(meta?.entryFloor?{to:worldGeodata.point(outside.routes[id]?.to),sourceSpawn:entry.entrySource}:null);if(!root?.to||!meta?.floors)throw Error('Missing cave approach or reviewed floors');
  const levels={};let previousLevel;
- for(const floor of pilot.fields[id].floors){
+ for(const floor of meta.walkingFloors||meta.floors){
   const base=pilot.fields[id].sequentialFloors&&previousLevel?previousLevel:{to:root.to,path:[]};
   const model=LOCATION_LEVELS[id].floors.find(f=>f.number===floor),candidates=nativeInteriorCandidates(id,model,base.to);
-  if(floor===1){previousLevel=levels[floor]={title:model.title,to:root.to,path:[],source:root.sourceSpawn};continue;}
+  if(floor===(meta.entryFloor||1)){previousLevel=levels[floor]={title:model.title,to:root.to,path:[],source:root.sourceSpawn};continue;}
   let result;
   for(const source of candidates){
    const plan=findNativePath(base.to,source.point,{allowed:nativeGroundAllowed,stride:4,maxNodes:200000,margin:2048,heuristicWeight:2,reversible:true});
