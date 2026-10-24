@@ -34,7 +34,7 @@ const TIER_BY_NAME = {Stone: 'stone', Crystal: 'crystal', Jewel: 'jewel'};
 export function itemRow(id) {
     if(FERRY_TICKETS[id])return {...FERRY_TICKETS[id]};
     const recovery=recoveryInfo(id);if(recovery)return recovery;
-    const row = ITEMS[id];
+    const row = ITEMS[id]||nativeMinions.items?.[id];
     if (row) {
         const scroll=/^This Forgotten Scroll .* to learn ([^.]+)\./.exec(row[0]);
         return {id:Number(id),name:scroll?'Forgotten Scroll - '+scroll[1]:row[0],description:scroll?row[0]:null,type:row[1],grade:row[2],price:row[3],etc:row[4]};

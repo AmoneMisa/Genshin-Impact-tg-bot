@@ -7192,6 +7192,8 @@ export default {
       "sp": 3095.0
     }
   },
+  "items": {},
+  "itemIcons": {},
   "spawnOffsetRadius": 200,
   "minimumSpawnRadius": 30,
   "forceDeleteMinions": false,
