@@ -207,7 +207,10 @@ export function nativeCombatLine(a,b){
  const from=nativeActorPoint(a),to=nativeActorPoint(b);
  return Boolean(from&&to&&nativeStaticSight(from,to,{allowed:nativeGroundAtStage(a.native?.hellboundStage??b.native?.hellboundStage)}));
 }
-export const nativeMobMovement=mob=>pilot.actors[mob.mobId]||minions.actors[mob.mobId]?.movement||null;
+const movement={...pilot.actors};
+for(const [id,actor] of Object.entries(minions.actors))movement[id]={...actor.movement,...movement[id]};
+export const nativeMobMovement=mob=>movement[mob.mobId]||null;
+export const nativeFamilySocial=mob=>Boolean(mob?.native&&(mob.sourceMinion||minions.zones[mob.zone]?.includes(String(mob.mobId))));
 /** The public target list has a fixed sight budget, including Canvas fallback. */
 export function nativeVisibleActors(hunt){
  const f=hunt?.field;
@@ -219,6 +222,6 @@ export function nativeFieldDto(session){
  const f=session.game.hunt?.field,point=nativeFieldPoint(session);if(!point)return null;
  return {zone:session.game.hunt.zone,point,target:f.target,ground:f.native.outside?null:nativeInteriorMap(session.game.hunt.zone,point,f.native.sourceFloor),...(pilot.fields[session.game.hunt.zone]?.peacefulViewSize&&f.native.sourceFloor!==1?{viewSize:pilot.fields[session.game.hunt.zone].peacefulViewSize}:{}),...(session.game.hunt.zone==='hellbound'?{doors:nativeDoorStates(f.populationStage)}:{}),
   actors:nativeVisibleActors(session.game.hunt).map(m=>({
-   ...nativeActorPoint(m),id:m.mobId,instanceId:m.instanceId,name:m.name,level:m.level,hp:m.hp,currentHp:m.currentHp,aggressive:Boolean(m.aggressive),social:Boolean(m.clanHelpRange&&m.socialClans?.length),aggro:Boolean(m.aggro)
+   ...nativeActorPoint(m),id:m.mobId,instanceId:m.instanceId,name:m.name,level:m.level,hp:m.hp,currentHp:m.currentHp,aggressive:Boolean(m.aggressive),social:Boolean(m.clanHelpRange>0&&m.socialClans?.length||nativeFamilySocial(m)),aggro:Boolean(m.aggro)
   }))};
 }

@@ -1,10 +1,12 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import data from '../template/nativeMinions.js';
+import fs from 'node:fs';
+import {ITEM_ICONS} from '../webapp/art/l2-gameplay-icons.js';
 import {nativeMinionProposal,syncNativeMinions} from '../functions/game/world/nativeMinions.js';
 import {nativeActorPoint,nativeFieldBuckets,activateNativeField,nativeMobMovement,placeNativeActor,syncNativePopulation} from '../functions/game/world/nativeFieldSpace.js';
 import levels from '../template/nativeLevelRoutes.js';
-import {worldAction,advanceWorld} from '../functions/game/world/world.js';
-import {ensureHunt,advanceHunt} from '../functions/game/hunt/huntFight.js';
+import {worldAction,advanceWorld,worldState} from '../functions/game/world/world.js';
+import {ensureHunt,advanceHunt,mobDto} from '../functions/game/hunt/huntFight.js';
 import {getMobDef,getZone,npcBehaviour,buildMob} from '../functions/game/hunt/huntMobs.js';
 import {provokeMob,pursuePlayer} from '../functions/game/hunt/huntAi.js';
 import {findNativePath} from '../functions/game/world/nativeNavigation.js';
@@ -23,6 +25,14 @@ test('native private proposals preserve original inclusive rolls, collision radi
  const from={x:1000,y:2000,z:-12080};let draws=[0,0];assert.deepEqual(nativeMinionProposal(from,14,()=>draws.shift()),{x:956,y:2044,z:-12080});
  draws=[.999999,.999999];assert.deepEqual(nativeMinionProposal(from,14,()=>draws.shift()),{x:1200,y:2044,z:-12080});
  for(const actor of Object.values(data.actors)){assert.deepEqual(nativeMobMovement({mobId:actor.definition.id}),actor.movement);assert.equal(npcBehaviour(actor.definition.id).aiDataMissing,false);assert.ok(npcSp[actor.definition.id]>0);for(const row of actor.loot)assert.ok(itemRow(row[0]),String(row[0]));}
+});
+test('supplemental minion loot keeps original names, grades, prices and exact published client icons',()=>{
+ for(const [id,row] of Object.entries(data.items||{})){
+  const item=itemRow(id);assert.equal(item.name,row[0]);assert.equal(item.type,row[1]);assert.equal(item.grade,row[2]);assert.equal(item.price,row[3]);
+  const icon=data.itemIcons[id].toLowerCase().replaceAll('.','-');assert.equal(ITEM_ICONS['l2_'+id],icon);
+  for(const size of [32,64])assert.ok(fs.existsSync(`webapp/art/l2-extra/${icon}-${size}.webp`));
+ }
+ for(const [id,parents] of Object.entries(data.zones))for(const parent of parents)for(const child of data.masters[parent].entries)assert.equal(getMobDef(getZone(id),child.id),data.actors[child.id].definition);
 });
 for(const [id,masters] of Object.entries(data.zones))test(`${id}: all automatic source families keep exact quotas or explicit rejected proposals`,()=>{
  let seed=42;const random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
@@ -51,6 +61,10 @@ test('striking a private alerts its living source family even without a shared s
  const s=hero(),master=actors(s).find(m=>m.mobId==='20751'&&!m.sourceMinion);activateNativeField(s.game.hunt,master.sourcePosition,NOW+1e7);syncNativeMinions(s,NOW+1e7,()=>.5);
  const key=`${master.sourceRoom}:${master.sourceSlot}`,family=actors(s).filter(m=>m===master||m.sourceMinion?.owner===key);assert.equal(family.length,4);
  for(const m of family){m.aggro=false;m.socialClans=[];m.clanHelpRange=0;}provokeMob(s.game.hunt,family.at(-1),NOW+1e7);assert.ok(family.every(m=>m.aggro));
+});
+test('both Atlas DTOs mark peaceful family helpers as social even without an XML clan list',()=>{
+ const s=hero(),master=actors(s).find(m=>m.mobId==='20751'&&!m.sourceMinion);activateNativeField(s.game.hunt,master.sourcePosition,NOW+1e7);master.aggressive=false;master.socialClans=[];master.clanHelpRange=0;
+ assert.equal(mobDto(master,NOW+1e7).social,true);const dto=worldState(s,NOW+1e7).nativeField.actors.find(m=>m.instanceId===master.instanceId);assert.ok(dto);assert.equal(dto.social,true);assert.equal(dto.aggressive,false);
 });
 test('live minions do not consume fixed source room capacity or prevent their master respawning with missing privates',()=>{
  const s=hero(),master=actors(s).find(m=>m.mobId==='20751'&&!m.sourceMinion),field=s.game.hunt.field,key=`${master.sourceRoom}:${master.sourceSlot}`,family=()=>actors(s).filter(m=>m.sourceMinion?.owner===key);

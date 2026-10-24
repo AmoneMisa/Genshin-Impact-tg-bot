@@ -34,7 +34,7 @@ import calcDamage from '../boss/calcDamage.js';
 export const getZones = () => zones;
 export const getZone = id => zones.find(zone => zone.id === id) || null;
 const nativePrivateDefinitions=Object.fromEntries(Object.entries(nativeMinions.zones).map(([id,masters])=>[id,Object.fromEntries(masters.flatMap(m=>nativeMinions.masters[m].entries.map(e=>[e.id,nativeMinions.actors[e.id].definition])))]));
-export const getMobDef = (zone, mobId) => zone?.mobs.find(mob => mob.id === String(mobId)) || nativePrivateDefinitions[zone?.id]?.[String(mobId)] || null;
+export const getMobDef = (zone, mobId) => nativePrivateDefinitions[zone?.id]?.[String(mobId)] || zone?.mobs.find(mob => mob.id === String(mobId)) || null;
 
 // "A typical mob of that level": the median of a real stat over every extracted mob within WINDOW levels, so
 // each mob can be compared with its neighbours (hp x1.4 means 40% tougher than usual there).

@@ -42,7 +42,7 @@ import {syncResidentRooms,neighborhood,battleField,battleWalls,battleActor,remov
 import getSpeed from '../player/getters/getSpeed.js';
 import {BASIC_ATTACK, hostileSkill, skillSpatial, weaponSpatial, needsTarget, inSkillReach, spatialTargets, spatialDistance,clearLine} from './huntSpatial.js';
 import {skillCombatType} from '../player/combatType.js';
-import {syncNativePopulation,moveNativeActor,advanceNativeActor,placeNativeActor,placeNativeSpawn,stopNativeActor} from '../world/nativeFieldSpace.js';
+import {syncNativePopulation,moveNativeActor,advanceNativeActor,placeNativeActor,placeNativeSpawn,stopNativeActor,nativeFamilySocial} from '../world/nativeFieldSpace.js';
 import {nativeTerritorySource} from '../world/nativeSpawnTerritory.js';
 
 // A mob that was not attacked for this long loses interest and leaves.
@@ -799,7 +799,7 @@ export function mobDto(mob, now = Date.now()) {
         role: AI_LABELS[mob.ai] || null,
         aggro: Boolean(mob.aggro),
         aggressive: Boolean(mob.aggressive),
-        social: Boolean(mob.clanHelpRange>0&&mob.socialClans?.length),
+        social: Boolean(mob.clanHelpRange>0&&mob.socialClans?.length||nativeFamilySocial(mob)),
         x: mob.x, y: mob.y,
         buffs: (mob.buffs || []).filter(e => e.until > now).map(e => ({...e, remainMs: e.until - now})),
         name: mob.name,
