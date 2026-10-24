@@ -1,10 +1,10 @@
+import {sampleNativeTerritory,nativeTerritorySource} from '../functions/game/world/nativeSpawnTerritory.js';
 import {nativeFieldRooms} from '../functions/game/world/nativeFieldRooms.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 import maps from '../template/nativeInteriorMaps.js';
-import {LOCATION_LEVELS} from '../template/locationLevels.js';
 import {MISSING_WORLD_SOURCE} from '../docs/missing-world-sources.js';
 import {worldGeodata,geoCell,geoRegionId} from '../functions/game/world/l2jGeodata.js';
 import {nativeInteriorMap} from '../functions/game/world/nativeInteriorMap.js';
@@ -15,8 +15,12 @@ for(const [id,map] of Object.entries(maps.maps))test(`${id}: vector cave footpri
  assert.equal(createHash('sha256').update(text).digest('hex'),map.sha256);assert.equal(Buffer.byteLength(text),map.bytes);assert.ok(map.bytes<200000);assert.equal(maps.geodataCommit,worldGeodata.manifest.commit);
  for(const [file,sha] of Object.entries(map.files))assert.equal(sha,MISSING_WORLD_SOURCE.files[file]);
  const inside=point=>polygons.reduce((yes,polygon)=>yes!==pointInPolygon({x:(point.x-map.bounds.x)/16,y:(point.y-map.bounds.y)/16},polygon),false);
- const slots=nativeFieldRooms(id).flatMap(r=>r.spawns||[]);let checked=0;
- for(const slot of slots){const floor=worldGeodata.point(slot),roof=worldGeodata.point({...slot,z:32767});if(roof.z<=floor.z)continue;assert.equal(inside(slot),true,`${id} ${slot.id} ${slot.x},${slot.y}`);checked++;}
+ const slots=nativeFieldRooms(id).flatMap(r=>r.spawns||[]);let checked=0,placementSeed=42;
+ const placementRandom=()=>((placementSeed=(Math.imul(placementSeed,1664525)+1013904223)>>>0)/4294967296);
+ for(const slot of slots){
+  const points=slot.coordinateSource==='point'?[slot]:Array.from({length:3},()=>sampleNativeTerritory(nativeTerritorySource(id,slot),{random:placementRandom}));assert.ok(points.every(Boolean));
+  for(const point of points){const floor=worldGeodata.point(point),roof=worldGeodata.point({...point,z:32767});if(roof.z<=floor.z)continue;assert.equal(inside(point),true,`${id} ${slot.id} ${point.x},${point.y}`);checked++;}
+ }
  // Independent raw-layer check at deterministic vector samples. A filled
  // pixel must correspond to a real NSWE cell beneath another stored layer.
  let seed=42,filled=0,empty=0;const random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);

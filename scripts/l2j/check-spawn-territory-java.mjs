@@ -1,10 +1,10 @@
+import {nativeFieldRooms} from '../../functions/game/world/nativeFieldRooms.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import policy from '../../template/nativeFieldPilot.js';
-import {LOCATION_LEVELS} from '../../template/locationLevels.js';
 import {sampleNativeTerritory,nativeTerritorySource} from '../../functions/game/world/nativeSpawnTerritory.js';
 const out=path.resolve('.tmp/geodata/java-spawn-oracle');fs.mkdirSync(out,{recursive:true});
 const put=(file,body)=>{const p=path.join(out,file);fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,body);return p;};
@@ -21,7 +21,7 @@ files.push(put('org/l2jmobius/gameserver/geoengine/GeoEngine.java',`package org.
 files.push(put('SpawnTerritoryProbe.java',`import java.util.Scanner;import org.l2jmobius.commons.util.Rnd;import org.l2jmobius.gameserver.entity.Location;import org.l2jmobius.gameserver.entity.zone.form.ZoneNPoly;import org.l2jmobius.gameserver.entity.zone.type.NpcSpawnTerritory;import org.l2jmobius.gameserver.geoengine.GeoEngine;public class SpawnTerritoryProbe {static ZoneNPoly read(Scanner s){int n=s.nextInt(),low=s.nextInt(),high=s.nextInt();int[] x=new int[n],y=new int[n];for(int i=0;i<n;i++){x[i]=s.nextInt();y[i]=s.nextInt();}return new ZoneNPoly(x,y,low,high);}public static void main(String[] args){Scanner s=new Scanner(System.in);int count=s.nextInt();for(int i=0;i<count;i++){Rnd.seed=s.nextLong();GeoEngine.height=s.nextInt();GeoEngine.calls=0;NpcSpawnTerritory t=new NpcSpawnTerritory("fixture",read(s));int banned=s.nextInt();for(int j=0;j<banned;j++)t.addBannedTerritory(read(s));Location p=t.getRandomPoint();System.out.println(p.getX()+","+p.getY()+","+p.getZ()+","+GeoEngine.firstHint);}}}`));
 execFileSync(process.env.JAVAC||'javac',['-d',out,...files],{stdio:'pipe',timeout:60000});
 const fixtures=[];
-for(const id of Object.keys(policy.fields))for(const t of LOCATION_LEVELS[id].floors[0].rooms.flatMap(r=>r.spawns||[]).filter(s=>s.coordinateSource!=='point'))for(let seed=1;seed<=8;seed++)fixtures.push({t:nativeTerritorySource(id,t),seed,height:Math.trunc((t.minZ+t.maxZ)/2)});
+for(const id of Object.keys(policy.fields))for(const t of nativeFieldRooms(id).flatMap(r=>r.spawns||[]).filter(s=>s.coordinateSource!=='point'))for(let seed=1;seed<=8;seed++)fixtures.push({t:nativeTerritorySource(id,t),seed,height:Math.trunc((t.minZ+t.maxZ)/2)});
 for(let seed=1;seed<=80;seed++)fixtures.push({t:{polygon:[[-10,-20],[10,-20],[10,20],[-10,20]],minZ:-101,maxZ:100,bannedTerritories:seed%2?[{polygon:[[-10,-20],[0,-20],[0,20],[-10,20]],minZ:-101,maxZ:100}]:[]},seed,height:0});
 // H5 uses the midpoint to choose a geodata layer, but only caps its upper Z.
 for(let seed=1;seed<=40;seed++)fixtures.push({t:{polygon:[[-10,-20],[10,-20],[10,20],[-10,20]],minZ:-101,maxZ:100},seed,height:-104});

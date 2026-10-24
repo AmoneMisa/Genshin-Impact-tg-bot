@@ -51,7 +51,7 @@ export function createAtlasCombat(root,action,{mapAvailable=true}={}){
   host.querySelector('[data-native-skills]').innerHTML=hotbar(p.skills,{className:p.className,chosen:p.hotbar.filter(i=>typeof i==='number').slice(0,8)});
   host.querySelector('[data-native-supplies]').innerHTML=combatSuppliesHtml(state,{idPrefix:'atlas'});
   const routes=state.field.native.levels||[],levels=host.querySelector('[data-native-levels]'),buttons=host.querySelector('[data-native-level-buttons]');
-  levels.hidden=routes.length<2;levels.querySelector('summary').textContent='Уровни локации · '+state.field.native.floor;
+  levels.hidden=routes.length<2;if(levels.hidden)levels.open=false;levels.querySelector('summary').textContent='Уровни локации · '+state.field.native.floor;
   const routeKey=routes.map(r=>r.floor+':'+r.title+':'+r.enabled+':'+alive).join('|');
   if(routeKey!==levelsKey){if(buttons.contains(document.activeElement))levels.querySelector('summary').focus({preventScroll:true});buttons.innerHTML=routes.map(r=>`<button type="button" class="ui-button" data-native-floor="${r.floor}" ${!alive||!r.enabled?'disabled':''}>${escapeHtml(r.title)}</button>`).join('');levelsKey=routeKey;}
   host.querySelector('[data-last-loot]').hidden=!state.lastLoot;

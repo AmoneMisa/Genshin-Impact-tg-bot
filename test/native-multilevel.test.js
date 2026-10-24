@@ -1,3 +1,5 @@
+import {nativeTerritoryGround,nativeTerritorySource,sampleNativeTerritory} from '../functions/game/world/nativeSpawnTerritory.js';
+import {nativeFieldEntryVisible} from '../functions/game/world/nativeFieldSpace.js';
 import {worldGeodata} from '../functions/game/world/l2jGeodata.js';
 import test from 'node:test';import assert from 'node:assert/strict';
 import policy from '../template/nativeFieldPilot.js';import levels from '../template/nativeLevelRoutes.js';import {LOCATION_LEVELS} from '../template/locationLevels.js';
@@ -79,4 +81,26 @@ test('Monastery source provenance, physical ascent, saved banks and return stay 
  assert.equal(worldAction(s,{action:'native_floor',floor:2},now).ok,true);const end=s.game.hunt.field.native.journey.until+1;s=JSON.parse(JSON.stringify(s));advanceWorld(s,end);quiet(s);assert.deepEqual(nativeActorPoint(s.game.hunt.field),model.levels[2].to);assert.equal((await getHuntState(s,end)).field.native.floor,2);
  now=walk(s,1,end+1);assert.deepEqual(nativeActorPoint(s.game.hunt.field),model.root);assert.equal(actors(s).find(m=>m.instanceId===kept.id).currentHp,kept.hp);assert.equal(s.game.inventory.gold,1e6);
  const keys=actors(s).map(m=>m.sourceRoom+':'+m.sourceSlot);assert.equal(new Set(keys).size,keys.length);
+});
+
+test('Giants Cave keeps original polygon quotas, descends through geodata, and resamples the owning lower slot',async()=>{
+ const zone='giants-cave',model=levels.zones[zone],meta=policy.fields[zone];assert.equal(meta.fixedCount,99);assert.equal(meta.territoryCount,327);assert.equal(meta.count,426);
+ let s=hero('aden'),now=enter(s,zone);const from=nativeActorPoint(s.game.hunt.field);assert.equal(worldAction(s,{action:'native_floor',floor:2},now).ok,true);assert.deepEqual(nativeActorPoint(s.game.hunt.field),from);const end=s.game.hunt.field.native.journey.until+1;s=JSON.parse(JSON.stringify(s));advanceWorld(s,end);quiet(s);now=end;
+ assert.deepEqual(nativeActorPoint(s.game.hunt.field),model.levels[2].to);assert.equal((await getHuntState(s,now)).field.native.floor,2);
+ const poly=actors(s).find(m=>m.sourceFloor===2&&m.sourceTerritory&&m.currentHp>0);assert.ok(poly);assert.equal(poly.sourcePlacement,'territory');
+ // Combat persistence is checked at an existing valid spawn; level traversal
+ // above independently verifies the actual player walk.
+ activateNativeField(s.game.hunt,nativeActorPoint(poly),now);ensureHunt(s,now);quiet(s);const slot=poly.sourceSlot,room=poly.sourceRoom;poly.currentHp=1;
+ assert.equal(selectHuntTarget(s,poly.instanceId,now).ok,true);assert.equal(setHuntAttack(s,true,now).ok,true);advanceHunt(s,now+2000,()=>.99);assert.equal(s.game.hunt.kills,1);const pending=s.game.hunt.field.respawns.find(r=>r.room===room&&r.sourceSlot===slot);assert.ok(pending);
+ s=JSON.parse(JSON.stringify(s));let seed=42;advanceHunt(s,pending.at+1,()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296));quiet(s);
+ const replacement=actors(s).find(m=>m.sourceRoom===room&&m.sourceSlot===slot);assert.ok(replacement);assert.equal(replacement.sourceFloor,2);assert.equal(replacement.sourcePlacement,'territory');assert.deepEqual(replacement.sourceTerritory,poly.sourceTerritory);assert.notEqual(replacement.instanceId,poly.instanceId);assert.equal(s.game.hunt.kills,1);
+ const {pointInPolygon}=await import('../functions/game/world/navigation.js');assert.ok(pointInPolygon(replacement.sourcePosition,replacement.sourceTerritory.polygon));assert.ok(replacement.sourcePosition.z<=replacement.sourceTerritory.maxZ);assert.equal(nativeGroundAllowed(replacement.sourcePosition),true);
+});
+
+test('polygon cave residency checks the original area, selected layer and exclusions without a centroid witness',()=>{
+ const zone='giants-cave',slot=nativeFieldRooms(zone).flatMap(r=>r.spawns).find(s=>s.coordinateSource!=='point'),area=nativeTerritorySource(zone,slot);let seed=42;
+ const point=sampleNativeTerritory(area,{random:()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296)});assert.ok(point);assert.equal(nativeTerritoryGround(area,point),true);assert.equal(nativeFieldEntryVisible(point,zone),true);
+ assert.equal(nativeTerritoryGround(area,{...point,z:point.z+4096}),false);
+ assert.equal(nativeTerritoryGround(area,{...point,x:Math.max(...area.polygon.map(p=>p[0]))+16}),false);
+ assert.equal(nativeTerritoryGround({...area,bannedTerritories:[{polygon:area.polygon,minZ:point.z,maxZ:point.z}]},point),false);
 });

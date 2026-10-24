@@ -86,6 +86,27 @@ export default {
       "files": {
         "spawns/Others/23_15.xml": "fb6905618e655ed6258b6104967b89d33344ee8d35bb383c61b9f2012d8700cb"
       }
+    },
+    "giants-cave": {
+      "asset": "/art/world/native/giants-cave.svg",
+      "regions": {
+        "25_19": "e4e964ef53504058a1fc121e5c7ba0faf8417c4d4bee4dd9e303f58b6902fb40"
+      },
+      "bounds": {
+        "x": 172816,
+        "y": 46960,
+        "w": 21936,
+        "h": 16448
+      },
+      "cells": 474679,
+      "layerCells": 652969,
+      "contours": 54,
+      "corners": 5836,
+      "bytes": 48447,
+      "sha256": "99b96f83b12dc2e97eef9a715b714b393c704b414090596f959d2bdf3b3f6093",
+      "files": {
+        "spawns/Aden/GiantsCave.xml": "93fa79905f99141c77672133e0b5d3e38afc2d8b793b654282160902b81a6680"
+      }
     }
   }
 };

@@ -8,7 +8,7 @@ import {findNativePath} from './nativeNavigation.js';
 import {nativeStaticSight} from './nativeVisibility.js';
 import {createNativeJourney,advanceNativeJourney} from './nativeJourney.js';
 import {rememberNativeTrail} from './nativeTrail.js';
-import {nativeSpawnDistance,sampleNativeTerritory} from './nativeSpawnTerritory.js';
+import {nativeSpawnDistance,sampleNativeTerritory,nativeTerritorySource,nativeTerritoryGround} from './nativeSpawnTerritory.js';
 import {sourcePopulationActive} from '../hunt/sourcePopulation.js';
 
 // A residency budget, not a monster aggression/leash range. Public DTOs are capped separately.
@@ -29,13 +29,19 @@ export function nativeFieldZone(point,preferred=null){
  }
  return zone;
 }
-/** Only a visible original spawn can attach an underground bank from outside.
+/** Fixed-spawn sight or standing on an actual territory layer attaches a cave bank.
  * Residency itself does not depend on sight: walking behind a wall must not
  * unload the cave or recreate its monsters. Limit expensive sight probes.
  */
 export function nativeFieldEntryVisible(point,id){
  if(!pilot.fields[id]?.interior)return true;
- return (sourceSpawns[id]||[]).filter(s=>nativeSpawnDistance(point,s)<=NATIVE_FIELD_RADIUS).sort((a,b)=>Math.hypot(nativeSpawnDistance(point,a),(a.z??point.z)-point.z)-Math.hypot(nativeSpawnDistance(point,b),(b.z??point.z)-point.z)).slice(0,48).some(s=>nativeStaticSight(point,s,{allowed:nativeGroundAllowed}));
+ const height=s=>s.coordinateSource==='point'?s.z:Math.trunc((s.minZ+s.maxZ)/2);
+ return (sourceSpawns[id]||[]).filter(s=>nativeSpawnDistance(point,s)<=NATIVE_FIELD_RADIUS).sort((a,b)=>Math.hypot(nativeSpawnDistance(point,a),height(a)-point.z)-Math.hypot(nativeSpawnDistance(point,b),height(b)-point.z)).slice(0,48).some(s=>{
+  if(s.coordinateSource==='point')return nativeStaticSight(point,s,{allowed:nativeGroundAllowed});
+  // Polygon centroids partition legacy banks; they are never sight targets.
+  // Standing on the original territory's actual selected layer is sufficient.
+  return nativeTerritoryGround(nativeTerritorySource(id,s),point);
+ });
 }
 export const nativeFieldInterior=id=>Boolean(pilot.fields[id]?.interior);
 export const nativeInteriorAt=point=>Object.keys(pilot.fields).find(id=>nativeFieldInterior(id)&&nativeFieldNear(point,id)&&nativeFieldEntryVisible(point,id))||null;
@@ -128,7 +134,7 @@ export function syncNativePopulation(hunt,layout,now,populate,random=Math.random
  }
  if(pilot.fields[hunt.zone]?.floors){
   const distance=m=>Math.hypot((m.x-f.x)*ROOM_SIZE,(m.y-f.y)*ROOM_SIZE,m.native.z-f.native.z);
-  const floorActor=nativeVisibleActors(hunt).sort((a,b)=>distance(a)-distance(b))[0];
+  const floorActor=nativeVisibleActors(hunt).filter(m=>!m.sourceTerritory).sort((a,b)=>distance(a)-distance(b))[0];
   if(floorActor?.sourceFloor){
    f.native.sourceFloor=floorActor.sourceFloor;
    if(floorActor.sourceRoom!==f.room){

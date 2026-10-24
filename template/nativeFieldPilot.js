@@ -718,6 +718,38 @@ export default {
         ]
       }
     ],
+    "22666": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "22667",
+            "count": "3",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "22670": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "22671",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "22672",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
     "22693": [
       {
         "name": "Privates1",
@@ -829,6 +861,41 @@ export default {
     ]
   },
   "fields": {
+    "giants-cave": {
+      "city": "aden",
+      "interior": true,
+      "floors": [
+        1,
+        2
+      ],
+      "fixedCount": 99,
+      "territoryCount": 327,
+      "randomGroupCount": 0,
+      "initialCapacity": 426,
+      "unavailableCount": 0,
+      "availableCapacity": 426,
+      "npcIds": [
+        "22661",
+        "22662",
+        "22663",
+        "22664",
+        "22665",
+        "22666",
+        "22668",
+        "22669",
+        "22670",
+        "22673",
+        "22674",
+        "22675",
+        "22676",
+        "22677"
+      ],
+      "count": 426,
+      "unportedMinionTemplates": [
+        "22666",
+        "22670"
+      ]
+    },
     "monastery-of-silence": {
       "city": "rune",
       "interior": true,
@@ -2167,6 +2234,7 @@ export default {
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Aden/GiantsCave.xml": "93fa79905f99141c77672133e0b5d3e38afc2d8b793b654282160902b81a6680",
       "spawns/Others/23_15.xml": "fb6905618e655ed6258b6104967b89d33344ee8d35bb383c61b9f2012d8700cb",
       "spawns/Others/25_14.xml": "ee5e6564a38b4778cce668a88da2f36498bb17acfb3ea2eb8cdfa71c10675c8d",
       "spawns/Others/22_16.xml": "36cdf2361c2f13aee757f269e3b39b64946f89b1eaf2641b8598310de93f35a3",
@@ -4029,6 +4097,62 @@ export default {
     },
     "22659": {
       "runSpeed": 185.0,
+      "attackRange": 40.0
+    },
+    "22661": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22662": {
+      "runSpeed": 180.0,
+      "attackRange": 1100.0
+    },
+    "22663": {
+      "runSpeed": 180.0,
+      "attackRange": 1100.0
+    },
+    "22664": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22665": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22666": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22668": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22669": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22670": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "22673": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "22674": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22675": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22676": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22677": {
+      "runSpeed": 140.0,
       "attackRange": 40.0
     },
     "22691": {

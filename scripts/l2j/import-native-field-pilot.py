@@ -8,6 +8,7 @@ from pathlib import Path
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
 fields={
+    "giants-cave": {"city":"aden","interior":True,"floors":[1,2]},
     "monastery-of-silence": {"city":"rune","interior":True,"floors":[1,2]},
     "forge-of-the-gods": {"city":"goddard","interior":True,"floors":[1,2]},
     "stakato-nest": {"city":"rune","interior":True},
@@ -54,6 +55,8 @@ fields={
 }
 catalog=json.loads(subprocess.check_output(['node','--input-type=module','-e',
     'import {LOCATION_LEVELS} from "./template/locationLevels.js";console.log(JSON.stringify(Object.fromEntries('+json.dumps(list(fields))+'.map(id=>[id,LOCATION_LEVELS[id]]))))'],encoding='utf-8'))
+source_manifest=json.loads(subprocess.check_output(['node','--input-type=module','-e',
+    'import {LEVEL_SOURCE} from "./template/locationLevels.js";import {MISSING_WORLD_SOURCE} from "./docs/missing-world-sources.js";console.log(JSON.stringify({...LEVEL_SOURCE.files,...MISSING_WORLD_SOURCE.files}))'],encoding='utf-8'))
 ids=set();exclusions={}
 for id,field in fields.items():
     model=catalog[id];assert (model.get('source',{}).get('coordinateSpace')=='surface' or field.get('interior')) and (len(model['floors'])==1 or field.get('floors'))
@@ -78,7 +81,8 @@ for id,field in fields.items():
     if field.get('interior'):
         for file in {s.get('sourceFile') or s.get('file') for s in slots}:
             assert file and (base/file).is_file()
-            model.setdefault('source',{}).setdefault('files',{})[file]=hashlib.sha256((base/file).read_bytes()).hexdigest()
+            sha=source_manifest[file];assert hashlib.sha256((base/file).read_bytes()).hexdigest()==sha
+            model.setdefault('source',{}).setdefault('files',{})[file]=sha
     field['fixedCount']=sum(s['count'] for s in slots if s['coordinateSource']=='point')
     field['territoryCount']=sum(s['count'] for s in slots if s['coordinateSource']!='point')
     random_groups={};capacity=0

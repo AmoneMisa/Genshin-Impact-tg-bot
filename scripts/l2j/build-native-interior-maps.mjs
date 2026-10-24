@@ -1,7 +1,9 @@
+import {sampleNativeTerritory,nativeTerritorySource} from '../../functions/game/world/nativeSpawnTerritory.js';
+import {pointInPolygon} from '../../functions/game/world/navigation.js';
+import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';
 import {nativeFieldRooms} from '../../functions/game/world/nativeFieldRooms.js';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
-import {LOCATION_LEVELS} from '../../template/locationLevels.js';
 import {LOCATIONS} from '../../template/worldMap.js';
 import {MISSING_WORLD_SOURCE} from '../../docs/missing-world-sources.js';
 import approaches from '../../template/nativeInteriorRoutes.js';
@@ -10,8 +12,9 @@ import {nativeStep} from '../../functions/game/world/nativeNavigation.js';
 const file='template/nativeInteriorMaps.js',previous=fs.existsSync(file)?(await import(new URL('../../template/nativeInteriorMaps.js',import.meta.url))).default:null;
 const requested=process.argv.slice(2),ids=requested.length?requested:['antharas-lair','stakato-nest'],maps={...previous?.maps};
 for(const id of ids){
- const slots=nativeFieldRooms(id).flatMap(r=>r.spawns||[]);if(slots.some(s=>s.coordinateSource!=='point'))throw Error('Fixed source seeds required');
- const anchors=[...slots,LOCATIONS.find(l=>l.id===id),...(approaches.routes[id]?.path||[])];
+ const slots=nativeFieldRooms(id).flatMap(r=>r.spawns||[]),fixed=slots.filter(s=>s.coordinateSource==='point'),areas=slots.filter(s=>s.coordinateSource!=='point');
+ const files=Object.fromEntries([...new Set(slots.map(s=>s.file||s.sourceFile))].map(f=>{if(!MISSING_WORLD_SOURCE.files[f])throw Error('Missing source provenance');return [f,MISSING_WORLD_SOURCE.files[f]];}));
+ const anchors=[...fixed,...areas.flatMap(s=>s.polygon.map(([x,y])=>({x,y}))),LOCATIONS.find(l=>l.id===id),...(approaches.routes[id]?.path||[])];
  // Presentation crop only. It never participates in movement or placement.
  const left=geoCell(Math.min(...anchors.map(s=>s.x)))-16,top=geoCell(Math.min(...anchors.map(s=>s.y)))-16,right=geoCell(Math.max(...anchors.map(s=>s.x)))+16,bottom=geoCell(Math.max(...anchors.map(s=>s.y)))+16;
  const width=right-left+1,height=bottom-top+1,roof=new Int16Array(width*height);roof.fill(32767);
@@ -19,7 +22,22 @@ for(const id of ids){
  const covered=n=>{const i=index(n.gx,n.gy);if(roof[i]===32767)roof[i]=worldGeodata.cell(n.gx,n.gy,32767)?.z??-32768;return roof[i]>n.z;};
  const queue=[],seen=new Set(),mask=new Set();
  function add(n){if(!n?.nswe||!inside(n)||!covered(n))return;const i=index(n.gx,n.gy),key=i+':'+n.z;if(seen.has(key))return;seen.add(key);mask.add(i);queue.push(n);if(seen.size>1500000)throw Error('Cave footprint node budget');}
- for(const s of slots)add({gx:geoCell(s.x),gy:geoCell(s.y),...worldGeodata.point(s)});
+ for(const s of fixed)add({gx:geoCell(s.x),gy:geoCell(s.y),...worldGeodata.point(s)});
+ const territories=new Set();
+ for(const area of areas){
+  const key=(area.file||area.sourceFile)+':'+area.sourceGroup;if(territories.has(key))continue;territories.add(key);
+  const territory=nativeTerritorySource(id,area),xs=area.polygon.map(p=>p[0]),ys=area.polygon.map(p=>p[1]),middle=Math.trunc((area.minZ+area.maxZ)/2);
+  for(let gx=geoCell(Math.min(...xs));gx<=geoCell(Math.max(...xs));gx++)for(let gy=geoCell(Math.min(...ys));gy<=geoCell(Math.max(...ys));gy++){
+   const point={x:gx*16+8,y:gy*16+8,z:middle};if(!pointInPolygon(point,area.polygon))continue;
+   const ground=worldGeodata.point(point);if(!ground?.nswe||ground.z>area.maxZ||!nativeGroundAllowed(ground))continue;
+   if(territory.bannedTerritories.some(b=>ground.z>=b.minZ&&ground.z<=b.maxZ&&pointInPolygon(ground,b.polygon)))continue;
+   add({gx,gy,...ground});
+  }
+  // A narrow valid polygon can miss all cell centres. This seed uses the
+  // original placement proposal and ground checks, never its authored centroid.
+  let seed=42;const random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296),point=sampleNativeTerritory(territory,{random});
+  if(!point)throw Error('Unverified source territory seed: '+key);add({gx:geoCell(point.x),gy:geoCell(point.y),...worldGeodata.point(point)});
+ }
  for(let at=0;at<queue.length;at++){
   const n=queue[at];queue[at]=null;
   for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){
@@ -50,7 +68,7 @@ for(const id of ids){
  }
  const color=id==='stakato-nest'?'#51573f':id==='forge-of-the-gods'?'#674536':'#5e5143',svg=`<!-- Derived from L2J High Five geodata ${worldGeodata.manifest.commit}, GPL-3.0. Source: scripts/l2j/build-native-interior-maps.mjs; license: data/l2j-geodata/LICENSE. -->\n<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><path fill="${color}" stroke="#a9a48c" stroke-width=".5" fill-rule="evenodd" d="${commands.join('')}"/></svg>\n`,asset=`/art/world/native/${id}.svg`;
  fs.mkdirSync('webapp/art/world/native',{recursive:true});fs.writeFileSync('webapp'+asset,svg);
- const files=Object.fromEntries([...new Set(slots.map(s=>s.file||s.sourceFile))].map(f=>{if(!MISSING_WORLD_SOURCE.files[f])throw Error('Missing source provenance');return [f,MISSING_WORLD_SOURCE.files[f]];}));
+
  const regions={};for(let x=left;x<=right;x+=2048)for(let y=top;y<=bottom;y+=2048){const region=geoRegionId(x*16,y*16);regions[region]=worldGeodata.manifest.regions[region]?.sha256;}
  for(const p of [{x:left,y:bottom},{x:right,y:top},{x:right,y:bottom}]){const region=geoRegionId(p.x*16,p.y*16);regions[region]=worldGeodata.manifest.regions[region]?.sha256;}
  if(Object.values(regions).some(sha=>!sha))throw Error('Missing source region');

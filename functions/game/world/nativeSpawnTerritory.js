@@ -19,6 +19,12 @@ export function nativeSpawnDistance(point,spawn){
  // Only a residency bound; this never authorizes a spawn or a walk.
  return Math.hypot(Math.max(box.left-point.x,0,point.x-box.right),Math.max(box.top-point.y,0,point.y-box.bottom));
 }
+/** Exact territory/layer residency, without selecting a fictional NPC position. */
+export function nativeTerritoryGround(territory,point,{geo=worldGeodata,allowed=nativeGroundAllowed}={}){
+ if(!bounds(territory)||!point||!['x','y','z'].every(k=>Number.isFinite(point[k]))||!pointInPolygon(point,territory.polygon))return false;
+ const ground=geo.point({...point,z:Math.trunc((territory.minZ+territory.maxZ)/2)});
+ return Boolean(ground?.nswe&&ground.z===point.z&&ground.z<=territory.maxZ&&allowed(ground)&&!territory.bannedTerritories?.some(b=>ground.z>=b.minZ&&ground.z<=b.maxZ&&pointInPolygon(ground,b.polygon)));
+}
 /** H5 ZoneNPoly/NpcSpawnTerritory proposal rule, with fail-closed ground validation.
  * Original classes and MIT notices: art-source/geodata/spawns.
  * Unlike the source fallback, an exhausted search cannot produce an unchecked point.
