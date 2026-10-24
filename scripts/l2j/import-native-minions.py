@@ -1,10 +1,11 @@
-"""Original automatic Privates for reviewed native fields (currently Cruma)."""
+"""Original automatic Privates for reviewed native fields from pinned H5 sources."""
 from pathlib import Path
 import hashlib,json,os,re,subprocess,sys,xml.etree.ElementTree as ET
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
 registry=json.loads(subprocess.check_output(['node','--input-type=module','-e','import r from "./template/nativeFieldPilot.js";console.log(JSON.stringify(r))'],encoding='utf8'))
-requested=list(dict.fromkeys(['cruma-tower',*sys.argv[1:]]));assert all(z in registry['fields'] for z in requested)
+existing=json.loads(subprocess.check_output(['node','--input-type=module','-e','import m from "./template/nativeMinions.js";console.log(JSON.stringify(Object.keys(m.zones)))'],encoding='utf8'))
+requested=list(dict.fromkeys(['cruma-tower',*existing,*sys.argv[1:]]));assert all(z in registry['fields'] for z in requested)
 files={};npcs={}
 def xml(file):
  data=(base/file).read_bytes();sha=hashlib.sha256(data).hexdigest()
