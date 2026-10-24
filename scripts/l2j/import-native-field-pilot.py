@@ -8,6 +8,7 @@ from pathlib import Path
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
 fields={
+    "imperial-tomb": {"city":"goddard","interior":True,"floors":[1,2]},
     "giants-cave": {"city":"aden","interior":True,"floors":[1,2]},
     "monastery-of-silence": {"city":"rune","interior":True,"floors":[1,2]},
     "forge-of-the-gods": {"city":"goddard","interior":True,"floors":[1,2]},
@@ -64,11 +65,12 @@ for id,field in fields.items():
     assert len(levels)==len(field.get('floors',[1]))
     rooms=[{**r,'id':(f'f{f["number"]}/'+r['id'] if field.get('floors') else r['id'])} for f in levels for r in f['rooms']]
     slots=[s for r in rooms for s in r['spawns']]
-    assert all((s['coordinateSource']=='point' or (len(s.get('polygon',[]))>=3 and s.get('minZ') is not None and s.get('maxZ') is not None)) and (not s.get('randomGroup') or id=='primeval-isle') for s in slots)
+    assert all((s['coordinateSource']=='point' or (len(s.get('polygon',[]))>=3 and s.get('minZ') is not None and s.get('maxZ') is not None)) and (not s.get('randomGroup') or id in ['primeval-isle','imperial-tomb']) for s in slots)
     for slot in slots:
         if slot['coordinateSource']=='point':continue
         file=slot.get('sourceFile') or slot.get('file');assert file
         group=next(g for g in ET.parse(base/file).getroot().findall('spawn') if g.get('zone',g.get('name'))==slot['sourceGroup'])
+        assert group.get('selection','all')==('random' if slot.get('randomGroup') else 'all'),'Source selection rule must be preserved'
         banned=[]
         for area in group.findall('banned_territory'):
             polygon=[[int(n.get('x')),int(n.get('y'))] for n in area.findall('node')];assert len(polygon)>=3

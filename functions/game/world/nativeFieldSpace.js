@@ -1,4 +1,4 @@
-import {nativeFieldRooms,migrateNativeRoomBanks} from './nativeFieldRooms.js';
+import {nativeFieldRooms,migrateNativeRoomBanks,migrateNativeRandomGroups} from './nativeFieldRooms.js';
 import pilot from '../../../template/nativeFieldPilot.js';
 import {nativeInteriorMap} from './nativeInteriorMap.js';
 import {ROOM_SIZE} from './navigation.js';
@@ -78,6 +78,7 @@ export function activateNativeField(hunt,point,now){
  if(!f.native){
   f.native={version:1,z:point.z,loaded:{},missing:{},randomGroups:{}};
   migrateNativeRoomBanks(f,hunt.zone);
+  migrateNativeRandomGroups(f,hunt.zone);
   // Existing room banks already rolled their entire source group. Preserve even
   // mixed species left by respawns; migration must never refill lost rolls.
   const existing=nativeFieldBuckets(f).flatMap(b=>b.mobs||[]);
@@ -135,10 +136,12 @@ export function syncNativePopulation(hunt,layout,now,populate,random=Math.random
  if(pilot.fields[hunt.zone]?.floors){
   const distance=m=>Math.hypot((m.x-f.x)*ROOM_SIZE,(m.y-f.y)*ROOM_SIZE,m.native.z-f.native.z);
   const floorActor=nativeVisibleActors(hunt).filter(m=>!m.sourceTerritory).sort((a,b)=>distance(a)-distance(b))[0];
-  if(floorActor?.sourceFloor){
-   f.native.sourceFloor=floorActor.sourceFloor;
-   if(floorActor.sourceRoom!==f.room){
-    f.rooms[f.room]={mobs:f.mobs};f.mobs=f.rooms[floorActor.sourceRoom]?.mobs||[];delete f.rooms[floorActor.sourceRoom];f.room=floorActor.sourceRoom;
+  const territoryRoom=floorActor?null:nativeTerritoryFloorRoom(hunt.zone,layout.rooms,nativeActorPoint(f));
+  const floor=floorActor?.sourceFloor||territoryRoom?.sourceFloor,room=floorActor?.sourceRoom||territoryRoom?.id;
+  if(floor){
+   f.native.sourceFloor=floor;
+   if(room!==f.room){
+    f.rooms[f.room]={mobs:f.mobs};f.mobs=f.rooms[room]?.mobs||[];delete f.rooms[room];f.room=room;
     if(!f.visited.includes(f.room))f.visited.push(f.room);
    }
   }
@@ -150,6 +153,17 @@ export function syncNativePopulation(hunt,layout,now,populate,random=Math.random
  }
  if(!visible.has(f.target)||pilot.fields[hunt.zone]?.interior&&!nativeCombatLine(f,nativeFieldActors(hunt).find(m=>m.instanceId===f.target)))f.target=nativeVisibleActors(hunt)[0]?.instanceId||null;
  return true;
+}
+/** Polygon-only floors are identified by the original area and actual layer.
+ * Slot centroids and the current randomized actor positions are not witnesses. */
+export function nativeTerritoryFloorRoom(zone,rooms,point){
+ const seen=new Set(),matches=new Map();
+ for(const room of rooms)for(const slot of room.spawns||[]){
+  if(slot.coordinateSource==='point'||!room.sourceFloor)continue;
+  const key=room.sourceFloor+':'+(slot.file||slot.sourceFile)+':'+slot.sourceGroup;if(seen.has(key))continue;seen.add(key);
+  if(nativeTerritoryGround(nativeTerritorySource(zone,slot),point))matches.set(room.sourceFloor,room);
+ }
+ return matches.size===1?matches.values().next().value:null;
 }
 export function moveNativeActor(actor,target,now,speed){
  const from=nativeActorPoint(actor);if(!from||!target||![target.x,target.y].every(Number.isFinite))return {ok:false,reason:'invalid_move'};

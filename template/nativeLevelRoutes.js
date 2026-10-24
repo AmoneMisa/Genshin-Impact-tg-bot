@@ -1,5 +1,5 @@
 // Derived from L2J High Five geodata (GPL-3.0); see data/l2j-geodata/LICENSE.
-// Derived physical level routes. Endpoints are pinned source NPCs; no authored stair teleport.
+// Derived physical level routes. Endpoints are pinned NPCs or explicitly derived territory witnesses; no authored stair teleport.
 export default {
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
   "barriersSha256": "a8d5c25223f54add9fb9359ec09bf9bdda6dcbcbf29c52af0066e8f76674a057",
@@ -592,6 +592,184 @@ export default {
             "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
           },
           "visited": 50807
+        }
+      }
+    },
+    "imperial-tomb": {
+      "root": {
+        "x": 181550,
+        "y": -77859,
+        "z": -2728
+      },
+      "levels": {
+        "1": {
+          "title": "Имперская гробница · Верхние залы",
+          "to": {
+            "x": 181550,
+            "y": -77859,
+            "z": -2728
+          },
+          "path": [],
+          "source": {
+            "type": "TERRITORY_SAMPLE",
+            "originalEntrance": null,
+            "sourceGroup": "godard14_2515_03",
+            "polygon": [
+              [
+                183025,
+                -78004
+              ],
+              [
+                182081,
+                -77103
+              ],
+              [
+                180769,
+                -77070
+              ],
+              [
+                179850,
+                -78031
+              ],
+              [
+                179838,
+                -79343
+              ],
+              [
+                180759,
+                -80288
+              ],
+              [
+                182097,
+                -80297
+              ],
+              [
+                183015,
+                -79354
+              ]
+            ],
+            "minZ": -2784,
+            "maxZ": -2484,
+            "seed": 777,
+            "point": {
+              "x": 181550,
+              "y": -77859,
+              "z": -2728
+            },
+            "file": "spawns/Goddard/ImperialTomb.xml",
+            "sha256": "85df4c0d480833505a8d6318231350cce6a24cf7a8d23e5500f776f3f062e024",
+            "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+          }
+        },
+        "2": {
+          "title": "Имперская гробница · Нижние залы",
+          "to": {
+            "x": 183499,
+            "y": -78230,
+            "z": -5960
+          },
+          "path": [
+            {
+              "x": 181160,
+              "y": -75560,
+              "z": -2728
+            },
+            {
+              "x": 178344,
+              "y": -75432,
+              "z": -2728
+            },
+            {
+              "x": 178280,
+              "y": -75432,
+              "z": -2728
+            },
+            {
+              "x": 178024,
+              "y": -75752,
+              "z": -2728
+            },
+            {
+              "x": 177960,
+              "y": -77672,
+              "z": -3376
+            },
+            {
+              "x": 178024,
+              "y": -80552,
+              "z": -4024
+            },
+            {
+              "x": 178088,
+              "y": -80680,
+              "z": -4024
+            },
+            {
+              "x": 178408,
+              "y": -80936,
+              "z": -4024
+            },
+            {
+              "x": 182568,
+              "y": -80936,
+              "z": -5104
+            },
+            {
+              "x": 183272,
+              "y": -80936,
+              "z": -5320
+            },
+            {
+              "x": 183592,
+              "y": -80488,
+              "z": -5312
+            },
+            {
+              "x": 183528,
+              "y": -78248,
+              "z": -5960
+            },
+            {
+              "x": 183499,
+              "y": -78230,
+              "z": -5960
+            }
+          ],
+          "source": {
+            "type": "TERRITORY_SAMPLE",
+            "originalEntrance": null,
+            "sourceGroup": "godard14_2515_12",
+            "polygon": [
+              [
+                183282,
+                -78507
+              ],
+              [
+                184060,
+                -78506
+              ],
+              [
+                184047,
+                -77708
+              ],
+              [
+                183290,
+                -77713
+              ]
+            ],
+            "minZ": -6012,
+            "maxZ": -5712,
+            "seed": 111,
+            "point": {
+              "x": 183499,
+              "y": -78230,
+              "z": -5960
+            },
+            "file": "spawns/Goddard/ImperialTomb.xml",
+            "sha256": "85df4c0d480833505a8d6318231350cce6a24cf7a8d23e5500f776f3f062e024",
+            "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+          },
+          "visited": 7022
         }
       }
     }

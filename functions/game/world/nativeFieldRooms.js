@@ -29,3 +29,22 @@ export function migrateNativeRoomBanks(field,id){
  Object.assign(field,{floor:1,room,mobs:banks[room]?.mobs||[],rooms:banks,respawns,visited:[...visited],floorStates:{},seq});delete banks[room];
  Object.assign(field.native,{roomKeysVersion:1,sourceFloor:originalFloor});
 }
+/** Old catalogs sometimes omitted selection=random. Keep an existing variant,
+ * its HP and timers instead of rerolling or retaining every alternative. Runs
+ * only while adopting a legacy bank; correctly tagged mixed respawns survive. */
+export function migrateNativeRandomGroups(field,id){
+ for(const room of nativeFieldRooms(id)){
+  const slots=[];let index=0;
+  for(const [entryIndex,entry] of (room.spawns||[]).entries())for(let n=0;n<entry.count;n++)slots[index++]={...entry,entryIndex};
+  const banks=[field,...Object.values(field.rooms||{})],actors=banks.flatMap(b=>b.mobs||[]).filter(m=>m.sourceRoom===room.id);
+  const untagged=actors.filter(m=>slots[m.sourceSlot]?.randomGroup&&!m.sourceRandomGroup),choices=new Map();
+  for(const m of untagged){const slot=slots[m.sourceSlot];if(!choices.has(slot.randomGroup))choices.set(slot.randomGroup,slot.entryIndex);}
+  if(!choices.size)continue;
+  const keep=slot=>!slot?.randomGroup||!choices.has(slot.randomGroup)||choices.get(slot.randomGroup)===slot.entryIndex;
+  for(const bank of banks)bank.mobs=(bank.mobs||[]).filter(m=>{
+   if(m.sourceRoom!==room.id)return true;const slot=slots[m.sourceSlot];if(!keep(slot))return false;
+   if(slot?.randomGroup)m.sourceRandomGroup=slot.randomGroup;return true;
+  });
+  field.respawns=(field.respawns||[]).filter(r=>r.room!==room.id||keep(slots[r.sourceSlot]));
+ }
+}

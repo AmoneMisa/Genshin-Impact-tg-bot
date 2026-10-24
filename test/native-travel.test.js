@@ -45,10 +45,15 @@ test('Imperial Tomb keeps its noblesse-only teleport while publishing the checke
  assert.equal(worldState(walker,NOW).nativeWalk['imperial-tomb'].enabled,true);
  assert.equal(worldAction(walker,{action:'walk_location',location:'imperial-tomb'},NOW).ok,true);
  const trip=walker.game.world.walkHome;assert.ok(trip.native);assert.ok(routes.routes['imperial-tomb'].attempts.some(a=>a.via==='wall-of-argos'&&!a.reason));
- assert.deepEqual(trip.native.path.at(-1),routes.routes['imperial-tomb'].to);
+ assert.deepEqual(trip.native.path.at(-1),nativeRoute('imperial-tomb').to);
+ assert.ok(trip.native.path.some(p=>['x','y','z'].every(k=>p[k]===routes.routes['imperial-tomb'].to[k])),'the new inside approach retains the original Argos road endpoint');
  const saved=JSON.parse(JSON.stringify(walker));advanceWorld(saved,trip.until+1);
  assert.equal(saved.game.world.location,'imperial-tomb');assert.equal(saved.game.hunt.field.floor,1);assert.equal(saved.game.inventory.gold,gold);
  assert.equal(s.game.world.walkHome,undefined);assert.equal(s.game.inventory.gold,gold);
+ const quickFare=worldState(s,NOW+1).quickTravel.locations.find(l=>l.id==='imperial-tomb').gold;
+ assert.equal(worldAction(s,{action:'quick_travel',location:'imperial-tomb'},NOW+1).ok,true);
+ assert.deepEqual(worldState(s,NOW+1).nativeField.point,routes.routes['imperial-tomb'].to);
+ assert.equal(s.game.inventory.gold,gold-quickFare);
 });
 function finish(s,now){const trip=s.game.world.walkHome;assert.ok(trip.native);advanceWorld(s,now);assert.equal(s.game.world.walkHome,undefined);}
 test('unconfirmed source approaches never advertise or start a native walk',()=>{

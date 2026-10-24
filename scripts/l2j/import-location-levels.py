@@ -32,7 +32,7 @@ def rows(file,filter_npc=lambda n:True):
    y=int(spawn.get('y')) if spawn.get('y') else sum(p[1] for p in polygon)/len(polygon) if polygon else None
    z=int(spawn.get('z',territory.get('minZ','0') if territory is not None else '0'))
    if x is None:raise ValueError('Missing source position: '+spawn.get('id'))
-   out.append({'file':'spawns/'+file,'id':spawn.get('id'),'x':round(x),'y':round(y),'z':z,'coordinateSource':'point' if spawn.get('x') else 'territory-centroid-for-partition','count':int(spawn.get('count','1')),'respawnMs':round(float(spawn.get('respawnDelay','60'))*1000),'respawnRandomMs':round(float(spawn.get('respawnRandom','0'))*1000),'sourceGroup':group.get('zone',group.get('name')),'polygon':polygon,'minZ':int(territory.get('minZ')) if territory is not None else None,'maxZ':int(territory.get('maxZ')) if territory is not None else None})
+   out.append({'file':'spawns/'+file,**({'randomGroup':group.get('zone',group.get('name'))} if group.get('selection')=='random' else {}),**({'sourceChaseRange':int(spawn.get('chaseRange'))} if spawn.get('chaseRange') else {}),'id':spawn.get('id'),'x':round(x),'y':round(y),'z':z,'coordinateSource':'point' if spawn.get('x') else 'territory-centroid-for-partition','count':int(spawn.get('count','1')),'respawnMs':round(float(spawn.get('respawnDelay','60'))*1000),'respawnRandomMs':round(float(spawn.get('respawnRandom','0'))*1000),'sourceGroup':group.get('zone',group.get('name')),'polygon':polygon,'minZ':int(territory.get('minZ')) if territory is not None else None,'maxZ':int(territory.get('maxZ')) if territory is not None else None})
  return out
 
 def hostile(n):

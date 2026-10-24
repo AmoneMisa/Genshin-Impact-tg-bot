@@ -1,5 +1,5 @@
 import {nativeTerritoryGround,nativeTerritorySource,sampleNativeTerritory} from '../functions/game/world/nativeSpawnTerritory.js';
-import {nativeFieldEntryVisible} from '../functions/game/world/nativeFieldSpace.js';
+import {nativeFieldEntryVisible,nativeTerritoryFloorRoom} from '../functions/game/world/nativeFieldSpace.js';
 import {worldGeodata} from '../functions/game/world/l2jGeodata.js';
 import test from 'node:test';import assert from 'node:assert/strict';
 import policy from '../template/nativeFieldPilot.js';import levels from '../template/nativeLevelRoutes.js';import {LOCATION_LEVELS} from '../template/locationLevels.js';
@@ -103,4 +103,43 @@ test('polygon cave residency checks the original area, selected layer and exclus
  assert.equal(nativeTerritoryGround(area,{...point,z:point.z+4096}),false);
  assert.equal(nativeTerritoryGround(area,{...point,x:Math.max(...area.polygon.map(p=>p[0]))+16}),false);
  assert.equal(nativeTerritoryGround({...area,bannedTerritories:[{polygon:area.polygon,minZ:point.z,maxZ:point.z}]},point),false);
+});
+
+test('Imperial Tomb walks both source polygon floors and preserves its three random groups',async()=>{
+ const zone='imperial-tomb',model=levels.zones[zone],meta=policy.fields[zone],rooms=nativeFieldRooms(zone);
+ assert.equal(meta.fixedCount,0);assert.equal(meta.territoryCount,476);assert.equal(meta.initialCapacity,296);assert.equal(meta.randomGroupCount,3);
+ for(const floor of [1,2]){
+  const endpoint=model.levels[floor],witness=endpoint.source;assert.equal(witness.type,'TERRITORY_SAMPLE');assert.equal(witness.originalEntrance,null);
+  assert.equal(witness.sha256,'85df4c0d480833505a8d6318231350cce6a24cf7a8d23e5500f776f3f062e024');
+  let seed=witness.seed;const point=sampleNativeTerritory({...witness,bannedTerritories:[]},{random:()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296)});
+  assert.deepEqual(point,endpoint.to);assert.equal(nativeTerritoryFloorRoom(zone,rooms,point)?.sourceFloor,floor);
+  assert.equal(nativeTerritoryFloorRoom(zone,rooms,{...point,z:point.z+10000}),null);
+ }
+ let previous=model.root;for(const point of model.levels[2].path){assert.ok(nativeSegment(previous,point,{allowed:nativeGroundAllowed,reversible:true}));previous=point;}assert.deepEqual(previous,model.levels[2].to);assert.ok(model.root.z-previous.z>3000);
+ let s=hero(),now=enter(s,zone);const remembered=actors(s).filter(m=>m.currentHp>0).slice(0,3).map(m=>{m.currentHp=Math.floor(m.hp/2);return {id:m.instanceId,hp:m.currentHp};});assert.ok(remembered.length);
+ assert.equal((await getHuntState(s,now)).field.native.floor,1);const from=nativeActorPoint(s.game.hunt.field);
+ assert.equal(worldAction(s,{action:'native_floor',floor:2},now).ok,true);assert.deepEqual(nativeActorPoint(s.game.hunt.field),from);const end=s.game.hunt.field.native.journey.until+1;s=JSON.parse(JSON.stringify(s));advanceWorld(s,end);quiet(s);
+ assert.deepEqual(nativeActorPoint(s.game.hunt.field),model.levels[2].to);assert.equal((await getHuntState(s,end)).field.native.floor,2);
+ now=walk(s,1,end+1);for(const m of remembered)assert.equal(actors(s).find(a=>a.instanceId===m.id)?.currentHp,m.hp);
+ const choices=structuredClone(s.game.hunt.field.native.randomGroups);s=JSON.parse(JSON.stringify(s));ensureHunt(s,now);quiet(s);assert.deepEqual(s.game.hunt.field.native.randomGroups,choices);
+ const slots=actors(s).map(m=>m.sourceRoom+':'+m.sourceSlot);assert.equal(new Set(slots).size,slots.length);
+ for(const group of ['godard14_2515_15','godard14_2515_16','godard14_2515_17']){
+  const room=rooms.find(r=>r.spawns.some(p=>p.randomGroup===group)),slot=room.spawns.find(p=>p.randomGroup===group);let state=42;
+  const p=sampleNativeTerritory(nativeTerritorySource(zone,slot),{random:()=>((state=(Math.imul(state,1664525)+1013904223)>>>0)/4294967296)});assert.ok(p);
+  activateNativeField(s.game.hunt,p,now);ensureHunt(s,now);quiet(s);const members=actors(s).filter(m=>m.sourceRandomGroup===group);assert.equal(members.length,10);assert.equal(new Set(members.map(m=>m.mobId)).size,1);
+ }
+});
+
+test('overlapping source areas cannot infer an ambiguous floor from a polygon centroid',()=>{
+ const zone='imperial-tomb',rooms=nativeFieldRooms(zone),point=levels.zones[zone].root,matched=nativeTerritoryFloorRoom(zone,rooms,point);assert.ok(matched);
+ assert.equal(nativeTerritoryFloorRoom(zone,[matched,{...matched,id:'f99/r0c0',sourceFloor:99}],point),null);
+});
+
+test('legacy Imperial alternatives retain an existing variant and pending timer without a fresh population roll',async()=>{
+ const {migrateNativeRandomGroups}=await import('../functions/game/world/nativeFieldRooms.js');
+ const {populationSlots}=await import('../functions/game/hunt/sourcePopulation.js');
+ const zone='imperial-tomb',room=nativeFieldRooms(zone).find(r=>r.spawns.some(s=>s.randomGroup)),slots=populationSlots(room),group=room.spawns.find(s=>s.randomGroup).randomGroup,variants=slots.filter(s=>s.randomGroup===group),first=variants[0],other=variants.find(s=>s.entryIndex!==first.entryIndex);
+ const field={mobs:[{instanceId:'kept',sourceRoom:room.id,sourceSlot:first.slot,currentHp:17},{instanceId:'excess',sourceRoom:room.id,sourceSlot:other.slot,currentHp:29}],rooms:{},respawns:[{room:room.id,sourceSlot:first.slot+1,at:START+12345},{room:room.id,sourceSlot:other.slot+1,at:START+54321}]};
+ migrateNativeRandomGroups(field,zone);assert.deepEqual(field.mobs,[{instanceId:'kept',sourceRoom:room.id,sourceSlot:first.slot,currentHp:17,sourceRandomGroup:group}]);assert.deepEqual(field.respawns,[{room:room.id,sourceSlot:first.slot+1,at:START+12345}]);
+ field.mobs.push({instanceId:'new-respawn',sourceRoom:room.id,sourceSlot:other.slot,currentHp:11,sourceRandomGroup:group});const saved=structuredClone(field);migrateNativeRandomGroups(field,zone);assert.deepEqual(field,saved);
 });

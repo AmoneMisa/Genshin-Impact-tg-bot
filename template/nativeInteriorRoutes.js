@@ -1,5 +1,5 @@
 // Derived from L2J High Five geodata (GPL-3.0); see data/l2j-geodata/LICENSE.
-// Checked ground approaches from original outside entries to original cave NPCs.
+// Checked ground approaches to source NPCs or explicitly derived territory witnesses.
 // These are derived walking routes, never teleport destinations.
 export default {
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
@@ -1078,6 +1078,193 @@ export default {
         "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
       },
       "visited": 31953
+    },
+    "imperial-tomb": {
+      "from": {
+        "x": 186699,
+        "y": -75915,
+        "z": -2824,
+        "nswe": 15
+      },
+      "to": {
+        "x": 181550,
+        "y": -77859,
+        "z": -2728
+      },
+      "path": [
+        {
+          "x": 186568,
+          "y": -75656,
+          "z": -2824
+        },
+        {
+          "x": 185352,
+          "y": -75784,
+          "z": -2728
+        },
+        {
+          "x": 185160,
+          "y": -75912,
+          "z": -2728
+        },
+        {
+          "x": 184648,
+          "y": -76872,
+          "z": -2728
+        },
+        {
+          "x": 184648,
+          "y": -77576,
+          "z": -2728
+        },
+        {
+          "x": 184520,
+          "y": -78408,
+          "z": -2728
+        },
+        {
+          "x": 184456,
+          "y": -78472,
+          "z": -2728
+        },
+        {
+          "x": 183432,
+          "y": -78600,
+          "z": -2728
+        },
+        {
+          "x": 183048,
+          "y": -78600,
+          "z": -2728
+        },
+        {
+          "x": 182216,
+          "y": -77832,
+          "z": -2728
+        },
+        {
+          "x": 181550,
+          "y": -77859,
+          "z": -2728
+        }
+      ],
+      "returnPath": [
+        {
+          "x": 182216,
+          "y": -77832,
+          "z": -2728
+        },
+        {
+          "x": 183048,
+          "y": -78600,
+          "z": -2728
+        },
+        {
+          "x": 183432,
+          "y": -78600,
+          "z": -2728
+        },
+        {
+          "x": 184456,
+          "y": -78472,
+          "z": -2728
+        },
+        {
+          "x": 184520,
+          "y": -78408,
+          "z": -2728
+        },
+        {
+          "x": 184648,
+          "y": -77576,
+          "z": -2728
+        },
+        {
+          "x": 184648,
+          "y": -76872,
+          "z": -2728
+        },
+        {
+          "x": 185160,
+          "y": -75912,
+          "z": -2728
+        },
+        {
+          "x": 185352,
+          "y": -75784,
+          "z": -2728
+        },
+        {
+          "x": 186568,
+          "y": -75656,
+          "z": -2824
+        },
+        {
+          "x": 186699,
+          "y": -75915,
+          "z": -2824,
+          "nswe": 15
+        }
+      ],
+      "sourceEntry": {
+        "file": "teleporters/town/31275.xml",
+        "npcId": 31275,
+        "name": "Imperial Tomb",
+        "type": "NOBLES_ADENA",
+        "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+        "sha256": "812a374e2a26cd653f9139c2e5835d84f486d585d40b80045e4a6980f413a8d2"
+      },
+      "sourceSpawn": {
+        "type": "TERRITORY_SAMPLE",
+        "originalEntrance": null,
+        "sourceGroup": "godard14_2515_03",
+        "polygon": [
+          [
+            183025,
+            -78004
+          ],
+          [
+            182081,
+            -77103
+          ],
+          [
+            180769,
+            -77070
+          ],
+          [
+            179850,
+            -78031
+          ],
+          [
+            179838,
+            -79343
+          ],
+          [
+            180759,
+            -80288
+          ],
+          [
+            182097,
+            -80297
+          ],
+          [
+            183015,
+            -79354
+          ]
+        ],
+        "minZ": -2784,
+        "maxZ": -2484,
+        "seed": 777,
+        "point": {
+          "x": 181550,
+          "y": -77859,
+          "z": -2728
+        },
+        "file": "spawns/Goddard/ImperialTomb.xml",
+        "sha256": "85df4c0d480833505a8d6318231350cce6a24cf7a8d23e5500f776f3f062e024",
+        "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+      },
+      "visited": 606
     }
   }
 };

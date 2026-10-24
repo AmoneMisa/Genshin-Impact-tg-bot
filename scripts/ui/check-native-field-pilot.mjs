@@ -148,15 +148,15 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  else {
   const box=await page.locator('canvas').boundingBox(),actors=worldState(s,now).nativeField.actors;
   const trail=[...(s.game.hunt.field.native.nativeTrail?.points||[]).slice().reverse(),...fieldRoute.path.slice(-12).reverse()],trace=trail.flatMap(p=>{const distance=Math.hypot(p.x-before.x,p.y-before.y);return [600,1000,1500,2000,3000,4000,5000].filter(n=>n<=distance).map(n=>({x:before.x+(p.x-before.x)*n/distance,y:before.y+(p.y-before.y)*n/distance,z:before.z}));});
-  const candidates=[...trace,...[600,1000,1500,2000,3000,4000,5000].flatMap(n=>[[n,0],[-n,0],[0,n],[0,-n],[n,n],[-n,-n],[n,-n],[-n,n]]).map(([x,y])=>({x:before.x+x,y:before.y+y,z:before.z}))].filter(p=>{
+  const candidates=[...trace,...[600,1000,1500,2000,3000,4000,5000].flatMap(n=>[[n,0],[-n,0],[0,n],[0,-n],[n,n],[-n,-n],[n,-n],[-n,n]]).map(([x,y])=>({x:before.x+x,y:before.y+y,z:before.z}))].map(p=>({...p,z:before.z})).filter(p=>{
    const x=box.width/2+(p.x-before.x)*box.width/14000,y=box.height/2+(p.y-before.y)*box.width/14000;
    return x>30&&x<box.width-30&&y>30&&y<box.height-30&&actors.slice(0,box.width<700?8:16).every(a=>Math.hypot(a.x-p.x,a.y-p.y)*box.width/14000>30);
   });
   let goal;for(const candidate of candidates){
    const visible=await page.locator('canvas').evaluate((n,p)=>document.elementFromPoint(p.x,p.y)===n,{x:box.x+box.width/2+(candidate.x-before.x)*box.width/14000,y:box.y+box.height/2+(candidate.y-before.y)*box.width/14000});
-   if(visible&&findNativePath(before,candidate,{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true}).ok){goal=candidate;break;}
+   if(visible&&findNativePath(before,candidate,{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true,heuristicWeight:2}).ok){goal=candidate;break;}
   }
-  assert.ok(goal);const [moveResponse]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('canvas').click({position:{x:box.width/2+(goal.x-before.x)*box.width/14000,y:box.height/2+(goal.y-before.y)*box.width/14000}})]);assert.equal(moveResponse.status(),200,JSON.stringify(await moveResponse.json()));now+=3000;
+  assert.ok(goal);const [moveResponse]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('canvas').click({position:{x:box.width/2+(goal.x-before.x)*box.width/14000,y:box.height/2+(goal.y-before.y)*box.width/14000}})]);const movePayload=await moveResponse.json();assert.equal(moveResponse.status(),200,JSON.stringify({reason:movePayload.reason,visited:movePayload.visited,goal,requested:moveResponse.request().postDataJSON().point,from:before}));now+=3000;
  }
  await page.waitForTimeout(2100);assert.equal(s.game.hunt.kills,1);assert.equal(await page.locator('.hunt-overlay').count(),0);
  const after=worldState(s,now).player.worldPoint;assert.ok(Math.hypot(after.x-before.x,after.y-before.y)>0);

@@ -107,6 +107,27 @@ export default {
       "files": {
         "spawns/Aden/GiantsCave.xml": "93fa79905f99141c77672133e0b5d3e38afc2d8b793b654282160902b81a6680"
       }
+    },
+    "imperial-tomb": {
+      "asset": "/art/world/native/imperial-tomb.svg",
+      "regions": {
+        "25_15": "1aa9826f0a495924411ef3ee04ae4dfc2a6eb0fdda1e69919376df39b8fae79e"
+      },
+      "bounds": {
+        "x": 174416,
+        "y": -84544,
+        "w": 15712,
+        "h": 9904
+      },
+      "cells": 217188,
+      "layerCells": 221090,
+      "contours": 47,
+      "corners": 3981,
+      "bytes": 31210,
+      "sha256": "3296359b341ce32a5fd761a91358a0c99e23b690a9659e52a9d7f2515237ef18",
+      "files": {
+        "spawns/Goddard/ImperialTomb.xml": "85df4c0d480833505a8d6318231350cce6a24cf7a8d23e5500f776f3f062e024"
+      }
     }
   }
 };
