@@ -185,7 +185,7 @@ export const combatChat = guarded('combat chat',async(req,res)=>{
 
 export const worldRequest = guarded('world map', async (req,res) => {
   const context=await authorize(req),body=req.method==='POST'?await readJsonBody(req):null;
-  if(['quick_travel','siege_register'].includes(body?.action))assertGoldUnlocked(context);
+  if(['quick_travel','siege_register','hellbound_route'].includes(body?.action))assertGoldUnlocked(context);
   const result=await withLock('clan:world',()=>withLock(huntLock(context),async()=>{
     context.session=await getSession(context.chatId,context.userId);
     const outcome=await worldRequestState(context.session,body);

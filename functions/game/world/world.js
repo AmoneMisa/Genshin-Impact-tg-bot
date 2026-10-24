@@ -30,6 +30,11 @@ import {ferryOptions,buyFerryTicket,boardFerry,advanceFerry,leaveFerry,ferryJour
 import {rememberNativeTrail,rememberNativeResume} from './nativeTrail.js';
 import {activateNativeField,nativeFieldPoint,nativeFieldDto,nativeFieldNear,nativeFieldZone,nativeFieldCity,nativeFieldSupported} from './nativeFieldSpace.js';
 import {ROOM_SIZE} from './navigation.js';
+import {hellboundNpcAction,hellboundAccessDto,hellboundNpc,hellboundPlayerPoint,hellboundApproachQuote} from './hellboundAccess.js';
+import HELLBOUND_ACCESS from '../../../template/hellboundAccess.js';
+import {findNativePath} from './nativeNavigation.js';
+import {nativeGroundAllowed} from './nativeGround.js';
+import {createNativeJourney} from './nativeJourney.js';
 
 export {CITIES,REGIONS,LOCATIONS,CITY_NPCS};
 const PUBLIC_CITIES=CITIES.map(({arrivals,arrivalSource,...city})=>city);
@@ -215,6 +220,37 @@ export function worldAction(session,body,now=Date.now()){
     if(body.action==='quick_travel')return quickTravel(session,body,now);
     const w=advanceWorld(session,now);
     if(!alive(session))return {ok:false,reason:'dead'};
+    if(body.action==='hellbound_route'){
+        if(hellboundNpc(body.npc)?.npcId!==30612)return {ok:false,reason:'unknown_npc'};
+        const denied=quickTravelBlock(session,now);if(denied)return {ok:false,reason:denied};
+        const quote=hellboundApproachQuote(session,now);if(!quote.inCity)return {ok:false,reason:'gatekeeper_required'};if(!quote.near)return {ok:false,reason:'npc_too_far'};
+        if(session.game.inventory.gold<quote.gold)return {ok:false,reason:'not_enough_gold'};
+        const point=HELLBOUND_ACCESS.approach;session.game.inventory.gold-=quote.gold;
+        Object.assign(w,{mode:'native',nativePosition:{x:point.x,y:point.y,z:point.z},location:null,path:[],pending:null,channel:null,lastTeleport:{to:point.name,gold:quote.gold,at:now,source:point.file,point:{x:point.x,y:point.y,z:point.z}}});delete w.walkHome;
+        session.needsSave=true;return {ok:true,gold:quote.gold};
+    }
+    if(body.action==='hellbound_walk'){
+        const npc=hellboundNpc(body.npc),from=hellboundPlayerPoint(session);
+        if(!npc)return {ok:false,reason:'unknown_npc'};
+        if(!from||nativeIsland(session))return {ok:false,reason:'hellbound_ground_required'};
+        const blocked=l2ActionBlock(session,{move:true},now);if(blocked)return {ok:false,reason:blocked};
+        const plan=findNativePath(from,npc,{allowed:nativeGroundAllowed,maxNodes:12000,stride:8,reversible:true,heuristicWeight:2});if(!plan.ok)return plan;
+        const trip=createNativeJourney(plan.start,plan.path,{now,speed:getSpeed(session)*l2MoveMultiplier(session,now)});if(!trip)return {ok:false,reason:'path_blocked'};
+        trip.npc=npc.id;trip.native.historyStart={...plan.start};
+        w.channel=null;w.pending=null;w.path=[];
+        if(nativeFieldPoint(session)){const field=session.game.hunt.field;stopHuntAction(field,now);field.native.journey=trip;field.seenAt=now;}
+        else {Object.assign(w,{mode:'road',walkHome:trip,path:[],pending:null,channel:null});delete w.nativePosition;}
+        return {ok:true};
+    }
+    if(body.action==='hellbound_npc'){
+        if(body.event==='enter'){const denied=quickTravelBlock(session,now)||l2ActionBlock(session,{move:true},now);if(denied)return {ok:false,reason:denied};}
+        const outcome=hellboundNpcAction(session,body.npc,body.event,now);if(!outcome.ok)return outcome;
+        if(outcome.portal){
+            const previous=session.game.hunt;session.game.hunt=null;const entered=enterPublicField(session,'hellbound',{now,departure:w.mode==='location'?previous:null});if(!entered.ok){session.game.hunt=previous;return entered;}
+            Object.assign(w,{mode:'location',location:'hellbound',city:LOCATIONS.find(l=>l.id==='hellbound').region,instanceId:null,path:[],pending:null,channel:null,lastTeleport:{to:'hellbound',gold:0,at:now,source:'Warpgate.java',point:outcome.portal}});delete w.walkHome;delete w.nativePosition;
+        }else {stopNativeWalk(w);if(session.game.hunt?.field)stopHuntAction(session.game.hunt.field,now);w.path=[];w.pending=null;w.channel=null;}
+        session.needsSave=true;return outcome;
+    }
     if(body.action==='ferry_leave')return leaveFerry(session,now);
     if(['ferry_ticket','ferry_board','ferry_walk'].includes(body.action)){
         const denied=quickTravelBlock(session,now);if(denied)return {ok:false,reason:denied};
@@ -338,6 +374,7 @@ export function worldAction(session,body,now=Date.now()){
         return {ok:true};
     }
     if(body.action==='walk_exit'){
+        if(w.location==='hellbound')return {ok:false,reason:'hellbound_portal_required'};
         if(w.mode==='native'){const port=nativeIslandPort(session);return worldAction(session,port?{action:'ferry_walk',port,stop:'vendor'}:{action:'native_walk_city',city:w.city},now);}
         const native=nativeRoute(w.location);
         if(w.mode==='location'&&native?.isolatedPort)return worldAction(session,{action:'ferry_walk',port:native.isolatedPort,stop:'vendor'},now);
@@ -528,5 +565,5 @@ export function worldState(session,now=Date.now()){
     const {mode,city,location,x,y,path,moveAt,pending,channel,walkHome,holding,instanceId,readyHolding,boss,bossPosition,bossRoom}=w;
     const fieldPoint=nativeFieldPoint(session),field=session.game.hunt?.field;
     const nativePosition=fieldPoint?{worldPoint:fieldPoint,worldPath:(field.path||[]).map(p=>({x:p.x*ROOM_SIZE,y:p.y*ROOM_SIZE,z:p.z}))}:mode==='road'?(ferryJourneyPosition(walkHome,now)||airshipJourneyPosition(walkHome,now)||nativeJourneyPosition(walkHome)):mode==='native'?{worldPoint:w.nativePosition,worldPath:[]}:null;
-    return {now,nativeField:nativeFieldDto(session),walkingExit:nativeIsland(session)?'port':null,ferries:ferryOptions(session,now),nativeWalk:nativeWalkOptions(session),nativeWalkCities:nativeWalkCities(session),locationTravel:Object.fromEntries(LOCATIONS.map(l=>[l.id,locationTravelQuote(session,l,CITY_NPCS.find(n=>n.city===w.city&&n.gateway),now)])),cityTravel:Object.fromEntries(CITIES.map(c=>[c.id,townTravelQuote(session,c.id,now)])),questTargets:questTargets(session,LOCATIONS),quickTravel:{multiplier:QUICK_TRAVEL_MULTIPLIER,blocked:quickTravelBlock(session,now),cities:CITIES.flatMap(c=>{const gold=quickCityGold(session,c,now);return gold===null?[]:[{id:c.id,gold}];}),locations:LOCATIONS.filter(l=>!l.instance&&!siegePoint(l)&&locationTeleportAllowed(session,l,now)&&!regionAccessBlock(session,l,{now})).map(l=>({id:l.id,gold:teleportPrice(session,quickTravelPrice(l),now)}))},death:w.death?{...w.death}:null,player:{hallRoom:w.hallRoom,areaSize:mode==='city'?citySize(cityOf(w)):ENTRANCE_SIZE,entryOrigin:mode==='entrance'?w.entryOrigin:null,userId:String(session.userId),mode,city,location,x,y,path,moveAt,pending,channel,walkHome:nativeJourneyDto(ferryJourneyDto(walkHome)),holding,instanceId,readyHolding,...nativePosition,runSpeed:walkHome?.native&&l2ActionBlock(session,{move:true},now)?0:getSpeed(session)*l2MoveMultiplier(session,now),boss,bossPosition,bossRoom,hp:session.game.gameClass?.stats?.hp,level:session.game.stats?.lvl},cities:PUBLIC_CITIES,regions:REGIONS,locations:LOCATIONS,npcs:CITY_NPCS,gold:session.game.inventory.gold,scrolls:session.game.inventory.materials?.scroll_escape||0};
+    return {now,hellbound:hellboundAccessDto(session,now),nativeField:nativeFieldDto(session),walkingExit:nativeIsland(session)?'port':null,ferries:ferryOptions(session,now),nativeWalk:nativeWalkOptions(session),nativeWalkCities:nativeWalkCities(session),locationTravel:Object.fromEntries(LOCATIONS.map(l=>[l.id,locationTravelQuote(session,l,CITY_NPCS.find(n=>n.city===w.city&&n.gateway),now)])),cityTravel:Object.fromEntries(CITIES.map(c=>[c.id,townTravelQuote(session,c.id,now)])),questTargets:questTargets(session,LOCATIONS),quickTravel:{multiplier:QUICK_TRAVEL_MULTIPLIER,blocked:quickTravelBlock(session,now),cities:CITIES.flatMap(c=>{const gold=quickCityGold(session,c,now);return gold===null?[]:[{id:c.id,gold}];}),locations:LOCATIONS.filter(l=>!l.instance&&!siegePoint(l)&&locationTeleportAllowed(session,l,now)&&!regionAccessBlock(session,l,{now})).map(l=>({id:l.id,gold:teleportPrice(session,quickTravelPrice(l),now)}))},death:w.death?{...w.death}:null,player:{hallRoom:w.hallRoom,areaSize:mode==='city'?citySize(cityOf(w)):ENTRANCE_SIZE,entryOrigin:mode==='entrance'?w.entryOrigin:null,userId:String(session.userId),mode,city,location,x,y,path,moveAt,pending,channel,walkHome:nativeJourneyDto(ferryJourneyDto(walkHome)),holding,instanceId,readyHolding,...nativePosition,runSpeed:walkHome?.native&&l2ActionBlock(session,{move:true},now)?0:getSpeed(session)*l2MoveMultiplier(session,now),boss,bossPosition,bossRoom,hp:session.game.gameClass?.stats?.hp,level:session.game.stats?.lvl},cities:PUBLIC_CITIES,regions:REGIONS,locations:LOCATIONS,npcs:CITY_NPCS,gold:session.game.inventory.gold,scrolls:session.game.inventory.materials?.scroll_escape||0};
 }

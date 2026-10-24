@@ -35,4 +35,32 @@ const phrases={
 for(const level of [23,26,33,36,43,46,53,56,63,66,73])phrases['Камалока · '+level]='Kamaloka · '+level;
 for(const level of [29,39,49,59,69,78,81,83])phrases['Лабиринт Бездны · '+level]='Tubsizlik labirinti · '+level;
 for(let n=1;n<=6;n++)phrases['Разлом Измерений · '+n]='O‘lchovlar yorig‘i · '+n;
+Object.assign(phrases,{
+ 'В задании отсутствует нужный предмет.':'Topshiriq uchun kerakli buyum yo‘q.',
+ 'Вернитесь к Касиану за кристаллом.':'Kristall uchun Kasianga qayting.',
+ 'Войти на Хеллбаунд':'Hellboundga kirish',
+ 'Врата · западное побережье':'Darvoza · g‘arbiy sohil',
+ 'Врата · Хейн':'Darvoza · Heine',
+ 'Задание доступно с 78 уровня.':'Topshiriq 78-darajadan ochiladi.',
+ 'Задание уже завершено.':'Topshiriq allaqachon bajarilgan.',
+ 'К Касиану: хранитель портала Глудина → Пустоши.':'Kasianga: Gludin portal qo‘riqchisi → Wastelands.',
+ 'На Хеллбаунд ведут врата в Хейне и на западном побережье.':'Hellboundga Heine va g‘arbiy sohildagi darvozalar orqali boriladi.',
+ 'Начать путь на Хеллбаунд':'Hellbound yo‘lini boshlash',
+ 'Нужно завершить «Путь на Хеллбаунд» или «Это жутко горячо!».':'«Hellboundga yo‘l» yoki «Juda issiq!» topshirig‘ini bajarish kerak.',
+ 'Передайте кристалл Касиана Галате.':'Kasianning kristallini Galatega bering.',
+ 'Передать кристалл Галате':'Kristallni Galatega berish',
+ 'Поговорите с Галате в Хейне.':'Heinedagi Galate bilan gaplashing.',
+ 'Подойти к хранителю Глудина':'Gludin qo‘riqchisiga yaqinlashish',
+ 'Подойти к NPC':'NPCga yaqinlashish',
+ 'Получить кристалл Касиана':'Kasianning kristallini olish',
+ 'Путь на Хеллбаунд':'Hellboundga yo‘l',
+ 'Путь на Хеллбаунд начинается у Касиана.':'Hellboundga yo‘l Kasiandan boshlanadi.',
+ 'Путь на Хеллбаунд открыт.':'Hellboundga yo‘l ochiq.',
+ 'Путь через Пустоши':'Wastelands orqali yo‘l',
+ 'Сначала выйдите в город или на открытую местность материка.':'Avval shaharga yoki materikning ochiq hududiga chiqing.',
+ 'Сначала выполните текущий этап задания.':'Avval topshiriqning joriy bosqichini bajaring.',
+ 'Телепорт в Пустоши · {2} аден':'Wastelandsga teleport · {2} adena',
+ 'Узнать о проходе на Хеллбаунд':'Hellboundga kirish haqida bilish',
+ 'Хеллбаунд пока закрыт. Для открытия нужно завершить исходную цепочку Кэниса.':'Hellbound hozircha yopiq. Ochish uchun Kanisning asl topshiriqlar zanjirini bajarish kerak.',
+});
 export default {...phrases,...locations};
