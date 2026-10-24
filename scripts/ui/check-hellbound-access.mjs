@@ -2,6 +2,7 @@ import fs from 'node:fs';import path from 'node:path';import assert from 'node:a
 import {bundlePageAssets} from '../../miniapp/pageAssets.js';import {worldAction,worldState,advanceWorld} from '../../functions/game/world/world.js';
 import {getHuntState} from '../../miniapp/hunt.js';import {nativeFieldBuckets} from '../../functions/game/world/nativeFieldSpace.js';
 import change from '../../functions/game/player/changePlayerGameClass.js';import update from '../../functions/game/player/updatePlayerStats.js';
+import {findNativePath} from '../../functions/game/world/nativeNavigation.js';import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';import source from '../../template/hellboundAccess.js';
 const {chromium}=createRequire(process.env.PLAYWRIGHT_PACKAGE||'C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json')('playwright');
 const root=path.resolve('webapp'),out=path.resolve('.tmp/hellbound-access-ui');fs.mkdirSync(out,{recursive:true});
 const assets=bundlePageAssets(fs.readFileSync(path.join(root,'index.html'),'utf8'),file=>fs.readFileSync(path.join(root,file.slice(1)),'utf8'));
@@ -9,7 +10,7 @@ const styles=[...assets.html.matchAll(/<(?:link rel="stylesheet"|meta name="game
 const browser=await chromium.launch({headless:true,executablePath:process.env.DESIGN_BROWSER||'C:/Users/kubai/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe'});
 const cases=[{width:320},{width:390},{width:1100},{width:320,noCanvas:true},{width:320,noImages:true}].filter(c=>!process.env.HELLBOUND_WIDTH||c.width===Number(process.env.HELLBOUND_WIDTH));
 try{for(const {width,noCanvas=false,noImages=false}of cases){
- let now=1800000000000;const s={userId:1,userChatData:{user:{id:1,first_name:'Test'}},game:{stats:{lvl:85,currentExp:0},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:'gludin',x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
+ let now=1800000000000;const s={userId:1,userChatData:{user:{id:1,first_name:'Test'}},game:{stats:{lvl:85,currentExp:0},inventory:{gold:1000000,materials:{scroll_escape:2},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:'gludin',x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
  const chat={game:{hellbound:{level:1}},members:[s]};s.ownerDocument=()=>chat;change(s,'humanFighter');update(s);
  const quiet=()=>{for(const mob of nativeFieldBuckets(s.game.hunt?.field).flatMap(b=>b.mobs||[]))Object.assign(mob,{aggressive:false,aggro:false,nextAttackAt:now+1e9});};
  const dto=()=>{advanceWorld(s,now);quiet();return {world:{...worldState(s,now),holdings:[],corpses:[]}};};
@@ -53,7 +54,22 @@ try{for(const {width,noCanvas=false,noImages=false}of cases){
  await galate();await action('galate','report');assert.equal(s.game.worldQuests[130].condition,2);
  await city('Глудин');await casian();await action('casian','crystal');assert.equal(s.game.worldQuests[130].items[12823],1);s.game=JSON.parse(JSON.stringify(s.game));
  await galate();await action('galate','complete');assert.ok(s.game.worldQuests[130].completedAt);assert.equal(s.game.worldQuests[130].items[12823],undefined);
- await openNpc('heine-gate');const gold=s.game.inventory.gold;await action('heine-gate','enter');await page.locator('.atlas-room-host:not([hidden]) .hunt-ground').waitFor();assert.equal(s.game.world.location,'hellbound');assert.equal(s.game.inventory.gold,gold);assert.equal(await page.locator('.hunt-overlay').count(),0);await same();
+ await openNpc('heine-gate');const gold=s.game.inventory.gold;await action('heine-gate','enter');await page.locator('.atlas-combat:not([hidden])').waitFor();assert.equal(s.game.world.location,'hellbound');assert.equal(s.game.inventory.gold,gold);assert.equal(await page.locator('.hunt-overlay,.atlas-room-host:not([hidden]) .hunt-ground').count(),0);await same();
+ const initial=worldState(s,now).nativeField;assert.deepEqual(initial.point,source.entry);assert.ok(initial.actors.length>0);
+ assert.ok((await page.getByRole('combobox',{name:'Регион',exact:true}).innerText()).includes(worldState(s,now).cities.find(c=>c.id===s.game.world.city).name));
+ if(noCanvas){const direction=[['east',200,0],['west',-200,0],['south',0,200],['north',0,-200]].find(([,x,y])=>findNativePath(initial.point,{x:initial.point.x+x,y:initial.point.y+y,z:initial.point.z},{allowed:nativeGroundAllowed,maxNodes:6000,reversible:true}).ok);assert.ok(direction);await page.locator(`[data-native-step="${direction[0]}"]`).click();}
+ else{
+  const box=await page.locator('.atlas-stage canvas').boundingBox(),scale=box.width/14000,visible=initial.actors.slice(0,width<700?8:16);
+  const candidates=[1000,2000,3000,4000,5000].flatMap(n=>[[n,0],[-n,0],[0,n],[0,-n]]).map(([dx,dy])=>({x:initial.point.x+dx,y:initial.point.y+dy,z:initial.point.z,px:box.width/2+dx*scale,py:box.height/2+dy*scale}));
+  const point=candidates.find(p=>p.px>24&&p.px<box.width-24&&p.py>24&&p.py<box.height-24&&visible.every(a=>Math.hypot(a.x-p.x,a.y-p.y)*scale>34)&&findNativePath(initial.point,p,{allowed:nativeGroundAllowed,maxNodes:6000,reversible:true}).ok);assert.ok(point);
+  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('.atlas-stage canvas').click({position:{x:point.px,y:point.py}})]);
+ }
+ await page.waitForTimeout(100);assert.ok(Math.hypot(worldState(s,now).nativeField.point.x-initial.point.x,worldState(s,now).nativeField.point.y-initial.point.y)>0);await same();
+ const wounded=nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs||[]).find(m=>m.currentHp>0),saved={id:wounded.instanceId,hp:Math.floor(wounded.hp/2)};wounded.currentHp=saved.hp;
+ await closePopup();await page.locator('[data-movement]').click();await page.locator('[data-movement-tab="scroll"]').click();assert.equal(await page.locator('[data-leave]').count(),0);await page.locator('[data-escape]').click();now+=15000;
+ await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.player.mode==='native');assert.equal(s.game.inventory.materials.scroll_escape,1);assert.ok(source.escape.points.some(p=>JSON.stringify(p)===JSON.stringify(s.game.world.nativePosition)));
+ s.game=JSON.parse(JSON.stringify(s.game));await city('Хейн');await openNpc('heine-gate');if(await page.locator('[data-hellbound-action="walk"]').count()){await action('heine-gate','walk');await openNpc('heine-gate');}await action('heine-gate','enter');await page.locator('.atlas-combat:not([hidden])').waitFor();
+ const copies=nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs||[]).filter(m=>m.instanceId===saved.id);assert.equal(copies.length,1);assert.equal(copies[0].currentHp,saved.hp);await same();
  assert.equal(await page.locator('.atlas-panel').evaluate(p=>p.scrollWidth<=p.clientWidth+1),true);await page.screenshot({path:path.join(out,`quest-${width}${noCanvas?'-no-canvas':noImages?'-no-images':''}.png`)});
  assert.equal(requests.some(u=>u.includes('/vendor/phaser/')||u.includes('l2j-geodata')||u.endsWith('.gz')),false);assert.deepEqual(errors,[]);
  await page.locator('.atlas-panel>[data-close],.atlas-panel>.game-dialog-heading [data-close]').first().click();const before=requests.length;await page.waitForTimeout(2300);assert.equal(requests.length,before);assert.equal(await page.locator('.atlas-overlay,dialog[open],[inert]').count(),0);await page.close();

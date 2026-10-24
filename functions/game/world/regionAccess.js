@@ -1,8 +1,16 @@
 import {getMaterialCount,spendMaterials} from '../player/materials.js';
 import {WORLD_EXTENSION_LOCATIONS,WORLD_EXTENSION_LEVELS} from '../../../template/worldExtension.js';
+import {hellboundStage} from '../hunt/sourcePopulation.js';
+import HELLBOUND_ACCESS from '../../../template/hellboundAccess.js';
 export function regionAccessBlock(session,location,{linked=false,walking=false,now=Date.now()}={}){
  const rule=location?.access;
- if(rule?.kind==='hellbound-portal')return 'hellbound_portal_required';
+ if(rule?.kind==='hellbound-portal'){
+  // Only the server-owned island residency created by an admitted gate permits
+  // walking back into its population window. No mainland route grants entry.
+  if(!walking||session.game.world?.nativeIsland!=='hellbound')return 'hellbound_portal_required';
+  if(hellboundStage(session)<=0)return 'hellbound_locked';
+  if(HELLBOUND_ACCESS.requiresQuest&&!session.game.worldQuests?.[130]?.completedAt&&!session.game.worldQuests?.[133]?.completedAt)return 'hellbound_quest_required';
+ }
  if(rule?.kind==='walk-only'&&!walking)return 'city_route_unavailable';
  if(rule?.kind==='linked'&&!linked)return 'location_path_required';
  if(linked&&location.id==='tower-of-infinitum'){

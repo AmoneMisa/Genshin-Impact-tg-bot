@@ -31,6 +31,10 @@ export default {
       "30320.xml": {
         "file": "teleporters/town/30320.xml",
         "sha256": "ec6a8a6c51cf147a8c955a374d45c064c10364a5ad9304e06b8a80988d9ec35b"
+      },
+      "miscs.xml": {
+        "file": "mapregion/miscs.xml",
+        "sha256": "eca4a72e2283b5e720773642a8964d97f734a68626347c0489203431402a6099"
       }
     }
   },
@@ -95,6 +99,45 @@ export default {
       "region": "gludio"
     }
   ],
+  "escape": {
+    "file": "mapregion/miscs.xml",
+    "regions": [
+      "19_25",
+      "20_25"
+    ],
+    "points": [
+      {
+        "x": -16434,
+        "y": 208803,
+        "z": -3691
+      },
+      {
+        "x": -16929,
+        "y": 209712,
+        "z": -3691
+      },
+      {
+        "x": -16219,
+        "y": 210056,
+        "z": -3691
+      },
+      {
+        "x": -15686,
+        "y": 209285,
+        "z": -3691
+      },
+      {
+        "x": -17067,
+        "y": 208965,
+        "z": -3691
+      },
+      {
+        "x": -17463,
+        "y": 209659,
+        "z": -3691
+      }
+    ]
+  },
   "approach": {
     "city": "gludin",
     "npcId": 30320,

@@ -26,6 +26,7 @@ export function nativeFieldZone(point,preferred=null){
  return zone;
 }
 export const nativeFieldCity=id=>pilot.fields[id]?.city||null;
+export const nativeFieldIsland=id=>pilot.fields[id]?.island||null;
 const worldAxis=value=>{const n=value*ROOM_SIZE,integer=Math.round(n);return Math.abs(n-integer)<1e-8?integer:n;};
 export const nativeActorPoint=actor=>actor?.native&&({x:worldAxis(actor.x),y:worldAxis(actor.y),z:actor.native.z});
 export const nativeFieldPoint=session=>session.game.world?.mode==='location'?nativeActorPoint(session.game.hunt?.field):null;

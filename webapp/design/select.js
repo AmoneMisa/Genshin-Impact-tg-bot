@@ -87,6 +87,9 @@ export function enhanceSelects(root) {
   }
 }
 
+/** Repaints the custom label after a script assigns `select.value` (no change event is fired for that). */
+export function syncSelect(select) { refresh.get(select)?.(); }
+
 // One observer for newly rendered screens, without timers or per-control observers.
 export function observeSelects(root) {
   enhanceSelects(root);

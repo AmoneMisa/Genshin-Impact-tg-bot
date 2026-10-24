@@ -25,7 +25,7 @@ import {huntMobUrl} from './art/hunt-art.js';
 import {openMerchantsGame} from './merchants.js';
 import {classArtUrl} from './boss-stage.js';
 import {worldArtUrl} from './art/world-art-url.js';
-import {enhanceSelects} from './design/select.js';
+import {enhanceSelects,syncSelect} from './design/select.js';
 
 const MAP='/art/world/l2/world.webp';
 const cityScale=city=>city?.size||14000;
@@ -174,7 +174,7 @@ export async function openWorldMap(options){
         const show=event.target.closest('[data-hellbound-show]');if(show){openHellboundNpc(show.dataset.hellboundShow);return;}
         const button=event.target.closest('[data-hellbound-action]');if(!button||button.disabled)return;const id=button.dataset.hellboundNpc,action=button.dataset.hellboundAction;button.disabled=true;
         const next=await act(action==='keeper'?{action:'approach_npc',npc:state.hellbound.approach.gatekeeper}:{action:action==='walk'?'hellbound_walk':action==='route'?'hellbound_route':'hellbound_npc',npc:id,event:action});
-        if(next?.ok&&(['walk','enter','route','keeper'].includes(action))){popup.hidden=true;mode='city';region=state.player.city;select.value=region;pan={x:0,y:0};zoom=1;draw();}
+        if(next?.ok&&(['walk','enter','route','keeper'].includes(action))){popup.hidden=true;mode='city';region=state.player.city;select.value=region;syncSelect(select);pan={x:0,y:0};zoom=1;draw();}
         else {openHellboundNpc(id);if(!next?.ok)popup.insertAdjacentHTML('beforeend','<p role="alert">'+esc(status.textContent)+'</p>');}
     });
     function ferryMenu(id){

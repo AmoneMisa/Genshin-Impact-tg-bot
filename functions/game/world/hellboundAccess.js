@@ -5,6 +5,7 @@ import {outdoorPoint} from './holdingEntry.js';
 import {nativeTownSource} from './nativeTownGraph.js';
 import {hellboundStage} from '../hunt/sourcePopulation.js';
 import {normalTeleportFee} from './townTravel.js';
+import {geoRegionId} from './l2jGeodata.js';
 
 export function hellboundPlayerPoint(session){
  const w=session.game.world;if(!w||w.instanceId||w.walkHome?.kind==='ferry'||w.walkHome?.kind==='airship')return null;
@@ -21,6 +22,10 @@ export function hellboundApproachQuote(session,now){
  return {city:route.city,gold:normalTeleportFee(session,route.fee,now),gatekeeper:keeper?.id,near:Boolean(session.game.world?.mode==='city'&&session.game.world.city===route.city&&nearHellboundNpc(session,keeper)),inCity:session.game.world?.mode==='city'&&session.game.world.city===route.city};
 }
 const quest=session=>session.game.worldQuests?.[130];
+export function hellboundEscapePoint(session,random=Math.random){
+ const point=hellboundPlayerPoint(session);if(!point||!source.escape.regions.includes(geoRegionId(point.x,point.y)))return null;
+ return {...source.escape.points[Math.min(source.escape.points.length-1,Math.floor(random()*source.escape.points.length))]};
+}
 export function hellboundAdmission(session){
  if(!hellboundPlayerPoint(session))return 'hellbound_ground_required';
  if(hellboundStage(session)<=0)return 'hellbound_locked';

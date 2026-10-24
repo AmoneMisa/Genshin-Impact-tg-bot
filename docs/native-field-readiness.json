@@ -2,8 +2,8 @@
   "sourceCommit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
   "zoneCount": 39,
-  "nativeFieldCount": 38,
-  "partialNativeFieldCount": 3,
+  "nativeFieldCount": 39,
+  "partialNativeFieldCount": 4,
   "zones": [
     {
       "id": "talking-island",
@@ -344,7 +344,7 @@
       "validFixed": 456,
       "areas": 0,
       "unknown": 0,
-      "state": "Исходные врата подключены; население ещё в адаптированных комнатах"
+      "state": "Подключён частично: недоступно 1 исходных мест"
     },
     {
       "id": "dragon-valley",

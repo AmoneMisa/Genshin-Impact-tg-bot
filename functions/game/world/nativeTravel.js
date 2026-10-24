@@ -9,10 +9,10 @@ import {nativeTownPath,nativeTownCities,nativeTownHub,nativeTownEdges,nativeTown
 import ports from '../../../template/nativePortRoutes.js';
 import islands from '../../../template/nativeIslandRoutes.js';
 import {nativeTrailBack,resumeNativeJourney,rememberNativeTrail} from './nativeTrail.js';
-import {nativeFieldPoint} from './nativeFieldSpace.js';
+import {nativeFieldPoint,nativeFieldIsland} from './nativeFieldSpace.js';
 
 export const nativeRoute=id=>islands.routes[id]?.available?islands.routes[id]:routes.routes[id]?.available?routes.routes[id]:null;
-export const nativeIsland=session=>session.game.world.mode==='location'?nativeRoute(session.game.world.location)?.island||null:session.game.world.nativeIsland||null;
+export const nativeIsland=session=>session.game.world.mode==='location'?nativeFieldIsland(session.game.world.location)||nativeRoute(session.game.world.location)?.island||null:session.game.world.nativeIsland||null;
 export const nativeIslandPort=session=>Object.values(islands.routes).find(r=>r.island===nativeIsland(session))?.isolatedPort||null;
 export function nativePortRoute(id,stop='vendor'){
  const route=ports.routes[id];if(!route||!['vendor','boarding'].includes(stop))return null;

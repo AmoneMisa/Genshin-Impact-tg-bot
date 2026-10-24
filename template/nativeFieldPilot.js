@@ -196,6 +196,19 @@ export default {
         ]
       }
     ],
+    "18484": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "22422",
+            "count": "4",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
     "20767": [
       {
         "name": "Privates",
@@ -589,6 +602,70 @@ export default {
         ]
       }
     ],
+    "22320": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "22322",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "22323",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "22321": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "22322",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "22323",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "22346": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "22347",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "22448": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "22451",
+            "count": "5",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
     "22693": [
       {
         "name": "Privates1",
@@ -700,6 +777,92 @@ export default {
     ]
   },
   "fields": {
+    "hellbound": {
+      "city": "gludio",
+      "island": "hellbound",
+      "portalOnly": true,
+      "sourceGaps": [
+        {
+          "kind": "point",
+          "zone": "hellbound",
+          "npcId": "22320",
+          "source": {
+            "x": -10315,
+            "y": 237442,
+            "z": -3850
+          },
+          "sourceFile": "scripts/ai/areas/Hellbound/hellboundSpawns.xml",
+          "issues": [
+            "swimming_required"
+          ]
+        }
+      ],
+      "fixedCount": 457,
+      "territoryCount": 0,
+      "randomGroupCount": 0,
+      "initialCapacity": 344,
+      "phaseCapacity": {
+        "0": 0,
+        "1": 222,
+        "2": 237,
+        "3": 238,
+        "4": 239,
+        "5": 249,
+        "6": 242,
+        "7": 275,
+        "8": 275,
+        "9": 286,
+        "10": 344,
+        "11": 344
+      },
+      "unavailableCount": 1,
+      "availableCapacity": 343,
+      "npcIds": [
+        "18463",
+        "18464",
+        "18465",
+        "18466",
+        "18484",
+        "22320",
+        "22321",
+        "22324",
+        "22325",
+        "22326",
+        "22327",
+        "22328",
+        "22329",
+        "22330",
+        "22334",
+        "22335",
+        "22336",
+        "22337",
+        "22339",
+        "22340",
+        "22341",
+        "22344",
+        "22345",
+        "22346",
+        "22349",
+        "22350",
+        "22351",
+        "22352",
+        "22353",
+        "22357",
+        "22358",
+        "22396",
+        "22397",
+        "22403",
+        "22448"
+      ],
+      "count": 457,
+      "unportedMinionTemplates": [
+        "18484",
+        "22320",
+        "22321",
+        "22346",
+        "22448"
+      ]
+    },
     "alligator-beach": {
       "city": "heine",
       "sourceGaps": [
@@ -1805,6 +1968,7 @@ export default {
     "files": {
       "stats/npcs/18000-18099.xml": "a03369c1002918c851f381845a2e096a950409aaa8a21f7e5d3ca0dca47a55d0",
       "stats/npcs/18300-18399.xml": "8f2d6841a154a3b33e0c9a4478df29934e4932915b4f684081194df83031484b",
+      "stats/npcs/18400-18499.xml": "7db2b5743ab46a38ac0175f0e292cfe35f229569aa237c793000cada0d96c099",
       "stats/npcs/18800-18899.xml": "97c30f7fcc9316581f1d469e7849cfd72f951c2a90c06105d6c9d2ddddc51094",
       "stats/npcs/18900-18999.xml": "deac9bb9f86c56e07e8dd79246ff47821be27d4d9779e1783164b8ebcb915474",
       "stats/npcs/20000-20099.xml": "0a724ea2409c42bc532882ac61c9bd19adc2ae60120ee297c3727c29b71fff58",
@@ -1825,9 +1989,14 @@ export default {
       "stats/npcs/22000-22099.xml": "99c9046f0c240f8de7fd4ed5737b65db17b8ee049aa6a496d09ce60be506e624",
       "stats/npcs/22100-22199.xml": "301a34e4583c40d825dcde4c5e5feaaed6e55545be6c562f6b94e3537dd46a8b",
       "stats/npcs/22200-22299.xml": "4337264b4357a8f29568b11cedac58d030bfee7f2f0a3e91b69fc74ef43464b3",
+      "stats/npcs/22300-22399.xml": "bc8150f52eacf00e9e2b8ad7fb47602eea33e846c90020e76fa9feac81166fea",
+      "stats/npcs/22400-22499.xml": "e57edc26e30d8f3a27b939562b8ed658c3ce239ff10c079aa6702353acc27269",
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "scripts/ai/areas/Hellbound/hellboundSpawns.xml": "7a940814df23cfae17baaa41e6381b610b2595cd0fc379a9bbab5f37aa8cc5b2",
+      "scripts/ai/areas/Hellbound/HellboundSpawns.java": "f1ef4cadab00817a417548fa57d148bab7433563b5e7b1b77b463dc7e972bb5f",
+      "scripts/ai/areas/Hellbound/HellboundEngine.java": "690c0879d41c0357c96f46fd3d30d819fe5639622122a88bbc9b080c230046ef",
       "spawns/Innadril/AlligatorBeach.xml": "7cd9c497405ec5931dd94f40ce5a9eddfcf094298b740d01ae71a9b8c53d7991",
       "spawns/Oren/SelMahums.xml": "dc73abf212503f4bcd5e2e9dc70ac00c16cd85370b4b337d712ddf67dd77384e",
       "spawns/Rune/PrimevalIsle.xml": "83b56f39ab13c0c29f7ff35f1b2424251e8d5ae4ed93b168b9ad219397a80c8b",
@@ -1883,6 +2052,26 @@ export default {
     },
     "18346": {
       "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "18463": {
+      "runSpeed": 160.0,
+      "attackRange": 1100.0
+    },
+    "18464": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "18465": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "18466": {
+      "runSpeed": 220.0,
+      "attackRange": 40.0
+    },
+    "18484": {
+      "runSpeed": 80.0,
       "attackRange": 40.0
     },
     "18873": {
@@ -3403,6 +3592,126 @@ export default {
     },
     "22225": {
       "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "22320": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22321": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22324": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22325": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22326": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22327": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "22328": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22329": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22330": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22334": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22335": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22336": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22337": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "22339": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "22340": {
+      "runSpeed": 250.0,
+      "attackRange": 40.0
+    },
+    "22341": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "22344": {
+      "runSpeed": 165.0,
+      "attackRange": 40.0
+    },
+    "22345": {
+      "runSpeed": 165.0,
+      "attackRange": 40.0
+    },
+    "22346": {
+      "runSpeed": 165.0,
+      "attackRange": 40.0
+    },
+    "22349": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22350": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22351": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22352": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22353": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22357": {
+      "runSpeed": 210.0,
+      "attackRange": 40.0
+    },
+    "22358": {
+      "runSpeed": 210.0,
+      "attackRange": 40.0
+    },
+    "22396": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "22397": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22403": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22448": {
+      "runSpeed": 100.0,
       "attackRange": 40.0
     },
     "22650": {

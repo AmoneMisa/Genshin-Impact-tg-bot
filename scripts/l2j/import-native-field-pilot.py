@@ -8,6 +8,7 @@ from pathlib import Path
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
 fields={
+    'hellbound': {'city':'gludio','island':'hellbound','portalOnly':True,'sourceGaps':[{'kind':'point','zone':'hellbound','npcId':'22320','source':{'x':-10315,'y':237442,'z':-3850},'sourceFile':'scripts/ai/areas/Hellbound/hellboundSpawns.xml','issues':['swimming_required']}]},
     "alligator-beach": {"city":"heine","sourceGaps":[{"kind":"territory","zone":"alligator-beach","npcId":"20314","count":3,"sourceFile":"spawns/Innadril/AlligatorBeach.xml","sourceGroup":"innadril01_qm2324_01","polygon":[[106252,197068],[106452,197068],[106452,197268],[106252,197268]],"minZ":-4236,"maxZ":-4036,"rejected":{"swimming_required":100},"issues":["swimming_required"]}]},
     "field-of-silence": {"city":"heine","sourceGaps":[{"kind":"point","zone":"field-of-silence","npcId":"22651","source":{"x":75897,"y":189168,"z":-3448},"sourceFile":"spawns/Innadril/FieldOfSilence.xml","ground":{"x":75897,"y":189168,"z":-3448,"nswe":7},"issues":["holding_region_required"]},{"kind":"point","zone":"field-of-silence","npcId":"22651","source":{"x":78995,"y":190581,"z":-3784},"sourceFile":"spawns/Innadril/FieldOfSilence.xml","ground":{"x":78995,"y":190581,"z":-3784,"nswe":15},"issues":["swimming_required"]}]},
     "forsaken-plains": {"city": "aden", "sourceGaps": [{"kind": "point", "zone": "forsaken-plains", "npcId": "21020", "source": {"x": 186579, "y": 37084, "z": -4059}, "sourceFile": "spawns/Others/25_19.xml", "ground": {"x": 186579, "y": 37084, "z": -4152, "nswe": 15}, "issues": ["holding_region_required"]}]},
@@ -75,6 +76,9 @@ for id,field in fields.items():
                 key=room['id']+':'+s['randomGroup'];random_groups[key]=max(random_groups.get(key,0),s['count'])
             else:capacity+=s['count']
     field['randomGroupCount']=len(random_groups);field['initialCapacity']=capacity+sum(random_groups.values())
+    if id == 'hellbound':
+        field['phaseCapacity']={stage:sum(s['count'] for s in slots if s.get('hellboundMin',1)<=stage<=s.get('hellboundMax',100)) for stage in range(12)}
+        field['initialCapacity']=max(field['phaseCapacity'].values())
     field['unavailableCount']=0
     for gap in field.get('sourceGaps',[]):
         matches=[s for s in slots if s['id']==gap['npcId'] and ((s['coordinateSource']=='point' and all(s[k]==gap['source'][k] for k in ['x','y','z'])) if gap['kind']=='point' else s.get('sourceGroup')==gap['sourceGroup'] and (s.get('sourceFile') or s.get('file'))==gap['sourceFile'])]
