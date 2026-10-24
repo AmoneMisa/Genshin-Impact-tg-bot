@@ -5,6 +5,38 @@ export default {
   "format": "L2J",
   "license": "GPL-3.0",
   "regions": {
+    "12_24": {
+      "file": "12_24.l2j.gz",
+      "bytes": 8610190,
+      "sha256": "87133f57ba586cbff50c2f69681cf708dd5b08752bd1286f650a5461ff8b9509",
+      "compressedBytes": 2910517,
+      "compressedSha256": "52954f3af4f8b4b9dce0f1d51df84e24d017160d932f5f5a05308807cef9d022",
+      "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/12_24.l2j"
+    },
+    "13_23": {
+      "file": "13_23.l2j.gz",
+      "bytes": 3198908,
+      "sha256": "65d018cc23e1efb4618f1e81dab9c24a45079c008dff84fc12f13fdc5ced8a18",
+      "compressedBytes": 189460,
+      "compressedSha256": "1c6fe3991892b44b93311b16e8f0cd9b1ccd2427b0de06e5f0dd8b1b56186de0",
+      "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/13_23.l2j"
+    },
+    "14_23": {
+      "file": "14_23.l2j.gz",
+      "bytes": 7820594,
+      "sha256": "a3716333953fd22baf12d510e86099315e45263b982dc4c4c55c1f12774110af",
+      "compressedBytes": 3223625,
+      "compressedSha256": "f3f90377fb4c30cafc8d1e39842ff289d6c5a0e60762afba3de31f4687521109",
+      "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/14_23.l2j"
+    },
+    "14_24": {
+      "file": "14_24.l2j.gz",
+      "bytes": 8674414,
+      "sha256": "eeab7895da23ec89533a19b6e61fbd76af46fc3021676e87b0d93037d7a2bb96",
+      "compressedBytes": 2584058,
+      "compressedSha256": "83dcc717e995ff9a0f0dcd16316de10dda5d3dfdf8d86954153e5197fcb9d861",
+      "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/14_24.l2j"
+    },
     "14_25": {
       "file": "14_25.l2j.gz",
       "bytes": 8142428,
@@ -85,6 +117,14 @@ export default {
       "compressedSha256": "f25ba73e2cfd1d439491ac1a8a4a292816d58d7f6fa22ee900685b28fb43c996",
       "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/17_25.l2j"
     },
+    "18_10": {
+      "file": "18_10.l2j.gz",
+      "bytes": 1560558,
+      "sha256": "6fb946cce06ac5daa3dd03c7e7018d934c516a668aef29a069cf485674b8314e",
+      "compressedBytes": 31935,
+      "compressedSha256": "8efb29275e42a17c2a6383e81fbce16c929c48e0bab5c1afb77f56e668e43aca",
+      "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/18_10.l2j"
+    },
     "18_14": {
       "file": "18_14.l2j.gz",
       "bytes": 6227664,
@@ -124,6 +164,38 @@ export default {
       "compressedBytes": 1698636,
       "compressedSha256": "9d4dc93c6a722e30ed042e1ec355d1b9f00dc0e14764cee3383a20a783cd1d4a",
       "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/18_23.l2j"
+    },
+    "18_24": {
+      "file": "18_24.l2j.gz",
+      "bytes": 6692878,
+      "sha256": "f8cafaaefaea97f78d4d5136f69913cc836697ea461362d25c1d808570419872",
+      "compressedBytes": 1010796,
+      "compressedSha256": "ce5b8f6f494cfac4a1c89a284bb31c5e02896aee87f1d51bb13bd5bb0df895ec",
+      "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/18_24.l2j"
+    },
+    "18_25": {
+      "file": "18_25.l2j.gz",
+      "bytes": 1105990,
+      "sha256": "65cba73a0a27c42ffd4b8fd0f33c00374d68c17a11cc37d8951332d563fb147f",
+      "compressedBytes": 51620,
+      "compressedSha256": "11b518c25180e2212af72877535cb321c6c7261f3f8bde11d92a2f52f222696d",
+      "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/18_25.l2j"
+    },
+    "19_10": {
+      "file": "19_10.l2j.gz",
+      "bytes": 1559264,
+      "sha256": "750cc04fe55d9e58dcf0d5189461b0a6ad7598621733aefee1e0bd83683a1b66",
+      "compressedBytes": 32067,
+      "compressedSha256": "eacb97fdf8351a95e19f45a3b10ed449771765fc06eb92fd33dfd174095b97d3",
+      "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/19_10.l2j"
+    },
+    "19_16": {
+      "file": "19_16.l2j.gz",
+      "bytes": 3434442,
+      "sha256": "7478d51f636b94e45983054b444eca4c8ecae9bdc95a3f0b16ad48693d32145a",
+      "compressedBytes": 83486,
+      "compressedSha256": "cef44794456816f6e1aa05c9070bbd366e4742f727cd34af902f3347f3b35b81",
+      "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/19_16.l2j"
     },
     "19_18": {
       "file": "19_18.l2j.gz",
@@ -188,6 +260,22 @@ export default {
       "compressedBytes": 1896463,
       "compressedSha256": "6299bdc4baab8b79bc65c3f55b1cfb13a1123715d06476863de7d5102a30b5f2",
       "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/19_25.l2j"
+    },
+    "19_26": {
+      "file": "19_26.l2j.gz",
+      "bytes": 2434108,
+      "sha256": "8b63145e29fa2d8f4aafdeee1da3f187be9a9504289720e79bc509d8c66e28b7",
+      "compressedBytes": 90073,
+      "compressedSha256": "d487784d2cf104525bc4a65af261f80402d628e0b4bd29a6acb247747c4367e5",
+      "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/19_26.l2j"
+    },
+    "20_10": {
+      "file": "20_10.l2j.gz",
+      "bytes": 896236,
+      "sha256": "bfcbbcfea4c926e98ec8625af21a1b03240c19c7f73b79f3120045d23405f646",
+      "compressedBytes": 17194,
+      "compressedSha256": "46e1b2da81358f95bf6d6142c0531a5ece972d8fe256fc0fe87ff802897d4679",
+      "url": "https://gitlab.com/l2j/l2j-geodata/-/blob/378672ee9bffa47b37956911040fc7d5b1a7258e/geodata/20_10.l2j"
     },
     "20_17": {
       "file": "20_17.l2j.gz",
