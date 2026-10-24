@@ -9,6 +9,7 @@ export const sameNativeFamily=(a,b)=>Boolean((a.sourceMinion||b.sourceMinion)&&o
 export const nativeMinionLeader=(actors,minion)=>minion.sourceMinion?actors.find(m=>!m.sourceMinion&&m.currentHp>0&&owner(m)===minion.sourceMinion.owner):null;
 /** MinionList.initializeNpc's two inclusive integer rolls and truncations. */
 export function nativeMinionProposal(master,radius,random=Math.random){
+ master={x:Math.trunc(master.x),y:Math.trunc(master.y),z:Math.trunc(master.z)};
  const minimum=Math.trunc(radius)+data.minimumSpawnRadius,maximum=data.spawnOffsetRadius;
  const integer=(a,b)=>a+Math.floor(random()*(b-a+1));
  let x=integer(minimum*2,maximum*2),y=integer(x,maximum*2);y=Math.trunc(Math.sqrt(y*y-x*x));
@@ -32,7 +33,10 @@ export function syncNativeMinions(session,now,random=Math.random){
    const point=nativeMinionProposal(nativeActorPoint(master),config.collisionRadius,random);
    const actor=buildMob(getZone(hunt.zone),data.actors[entry.id].definition,{now,random,champion:null,className:session.game.gameClass.stats.name});
    Object.assign(actor,{instanceId:`${master.instanceId}:private:${slot}`,sourceRoom:master.sourceRoom,sourceFloor:master.sourceFloor,sourceSlot:`private:${key}:${slot}`,sourceMinion:{owner:key,slot,masterId:master.mobId},sourcePosition:point,sourcePlacement:'minion',sourceRespawnMs:entry.respawnMs,sourceRespawnRandomMs:0,ai:null,aggro:false,buffs:[]});
-   if(!placeNativeActor(actor,point)||!nativeStaticSight(nativeActorPoint(master),nativeActorPoint(actor),{allowed:nativeGroundAllowed})){family.missing[slot]='source_minion_ground_unavailable';continue;}
+   if(!placeNativeActor(actor,point)){family.missing[slot]='source_minion_ground_unavailable';continue;}
+   // initializeNpc calls spawnMe directly, bypassing Spawn.java's correction.
+   actor.native.z=point.z;
+   if(!nativeStaticSight(nativeActorPoint(master),nativeActorPoint(actor),{allowed:nativeGroundAllowed})){family.missing[slot]='source_minion_ground_unavailable';continue;}
    bucket.mobs.push(actor);actors.push(actor);
   }
  }

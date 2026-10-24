@@ -65,10 +65,10 @@ test('all 724 reviewed source slots fit one saved bank and survive departure wit
  const s=hero();const now=enter(s);
  // Load each reviewed source neighborhood; this audits persistence, not movement.
  for(const room of nativeFieldRooms(id)){const p=room.spawns[0];if(p){activateNativeField(s.game.hunt,worldGeodata.point(p),now);ensureHunt(s,now);quiet(s);}}
- const all=actors(s);assert.equal(all.length,724);const remembered=all.map(m=>({id:m.instanceId,room:m.sourceRoom,slot:m.sourceSlot}));const marked=all.find(m=>m.sourceFloor===2);marked.currentHp=Math.floor(marked.hp/2);const hp=marked.currentHp;
+ const all=actors(s);assert.equal(all.filter(m=>!m.sourceMinion).length,724);const remembered=all.map(m=>({id:m.instanceId,room:m.sourceRoom,slot:m.sourceSlot}));const marked=all.find(m=>m.sourceFloor===2);marked.currentHp=Math.floor(marked.hp/2);const hp=marked.currentHp;
  assert.ok(Buffer.byteLength(JSON.stringify(s.game.hunt.field))<2*1024*1024);
  assert.equal(worldAction(s,{action:'quick_travel',city:'goddard'},now+1).ok,true);assert.equal(worldAction(s,{action:'walk_location',location:id},now+2).ok,true);advanceWorld(s,s.game.world.walkHome.until+1);quiet(s);
- const restored=new Map(actors(s).map(m=>[m.instanceId,m]));assert.equal(restored.size,724);for(const m of remembered){assert.equal(restored.get(m.id).sourceRoom,m.room);assert.equal(restored.get(m.id).sourceSlot,m.slot);}assert.equal(restored.get(marked.instanceId).currentHp,hp);
+ const restored=new Map(actors(s).map(m=>[m.instanceId,m]));assert.equal(restored.size,all.length);for(const m of remembered){assert.equal(restored.get(m.id).sourceRoom,m.room);assert.equal(restored.get(m.id).sourceSlot,m.slot);}assert.equal(restored.get(marked.instanceId).currentHp,hp);
 });
 
 test('Monastery source provenance, physical ascent, saved banks and return stay in one world space',async()=>{

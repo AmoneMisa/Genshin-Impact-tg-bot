@@ -33,6 +33,7 @@ for(const [id,masters] of Object.entries(data.zones))test(`${id}: all automatic 
   s.game.hunt={zone:id,field:{native:{version:1,z:master.native.z},x:master.x,y:master.y,mobs:[master],rooms:{},respawns:[]}};
   syncNativeMinions(s,NOW,random);const family=s.game.hunt.field.native.minionFamilies[`${room.id}:${sourceSlot}`],children=actors(s).filter(m=>m.sourceMinion),quota=data.masters[npcId].entries.reduce((n,e)=>n+e.count,0);
   assert.equal(children.length+Object.keys(family.missing).length,quota);assert.ok(children.every(m=>data.masters[npcId].entries.some(e=>e.id===m.mobId)));assert.ok(children.every(m=>getMobDef(getZone(id),m.mobId)&&nativeMobMovement(m)));
+  assert.ok(children.every(m=>m.native.z===master.native.z&&m.sourcePosition.z===master.native.z),'direct minion spawn preserves the original leader Z');
   syncNativeMinions(s,NOW+1e6,random);assert.equal(actors(s).filter(m=>m.sourceMinion).length,children.length);
  }
 });
