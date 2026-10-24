@@ -45,6 +45,14 @@ test('public snapshots never capture instanced populations or ship decks',()=>{
  const s=hero('devils-isle');assert.ok(changeHuntFloor(s,4,{now:NOW}).ok);saveNativeField(s,NOW);assert.equal(s.game.world.nativeFields,undefined);
 });
 
+test('returning from a voyage or Seed strips old private floors without changing the active session',()=>{
+ for(const [id,floor]of [['devils-isle',4],['seed-of-infinity',2],['seed-of-destruction',2]]){
+  const s=hero(id),field=s.game.hunt.field;field.floorStates={...field.floorStates,[floor]:{mobs:[{instanceId:'private-leak',currentHp:7}],room:'r0c0',rooms:{}}};
+  saveNativeField(s,NOW);assert.equal(field.floorStates[floor].mobs[0].instanceId,'private-leak');s.game.hunt=null;
+  assert.ok(enterHuntField(s,id,{now:NOW+1000}).ok);assert.ok(restoreNativeField(s,id,NOW+1000));assert.equal(s.game.hunt.field.floorStates[floor],undefined);
+ }
+});
+
 test('a different arrival floor keeps older floors and pending respawns',()=>{
  const s=hero('tower-of-insolence'),f=s.game.hunt.field,m=f.mobs[0];m.currentHp=7;
  f.respawns.push({room:f.room,sourceSlot:123,mobId:m.mobId,at:NOW+120000});const pending=structuredClone(f.respawns);

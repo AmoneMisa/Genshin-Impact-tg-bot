@@ -1,20 +1,25 @@
 import {deflateSync,inflateSync} from 'node:zlib';
 import {roomById} from '../hunt/huntRooms.js';
 import {getZone} from '../hunt/huntMobs.js';
+import {LOCATIONS} from '../../../template/worldMap.js';
+
+const publicFloor=(id,floor)=>id==='devils-isle'?floor<4:LOCATIONS.find(l=>l.id===id)?.access?.kind==='seed-instance'?floor===1:true;
+const publicFloors=(id,banks)=>Object.fromEntries(Object.entries(banks||{}).filter(([floor])=>publicFloor(id,Number(floor))));
 
 /** Public-space snapshots survive every Atlas departure, including underground links.
  * Instanced populations belong to their instance and must never enter this cache.
  */
 export function saveNativeField(session,now,hunt=session.game.hunt){
- if(!hunt?.field||!getZone(hunt.zone)||getZone(hunt.zone).instance||session.game.world?.instanceId||hunt.zone==='devils-isle'&&hunt.field.floor>=4)return;
+ if(!hunt?.field||!getZone(hunt.zone)||getZone(hunt.zone).instance||session.game.world?.instanceId||!publicFloor(hunt.zone,hunt.field.floor||1))return;
  const banks=session.game.world.nativeFields||={};
- banks[hunt.zone]={at:now,data:deflateSync(Buffer.from(JSON.stringify(hunt.field))).toString('base64')};
+ banks[hunt.zone]={at:now,data:deflateSync(Buffer.from(JSON.stringify({...hunt.field,floorStates:publicFloors(hunt.zone,hunt.field.floorStates)}))).toString('base64')};
 }
 export function restoreNativeField(session,id,now){
  if(getZone(id)?.instance)return false;
  const saved=session.game.world.nativeFields?.[id];if(!saved)return false;
  let field;try{field=JSON.parse(inflateSync(Buffer.from(saved.data,'base64'),{maxOutputLength:2*1024*1024}).toString());}catch{return false;}
- if(id==='devils-isle'&&field.floor>=4)return false;
+ if(!publicFloor(id,field.floor||1))return false;
+ field.floorStates=publicFloors(id,field.floorStates);
  if(!roomById(getZone(id),field.room,field.floor||1))return false;
  const entry=session.game.hunt.field;
  if((field.floor||1)!==(entry.floor||1)){
