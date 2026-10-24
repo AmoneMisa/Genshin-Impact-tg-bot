@@ -91,7 +91,7 @@ export function ensureHunt(session, now = Date.now(),random=Math.random) {
                 // population would create distant actors and adapted positions
                 // where original ground placement failed.
                 field.mobs=[];field.rooms={};field.respawns=[];
-                field.native.loaded={};field.native.missing={};field.native.randomGroups={};
+                field.native.loaded={};field.native.missing={};field.native.randomGroups={};field.native.minionFamilies={};
                 stopHuntAction(field,now);syncResident(session,game.hunt,now,random);
                 const previous=new Map(old.map(m=>[m.sourceRoom+':'+m.sourceSlot,m]));
                 for(const bank of [field,...Object.values(field.rooms)])for(const m of bank.mobs){
@@ -101,6 +101,13 @@ export function ensureHunt(session, now = Date.now(),random=Math.random) {
                     // NPC back to its spawn point when the island phase changes.
                     if(saved.native){m.x=saved.x;m.y=saved.y;m.native.z=saved.native.z;}
                     if(saved.currentHp>0)m.buffs=saved.buffs;
+                }
+                // Reconciliation restores stable master IDs. Bind each newly
+                // attempted family to that ID so polling cannot reroll omissions.
+                for(const bank of [field,...Object.values(field.rooms)])for(const m of bank.mobs){
+                    if(m.sourceMinion)continue;
+                    const family=field.native.minionFamilies[m.sourceRoom+':'+m.sourceSlot];
+                    if(family)family.epoch=m.instanceId;
                 }
             }else{
                 for(const id of new Set([field.room,...Object.keys(field.rooms||{})])){

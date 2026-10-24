@@ -10,6 +10,7 @@ import {LOCATION_LEVELS} from '../template/locationLevels.js';
 import {LOCATIONS} from '../template/worldMap.js';
 import registry from '../template/nativeFieldPilot.js';
 import source from '../template/hellboundAccess.js';
+import minions from '../template/nativeMinions.js';
 import change from '../functions/game/player/changePlayerGameClass.js';import update from '../functions/game/player/updatePlayerStats.js';
 const NOW=1800000000000,gate=source.npcs.find(n=>n.id==='hellbound:heine-gate');
 const actors=s=>nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs||[]);
@@ -27,7 +28,8 @@ test('Hellbound registers every original surface slot and keeps phase capacity s
 test('an admitted gate enters original XYZ and active NPCs directly in the same public native field',()=>{
  const {s}=fixture();enter(s);const dto=worldState(s,NOW);assert.equal(dto.nativeField.zone,'hellbound');assert.deepEqual(dto.nativeField.point,source.entry);assert.equal(nativeIsland(s),'hellbound');assert.ok(dto.nativeField.actors.length>0&&dto.nativeField.actors.length<=48);assert.equal(s.game.inventory.gold,1e6);
  const active=new Set(LOCATION_LEVELS.hellbound.floors[0].rooms.flatMap(r=>populationSlots(r,s,'hellbound').map(p=>r.id+':'+p.slot)));
- assert.ok(actors(s).every(m=>m.native&&active.has(m.sourceRoom+':'+m.sourceSlot)));assert.equal(new Set(actors(s).map(m=>m.sourceRoom+':'+m.sourceSlot)).size,actors(s).length);
+ assert.ok(actors(s).every(m=>m.native&&active.has(m.sourceMinion?.owner||m.sourceRoom+':'+m.sourceSlot)));assert.equal(new Set(actors(s).map(m=>m.sourceRoom+':'+m.sourceSlot)).size,actors(s).length);
+ for(const m of actors(s).filter(m=>m.sourceMinion))assert.ok(minions.masters[m.sourceMinion.masterId].entries.some(e=>e.id===m.mobId));
  assert.equal(worldAction(s,{action:'native_walk_city',city:'heine'},NOW).ok,false);assert.equal(worldAction(s,{action:'hellbound_walk',npc:'hellbound:casian'},NOW).reason,'hellbound_ground_required');
  const location=LOCATIONS.find(l=>l.id==='hellbound');assert.equal(regionAccessBlock(s,location,{walking:true}),null);delete s.game.world.nativeIsland;assert.equal(regionAccessBlock(s,location,{walking:true}),'hellbound_portal_required');
 });
