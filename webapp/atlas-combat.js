@@ -23,8 +23,8 @@ export function createAtlasCombat(root,action,{mapAvailable=true}={}){
   else if(button.hasAttribute('data-native-step')&&state?.field?.native){
    action('/api/world/action',{action:'native_step',direction:button.dataset.nativeStep});
   }
-  else if(button.hasAttribute('data-native-floor'))action('/api/world/action',{action:'native_floor',floor:Number(button.dataset.nativeFloor)});
-  else if(button.hasAttribute('data-native-guide'))action('/api/world/action',{action:'native_guide'});
+  else if(button.hasAttribute('data-native-floor'))action('/api/world/action',{action:'native_floor',floor:Number(button.dataset.nativeFloor),routeId:button.dataset.nativeRoute});
+  else if(button.hasAttribute('data-native-guide'))action('/api/world/action',{action:'native_guide',npcId:Number(button.dataset.nativeGuide)});
   else if(button.hasAttribute('data-shots'))action('/api/shots/auto',{kind:button.dataset.shots,enabled:button.dataset.shots!==state.shots.selected||!state.shots.enabled});
   else if(button.hasAttribute('data-supply')){
    const item=state.supplies.rows.find(p=>p.slot===button.dataset.supply);
@@ -51,12 +51,12 @@ export function createAtlasCombat(root,action,{mapAvailable=true}={}){
   host.querySelector('[data-native-skills]').innerHTML=hotbar(p.skills,{className:p.className,chosen:p.hotbar.filter(i=>typeof i==='number').slice(0,8)});
   host.querySelector('[data-native-supplies]').innerHTML=combatSuppliesHtml(state,{idPrefix:'atlas'});
   const routes=state.field.native.levels||[],levels=host.querySelector('[data-native-levels]'),buttons=host.querySelector('[data-native-level-buttons]');
-  const guide=state.field.native.guide,guideHost=host.querySelector('[data-native-guide]');guideHost.hidden=!guide;guideHost.className=guide?'ui-control-row':'';
-  const guideKey=guide?guide.name+':'+guide.near+':'+alive:'';
-  if(guideHost.dataset.key!==guideKey){if(guideHost.contains(document.activeElement))levels.querySelector('summary').focus({preventScroll:true});guideHost.innerHTML=guide?`<button type="button" class="ui-button" data-native-guide ${guide.near||!alive?'disabled':''}>Подойти к ${escapeHtml(guide.name)}</button>`:'';guideHost.dataset.key=guideKey;}
-  levels.hidden=routes.length<2;if(levels.hidden)levels.open=false;levels.querySelector('summary').textContent='Уровни локации · '+state.field.native.floor;
-  const routeKey=routes.map(r=>r.floor+':'+r.title+':'+r.enabled+':'+alive).join('|');
-  if(routeKey!==levelsKey){if(buttons.contains(document.activeElement))levels.querySelector('summary').focus({preventScroll:true});buttons.innerHTML=routes.map(r=>`<button type="button" class="ui-button" data-native-floor="${r.floor}" ${!alive||!r.enabled?'disabled':''}>${escapeHtml(r.title)}</button>`).join('');levelsKey=routeKey;}
+  const guides=state.field.native.guides||(state.field.native.guide?[state.field.native.guide]:[]),guideHost=host.querySelector('[data-native-guide]');guideHost.hidden=!guides.length;guideHost.className=guides.length?'ui-control-row':'';
+  const guideKey=JSON.stringify(guides)+':'+alive;
+  if(guideHost.dataset.key!==guideKey){if(guideHost.contains(document.activeElement))levels.querySelector('summary').focus({preventScroll:true});guideHost.innerHTML=guides.map(guide=>`<button type="button" class="ui-button" data-native-guide="${guide.npcId}" ${guide.near||!alive?'disabled':''}>Подойти к ${escapeHtml(guide.name)}</button>`).join('');guideHost.dataset.key=guideKey;}
+  levels.hidden=routes.length<2&&!guides.length;if(levels.hidden)levels.open=false;levels.querySelector('summary').textContent=state.field.native.outside?'Вход в локацию':'Уровни локации · '+state.field.native.floor;
+  const routeKey=JSON.stringify(routes)+':'+alive;
+  if(routeKey!==levelsKey){if(buttons.contains(document.activeElement))levels.querySelector('summary').focus({preventScroll:true});buttons.innerHTML=routes.map(r=>`<button type="button" class="ui-button" data-native-floor="${r.floor}" ${r.routeId?`data-native-route="${escapeHtml(r.routeId)}"`:''} ${!alive||!r.enabled?'disabled':''}>${escapeHtml(r.title)}</button>`).join('');levelsKey=routeKey;}
   host.querySelector('[data-last-loot]').hidden=!state.lastLoot;
   if(focusSelector)host.querySelector(focusSelector)?.focus({preventScroll:true});
  }

@@ -98,6 +98,7 @@ export function activateNativeField(hunt,point,now){
   });
  }
  Object.assign(f,{x:point.x/ROOM_SIZE,y:point.y/ROOM_SIZE,path:[],walls:[],moveAt:now,seenAt:now});
+ const entrance=landmarks.zones[hunt.zone]?.entrance;f.native.outside=Boolean(entrance&&Math.hypot(point.x-entrance.point.x,point.y-entrance.point.y,point.z-entrance.point.z)<=NATIVE_FIELD_RADIUS&&nativeStaticSight(point,entrance.point,{allowed:nativeGroundAllowed}));
  f.native.z=point.z;f.native.nativeIsland=pilot.fields[hunt.zone]?.island||null;delete f.native.journey;delete f.native.nativeTrail;delete f.native.floorResume;
  const nearest=nativeFieldRooms(hunt.zone).flatMap(r=>(r.spawns||[]).map(s=>({room:r.id,distance:nativeSpawnDistance(point,s)}))).sort((a,b)=>a.distance-b.distance)[0];
  if(nearest&&nearest.room!==f.room){
@@ -215,7 +216,7 @@ export function nativeVisibleActors(hunt){
 }
 export function nativeFieldDto(session){
  const f=session.game.hunt?.field,point=nativeFieldPoint(session);if(!point)return null;
- return {zone:session.game.hunt.zone,point,target:f.target,ground:nativeInteriorMap(session.game.hunt.zone,point,f.native.sourceFloor),...(pilot.fields[session.game.hunt.zone]?.peacefulViewSize&&f.native.sourceFloor!==1?{viewSize:pilot.fields[session.game.hunt.zone].peacefulViewSize}:{}),...(session.game.hunt.zone==='hellbound'?{doors:nativeDoorStates(f.populationStage)}:{}),
+ return {zone:session.game.hunt.zone,point,target:f.target,ground:f.native.outside?null:nativeInteriorMap(session.game.hunt.zone,point,f.native.sourceFloor),...(pilot.fields[session.game.hunt.zone]?.peacefulViewSize&&f.native.sourceFloor!==1?{viewSize:pilot.fields[session.game.hunt.zone].peacefulViewSize}:{}),...(session.game.hunt.zone==='hellbound'?{doors:nativeDoorStates(f.populationStage)}:{}),
   actors:nativeVisibleActors(session.game.hunt).map(m=>({
    ...nativeActorPoint(m),id:m.mobId,instanceId:m.instanceId,name:m.name,level:m.level,hp:m.hp,currentHp:m.currentHp,aggressive:Boolean(m.aggressive),social:Boolean(m.clanHelpRange&&m.socialClans?.length),aggro:Boolean(m.aggro)
   }))};

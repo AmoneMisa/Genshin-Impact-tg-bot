@@ -104,6 +104,34 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  finishRoad=true;
  await page.waitForResponse(async r=>r.url().includes('/api/world?live=1')&&(await r.json()).world.nativeField?.point.x===endpoint.x);
  }else await page.locator('.atlas-combat:not([hidden])').waitFor();
+ if(pilot.fields[zone].npcEntry){
+  await page.locator('[data-native-levels]>summary').click();
+  const kept=nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.currentHp>0);assert.ok(kept);kept.currentHp=Math.floor(kept.hp/2);const remembered={id:kept.instanceId,hp:kept.currentHp};
+  const teleport=async(id,list,index)=>{
+   const button=page.locator(`[data-native-route="${id}:${list}:${index}"]`);assert.equal(await button.isEnabled(),true);
+   await button.focus();assert.equal(await button.evaluate(n=>n===document.activeElement),true);
+   const [response]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.routeId===`${id}:${list}:${index}`),button.click()]);assert.equal(response.status(),200);
+   assert.equal(s.game.hunt.field.native.journey,undefined);assert.equal(s.game.inventory.gold,startingGold);
+  };
+  const approach=async(id)=>{
+   const button=page.locator(`button[data-native-guide="${id}"]`);if(await button.isDisabled())return;
+   const [response]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.npcId===id),button.click()]);assert.equal(response.status(),200);
+   const trip=s.game.hunt.field.native.journey;assert.ok(trip.native.remaining>0);const end=trip.native.path.at(-1);s.game=JSON.parse(JSON.stringify(s.game));finishRoad=true;
+   await page.waitForResponse(async r=>{if(!r.url().includes('/api/world?live=1'))return false;const p=(await r.json()).world.nativeField?.point;return p&&['x','y','z'].every(k=>p[k]===end[k]);});
+   await page.waitForFunction(id=>document.querySelector(`button[data-native-guide="${id}"]`)?.disabled,id);
+  };
+  await teleport(30483,'SCRIPT',0);assert.equal(s.game.hunt.field.native.outside,false);
+  await approach(30487);await teleport(30487,'OTHER',0);assert.equal(s.game.hunt.field.native.sourceFloor,2);
+  assert.equal(await page.locator('[data-native-route="30486:OTHER:0"]').isDisabled(),true);
+  await page.screenshot({path:path.join(out,`native-npcs-${width}${noCanvas?'-no-canvas':noImages?'-no-images':''}.png`)});
+  await approach(30486);await teleport(30486,'OTHER',0);assert.equal(s.game.hunt.field.native.sourceFloor,3);
+  assert.equal(await page.locator('[data-native-route="31843:OTHER:1"]').isDisabled(),true);
+  const ground=worldState(s,now).nativeField?.ground;assert.ok(ground?.asset);if(!noCanvas)assert.ok(requests.includes(ground.asset));
+  await teleport(31843,'OTHER',0);await approach(30485);await teleport(30485,'OTHER',0);await approach(30484);await teleport(30484,'OTHER',0);
+  assert.equal(s.game.hunt.field.native.outside,true);assert.equal(nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.instanceId===remembered.id).currentHp,remembered.hp);
+  assert.equal(await page.locator('[data-native-levels]').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
+  await page.locator('[data-native-levels]>summary').click();
+ }else{
  if(pilot.fields[zone].peacefulEntry){
   const {default:levels}=await import('../../template/nativeLevelRoutes.js');
   await page.locator('[data-native-levels]>summary').click();await page.locator('[data-native-floor="1"]').click();finishRoad=true;
@@ -176,6 +204,7 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
   assert.equal(s.game.hunt.field.native.sourceFloor,1);await page.locator('[data-native-levels]>summary').click();
   assert.equal(await page.locator('.hunt-overlay').count(),0);assert.equal(await page.locator('[data-native-levels]').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  }
+ }
  // Combat and world polling share the same saved actors, even when movement is requested again.
  const before=worldState(s,now).player.worldPoint;
  if(noCanvas){
@@ -195,7 +224,7 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
   }
   assert.ok(goal);const [moveResponse]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('canvas').click({position:{x:box.width/2+(goal.x-before.x)*box.width/14000,y:box.height/2+(goal.y-before.y)*box.width/14000}})]);const movePayload=await moveResponse.json();assert.equal(moveResponse.status(),200,JSON.stringify({reason:movePayload.reason,visited:movePayload.visited,goal,requested:moveResponse.request().postDataJSON().point,from:before}));now+=3000;
  }
- await page.waitForTimeout(2100);assert.equal(s.game.hunt.kills,1);assert.equal(await page.locator('.hunt-overlay').count(),0);
+ await page.waitForTimeout(2100);assert.equal(s.game.hunt.kills,pilot.fields[zone].npcEntry?0:1);assert.equal(await page.locator('.hunt-overlay').count(),0);
  const after=worldState(s,now).player.worldPoint;assert.ok(Math.hypot(after.x-before.x,after.y-before.y)>0);
  assert.equal(await page.locator('.atlas-combat').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  const ground=worldState(s,now).nativeField?.ground;
@@ -221,5 +250,5 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  await page.locator('[data-close]').click();assert.equal(await page.locator('.atlas-panel').count(),0);assert.equal(await page.locator('[inert],dialog[open]').count(),0);
  assert.deepEqual(errors,[]);assert.equal(requests.some(p=>p.endsWith('.gz')||p.includes('l2j-geodata')),false);
  const requestsAtClose=requests.length;await page.waitForTimeout(2200);assert.equal(requests.length,requestsAtClose,'closing stops world and combat requests');
- await page.close();console.log(`PASS native field ${zone} ${width}${noCanvas?' no Canvas':noImages?' no images':''}: same Atlas/canvas, original actors, combat/reward, walking, ${island?'port':'city'} return, focus and cleanup`);
+ await page.close();console.log(`PASS native field ${zone} ${width}${noCanvas?' no Canvas':noImages?' no images':''}: same Atlas/canvas, original actors, ${pilot.fields[zone].npcEntry?'public NPC routes and saved HP':'combat/reward'}, walking, ${island?'port':'city'} return, focus and cleanup`);
 }}finally{await browser.close();}

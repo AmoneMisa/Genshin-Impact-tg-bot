@@ -13,7 +13,7 @@ import {geoCell,geoRegionId,worldGeodata} from '../../functions/game/world/l2jGe
 import {nativeStep} from '../../functions/game/world/nativeNavigation.js';
 const file='template/nativeInteriorMaps.js',previous=fs.existsSync(file)?(await import(new URL('../../template/nativeInteriorMaps.js',import.meta.url))).default:null;
 const requested=process.argv.slice(2),ids=requested.length?requested:['antharas-lair','stakato-nest'],maps={...previous?.maps};
-const requests=ids.flatMap(id=>[{id,key:id},...(pilot.fields[id]?.separateFloorMaps?Object.keys(landmarks.zones[id]||{}).map(floor=>({id,key:id+':f'+floor,sourceFloor:Number(floor)})):[])]);
+const requests=ids.flatMap(id=>[{id,key:id},...(pilot.fields[id]?.separateFloorMaps?Object.keys(landmarks.zones[id]||{}).filter(floor=>Number.isInteger(Number(floor))).map(floor=>({id,key:id+':f'+floor,sourceFloor:Number(floor)})):[])]);
 for(const {id,key,sourceFloor} of requests){
  const allSlots=nativeFieldRooms(id).flatMap(r=>r.spawns||[]),allMarkers=Object.values(landmarks.zones[id]||{});
  const slots=nativeFieldRooms(id).filter(r=>!sourceFloor||r.sourceFloor===sourceFloor).flatMap(r=>r.spawns||[]),fixed=slots.filter(s=>s.coordinateSource==='point'),areas=slots.filter(s=>s.coordinateSource!=='point');

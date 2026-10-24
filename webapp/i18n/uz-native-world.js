@@ -1,4 +1,10 @@
 export default {
+ 'Башня Крумы · 3 этаж':'Kruma minorasi · 3-qavat',
+ 'Подойти к {2}':'{2} yoniga borish',
+ 'Вход в локацию':'Hududga kirish',
+ 'К северному залу':'Shimoliy zalga',
+ 'Мозелла пропускает персонажей до 55 уровня включительно.':'Mozella 55-darajagacha bo‘lgan qahramonlarni o‘tkazadi.',
+ 'Вход к Ядру доступен через раздел эпиков в Атласе.':'Core huzuriga Atlasdagi epiklar bo‘limi orqali kirish mumkin.',
  'Подойти к {1}':'{1} yoniga borish',
  'Вы уже рядом с хранителем портала.':'Siz allaqachon darvozabon yonidasiz.',
  'Завершите текущее действие перед разговором.':'Suhbatdan oldin joriy amalni yakunlang.',

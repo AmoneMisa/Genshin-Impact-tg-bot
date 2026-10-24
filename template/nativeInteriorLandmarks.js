@@ -106,6 +106,76 @@ export default {
           "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
         }
       }
+    },
+    "cruma-tower": {
+      "entrance": {
+        "point": {
+          "x": 17296,
+          "y": 114176,
+          "z": -3439
+        },
+        "source": {
+          "type": "SOURCE_NPC",
+          "id": 30483,
+          "x": 17296,
+          "y": 114176,
+          "z": -3439,
+          "file": "spawns/Others/20_21.xml",
+          "sha256": "3fb208271643f2d7f63f081f797169555dddc72d23a893759e01d28d83ce5737",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+        }
+      },
+      "1": {
+        "point": {
+          "x": 17877,
+          "y": 113970,
+          "z": -11672
+        },
+        "source": {
+          "type": "SOURCE_NPC",
+          "id": 30487,
+          "x": 17877,
+          "y": 113970,
+          "z": -11672,
+          "file": "spawns/Others/20_21.xml",
+          "sha256": "3fb208271643f2d7f63f081f797169555dddc72d23a893759e01d28d83ce5737",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+        }
+      },
+      "2": {
+        "point": {
+          "x": 17725,
+          "y": 108220,
+          "z": -9057
+        },
+        "source": {
+          "type": "SOURCE_NPC",
+          "id": 30485,
+          "x": 17725,
+          "y": 108220,
+          "z": -9057,
+          "file": "spawns/Others/20_21.xml",
+          "sha256": "3fb208271643f2d7f63f081f797169555dddc72d23a893759e01d28d83ce5737",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+        }
+      },
+      "3": {
+        "point": {
+          "x": 17719,
+          "y": 115430,
+          "z": -6582
+        },
+        "source": {
+          "type": "SOURCE_NPC",
+          "id": 31843,
+          "x": 17719,
+          "y": 115430,
+          "z": -6582,
+          "file": "spawns/Others/20_21.xml",
+          "sha256": "3fb208271643f2d7f63f081f797169555dddc72d23a893759e01d28d83ce5737",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+        }
+      }
     }
   }
 };

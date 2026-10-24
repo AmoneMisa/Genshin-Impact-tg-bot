@@ -151,8 +151,8 @@ test('hunting areas join through their source town hub and retain HP, IDs, visit
  assert.equal(s.game.hunt.kills,0);assert.equal(JSON.stringify(worldState(s,NOW+5000000)).includes('nativeFields'),false);
 });
 test('adapted field departure still requires the actual entrance, no aggro, the right region and existing access rules',async()=>{
- const s=hero();s.game.world.city='dion';assert.equal(worldAction(s,{action:'walk_location',location:'devils-isle'},NOW).ok,false);
- assert.ok(worldAction(s,{action:'walk_location',location:'cruma-tower'},NOW).ok);finish(s,NOW+1000000);
+ const s=hero();s.game.world.city='heine';assert.equal(worldAction(s,{action:'walk_location',location:'devils-isle'},NOW).ok,false);
+ assert.ok(worldAction(s,{action:'walk_location',location:'garden-of-eva'},NOW).ok);finish(s,NOW+1000000);
  await getHuntState(s,NOW+1000000);const f=s.game.hunt.field;quiet(f);Object.assign(f,{x:.2,y:.2});
  assert.equal(worldAction(s,{action:'walk_location',location:'silent-valley'},NOW+1000000).reason,'entrance_required');
  Object.assign(f,{x:.5,y:.95});

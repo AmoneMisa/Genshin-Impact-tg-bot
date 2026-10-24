@@ -247,16 +247,16 @@ export function worldAction(session,body,now=Date.now()){
     if(body.action==='native_floor'){
         const f=session.game.hunt?.field;
         if(w.mode!=='location'||!f?.native||w.instanceId||session.game.hunt.zone!==w.location)return {ok:false,reason:'invalid_floor'};
-        const teleport=nativeFloorTeleport(session,Number(body.floor),now);
+        const teleport=nativeFloorTeleport(session,Number(body.floor),now,body.routeId);
         const blocked=l2ActionBlock(session,{move:!teleport},now);if(blocked)return {ok:false,reason:blocked};
-        if(teleport){if(!teleport.ok)return teleport;stopHuntAction(f,now);activateNativeField(session.game.hunt,teleport.point,now);f.native.sourceFloor=teleport.floor;w.channel=null;delete w.nativeResume;session.needsSave=true;return {ok:true};}
+        if(teleport){if(!teleport.ok)return teleport;stopHuntAction(f,now);activateNativeField(session.game.hunt,teleport.point,now);f.native.sourceFloor=teleport.floor;f.native.outside=teleport.outside;w.channel=null;delete w.nativeResume;session.needsSave=true;return {ok:true};}
         const result=nativeLevelTravel(session,Number(body.floor),now,getSpeed(session)*l2MoveMultiplier(session,now));if(!result.ok)return result;
         stopHuntAction(f,now);f.native.journey=result.trip;f.seenAt=now;w.channel=null;return {ok:true};
     }
     if(body.action==='native_guide'){
         const f=session.game.hunt?.field;if(w.mode!=='location'||!f?.native||w.instanceId)return {ok:false,reason:'unknown_npc'};
         const blocked=l2ActionBlock(session,{move:true},now);if(blocked)return {ok:false,reason:blocked};
-        const result=nativeGuideTravel(session,now,getSpeed(session)*l2MoveMultiplier(session,now));if(!result.ok)return result;
+        const result=nativeGuideTravel(session,now,getSpeed(session)*l2MoveMultiplier(session,now),body.npcId);if(!result.ok)return result;
         stopHuntAction(f,now);f.native.journey=result.trip;f.seenAt=now;w.channel=null;return {ok:true};
     }
     if(body.action==='hellbound_route'){

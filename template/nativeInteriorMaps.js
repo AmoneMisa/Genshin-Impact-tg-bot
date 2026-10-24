@@ -305,6 +305,96 @@ export default {
       "files": {
         "spawns/Others/22_18.xml": "574125cae6f6af87df71e964fe0dc8260fa576e25202e7da3b9a55d5f454d41c"
       }
+    },
+    "cruma-tower": {
+      "asset": "/art/world/native/cruma-tower.svg",
+      "regions": {
+        "20_21": "c1d2701d44c920823b2d15540bc855c2dfdfeedbdb4ad17f25b28ca36c4e09e4"
+      },
+      "bounds": {
+        "x": 10832,
+        "y": 107408,
+        "w": 13712,
+        "h": 13392
+      },
+      "cells": 454850,
+      "layerCells": 605774,
+      "contours": 120,
+      "corners": 6114,
+      "bytes": 48293,
+      "sha256": "95921d7abb9a0b6950b0b147347d57f6bdd2bc43ac3144b1fdbc145df70a09c1",
+      "files": {
+        "spawns/Others/20_21.xml": "3fb208271643f2d7f63f081f797169555dddc72d23a893759e01d28d83ce5737"
+      }
+    },
+    "cruma-tower:f1": {
+      "zone": "cruma-tower",
+      "sourceFloor": 1,
+      "asset": "/art/world/native/cruma-tower-floor-1.svg",
+      "regions": {
+        "20_21": "c1d2701d44c920823b2d15540bc855c2dfdfeedbdb4ad17f25b28ca36c4e09e4"
+      },
+      "bounds": {
+        "x": 10832,
+        "y": 107408,
+        "w": 13712,
+        "h": 13392
+      },
+      "cells": 284439,
+      "layerCells": 284439,
+      "contours": 14,
+      "corners": 4190,
+      "bytes": 32698,
+      "sha256": "e55f936d784a3021d7937f0732db1227c8eb842a16a3603f9a146f4b4bbbd6a3",
+      "files": {
+        "spawns/Others/20_21.xml": "3fb208271643f2d7f63f081f797169555dddc72d23a893759e01d28d83ce5737"
+      }
+    },
+    "cruma-tower:f2": {
+      "zone": "cruma-tower",
+      "sourceFloor": 2,
+      "asset": "/art/world/native/cruma-tower-floor-2.svg",
+      "regions": {
+        "20_21": "c1d2701d44c920823b2d15540bc855c2dfdfeedbdb4ad17f25b28ca36c4e09e4"
+      },
+      "bounds": {
+        "x": 10832,
+        "y": 107408,
+        "w": 13712,
+        "h": 13392
+      },
+      "cells": 226937,
+      "layerCells": 226937,
+      "contours": 45,
+      "corners": 3032,
+      "bytes": 23805,
+      "sha256": "04751f90016f34eeb301a270da7ca12b9bd36848839e4d3066cbce87ef2cd234",
+      "files": {
+        "spawns/Others/20_21.xml": "3fb208271643f2d7f63f081f797169555dddc72d23a893759e01d28d83ce5737"
+      }
+    },
+    "cruma-tower:f3": {
+      "zone": "cruma-tower",
+      "sourceFloor": 3,
+      "asset": "/art/world/native/cruma-tower-floor-3.svg",
+      "regions": {
+        "20_21": "c1d2701d44c920823b2d15540bc855c2dfdfeedbdb4ad17f25b28ca36c4e09e4"
+      },
+      "bounds": {
+        "x": 10832,
+        "y": 107408,
+        "w": 13712,
+        "h": 13392
+      },
+      "cells": 70700,
+      "layerCells": 70700,
+      "contours": 26,
+      "corners": 701,
+      "bytes": 5946,
+      "sha256": "c53cf42763ab92fa4386faf38f0f6e377221332ed476f66236c1b0f9dbdcc0fe",
+      "files": {
+        "spawns/Others/20_21.xml": "3fb208271643f2d7f63f081f797169555dddc72d23a893759e01d28d83ce5737"
+      }
     }
   }
 };

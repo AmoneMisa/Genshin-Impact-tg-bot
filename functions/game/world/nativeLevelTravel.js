@@ -11,10 +11,10 @@ import {worldGeodata} from './l2jGeodata.js';
 const model=id=>data.geodataCommit===world.geodataCommit&&data.barriersSha256===world.barriersSha256?data.zones[id]:null;
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
 export function nativeLevelOptions(hunt){
- const source=model(hunt?.zone),point=nativeActorPoint(hunt?.field);if(!source||!point)return [];
- const port=nativeFloorPort(hunt),portals=nativePortOptions(hunt),choices=new Map(portals.map(p=>[p.floor,p]));
- for(const [floor,l] of Object.entries(source.levels))if(!choices.has(Number(floor))&&(!port||source.levels[hunt.field.native.sourceFloor]))choices.set(Number(floor),{floor:Number(floor),title:l.title,enabled:distance(point,l.to)>16});
- return [...choices.values()].sort((a,b)=>a.floor-b.floor);
+ const source=model(hunt?.zone),point=nativeActorPoint(hunt?.field);if(!point)return [];
+ const port=nativeFloorPort(hunt),portals=nativePortOptions(hunt),choices=[...portals];
+ for(const [floor,l] of Object.entries(source?.levels||{}))if(!choices.some(p=>p.floor===Number(floor))&&(!port||source.levels[hunt.field.native.sourceFloor]))choices.push({floor:Number(floor),title:l.title,enabled:distance(point,l.to)>16});
+ return choices.sort((a,b)=>a.floor-b.floor);
 }
 /** Rejoin only verified vertices. An inaccessible join never grants a floor switch. */
 export function nativeLevelTravel(session,floor,now,speed){

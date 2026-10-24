@@ -209,6 +209,44 @@ export default {
         ]
       }
     ],
+    "20751": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "20752",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "21039",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "20753": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "20754",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "21040",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
     "20767": [
       {
         "name": "Privates",
@@ -981,6 +1019,48 @@ export default {
     ]
   },
   "fields": {
+    "cruma-tower": {
+      "city": "dion",
+      "interior": true,
+      "floors": [
+        1,
+        2,
+        3
+      ],
+      "peacefulEntry": true,
+      "npcEntry": true,
+      "separateFloorMaps": true,
+      "fixedCount": 330,
+      "territoryCount": 0,
+      "randomGroupCount": 0,
+      "initialCapacity": 330,
+      "unavailableCount": 0,
+      "availableCapacity": 330,
+      "npcIds": [
+        "20136",
+        "20213",
+        "20214",
+        "20215",
+        "20216",
+        "20217",
+        "20218",
+        "20219",
+        "20220",
+        "20221",
+        "20222",
+        "20751",
+        "20753",
+        "21035",
+        "21036",
+        "21037",
+        "21038"
+      ],
+      "count": 330,
+      "unportedMinionTemplates": [
+        "20751",
+        "20753"
+      ]
+    },
     "ivory-tower": {
       "city": "oren",
       "interior": true,
@@ -2529,6 +2609,7 @@ export default {
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Others/20_21.xml": "3fb208271643f2d7f63f081f797169555dddc72d23a893759e01d28d83ce5737",
       "spawns/Oren/IvoryTower.xml": "cfbccd749dccb65226faff639603fc6de1b2e358b42389b9b03ee8c4581f607e",
       "spawns/Aden/TowerOfInsolence.xml": "06d8c63c7f15dd8f34aa0aeb269e33b3de88863cf34600d02250e889f46d653e",
       "spawns/Goddard/ImperialTomb.xml": "85df4c0d480833505a8d6318231350cce6a24cf7a8d23e5500f776f3f062e024",
@@ -2793,6 +2874,10 @@ export default {
       "runSpeed": 174.0,
       "attackRange": 40.0
     },
+    "20136": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
     "20146": {
       "runSpeed": 174.0,
       "attackRange": 40.0
@@ -2823,6 +2908,46 @@ export default {
     },
     "20206": {
       "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "20213": {
+      "runSpeed": 23.0,
+      "attackRange": 40.0
+    },
+    "20214": {
+      "runSpeed": 90.0,
+      "attackRange": 40.0
+    },
+    "20215": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "20216": {
+      "runSpeed": 90.0,
+      "attackRange": 40.0
+    },
+    "20217": {
+      "runSpeed": 23.0,
+      "attackRange": 40.0
+    },
+    "20218": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20219": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "20220": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "20221": {
+      "runSpeed": 20.0,
+      "attackRange": 40.0
+    },
+    "20222": {
+      "runSpeed": 110.0,
       "attackRange": 40.0
     },
     "20225": {
@@ -3373,6 +3498,14 @@ export default {
       "runSpeed": 174.0,
       "attackRange": 40.0
     },
+    "20751": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "20753": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
     "20767": {
       "runSpeed": 174.0,
       "attackRange": 40.0
@@ -3663,6 +3796,22 @@ export default {
     },
     "21022": {
       "runSpeed": 174.0,
+      "attackRange": 40.0
+    },
+    "21035": {
+      "runSpeed": 155.0,
+      "attackRange": 40.0
+    },
+    "21036": {
+      "runSpeed": 90.0,
+      "attackRange": 40.0
+    },
+    "21037": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "21038": {
+      "runSpeed": 140.0,
       "attackRange": 40.0
     },
     "21061": {
