@@ -59,4 +59,3 @@ if __name__=='__main__':
   floor['npcs']=[{'id':str(p['npcId']),'name':p['name'],'sourcePosition':p['point']} for p in ports.get(floor['number'],[])]
  model['floors'][2]['title']='Р‘Р°С€РЅСЏ РљСЂСѓРјС‹ В· 3 СЌС‚Р°Р¶'
  Path('template/location-levels/cruma-tower.js').write_text('// Imported from pinned High Five sources; local grids are adapted.\nexport default '+json.dumps(model,ensure_ascii=False,separators=(',',':'))+';\n',encoding='utf8')
-
