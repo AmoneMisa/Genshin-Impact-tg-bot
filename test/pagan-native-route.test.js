@@ -6,7 +6,21 @@ import {levelTransitions,locationLevel} from '../functions/game/hunt/locationLev
 import {getHuntState} from '../miniapp/hunt.js';
 import change from '../functions/game/player/changePlayerGameClass.js';
 import update from '../functions/game/player/updatePlayerStats.js';
+import access from '../template/paganAccess.js';
 const NOW=1800000000000;
+test('Pagan source keeps both mirror NPCs, exact door passes and an explicit unresolved church drop',()=>{
+ assert.deepEqual(access.mirrors[32039].from,{x:34842,y:-49756,z:-763});
+ assert.deepEqual(access.mirrors[32039].to,{x:-12766,y:-35840,z:-10856});
+ assert.deepEqual(access.mirrors[32040].from,{x:-11986,y:-35903,z:-10857});
+ assert.deepEqual(access.mirrors[32040].to,{x:36640,y:-51218,z:718});
+ assert.deepEqual(access.doors.map(d=>[d.npcId,d.doorIds,d.anyCarriedItem]),[
+  [32034,[19160001],[8064,8065,8067]],[32035,[19160001],[]],
+  [32036,[19160010,19160011],[8067]],[32037,[19160010,19160011],[]]
+ ]);
+ assert.ok(access.doors.every(d=>d.openMs===10000&&!d.consumeItem&&!d.worldScenarioImplemented));
+ assert.equal(access.churchDrop.sourcePosition,null);assert.equal(access.churchDrop.implementedInNativeWorld,false);
+ for(const npc of Object.values(access.npcs))assert.equal(npc.source.sha256,access.source.files[npc.source.file]);
+});
 function hero(){const s={userId:1,game:{stats:{lvl:85},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:'rune',x:.5,y:.5,path:[],moveAt:NOW,locks:{}}}};change(s,'humanFighter');update(s);return s;}
 function quiet(s){const f=s.game.hunt.field;for(const m of [f,...Object.values(f.rooms||{})].flatMap(r=>r.mobs||[]))Object.assign(m,{aggressive:false,aggro:false,aggroRange:0,nextAttackAt:NOW+1e12});}
 test('native Pagan approach enters the church, retains its authored drop and requires the mirror before walking back',async()=>{
