@@ -8,6 +8,7 @@ import {sampleNativeTerritory,nativeTerritorySource} from '../functions/game/wor
 import {pointInPolygon} from '../functions/game/world/navigation.js';
 import {LOCATION_LEVELS} from '../template/locationLevels.js';
 import registry from '../template/nativeFieldPilot.js';
+import minions from '../template/nativeMinions.js';
 import {nativeRoute} from '../functions/game/world/nativeTravel.js';
 import change from '../functions/game/player/changePlayerGameClass.js';
 import update from '../functions/game/player/updatePlayerStats.js';
@@ -50,7 +51,7 @@ for(const [zone,meta]of Object.entries(registry.fields)){
   const dto=worldState(s,arrival);assert.equal(dto.nativeField.zone,zone);for(const key of ['x','y','z'])assert.equal(dto.nativeField.point[key],nativeRoute(zone).to[key]);
   assert.ok((dto.nativeField.actors.length>0||meta.peacefulEntry)&&dto.nativeField.actors.length<=48);
   const mobs=actors(s),keys=mobs.map(m=>m.sourceRoom+':'+m.sourceSlot);assert.equal(new Set(keys).size,keys.length);
-  assert.ok(mobs.every(m=>meta.npcIds.includes(m.mobId)));
+  assert.ok(mobs.every(m=>meta.npcIds.includes(m.mobId)||m.sourceMinion&&minions.zones[zone]?.includes(m.sourceMinion.masterId)&&minions.masters[m.sourceMinion.masterId].entries.some(e=>e.id===m.mobId)));
   for(const mob of mobs)for(const banned of mob.sourceTerritory?.bannedTerritories||[]){const p=mob.sourcePosition;assert.ok(p.z<banned.minZ||p.z>banned.maxZ||!pointInPolygon(p,banned.polygon),'source exclusion must be preserved during actual population loading');}
   const victim=mobs.find(m=>dto.nativeField.actors.some(a=>a.instanceId===m.instanceId))||(meta.peacefulEntry?mobs[0]:null);assert.ok(victim);
   victim.currentHp=Math.floor(victim.hp/2);const saved={id:victim.instanceId,hp:victim.currentHp,position:{...victim.sourcePosition}};

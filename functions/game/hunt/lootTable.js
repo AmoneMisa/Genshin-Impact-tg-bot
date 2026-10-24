@@ -4,6 +4,7 @@ import {FERRY_TICKETS} from '../../../template/ferryTickets.js';
 // Stones, attribute stones and seal stones become the game's own materials; every other real item - full weapons and
 // armor, pieces, recipes, dyes, crafting goods - is a collectable material `l2_<item id>` named like the real item.
 import LOOT from '../../../template/l2Loot.js';
+import nativeMinions from '../../../template/nativeMinions.js';
 import ITEMS from '../../../template/l2Items.js';
 import FISHING from '../../../template/fishingData.js';
 import {ATTRIBUTE_TIERS, ELEMENTS, lifestoneKey} from '../../../template/augmentData.js';
@@ -85,7 +86,7 @@ const cache = new Map();
 export function lootRows(mobId) {
     const id = String(mobId);
     if (!cache.has(id)) {
-        cache.set(id, (LOOT[id] || []).map(([itemId, min, max, chance]) => {
+        cache.set(id, (LOOT[id] || nativeMinions.actors[id]?.loot || []).map(([itemId, min, max, chance]) => {
             const info = lootInfo(itemId), item = itemRow(itemId);
             return {id: itemId, key: info.key, kind: info.kind, name: item?.name || String(itemId), min, max, chance};
         }));

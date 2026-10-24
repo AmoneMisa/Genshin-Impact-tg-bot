@@ -8,9 +8,10 @@ import {LOCATION_LEVELS,ZAKEN_SHIP} from '../../../template/locationLevels.js';
 import {FIELD_POPULATIONS} from '../../../template/fieldPopulations.js';
 import {WORLD_EXTENSION_ZONES} from '../../../template/worldExtension.js';
 import npcAi from '../../../template/l2NpcAi.js';
+import nativeMinions from '../../../template/nativeMinions.js';
 export const NPC_AI_VERSION=2;
 export function npcBehaviour(id){
-    const ai=npcAi[id];
+    const ai=npcAi[id]||nativeMinions.actors[id]?.ai;
     return {aiSourceVersion:NPC_AI_VERSION,aiDataMissing:!ai,aggressive:Boolean(ai?.aggressive),aggroRange:ai?.aggroRange??null,clanHelpRange:ai?.clanHelpRange??null,socialClans:ai?.clans||[],socialIgnoredIds:ai?.ignoredIds||[]};
 }
 import {NPC_ATTRIBUTES,NPC_ATTRIBUTE_ATTACKS} from '../../../template/l2AttributeRules.js';
@@ -32,7 +33,8 @@ import calcDamage from '../boss/calcDamage.js';
 
 export const getZones = () => zones;
 export const getZone = id => zones.find(zone => zone.id === id) || null;
-export const getMobDef = (zone, mobId) => zone?.mobs.find(mob => mob.id === String(mobId)) || null;
+const nativePrivateDefinitions=Object.fromEntries(Object.entries(nativeMinions.zones).map(([id,masters])=>[id,Object.fromEntries(masters.flatMap(m=>nativeMinions.masters[m].entries.map(e=>[e.id,nativeMinions.actors[e.id].definition])))]));
+export const getMobDef = (zone, mobId) => zone?.mobs.find(mob => mob.id === String(mobId)) || nativePrivateDefinitions[zone?.id]?.[String(mobId)] || null;
 
 // "A typical mob of that level": the median of a real stat over every extracted mob within WINDOW levels, so
 // each mob can be compared with its neighbours (hp x1.4 means 40% tougher than usual there).

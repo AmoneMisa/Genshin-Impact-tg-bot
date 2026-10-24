@@ -1,4 +1,5 @@
 import {nativeFieldRooms} from '../world/nativeFieldRooms.js';
+import {syncNativeMinions} from '../world/nativeMinions.js';
 import {recordSeedKill} from '../world/seedInstances.js';
 import {recordDeath} from '../player/deathPenalties.js';
 import {playerName} from '../player/playerName.js';
@@ -126,7 +127,7 @@ export function ensureHunt(session, now = Date.now(),random=Math.random) {
 
 /** Keeps the 3x3 window of cells populated; population itself stays in populateRoom. */
 function syncResident(session,hunt,now,random){
-    if(hunt.field?.native)return syncNativePopulation(hunt,{rooms:nativeFieldRooms(hunt.zone)},now,(room,slot,prefix)=>populateRoom(session,getZone(hunt.zone),room,{now,random,count:1,sourceSlot:slot,prefix}),random);
+    if(hunt.field?.native){const result=syncNativePopulation(hunt,{rooms:nativeFieldRooms(hunt.zone)},now,(room,slot,prefix)=>populateRoom(session,getZone(hunt.zone),room,{now,random,count:1,sourceSlot:slot,prefix}),random);syncNativeMinions(session,now,random);return result;}
     return syncResidentRooms(hunt,now,(zone,room,prefix)=>populateRoom(session,zone,room,{now,random,prefix}));
 }
 

@@ -7,7 +7,7 @@ import {worldState,worldAction,advanceWorld} from '../../functions/game/world/wo
 import {getHuntState} from '../../miniapp/hunt.js';
 import {selectHuntTarget,setHuntAttack,useHuntSkill} from '../../functions/game/hunt/huntFight.js';
 import {weaponSpatial} from '../../functions/game/hunt/huntSpatial.js';
-import {nativeFieldBuckets,nativeActorPoint,nativeFieldZone} from '../../functions/game/world/nativeFieldSpace.js';
+import {nativeFieldBuckets,nativeActorPoint,nativeFieldZone,activateNativeField} from '../../functions/game/world/nativeFieldSpace.js';
 import {findNativePath,nativeSegment} from '../../functions/game/world/nativeNavigation.js';
 import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';
 import {withTeleportSieges} from '../../functions/game/world/teleportSieges.js';
@@ -32,7 +32,7 @@ const browser=await chromium.launch({headless:true,executablePath:'C:/Users/kuba
 const cases=[{width:320},{width:390},{width:1100},{width:320,noCanvas:true},{width:320,noImages:true}].filter(c=>!process.env.NATIVE_WIDTH||String(c.width)===process.env.NATIVE_WIDTH);
 try{for(const {width,noCanvas=false,noImages=false} of cases){
  let now=1800000000000,finishRoad=false;
- const s={userId:1,userChatData:{user:{id:1,first_name:'Test'}},game:{stats:{lvl:Math.min(85,Math.max(...LOCATION_LEVELS[zone].mobs.map(m=>m.level))+4),currentExp:0},inventory:{gold:1e6,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city,x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
+ const s={userId:1,userChatData:{user:{id:1,first_name:'Test'}},game:{stats:{lvl:pilot.fields[zone].npcEntry?50:Math.min(85,Math.max(...LOCATION_LEVELS[zone].mobs.map(m=>m.level))+4),currentExp:0},inventory:{gold:1e6,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city,x:.5,y:.5,path:[],moveAt:now,locks:{}}}};
  const chat={game:{},members:[s]};s.ownerDocument=()=>chat;change(s,'humanFighter');update(s);
  const quiet=()=>{const f=s.game.hunt?.field;if(f)for(const bank of nativeFieldBuckets(f))for(const mob of bank.mobs){mob.aggressive=false;mob.aggro=false;mob.nextAttackAt=now+1e9;}};
  if(island){
@@ -107,11 +107,12 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  if(pilot.fields[zone].npcEntry){
   await page.locator('[data-native-levels]>summary').click();
   const kept=nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.currentHp>0);assert.ok(kept);kept.currentHp=Math.floor(kept.hp/2);const remembered={id:kept.instanceId,hp:kept.currentHp};
+  let npcGold=startingGold;
   const teleport=async(id,list,index)=>{
    const button=page.locator(`[data-native-route="${id}:${list}:${index}"]`);assert.equal(await button.isEnabled(),true);
    await button.focus();assert.equal(await button.evaluate(n=>n===document.activeElement),true);
    const [response]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.routeId===`${id}:${list}:${index}`),button.click()]);assert.equal(response.status(),200);
-   assert.equal(s.game.hunt.field.native.journey,undefined);assert.equal(s.game.inventory.gold,startingGold);
+   assert.equal(s.game.hunt.field.native.journey,undefined);assert.equal(s.game.inventory.gold,npcGold);
   };
   const approach=async(id)=>{
    const button=page.locator(`button[data-native-guide="${id}"]`);if(await button.isDisabled())return;
@@ -121,6 +122,18 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
    await page.waitForFunction(id=>document.querySelector(`button[data-native-guide="${id}"]`)?.disabled,id);
   };
   await teleport(30483,'SCRIPT',0);assert.equal(s.game.hunt.field.native.outside,false);
+  // Place this fixture at a real spawned private; the actual attack, reward and
+  // target selection still run through the Atlas and production HTTP handlers.
+  const entryPoint=nativeActorPoint(s.game.hunt.field),privateMob=nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs).find(m=>m.sourceMinion&&m.sourceFloor===1);assert.ok(privateMob);
+  activateNativeField(s.game.hunt,nativeActorPoint(privateMob),++now);quiet();
+  await page.waitForFunction(id=>[...document.querySelector('[data-native-target]').options].some(o=>o.value===id),privateMob.instanceId);
+  const privateIndex=await page.locator('[data-native-target]').evaluate((n,id)=>[...n.options].findIndex(o=>o.value===id),privateMob.instanceId);
+  await page.getByRole('combobox',{name:'Цель рядом',exact:true}).click();await page.getByRole('option').nth(privateIndex).click();privateMob.currentHp=1;
+  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/hunt/attack')),page.locator('.atlas-combat [data-attack]').click()]);
+  assert.ok(privateMob.rewarded?.exp>0);assert.ok(privateMob.rewarded?.sp>0);
+  await page.evaluate(()=>fetch('/api/hunt/attack',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({enabled:false})}));
+  npcGold=s.game.inventory.gold;activateNativeField(s.game.hunt,entryPoint,++now);quiet();
+  await page.waitForFunction(()=>document.querySelector('button[data-native-guide="30487"]')?.disabled===true);
   await approach(30487);await teleport(30487,'OTHER',0);assert.equal(s.game.hunt.field.native.sourceFloor,2);
   assert.equal(await page.locator('[data-native-route="30486:OTHER:0"]').isDisabled(),true);
   await page.screenshot({path:path.join(out,`native-npcs-${width}${noCanvas?'-no-canvas':noImages?'-no-images':''}.png`)});
@@ -224,7 +237,7 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
   }
   assert.ok(goal);const [moveResponse]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('canvas').click({position:{x:box.width/2+(goal.x-before.x)*box.width/14000,y:box.height/2+(goal.y-before.y)*box.width/14000}})]);const movePayload=await moveResponse.json();assert.equal(moveResponse.status(),200,JSON.stringify({reason:movePayload.reason,visited:movePayload.visited,goal,requested:moveResponse.request().postDataJSON().point,from:before}));now+=3000;
  }
- await page.waitForTimeout(2100);assert.equal(s.game.hunt.kills,pilot.fields[zone].npcEntry?0:1);assert.equal(await page.locator('.hunt-overlay').count(),0);
+ await page.waitForTimeout(2100);assert.equal(s.game.hunt.kills,1);assert.equal(await page.locator('.hunt-overlay').count(),0);
  const after=worldState(s,now).player.worldPoint;assert.ok(Math.hypot(after.x-before.x,after.y-before.y)>0);
  assert.equal(await page.locator('.atlas-combat').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  const ground=worldState(s,now).nativeField?.ground;

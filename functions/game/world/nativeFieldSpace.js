@@ -1,6 +1,7 @@
 import {nativeFieldRooms,migrateNativeRoomBanks,migrateNativeRandomGroups} from './nativeFieldRooms.js';
 import pilot from '../../../template/nativeFieldPilot.js';
 import landmarks from '../../../template/nativeInteriorLandmarks.js';
+import minions from '../../../template/nativeMinions.js';
 import {nativeInteriorMap} from './nativeInteriorMap.js';
 import {ROOM_SIZE} from './navigation.js';
 import {worldGeodata} from './l2jGeodata.js';
@@ -206,7 +207,7 @@ export function nativeCombatLine(a,b){
  const from=nativeActorPoint(a),to=nativeActorPoint(b);
  return Boolean(from&&to&&nativeStaticSight(from,to,{allowed:nativeGroundAtStage(a.native?.hellboundStage??b.native?.hellboundStage)}));
 }
-export const nativeMobMovement=mob=>pilot.actors[mob.mobId]||null;
+export const nativeMobMovement=mob=>pilot.actors[mob.mobId]||minions.actors[mob.mobId]?.movement||null;
 /** The public target list has a fixed sight budget, including Canvas fallback. */
 export function nativeVisibleActors(hunt){
  const f=hunt?.field;

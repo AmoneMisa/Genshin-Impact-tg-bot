@@ -9,6 +9,8 @@ import {pursueNeighborhood} from './huntPursuit.js';
 import {clearLine} from './huntSpatial.js';
 import {npcBehaviour,NPC_AI_VERSION} from './huntMobs.js';
 import {nativeFieldActors,nativeMobMovement,moveNativeActor,advanceNativeActor,nativeCombatLine} from '../world/nativeFieldSpace.js';
+import {sameNativeFamily,nativeMinionLeader,nativeMinionProposal} from '../world/nativeMinions.js';
+import {nativeActorPoint} from '../world/nativeFieldSpace.js';
 
 export function huntDebuff(session, kind, now) {
     return (session.game.hunt?.playerDebuffs || []).find(e => e.kind === kind && e.until > now)?.amount || 0;
@@ -29,6 +31,7 @@ export function aggroNearby(hunt, now,session=null) {
             mob.aggro = true;
             mob.nextAttackAt = now + mob.attackMs;
             mob.lastMoveAt = now;
+            if(hunt.field?.native)for(const ally of field.mobs)if(ally.currentHp>0&&!ally.aggro&&sameNativeFamily(mob,ally))Object.assign(ally,{aggro:true,nextAttackAt:now+ally.attackMs,lastMoveAt:now});
         }
     }
 }
@@ -40,7 +43,7 @@ export function provokeMob(hunt, target, now) {
         if(mob.aiSourceVersion!==NPC_AI_VERSION)Object.assign(mob,npcBehaviour(mob.mobId));
         if(target.aiSourceVersion!==NPC_AI_VERSION)Object.assign(target,npcBehaviour(target.mobId));
         const social=mob.clanHelpRange>0&&mob.socialClans?.some(clan=>target.socialClans?.includes(clan))&&!mob.socialIgnoredIds?.includes(String(target.mobId));
-        if (mob === target || mob.instanceId&&mob.instanceId===target.instanceId || social && Math.hypot(mob.x - target.x, mob.y - target.y) <= mob.clanHelpRange/2000 && clearLine(mob,target,field.walls)) {
+        if (mob === target || mob.instanceId&&mob.instanceId===target.instanceId || hunt.field?.native&&sameNativeFamily(mob,target) || social && Math.hypot(mob.x - target.x, mob.y - target.y) <= mob.clanHelpRange/2000 && clearLine(mob,target,field.walls)) {
             mob.aggro = true;
             mob.nextAttackAt = now + mob.attackMs;
             mob.lastMoveAt = now;
@@ -119,10 +122,23 @@ export function mobAiTurn(session, mob, at, note) {
 /** The native pilot uses source run speed/reach; source geometry owns each movement leg. */
 function pursueNative(hunt,now){
  let searches=0,moved=false;
- for(const mob of nativeFieldActors(hunt)){
+ const actors=nativeFieldActors(hunt);
+ for(const mob of actors){
   const seconds=Math.max(0,Math.min(5,(now-(mob.lastMoveAt??now))/1000));mob.lastMoveAt=now;
+  const leader=nativeMinionLeader(actors,mob),source=nativeMobMovement(mob);
+  if(!mob.aggro&&leader&&source&&!isBossStunned(mob,now)&&!l2HasControl(mob,'Root',now)&&!l2HasControl(mob,'ImmobileBuff',now)){
+   if(Math.hypot(mob.x-leader.x,mob.y-leader.y)*2000<=200){delete mob.native.journey;delete mob.native.following;continue;}
+   if(!mob.native.following||!mob.native.journey){
+    if(searches++>=12)continue;
+    const point=nativeMinionProposal(nativeActorPoint(leader),0),result=moveNativeActor(mob,{x:point.x/2000,y:point.y/2000,native:{z:point.z}},now-seconds*1000,source.walkSpeed);
+    if(!result.ok)continue;mob.native.following=true;delete mob.native.destination;
+   }
+   if(mob.native.journey?.native)mob.native.journey.native.moveAt=Math.max(mob.native.journey.native.moveAt,now-seconds*1000);
+   advanceNativeActor(mob,now,source.walkSpeed*l2MoveMultiplier(mob,now));moved=true;continue;
+  }
+  if(mob.native.following){delete mob.native.journey;delete mob.native.following;}
   if(!mob.aggro||isBossStunned(mob,now)||l2HasControl(mob,'Root',now)||l2HasControl(mob,'ImmobileBuff',now)){delete mob.native.journey;mob.path=[];continue;}
-  const source=nativeMobMovement(mob);if(!source)continue;
+  if(!source)continue;
   const distance=Math.hypot(mob.x-hunt.field.x,mob.y-hunt.field.y)*2000;
   if(distance<=source.attackRange&&nativeCombatLine(mob,hunt.field)){delete mob.native.journey;mob.path=[];continue;}
   const destination=mob.native.destination;
@@ -132,6 +148,7 @@ function pursueNative(hunt,now){
    if(!result.ok)continue;mob.native.destination={x:hunt.field.x,y:hunt.field.y};
   }
   const speed=Math.min(source.runSpeed*l2MoveMultiplier(mob,now),seconds>0?Math.max(0,distance-source.attackRange)/seconds:0);
+  if(mob.native.journey?.native)mob.native.journey.native.moveAt=Math.max(mob.native.journey.native.moveAt,now-seconds*1000);
   advanceNativeActor(mob,now,speed);moved=true;
  }
  return moved;

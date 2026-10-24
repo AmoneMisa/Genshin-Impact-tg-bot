@@ -40,6 +40,7 @@ export function restoreNativeField(session,id,now){
  delete field.crossing;delete field.pendingRoom;delete field.action;delete field.autoAttack;
  for(const bank of [field,...Object.values(field.floorStates||{})])for(const mob of [bank,...Object.values(bank.rooms||{})].flatMap(r=>r.mobs||[])){
   mob.aggro=false;mob.path=[];mob.lastMoveAt=now;mob.nextAttackAt=now+mob.attackMs;delete mob.pursuit;
+  if(mob.native){delete mob.native.journey;delete mob.native.following;delete mob.native.destination;}
  }
  session.game.hunt.field=field;
  session.game.hunt.mob=field.mobs.find(m=>m.instanceId===field.target)||null;
