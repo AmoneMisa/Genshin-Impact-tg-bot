@@ -19,12 +19,25 @@ const sourceSpawns=Object.fromEntries(Object.keys(pilot.fields).map(id=>[id,LOCA
 const allSourceSpawns=Object.values(sourceSpawns).flat();
 export const nativeFieldNear=(point,id)=>Boolean(point&&(id?sourceSpawns[id]||[]:allSourceSpawns).some(s=>nativeSpawnDistance(point,s)<=NATIVE_FIELD_RADIUS));
 export function nativeFieldZone(point,preferred=null){
- if(preferred)return nativeFieldNear(point,preferred)?preferred:null;
+ if(preferred)return nativeFieldNear(point,preferred)&&nativeFieldEntryVisible(point,preferred)?preferred:null;
  if(!point)return null;
  let zone=null,distance=NATIVE_FIELD_RADIUS;
- for(const [id,spawns] of Object.entries(sourceSpawns))for(const spawn of spawns){const next=nativeSpawnDistance(point,spawn);if(next<=distance){zone=id;distance=next;}}
+ for(const [id,spawns] of Object.entries(sourceSpawns)){
+  if(!nativeFieldEntryVisible(point,id))continue;
+  for(const spawn of spawns){const next=nativeSpawnDistance(point,spawn);if(next<=distance){zone=id;distance=next;}}
+ }
  return zone;
 }
+/** Only a visible original spawn can attach an underground bank from outside.
+ * Residency itself does not depend on sight: walking behind a wall must not
+ * unload the cave or recreate its monsters. Limit expensive sight probes.
+ */
+export function nativeFieldEntryVisible(point,id){
+ if(!pilot.fields[id]?.interior)return true;
+ return (sourceSpawns[id]||[]).filter(s=>nativeSpawnDistance(point,s)<=NATIVE_FIELD_RADIUS).sort((a,b)=>nativeSpawnDistance(point,a)-nativeSpawnDistance(point,b)).slice(0,48).some(s=>nativeStaticSight(point,s,{allowed:nativeGroundAllowed}));
+}
+export const nativeFieldInterior=id=>Boolean(pilot.fields[id]?.interior);
+export const nativeInteriorAt=point=>Object.keys(pilot.fields).find(id=>nativeFieldInterior(id)&&nativeFieldNear(point,id)&&nativeFieldEntryVisible(point,id))||null;
 export const nativeFieldCity=id=>pilot.fields[id]?.city||null;
 export const nativeFieldIsland=id=>pilot.fields[id]?.island||null;
 const worldAxis=value=>{const n=value*ROOM_SIZE,integer=Math.round(n);return Math.abs(n-integer)<1e-8?integer:n;};
@@ -116,7 +129,7 @@ export function syncNativePopulation(hunt,layout,now,populate,random=Math.random
  for(const bank of nativeFieldBuckets(f))for(const m of bank.mobs||[])if(!visible.has(m.instanceId)){
   m.aggro=false;m.path=[];delete m.native?.journey;m.lastMoveAt=now;m.nextAttackAt=now+m.attackMs;
  }
- if(!visible.has(f.target))f.target=nativeFieldActors(hunt).sort((a,b)=>Math.hypot(a.x-f.x,a.y-f.y)-Math.hypot(b.x-f.x,b.y-f.y))[0]?.instanceId||null;
+ if(!visible.has(f.target)||pilot.fields[hunt.zone]?.interior&&!nativeCombatLine(f,nativeFieldActors(hunt).find(m=>m.instanceId===f.target)))f.target=nativeVisibleActors(hunt)[0]?.instanceId||null;
  return true;
 }
 export function moveNativeActor(actor,target,now,speed){
@@ -151,10 +164,16 @@ export function nativeCombatLine(a,b){
  return Boolean(from&&to&&nativeStaticSight(from,to,{allowed:nativeGroundAtStage(a.native?.hellboundStage??b.native?.hellboundStage)}));
 }
 export const nativeMobMovement=mob=>pilot.actors[mob.mobId]||null;
+/** The public target list has a fixed sight budget, including Canvas fallback. */
+export function nativeVisibleActors(hunt){
+ const f=hunt?.field;
+ const nearest=nativeFieldActors(hunt).sort((a,b)=>Number(b.instanceId===f.target)-Number(a.instanceId===f.target)||Math.hypot(a.x-f.x,a.y-f.y)-Math.hypot(b.x-f.x,b.y-f.y)).slice(0,48);
+ return pilot.fields[hunt?.zone]?.interior?nearest.filter(m=>nativeCombatLine(f,m)):nearest;
+}
 export function nativeFieldDto(session){
  const f=session.game.hunt?.field,point=nativeFieldPoint(session);if(!point)return null;
  return {zone:session.game.hunt.zone,point,target:f.target,...(session.game.hunt.zone==='hellbound'?{doors:nativeDoorStates(f.populationStage)}:{}),
-  actors:nativeFieldActors(session.game.hunt).sort((a,b)=>Number(b.instanceId===f.target)-Number(a.instanceId===f.target)||Math.hypot(a.x-f.x,a.y-f.y)-Math.hypot(b.x-f.x,b.y-f.y)).slice(0,48).map(m=>({
+  actors:nativeVisibleActors(session.game.hunt).map(m=>({
    ...nativeActorPoint(m),id:m.mobId,instanceId:m.instanceId,name:m.name,level:m.level,hp:m.hp,currentHp:m.currentHp,aggressive:Boolean(m.aggressive),social:Boolean(m.clanHelpRange&&m.socialClans?.length),aggro:Boolean(m.aggro)
   }))};
 }

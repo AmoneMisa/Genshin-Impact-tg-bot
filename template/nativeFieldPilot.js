@@ -777,6 +777,37 @@ export default {
     ]
   },
   "fields": {
+    "antharas-lair": {
+      "city": "hunters",
+      "interior": true,
+      "fixedCount": 713,
+      "territoryCount": 0,
+      "randomGroupCount": 0,
+      "initialCapacity": 713,
+      "unavailableCount": 0,
+      "availableCapacity": 713,
+      "npcIds": [
+        "22838",
+        "22839",
+        "22840",
+        "22841",
+        "22842",
+        "22843",
+        "22844",
+        "22848",
+        "22849",
+        "22850",
+        "22851",
+        "22852",
+        "22853",
+        "22854",
+        "22855",
+        "22856",
+        "22857"
+      ],
+      "count": 713,
+      "unportedMinionTemplates": []
+    },
     "hellbound": {
       "city": "gludio",
       "island": "hellbound",
@@ -1994,6 +2025,7 @@ export default {
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Others/24_21.xml": "81239336cf56c7e81009f63ccc09684c34c47e51f89e2cab1ddd217830eecd62",
       "scripts/ai/areas/Hellbound/hellboundSpawns.xml": "7a940814df23cfae17baaa41e6381b610b2595cd0fc379a9bbab5f37aa8cc5b2",
       "scripts/ai/areas/Hellbound/HellboundSpawns.java": "f1ef4cadab00817a417548fa57d148bab7433563b5e7b1b77b463dc7e972bb5f",
       "scripts/ai/areas/Hellbound/HellboundEngine.java": "690c0879d41c0357c96f46fd3d30d819fe5639622122a88bbc9b080c230046ef",
@@ -3948,6 +3980,74 @@ export default {
     },
     "22834": {
       "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "22838": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22839": {
+      "runSpeed": 160.0,
+      "attackRange": 80.0
+    },
+    "22840": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22841": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22842": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "22843": {
+      "runSpeed": 150.0,
+      "attackRange": 1100.0
+    },
+    "22844": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22848": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22849": {
+      "runSpeed": 210.0,
+      "attackRange": 40.0
+    },
+    "22850": {
+      "runSpeed": 220.0,
+      "attackRange": 1100.0
+    },
+    "22851": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22852": {
+      "runSpeed": 200.0,
+      "attackRange": 80.0
+    },
+    "22853": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "22854": {
+      "runSpeed": 220.0,
+      "attackRange": 40.0
+    },
+    "22855": {
+      "runSpeed": 230.0,
+      "attackRange": 40.0
+    },
+    "22856": {
+      "runSpeed": 240.0,
+      "attackRange": 40.0
+    },
+    "22857": {
+      "runSpeed": 180.0,
       "attackRange": 40.0
     },
     "22858": {

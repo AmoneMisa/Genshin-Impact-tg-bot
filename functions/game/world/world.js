@@ -28,7 +28,7 @@ import {nativeCityAt} from './nativeTownGraph.js';
 import {airshipJourneyPosition} from './graciaTravel.js';
 import {ferryOptions,buyFerryTicket,boardFerry,advanceFerry,leaveFerry,ferryJourneyPosition,ferryJourneyDto} from './ferryTravel.js';
 import {rememberNativeTrail,rememberNativeResume} from './nativeTrail.js';
-import {activateNativeField,nativeFieldPoint,nativeFieldDto,nativeFieldNear,nativeFieldZone,nativeFieldCity,nativeFieldSupported,nativeFieldIsland} from './nativeFieldSpace.js';
+import {activateNativeField,nativeFieldPoint,nativeFieldDto,nativeFieldNear,nativeFieldZone,nativeFieldCity,nativeFieldSupported,nativeFieldIsland,nativeFieldInterior,nativeInteriorAt} from './nativeFieldSpace.js';
 import {ROOM_SIZE} from './navigation.js';
 import {hellboundNpcAction,hellboundAccessDto,hellboundNpc,hellboundPlayerPoint,hellboundApproachQuote,hellboundEscapePoint} from './hellboundAccess.js';
 import HELLBOUND_ACCESS from '../../../template/hellboundAccess.js';
@@ -125,6 +125,20 @@ export function advanceWorld(session,now=Date.now()) {
     }
     if(w.died){delete w.died;delete w.death;}
     if(w.mode==='location')advanceHunt(session,now);
+    // A visible cave entrance hands off the public bank at the current XYZ.
+    // Preserve the same journey and history; switching populations grants no step.
+    if(nativeFieldPoint(session)&&!w.instanceId&&!nativeFieldInterior(session.game.hunt.zone)){
+        const point=nativeFieldPoint(session),next=nativeInteriorAt(point);
+        if(next&&!regionAccessBlock(session,LOCATIONS.find(l=>l.id===next),{walking:true,now})){
+            const previous=session.game.hunt,native=previous.field.native;session.game.hunt=null;
+            if(enterPublicField(session,next,{now,departure:previous}).ok){
+                activateNativeField(session.game.hunt,point,now);
+                if(native.journey)session.game.hunt.field.native.journey=native.journey;
+                if(native.nativeTrail)session.game.hunt.field.native.nativeTrail=native.nativeTrail;
+                Object.assign(w,{location:next,city:nativeFieldCity(next)});advanceHunt(session,now);
+            }else session.game.hunt=previous;
+        }
+    }
     if(nativeFieldPoint(session)){
         const point=nativeFieldPoint(session),city=nativeCityAt(point);
         if(city){w.city=city.id;arriveCity(session,w,now);Object.assign(w,cityPoint(city,point),{z:point.z});}

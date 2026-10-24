@@ -1,11 +1,11 @@
 {
   "npcSourceCommit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
-  "zoneCount": 33,
-  "floorCount": 110,
+  "zoneCount": 32,
+  "floorCount": 109,
   "counts": {
-    "fixed": 4058,
-    "validFixed": 4058,
+    "fixed": 3345,
+    "validFixed": 3345,
     "territory": 5178,
     "unknown": 0
   },
@@ -2425,35 +2425,6 @@
           "title": "Монастырь Безмолвия · Верхний этаж",
           "fixed": 72,
           "valid": 72,
-          "territory": 0,
-          "unknown": 0,
-          "destinations": []
-        }
-      ]
-    },
-    {
-      "id": "antharas-lair",
-      "name": "Логово Антараса",
-      "native": false,
-      "entry": {
-        "x": 131557,
-        "y": 114509,
-        "z": -3712,
-        "source": {
-          "file": "teleporters/town/30233.xml",
-          "npcId": 30233,
-          "name": "Antharas's Lair",
-          "type": "NORMAL",
-          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
-          "sha256": "7be363bd9d543d91f6da4dc11fdcf99b255b9bcb6a54a4752782ed6977b4fcb0"
-        }
-      },
-      "floors": [
-        {
-          "floor": 1,
-          "title": "Логово Антараса",
-          "fixed": 713,
-          "valid": 713,
           "territory": 0,
           "unknown": 0,
           "destinations": []

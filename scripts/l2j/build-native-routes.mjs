@@ -9,6 +9,8 @@ import {LOCATIONS} from '../../template/worldMap.js';
 import {worldGeodata} from '../../functions/game/world/l2jGeodata.js';
 import {findNativePath,nativeSegment} from '../../functions/game/world/nativeNavigation.js';
 import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';
+import {nativeTownPath} from '../../functions/game/world/nativeTownGraph.js';
+import {pruneNativeLoops} from '../../functions/game/world/nativeJourney.js';
 
 const ids=process.argv.slice(2),routes={},file='template/nativeRoutes.js';
 const previous=fs.existsSync(file)?(await import(new URL('../../template/nativeRoutes.js',import.meta.url))).default:null;
@@ -43,6 +45,24 @@ for(const target of candidates){
    attempts.push({via:id,stride:8,maxNodes:30000,heuristicWeight:2,margin:1024,visited:branch.visited||0,reason:branch.ok&&!bounded?'route_vertex_limit':branch.reason||null});
    console.log(target.id,'via',id,bounded,branch.reason||'',branch.visited,Math.round(performance.now()-start)+'ms');
    if(bounded){result={...branch,start:via.from,path:[...via.path,...branch.path]};break;}
+  }
+ }
+ // A different town's published approach can reach the same mainland entrance.
+ // Join only checked town edges and checked local branches; never synthesize
+ // an overland straight line from a teleport destination.
+ if(!result.ok&&from&&previous?.geodataCommit===worldGeodata.manifest.commit&&previous.barriersSha256===barriersSha256){
+  const near=Object.entries(previous.routes).filter(([id,r])=>id!==target.id&&r.available&&r.returnPath&&r.city!==target.region&&Math.hypot(r.to.x-to.x,r.to.y-to.y)<=65536).sort((a,b)=>Math.hypot(a[1].to.x-to.x,a[1].to.y-to.y)-Math.hypot(b[1].to.x-to.x,b[1].to.y-to.y)).slice(0,6);
+  for(const [id,via] of near){
+   const link=nativeTownPath(target.region,via.city);if(!link)continue;
+   const join=(a,b)=>findNativePath(a,b,{allowed:nativeGroundAllowed,stride:2,maxNodes:6000,heuristicWeight:2,reversible:true});
+   const prefix=join(from,link.start);if(!prefix.ok)continue;
+   const connector=join(link.path.at(-1)||link.start,via.from);if(!connector.ok)continue;
+   const branch=findNativePath(via.to,to,{allowed:nativeGroundAllowed,stride:8,maxNodes:120000,heuristicWeight:2,margin:2048,reversible:true});
+   const path=branch.ok?pruneNativeLoops(prefix.start,[...prefix.path,...link.path,...connector.path,...via.path,...branch.path]):[];
+   const bounded=branch.ok&&path.length<=512;
+   attempts.push({via:id,cities:link.cities,stride:8,maxNodes:120000,heuristicWeight:2,margin:2048,visited:branch.visited||0,reason:branch.ok&&!bounded?'route_vertex_limit':branch.reason||null});
+   console.log(target.id,'via towns',id,bounded,branch.reason||'',branch.visited);
+   if(bounded){result={...branch,start:prefix.start,path};break;}
   }
  }
  if(!result.ok){routes[target.id]={city:target.region,available:false,to,sourceEntry:target.entrySource,reason:result.reason,attempts};continue;}

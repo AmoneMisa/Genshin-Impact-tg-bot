@@ -8,6 +8,7 @@ from pathlib import Path
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
 fields={
+    "antharas-lair": {"city":"hunters","interior":True},
     'hellbound': {'city':'gludio','island':'hellbound','portalOnly':True,'sourceGaps':[{'kind':'point','zone':'hellbound','npcId':'22320','source':{'x':-10315,'y':237442,'z':-3850},'sourceFile':'scripts/ai/areas/Hellbound/hellboundSpawns.xml','issues':['swimming_required']}]},
     "alligator-beach": {"city":"heine","sourceGaps":[{"kind":"territory","zone":"alligator-beach","npcId":"20314","count":3,"sourceFile":"spawns/Innadril/AlligatorBeach.xml","sourceGroup":"innadril01_qm2324_01","polygon":[[106252,197068],[106452,197068],[106452,197268],[106252,197268]],"minZ":-4236,"maxZ":-4036,"rejected":{"swimming_required":100},"issues":["swimming_required"]}]},
     "field-of-silence": {"city":"heine","sourceGaps":[{"kind":"point","zone":"field-of-silence","npcId":"22651","source":{"x":75897,"y":189168,"z":-3448},"sourceFile":"spawns/Innadril/FieldOfSilence.xml","ground":{"x":75897,"y":189168,"z":-3448,"nswe":7},"issues":["holding_region_required"]},{"kind":"point","zone":"field-of-silence","npcId":"22651","source":{"x":78995,"y":190581,"z":-3784},"sourceFile":"spawns/Innadril/FieldOfSilence.xml","ground":{"x":78995,"y":190581,"z":-3784,"nswe":15},"issues":["swimming_required"]}]},
@@ -52,7 +53,7 @@ catalog=json.loads(subprocess.check_output(['node','--input-type=module','-e',
     'import {LOCATION_LEVELS} from "./template/locationLevels.js";console.log(JSON.stringify(Object.fromEntries('+json.dumps(list(fields))+'.map(id=>[id,LOCATION_LEVELS[id]]))))'],encoding='utf-8'))
 ids=set();exclusions={}
 for id,field in fields.items():
-    model=catalog[id];assert model['source']['coordinateSpace']=='surface' and len(model['floors'])==1
+    model=catalog[id];assert (model.get('source',{}).get('coordinateSpace')=='surface' or field.get('interior')) and len(model['floors'])==1
     slots=[s for r in model['floors'][0]['rooms'] for s in r['spawns']]
     assert all((s['coordinateSource']=='point' or (len(s.get('polygon',[]))>=3 and s.get('minZ') is not None and s.get('maxZ') is not None)) and (not s.get('randomGroup') or id=='primeval-isle') for s in slots)
     for slot in slots:
@@ -67,6 +68,11 @@ for id,field in fields.items():
         territories=group.findall('territory');assert len(territories)==1 and not territories[0].get('banned')
         territory=territories[0];assert [[int(n.get('x')),int(n.get('y'))] for n in territory.findall('node')]==slot['polygon']
         assert int(territory.get('minZ'))==slot['minZ'] and int(territory.get('maxZ'))==slot['maxZ']
+    # Older interior catalogs carry provenance per spawn rather than per model.
+    if field.get('interior'):
+        for file in {s.get('sourceFile') or s.get('file') for s in slots}:
+            assert file and (base/file).is_file()
+            model.setdefault('source',{}).setdefault('files',{})[file]=hashlib.sha256((base/file).read_bytes()).hexdigest()
     field['fixedCount']=sum(s['count'] for s in slots if s['coordinateSource']=='point')
     field['territoryCount']=sum(s['count'] for s in slots if s['coordinateSource']!='point')
     random_groups={};capacity=0
@@ -115,7 +121,7 @@ territory_sources={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in Pa
 assert 'antiBlocker++ < 1000' in Path('art-source/geodata/spawns/ZoneNPoly.java').read_text()
 assert 'count++ < 100' in Path('art-source/geodata/spawns/NpcSpawnTerritory.java').read_text()
 for model in catalog.values():
-    for file,sha in model['source'].get('files',{}).items():
+    for file,sha in model.get('source',{}).get('files',{}).items():
         assert hashlib.sha256((base/file).read_bytes()).hexdigest()==sha
         files[file]=sha
 data={'randomGroupSampling':random_policy,'territoryExclusions':exclusions,'territorySampling':{'polygonResamples':1000,'geodataAttempts':100,'sources':territory_sources},'npcMinionTemplates':minions,'fields':fields,'source':{'files':files,'commit':'9fb01cb20513e55190cdde8d91e41be2c0914f84'},'groundSpawnHeight':policy,'actors':actors}

@@ -7,8 +7,8 @@ import {worldState,worldAction,advanceWorld} from '../../functions/game/world/wo
 import {getHuntState} from '../../miniapp/hunt.js';
 import {selectHuntTarget,setHuntAttack,useHuntSkill} from '../../functions/game/hunt/huntFight.js';
 import {weaponSpatial} from '../../functions/game/hunt/huntSpatial.js';
-import {nativeFieldBuckets,nativeActorPoint} from '../../functions/game/world/nativeFieldSpace.js';
-import {findNativePath} from '../../functions/game/world/nativeNavigation.js';
+import {nativeFieldBuckets,nativeActorPoint,nativeFieldZone} from '../../functions/game/world/nativeFieldSpace.js';
+import {findNativePath,nativeSegment} from '../../functions/game/world/nativeNavigation.js';
 import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';
 import change from '../../functions/game/player/changePlayerGameClass.js';
 import update from '../../functions/game/player/updatePlayerStats.js';
@@ -76,7 +76,16 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  if(!island){
  await page.locator('[data-movement]').click();await page.getByRole('combobox',{name:'Разделы телепорта',exact:true}).click();await page.getByRole('option',{name:'Охота',exact:true}).click();
  await page.locator('[data-quick-go]').filter({hasText:zoneName}).click();assert.equal(await page.locator('[data-native-walk]').isEnabled(),true);
- await page.locator('[data-native-walk]').click();assert.equal(s.game.world.mode,'road');now+=Math.floor((s.game.world.walkHome.until-now)*.9);
+ await page.locator('[data-native-walk]').click();assert.equal(s.game.world.mode,'road');
+ if(pilot.fields[zone].interior){
+  const trip=s.game.world.walkHome;let previous=trip.native.point,distance=0,entryAt=null;
+  for(const p of trip.native.path){
+   const cells=nativeSegment(previous,p,{allowed:nativeGroundAllowed,reversible:true});assert.ok(cells);
+   for(let i=0;i<cells.length;i+=16){const cell=cells[i];if(nativeFieldZone(cell,zone)){entryAt=now+Math.ceil((distance+Math.hypot(cell.x-previous.x,cell.y-previous.y))/trip.native.remaining*(trip.until-now))+100;break;}}
+   if(entryAt)break;distance+=Math.hypot(p.x-previous.x,p.y-previous.y);previous=p;
+  }
+  assert.ok(entryAt&&entryAt<trip.until,'source-visible cave approach before arrival');now=entryAt;
+ }else now+=Math.floor((s.game.world.walkHome.until-now)*.9);
  await page.locator('.atlas-combat:not([hidden])').waitFor();
  assert.ok(s.game.hunt.field.native.journey?.native.remaining>0,'native population streams before the road endpoint');
  if(process.env.NATIVE_RESUME){

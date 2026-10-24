@@ -10,7 +10,7 @@ import {worldGeodata,geoRegionId} from '../../functions/game/world/l2jGeodata.js
 
 const xyz=p=>['x','y','z'].every(k=>Number.isFinite(p?.[k]));
 const missingRegions=new Set(),blocked=[],rows=[],territories=[];
-for(const zone of getZones().filter(z=>!z.instance&&!continuousField(z,roomLayout(z)))){
+for(const zone of getZones().filter(z=>!z.instance&&!continuousField(z,roomLayout(z))&&!nativeFieldSupported(z.id))){
  const model=LOCATION_LEVELS[zone.id],location=LOCATIONS.find(l=>l.id===zone.id),floors=[];
  for(const floor of model.floors){
   let fixed=0,valid=0,territory=0,unknown=0;
@@ -43,7 +43,7 @@ const report={npcSourceCommit:LEVEL_SOURCE.commit,geodataCommit:worldGeodata.man
 fs.writeFileSync('docs/interior-geodata-readiness.json',JSON.stringify(report,null,2)+'\n');
 fs.writeFileSync('docs/interior-geodata-readiness.md',[
  '# Подземные и многоуровневые участки: исходные точки и геодата','',
- `После переноса 39 поверхностных зон остаются **${rows.length}** других неинстансовых зон каталога, **${floorCount}** этажей/участков. Они пока используют адаптированные комнаты в общем Атласе. Этот отчёт проверяет исходные данные для следующего переноса, а не объявляет комнаты бесшовными. Внутренние приватные этажи существующих зон также попадают в проверку исходных точек.`, '',
+ `После переноса поверхностных зон и проверенных подземных участков остаются **${rows.length}** других неинстансовых зон каталога, **${floorCount}** этажей/участков. Они пока используют адаптированные комнаты в общем Атласе. Этот отчёт проверяет исходные данные для следующего переноса, а не объявляет комнаты бесшовными. Внутренние приватные этажи существующих зон также попадают в проверку исходных точек.`, '',
  `Из **${total('fixed')}** фиксированных исходных мест наземная проверка допускает **${total('valid')}**. Дополнительно сохранены **${total('territory')}** мест в полигонах; их выбор и запретные области требуют отдельной проверки, центры не считаются спавнами. Без полного подтверждения координат — **${total('unknown')}** мест.`, '',
  '| Зона | Этажей | Наземная проверка фиксированных мест | В полигонах | Не подтверждены координаты | Исходный XYZ входа | Записаны XYZ назначения транспорта |',
  '| --- | ---: | ---: | ---: | ---: | --- | ---: |',
