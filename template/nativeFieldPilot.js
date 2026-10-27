@@ -2775,6 +2775,41 @@ export default {
       ],
       "count": 112,
       "unportedMinionTemplates": []
+    },
+    "necropolis-sacrifice": {
+      "city": "gludin",
+      "interior": true,
+      "floors": [
+        1
+      ],
+      "dungeon": true,
+      "peacefulEntry": true,
+      "fixedCount": 0,
+      "territoryCount": 232,
+      "randomGroupCount": 0,
+      "initialCapacity": 232,
+      "unavailableCount": 0,
+      "availableCapacity": 232,
+      "npcIds": [
+        "21139",
+        "21140",
+        "21141",
+        "21142",
+        "21166",
+        "21167",
+        "21168",
+        "21169",
+        "21187",
+        "21188",
+        "21189",
+        "21190",
+        "21208",
+        "21209",
+        "21210",
+        "21211"
+      ],
+      "count": 232,
+      "unportedMinionTemplates": []
     }
   },
   "source": {
@@ -2858,7 +2893,8 @@ export default {
       "spawns/Catacombs/CatacombOfTheApostate.xml": "3f08574048a9555abbdde67fe766c69b8a9f9586a907826955778e4caf809cb4",
       "spawns/Catacombs/CatacombOfTheWitch.xml": "ca6b03827c52f7c73c99401428d1746e9b3525ce4bf9ce2b13e27218ba0f5d30",
       "spawns/Catacombs/CatacombOfDarkOmens.xml": "581e411f4cd1e9558dbf00dd75b811ff514f3ecaec098c904b3e8f8345ba578e",
-      "spawns/Catacombs/CatacombOfTheForbiddenPath.xml": "5dc63fb6b2ac5adf32ae4b03f68cfdafd50b58f4d7653b898dfd96f159a1c5da"
+      "spawns/Catacombs/CatacombOfTheForbiddenPath.xml": "5dc63fb6b2ac5adf32ae4b03f68cfdafd50b58f4d7653b898dfd96f159a1c5da",
+      "spawns/Catacombs/NecropolisOfSacrifice.xml": "46ee9c978c4ed6cf75957907db637750d190856c134013df30a85388fe6b82a3"
     },
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
   },
@@ -4094,6 +4130,22 @@ export default {
       "runSpeed": 175.0,
       "attackRange": 40.0
     },
+    "21139": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "21140": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "21141": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "21142": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
     "21143": {
       "runSpeed": 140.0,
       "attackRange": 40.0
@@ -4174,6 +4226,18 @@ export default {
       "runSpeed": 200.0,
       "attackRange": 40.0
     },
+    "21166": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "21167": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "21168": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
     "21169": {
       "runSpeed": 140.0,
       "attackRange": 40.0
@@ -4246,6 +4310,18 @@ export default {
       "runSpeed": 200.0,
       "attackRange": 40.0
     },
+    "21187": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "21188": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "21189": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
     "21190": {
       "runSpeed": 140.0,
       "attackRange": 40.0
@@ -4316,6 +4392,22 @@ export default {
     },
     "21207": {
       "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "21208": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "21209": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "21210": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "21211": {
+      "runSpeed": 110.0,
       "attackRange": 40.0
     },
     "21236": {

@@ -527,6 +527,28 @@ export default {
         "spawns/Catacombs/CatacombOfTheForbiddenPath.xml": "5dc63fb6b2ac5adf32ae4b03f68cfdafd50b58f4d7653b898dfd96f159a1c5da",
         "spawns/Others/20_10.xml": "a740a326e744aaa98cf948eb636de7d2a57c80bdff4e0386d195823a8c668d32"
       }
+    },
+    "necropolis-sacrifice": {
+      "asset": "/art/world/native/necropolis-sacrifice.svg",
+      "regions": {
+        "18_24": "f8cafaaefaea97f78d4d5136f69913cc836697ea461362d25c1d808570419872"
+      },
+      "bounds": {
+        "x": -52480,
+        "y": 209536,
+        "w": 11568,
+        "h": 11472
+      },
+      "cells": 218306,
+      "layerCells": 218306,
+      "contours": 78,
+      "corners": 6254,
+      "bytes": 48492,
+      "sha256": "e034413a7d080431a866e4c51fc2413ec04262d5aaf5a4a16ae9f89fca7a2df4",
+      "files": {
+        "spawns/Catacombs/NecropolisOfSacrifice.xml": "46ee9c978c4ed6cf75957907db637750d190856c134013df30a85388fe6b82a3",
+        "spawns/Others/18_24.xml": "4dbb41e0833c9597f4c78abe00adeca0990dbb927240b6aed3dfc4a7f76a88c4"
+      }
     }
   }
 };
