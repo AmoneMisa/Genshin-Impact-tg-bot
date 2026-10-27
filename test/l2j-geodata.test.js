@@ -69,6 +69,17 @@ test('native movement checks source NSWE, height increase, corner cells and dest
  assert.equal(nativeSegment(a,{...b,z:512},{geo}),null,'a bridge layer is not reached by sharing XY');
  assert.equal(nativeSegment(a,{x:1000,y:1000,z:0},{geo}),null);
 });
+
+test('diagonal source corner checks do not climb onto the two unvisited side cells',()=>{
+ for(const dx of [-1,1])for(const dy of [-1,1]){
+  const cells=new Map([['0:0',[{z:0,nswe:15}]],[`${dx}:${dy}`,[{z:0,nswe:15}]],[`0:${dy}`,[{z:512,nswe:dx>0?1:2}]],[`${dx}:0`,[{z:512,nswe:dy>0?4:8}]]]);
+  const geo=grid(cells),from={gx:0,gy:0,z:0,nswe:15};
+  assert.deepEqual(nativeStep(geo,from,dx,dy),{gx:dx,gy:dy,z:0,nswe:15});
+  assert.equal(nativeStep(geo,from,dx,dy,p=>p.z<100),null,'the trusted side-volume veto is retained');
+  cells.set(`0:${dy}`,[{z:512,nswe:0}]);assert.equal(nativeStep(geo,from,dx,dy),null,'source corner direction still blocks movement');
+  cells.set(`0:${dy}`,[{z:512,nswe:15}]);cells.set(`${dx}:${dy}`,[{z:48,nswe:15}]);assert.equal(nativeStep(geo,from,dx,dy),null,'a real upward step over 40 remains blocked');
+ }
+});
 test('bounded native search finds a real detour and fails closed when the work budget is exhausted',()=>{
  const cells=new Map();for(let x=0;x<7;x++)for(let y=0;y<7;y++)cells.set(x+':'+y,[{z:0,nswe:x===3&&y<5?0:15}]);
  const geo=grid(cells),from={x:8,y:8,z:0},to={x:104,y:8,z:0};

@@ -15,7 +15,9 @@ export function nativeStep(geo,from,dx,dy,allowed=()=>true){
  if(dx&&dy){
   const vertical=geo.cell(from.gx,from.gy+dy,from.z),horizontal=geo.cell(from.gx+dx,from.gy,from.z);
   if(!vertical||!horizontal||!(vertical.nswe&(dx>0?1:2))||!(horizontal.nswe&(dy>0?4:8)))return null;
-  if(vertical.z-from.z>40||horizontal.z-from.z>40)return null;
+  // GeoEngine.checkNearestNsweAntiCornerCut checks side-cell direction bits,
+  // not their heights: these cells are not stepped onto. The destination's
+  // actual layer still passes the 40-unit increase check above.
   if(!allowed({x:geoWorld(from.gx),y:geoWorld(from.gy+dy),z:vertical.z})||!allowed({x:geoWorld(from.gx+dx),y:geoWorld(from.gy),z:horizontal.z}))return null;
  }
  return {gx:x,gy:y,...cell};
