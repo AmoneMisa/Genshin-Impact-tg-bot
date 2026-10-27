@@ -2573,6 +2573,41 @@ export default {
       ],
       "count": 268,
       "unportedMinionTemplates": []
+    },
+    "catacomb-heretic": {
+      "city": "dion",
+      "interior": true,
+      "floors": [
+        1
+      ],
+      "dungeon": true,
+      "peacefulEntry": true,
+      "fixedCount": 0,
+      "territoryCount": 224,
+      "randomGroupCount": 0,
+      "initialCapacity": 224,
+      "unavailableCount": 0,
+      "availableCapacity": 224,
+      "npcIds": [
+        "21143",
+        "21144",
+        "21145",
+        "21146",
+        "21169",
+        "21170",
+        "21171",
+        "21172",
+        "21190",
+        "21191",
+        "21192",
+        "21193",
+        "21236",
+        "21237",
+        "21238",
+        "21239"
+      ],
+      "count": 224,
+      "unportedMinionTemplates": []
     }
   },
   "source": {
@@ -2650,7 +2685,8 @@ export default {
       "spawns/Others/19_19.xml": "f0ad24acfc3936aef08bfd68fc4ea444e99749ccdaf32e19fd934626c86287e3",
       "spawns/Innadril/FieldOfWhispers.xml": "784edfcf4a0b3017e3684bb98f863363807baf13ea6df21fc406a0136b824686",
       "spawns/Dion/CrumaMarshlands.xml": "9eb722a945992899d143d0a3fd7a2206fb977f6dd2388927ee516e3d9a360d7f",
-      "spawns/Dion/PlainsOfDion.xml": "647003afc6a92cc16577b3ceb2980b1433dfa61bc68a38c4cbd9311b5e086ad4"
+      "spawns/Dion/PlainsOfDion.xml": "647003afc6a92cc16577b3ceb2980b1433dfa61bc68a38c4cbd9311b5e086ad4",
+      "spawns/Catacombs/CatacombOfTheHeretic.xml": "6c72c23ba243dd76bae5c1486145afd551e6644cf44bc7a2426b3746d556c77d"
     },
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
   },
@@ -3884,6 +3920,70 @@ export default {
     },
     "21116": {
       "runSpeed": 175.0,
+      "attackRange": 40.0
+    },
+    "21143": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "21144": {
+      "runSpeed": 130.0,
+      "attackRange": 40.0
+    },
+    "21145": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "21146": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "21169": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "21170": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "21171": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "21172": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "21190": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "21191": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "21192": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "21193": {
+      "runSpeed": 150.0,
+      "attackRange": 40.0
+    },
+    "21236": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "21237": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "21238": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "21239": {
+      "runSpeed": 120.0,
       "attackRange": 40.0
     },
     "21261": {
