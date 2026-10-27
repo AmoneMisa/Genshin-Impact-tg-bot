@@ -3,10 +3,10 @@
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
   "totals": {
     "catalogZones": 72,
-    "nativePopulationZones": 57,
-    "adaptedPopulationZones": 15,
-    "reviewedFloors": 80,
-    "deferredFloors": 69,
+    "nativePopulationZones": 58,
+    "adaptedPopulationZones": 14,
+    "reviewedFloors": 81,
+    "deferredFloors": 68,
     "partialPopulationZones": 4,
     "guardedScenarioRoutes": 1
   },
@@ -1701,21 +1701,16 @@
     {
       "id": "necropolis-patriots",
       "name": "Некрополь Патриотов",
-      "nativePopulation": false,
+      "nativePopulation": true,
       "catalogFloors": [
         1
       ],
-      "reviewedFloors": [],
-      "deferredFloors": [
-        {
-          "floor": 1,
-          "title": "Некрополь Патриотов",
-          "boss": null,
-          "reason": "dungeon_native_movement_and_gates"
-        }
+      "reviewedFloors": [
+        1
       ],
+      "deferredFloors": [],
       "catalogSourcePlaces": 188,
-      "nativeSourcePlaces": 0,
+      "nativeSourcePlaces": 188,
       "unavailablePlaces": 0,
       "sourceGaps": [],
       "guardedScenarioRoutes": [],

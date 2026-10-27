@@ -2872,6 +2872,37 @@ export default {
       ],
       "count": 168,
       "unportedMinionTemplates": []
+    },
+    "necropolis-patriots": {
+      "city": "gludio",
+      "interior": true,
+      "floors": [
+        1
+      ],
+      "dungeon": true,
+      "peacefulEntry": true,
+      "fixedCount": 0,
+      "territoryCount": 188,
+      "randomGroupCount": 0,
+      "initialCapacity": 188,
+      "unavailableCount": 0,
+      "availableCapacity": 188,
+      "npcIds": [
+        "21153",
+        "21154",
+        "21155",
+        "21177",
+        "21178",
+        "21179",
+        "21198",
+        "21199",
+        "21200",
+        "21221",
+        "21222",
+        "21223"
+      ],
+      "count": 188,
+      "unportedMinionTemplates": []
     }
   },
   "source": {
@@ -2958,7 +2989,8 @@ export default {
       "spawns/Catacombs/CatacombOfTheForbiddenPath.xml": "5dc63fb6b2ac5adf32ae4b03f68cfdafd50b58f4d7653b898dfd96f159a1c5da",
       "spawns/Catacombs/NecropolisOfSacrifice.xml": "46ee9c978c4ed6cf75957907db637750d190856c134013df30a85388fe6b82a3",
       "spawns/Catacombs/NecropolisOfThePilgrims.xml": "cb152cfd8213df90ea2cd2f02bf45c5da7c6c3d920bc1167f9aea8b549b5f2d0",
-      "spawns/Catacombs/NecropolisOfWorship.xml": "1f97378b6b34897283ff97fb8fbd802888c0eeec5ccb647173e10346d29f6087"
+      "spawns/Catacombs/NecropolisOfWorship.xml": "1f97378b6b34897283ff97fb8fbd802888c0eeec5ccb647173e10346d29f6087",
+      "spawns/Catacombs/NecropolisOfThePatriots.xml": "dd987eb019debb2981fc5211f30340466bb15031ba4be796cd949c0c386adaae"
     },
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
   },
@@ -4500,6 +4532,18 @@ export default {
     },
     "21219": {
       "runSpeed": 135.0,
+      "attackRange": 40.0
+    },
+    "21221": {
+      "runSpeed": 145.0,
+      "attackRange": 40.0
+    },
+    "21222": {
+      "runSpeed": 170.0,
+      "attackRange": 40.0
+    },
+    "21223": {
+      "runSpeed": 145.0,
       "attackRange": 40.0
     },
     "21236": {

@@ -593,6 +593,28 @@ export default {
         "spawns/Catacombs/NecropolisOfWorship.xml": "1f97378b6b34897283ff97fb8fbd802888c0eeec5ccb647173e10346d29f6087",
         "spawns/Others/23_23.xml": "bce4a4862c29adea296a47ed9f86e03ade31dd001ef7980f7b4049705b2d264f"
       }
+    },
+    "necropolis-patriots": {
+      "asset": "/art/world/native/necropolis-patriots.svg",
+      "regions": {
+        "19_20": "c1297d7fc78175a1f5731bb2e4d5f26999fd2ebb90a4ec24e53a7be391cd502b"
+      },
+      "bounds": {
+        "x": -21952,
+        "y": 76800,
+        "w": 11440,
+        "h": 11472
+      },
+      "cells": 174166,
+      "layerCells": 174166,
+      "contours": 69,
+      "corners": 5195,
+      "bytes": 39941,
+      "sha256": "c81869ce49718559e261b2a09e8646f319e9ec19c08b3657c128f7d66d1dc990",
+      "files": {
+        "spawns/Catacombs/NecropolisOfThePatriots.xml": "dd987eb019debb2981fc5211f30340466bb15031ba4be796cd949c0c386adaae",
+        "spawns/Others/19_20.xml": "9288973c393d4b37001bb9ed71607be55d02f3714bf3255c2cda98a9384c63b0"
+      }
     }
   }
 };
