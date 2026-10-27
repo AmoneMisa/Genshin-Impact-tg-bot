@@ -417,6 +417,28 @@ export default {
         "spawns/Catacombs/CatacombOfTheHeretic.xml": "6c72c23ba243dd76bae5c1486145afd551e6644cf44bc7a2426b3746d556c77d",
         "spawns/Others/18_10.xml": "72cf6ca858c39786f080247e46175714bfd85c9ae9b98abdfeb079972307fcf9"
       }
+    },
+    "catacomb-branded": {
+      "asset": "/art/world/native/catacomb-branded.svg",
+      "regions": {
+        "21_23": "e06e36ef66b6e9e626b24bb607f0b6dc015db9aa8a22ebf6c92e0c6f2fa2a9e0"
+      },
+      "bounds": {
+        "x": 46000,
+        "y": 169712,
+        "w": 11472,
+        "h": 11488
+      },
+      "cells": 226696,
+      "layerCells": 226696,
+      "contours": 80,
+      "corners": 6130,
+      "bytes": 47642,
+      "sha256": "68388aac8ff55a5c4e4b20b01a9be7e7f4052d6221b3a9319c08f6d02336293b",
+      "files": {
+        "spawns/Catacombs/CatacombOfTheBranded.xml": "73a34921e258f7844df239287e9c87bfd233be44df0da20601e989c15860862a",
+        "spawns/Others/21_23.xml": "7b40f748a5e5d4e458fc84a0c68eb5335ddd5a7f6786f27ca349ea472555af91"
+      }
     }
   }
 };
