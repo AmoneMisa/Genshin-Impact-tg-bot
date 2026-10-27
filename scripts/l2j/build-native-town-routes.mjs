@@ -90,5 +90,5 @@ for(const [fromCity,toCity] of TOWN_LINKS){
  routes[id]={fromCity,toCity,available:true,from:vertices[0],to:vertices.at(-1),distance,path:vertices.slice(1),returnPath:vertices.slice(0,-1).reverse(),attempts};
 }
 const result={geodataCommit:worldGeodata.manifest.commit,worldCommit:nativeWorld.source.commit,barriersSha256:createHash('sha256').update(fs.readFileSync('template/nativeWorld.js')).digest('hex'),towns:TOWN_ANCHORS,routes};
-fs.writeFileSync(file,'// Original H5 town links. All segments verified in both directions against native cells.\n// Derived from L2J High Five geodata (GPL-3.0); see data/l2j-geodata/LICENSE.\nexport default '+JSON.stringify(result,null,2)+';\n');
+fs.writeFileSync(file,'// H5 source town anchors joined by derived walks. Every segment verified in both directions against native cells.\n// Derived from L2J High Five geodata (GPL-3.0); see data/l2j-geodata/LICENSE.\nexport default '+JSON.stringify(result,null,2)+';\n');
 console.log('Verified town links:',Object.values(routes).filter(r=>r.available).length);

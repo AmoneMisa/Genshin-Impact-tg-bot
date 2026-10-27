@@ -1,6 +1,8 @@
 import nativeWorld from '../../template/nativeWorld.js';
 import {CITIES,CITY_NPCS} from '../../template/worldMap.js';
 
+// Candidate town pairs, not a client road table. The builder must prove every
+// derived walk against geodata; the NPC anchors below retain source positions.
 export const TOWN_LINKS=[['gludio','gludin'],['gludio','dion'],['dion','floran'],['dion','giran'],['giran','heine'],['giran','oren'],['oren','hunters'],['hunters','aden'],['aden','goddard'],['oren','rune'],['rune','goddard'],['goddard','schuttgart'],['oren','aden']];
 // Adjacent source regions cover mountain/river detours for the three narrow rectangles.
 export const TOWN_DETOUR_REGIONS=['18_23','19_23','21_20','21_21','23_16','23_17','23_21','25_16','25_17'];
