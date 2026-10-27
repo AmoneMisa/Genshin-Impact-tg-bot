@@ -3,10 +3,10 @@
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
   "totals": {
     "catalogZones": 72,
-    "nativePopulationZones": 56,
-    "adaptedPopulationZones": 16,
-    "reviewedFloors": 79,
-    "deferredFloors": 70,
+    "nativePopulationZones": 57,
+    "adaptedPopulationZones": 15,
+    "reviewedFloors": 80,
+    "deferredFloors": 69,
     "partialPopulationZones": 4,
     "guardedScenarioRoutes": 1
   },
@@ -1683,21 +1683,16 @@
     {
       "id": "necropolis-worship",
       "name": "Некрополь Поклонения",
-      "nativePopulation": false,
+      "nativePopulation": true,
       "catalogFloors": [
         1
       ],
-      "reviewedFloors": [],
-      "deferredFloors": [
-        {
-          "floor": 1,
-          "title": "Некрополь Поклонения",
-          "boss": null,
-          "reason": "dungeon_native_movement_and_gates"
-        }
+      "reviewedFloors": [
+        1
       ],
+      "deferredFloors": [],
       "catalogSourcePlaces": 168,
-      "nativeSourcePlaces": 0,
+      "nativeSourcePlaces": 168,
       "unavailablePlaces": 0,
       "sourceGaps": [],
       "guardedScenarioRoutes": [],

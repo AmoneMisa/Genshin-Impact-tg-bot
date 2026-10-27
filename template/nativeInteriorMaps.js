@@ -571,6 +571,28 @@ export default {
         "spawns/Catacombs/NecropolisOfThePilgrims.xml": "cb152cfd8213df90ea2cd2f02bf45c5da7c6c3d920bc1167f9aea8b549b5f2d0",
         "spawns/Others/21_21.xml": "9c6e622796ad3e070162b247138fa7f4a5187db78421c6627e1df20ee0c05374"
       }
+    },
+    "necropolis-worship": {
+      "asset": "/art/world/native/necropolis-worship.svg",
+      "regions": {
+        "23_23": "7c81cbd5d47367d9b817ff8ad0f0dd39cda6c61f30241980f6d29697e26d89ef"
+      },
+      "bounds": {
+        "x": 111024,
+        "y": 173392,
+        "w": 11472,
+        "h": 11568
+      },
+      "cells": 159748,
+      "layerCells": 159748,
+      "contours": 53,
+      "corners": 4559,
+      "bytes": 35352,
+      "sha256": "f30268b33873eaba8e4e482296f8cbc755887a81e7603e7424c652b24d1209dc",
+      "files": {
+        "spawns/Catacombs/NecropolisOfWorship.xml": "1f97378b6b34897283ff97fb8fbd802888c0eeec5ccb647173e10346d29f6087",
+        "spawns/Others/23_23.xml": "bce4a4862c29adea296a47ed9f86e03ade31dd001ef7980f7b4049705b2d264f"
+      }
     }
   }
 };
