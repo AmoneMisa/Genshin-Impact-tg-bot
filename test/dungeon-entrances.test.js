@@ -24,3 +24,11 @@ test('mainland Sacrifice entrance is grouped with Gludin across no island shortc
  assert.equal(entry.regionAssociation,'nearest-source-mainland-town');
  assert.deepEqual([entry.x,entry.y,entry.z],[-41568,209344,-5085]);
 });
+
+test('Saints and Disciples follow the named H5 teleport tables instead of catalog ordering',()=>{
+ const saints=entries['necropolis-saints'],disciples=entries['necropolis-disciples'];
+ assert.equal(saints.dungeonEntranceSource.npcId,31102);assert.equal(saints.dungeonEntranceSource.interiorNpcId,31110);assert.equal(saints.region,'heine');
+ assert.deepEqual(saints.dungeonEntranceSource.insideDestination,{x:83000,y:209213,z:-5443});
+ assert.equal(disciples.dungeonEntranceSource.npcId,31101);assert.equal(disciples.dungeonEntranceSource.interiorNpcId,31109);assert.equal(disciples.region,'goddard');
+ assert.deepEqual(disciples.dungeonEntranceSource.insideDestination,{x:172251,y:-17605,z:-4903});
+});

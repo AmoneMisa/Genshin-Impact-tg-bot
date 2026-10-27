@@ -1371,68 +1371,6 @@ export default {
     },
     "necropolis-saints": {
       "entrance": {
-        "npcId": 31101,
-        "name": "Gatekeeper Ziggurat",
-        "point": {
-          "x": 171936,
-          "y": -17600,
-          "z": -4899
-        },
-        "normal": false,
-        "castleIds": [],
-        "targets": [
-          {
-            "floor": 1,
-            "point": {
-              "x": 172251,
-              "y": -17605,
-              "z": -4903
-            },
-            "fee": 0,
-            "item": 57,
-            "list": "OTHER",
-            "index": 0,
-            "title": "Войти в подземелье",
-            "source": {
-              "file": "teleporters/dungeon/31101.xml",
-              "sha256": "ee4a31d826337367523b79ccca0e366a6ee980528fff64a8cd340dccd7ab46d3"
-            }
-          }
-        ]
-      },
-      "1": {
-        "npcId": 31109,
-        "name": "Gatekeeper Ziggurat",
-        "point": {
-          "x": 172672,
-          "y": -17600,
-          "z": -4897
-        },
-        "normal": false,
-        "castleIds": [],
-        "targets": [
-          {
-            "floor": 0,
-            "point": {
-              "x": 171902,
-              "y": -17595,
-              "z": -4905
-            },
-            "fee": 0,
-            "item": 57,
-            "list": "OTHER",
-            "index": 0,
-            "title": "Выйти к зиккурату",
-            "source": {
-              "file": "teleporters/dungeon/31109.xml",
-              "sha256": "b0662dc923f7740e220112f92912d84366e7f42cfe4e59af6f58dc425799b895"
-            }
-          }
-        ]
-      }
-    },
-    "necropolis-disciples": {
-      "entrance": {
         "npcId": 31102,
         "name": "Gatekeeper Ziggurat",
         "point": {
@@ -1488,6 +1426,68 @@ export default {
             "source": {
               "file": "teleporters/dungeon/31110.xml",
               "sha256": "6d2fe9f3e7c18515702bf02e2f6e5ea051ef1bc11e4e5dd0f278e053c155b801"
+            }
+          }
+        ]
+      }
+    },
+    "necropolis-disciples": {
+      "entrance": {
+        "npcId": 31101,
+        "name": "Gatekeeper Ziggurat",
+        "point": {
+          "x": 171936,
+          "y": -17600,
+          "z": -4899
+        },
+        "normal": false,
+        "castleIds": [],
+        "targets": [
+          {
+            "floor": 1,
+            "point": {
+              "x": 172251,
+              "y": -17605,
+              "z": -4903
+            },
+            "fee": 0,
+            "item": 57,
+            "list": "OTHER",
+            "index": 0,
+            "title": "Войти в подземелье",
+            "source": {
+              "file": "teleporters/dungeon/31101.xml",
+              "sha256": "ee4a31d826337367523b79ccca0e366a6ee980528fff64a8cd340dccd7ab46d3"
+            }
+          }
+        ]
+      },
+      "1": {
+        "npcId": 31109,
+        "name": "Gatekeeper Ziggurat",
+        "point": {
+          "x": 172672,
+          "y": -17600,
+          "z": -4897
+        },
+        "normal": false,
+        "castleIds": [],
+        "targets": [
+          {
+            "floor": 0,
+            "point": {
+              "x": 171902,
+              "y": -17595,
+              "z": -4905
+            },
+            "fee": 0,
+            "item": 57,
+            "list": "OTHER",
+            "index": 0,
+            "title": "Выйти к зиккурату",
+            "source": {
+              "file": "teleporters/dungeon/31109.xml",
+              "sha256": "b0662dc923f7740e220112f92912d84366e7f42cfe4e59af6f58dc425799b895"
             }
           }
         ]
@@ -1556,10 +1556,10 @@ export default {
       "teleporters/dungeon/31107.xml": "e28e399d9f681669b8558290c28cc6c4b3eaf3681d3a157f007776a11b5cd67c",
       "teleporters/dungeon/31100.xml": "e0bec2c7c3e4096f1f49d83749d362ee6488e3949e719d66a2c1f7011247ab3b",
       "teleporters/dungeon/31108.xml": "3b7300a14a1c5b03848ee6a1933d616883662ccec67316453046232fcc7f1ac5",
-      "teleporters/dungeon/31101.xml": "ee4a31d826337367523b79ccca0e366a6ee980528fff64a8cd340dccd7ab46d3",
-      "teleporters/dungeon/31109.xml": "b0662dc923f7740e220112f92912d84366e7f42cfe4e59af6f58dc425799b895",
       "teleporters/dungeon/31102.xml": "d63adafe83d2ce531511165b24dc554cfb64cacc1ce626ca1b8b50a665ac7921",
-      "teleporters/dungeon/31110.xml": "6d2fe9f3e7c18515702bf02e2f6e5ea051ef1bc11e4e5dd0f278e053c155b801"
+      "teleporters/dungeon/31110.xml": "6d2fe9f3e7c18515702bf02e2f6e5ea051ef1bc11e4e5dd0f278e053c155b801",
+      "teleporters/dungeon/31101.xml": "ee4a31d826337367523b79ccca0e366a6ee980528fff64a8cd340dccd7ab46d3",
+      "teleporters/dungeon/31109.xml": "b0662dc923f7740e220112f92912d84366e7f42cfe4e59af6f58dc425799b895"
     },
     "npcSha256": "ec380d608d02e02fb12a7ac1e5c82c05a1a2c2252f08bb591cde15ae316220e2",
     "holderSha256": "a5f44d6a29d599177cf8b7ea253e098969960f9646e07b9f7ed79e0b424e6fa1",

@@ -612,42 +612,6 @@ export default {
     "necropolis-saints": {
       "entrance": {
         "point": {
-          "x": 171936,
-          "y": -17600,
-          "z": -4899
-        },
-        "source": {
-          "type": "SOURCE_NPC",
-          "id": 31101,
-          "x": 171936,
-          "y": -17600,
-          "z": -4899,
-          "file": "spawns/Others/25_17.xml",
-          "sha256": "bd4c0e4d3135212c3da2faf6b32db255bdd79f4065cb12346a48958acde869f5",
-          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
-        }
-      },
-      "1": {
-        "point": {
-          "x": 172672,
-          "y": -17600,
-          "z": -4897
-        },
-        "source": {
-          "type": "SOURCE_NPC",
-          "id": 31109,
-          "x": 172672,
-          "y": -17600,
-          "z": -4897,
-          "file": "spawns/Others/25_17.xml",
-          "sha256": "bd4c0e4d3135212c3da2faf6b32db255bdd79f4065cb12346a48958acde869f5",
-          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
-        }
-      }
-    },
-    "necropolis-disciples": {
-      "entrance": {
-        "point": {
           "x": 82688,
           "y": 209216,
           "z": -5437
@@ -677,6 +641,42 @@ export default {
           "z": -5440,
           "file": "spawns/Others/22_24.xml",
           "sha256": "6642af364019bf2592d5fadb4b121b673d312585ba3be9f732d31db38aa65e29",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+        }
+      }
+    },
+    "necropolis-disciples": {
+      "entrance": {
+        "point": {
+          "x": 171936,
+          "y": -17600,
+          "z": -4899
+        },
+        "source": {
+          "type": "SOURCE_NPC",
+          "id": 31101,
+          "x": 171936,
+          "y": -17600,
+          "z": -4899,
+          "file": "spawns/Others/25_17.xml",
+          "sha256": "bd4c0e4d3135212c3da2faf6b32db255bdd79f4065cb12346a48958acde869f5",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+        }
+      },
+      "1": {
+        "point": {
+          "x": 172672,
+          "y": -17600,
+          "z": -4897
+        },
+        "source": {
+          "type": "SOURCE_NPC",
+          "id": 31109,
+          "x": 172672,
+          "y": -17600,
+          "z": -4897,
+          "file": "spawns/Others/25_17.xml",
+          "sha256": "bd4c0e4d3135212c3da2faf6b32db255bdd79f4065cb12346a48958acde869f5",
           "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
         }
       }

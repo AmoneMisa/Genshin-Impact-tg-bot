@@ -5,8 +5,13 @@ import sys
 import tarfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
-config={**{'necropolis-'+key:(31095+i,31103+i,1) for i,key in enumerate(['sacrifice','pilgrims','worship','patriots','devotion','martyrdom','saints','disciples'])},
-        **{'catacomb-'+key:(31114+i,31120+i,2) for i,key in enumerate(['heretic','branded','apostate','witch','dark-omens','forbidden-path'])}}
+necropolis_ids={'sacrifice':(31095,31103),'pilgrims':(31096,31104),'worship':(31097,31105),
+ 'patriots':(31098,31106),'devotion':(31099,31107),'martyrdom':(31100,31108),
+ 'saints':(31102,31110),'disciples':(31101,31109)}
+catacomb_ids={'heretic':(31114,31120),'branded':(31115,31121),'apostate':(31116,31122),
+ 'witch':(31117,31123),'dark-omens':(31118,31124),'forbidden-path':(31119,31125)}
+config={**{'necropolis-'+key:(*pair,1) for key,pair in necropolis_ids.items()},
+        **{'catacomb-'+key:(*pair,2) for key,pair in catacomb_ids.items()}}
 id=sys.argv[1];outside,inside,sign=config[id]
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
 world=json.loads(Path('template/nativeWorld.js').read_text(encoding='utf-8').split('export default ',1)[1].strip().rstrip(';'))
@@ -31,6 +36,11 @@ city=min(mainland,key=lambda city:(mainland[city]['x']-point['x'])**2+(mainland[
 destination=lambda row:{k.lower():row['Pos'+k] for k in ['X','Y','Z']}
 def teleport(npcId,command):
     file=f'teleporters/dungeon/{npcId}.xml';source=base/file
+    if command=='necro' and id in ['necropolis-saints','necropolis-disciples']:
+        # The H5 sequence ends Disciples, Saints, unlike the old catalog order.
+        # Literal source comments associate each NPC table with its dungeon.
+        label='Saints' if id=='necropolis-saints' else 'Disciples'
+        assert f'Necropolis {label} Entrance' in source.read_text(encoding='utf8')
     node=ET.parse(source).find(f'./npc[@id="{npcId}"]/teleport[@type="OTHER"]')
     assert node is not None and len(node.findall('location'))==1
     loc=node.find('location');files[file]=hashlib.sha256(source.read_bytes()).hexdigest()

@@ -954,85 +954,6 @@ export default {
     "selectionGeometry": "authored-extent"
   },
   "necropolis-saints": {
-    "x": 171936,
-    "y": -17600,
-    "z": -4899,
-    "region": "goddard",
-    "regionAssociation": "nearest-source-mainland-town",
-    "dungeonEntranceSource": {
-      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
-      "files": {
-        "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
-        "spawns/Others/25_17.xml": "bd4c0e4d3135212c3da2faf6b32db255bdd79f4065cb12346a48958acde869f5",
-        "teleporters/dungeon/31101.xml": "ee4a31d826337367523b79ccca0e366a6ee980528fff64a8cd340dccd7ab46d3",
-        "html/teleporter/31101.htm": "ef599b93a44eafe79ee5451b3f489d2f468bad6e49b3ef18b3087bd70d81ffb4",
-        "teleporters/dungeon/31109.xml": "b0662dc923f7740e220112f92912d84366e7f42cfe4e59af6f58dc425799b895",
-        "html/teleporter/31109.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
-      },
-      "npcId": 31101,
-      "role": 0,
-      "interiorNpcId": 31109,
-      "signNumber": 1,
-      "insideDestination": {
-        "x": 172251,
-        "y": -17605,
-        "z": -4903
-      },
-      "returnDestination": {
-        "x": 171902,
-        "y": -17595,
-        "z": -4905
-      },
-      "legacyParameterDestinations": {
-        "inside": {
-          "x": 172351,
-          "y": -17600,
-          "z": -4928
-        },
-        "return": {
-          "x": 172031,
-          "y": -17600,
-          "z": -4928
-        }
-      },
-      "destinationSource": "OTHER teleport table, HTML command index 0",
-      "coreFiles": {
-        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
-        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
-      },
-      "nativeGroundApproach": null,
-      "teleportTariff": {
-        "itemId": 57,
-        "count": 0
-      },
-      "returnTariff": {
-        "itemId": 57,
-        "count": 0
-      },
-      "seal": "avarice",
-      "sevenSignsStateAvailable": false
-    },
-    "polygon": [
-      [
-        171436,
-        -18100
-      ],
-      [
-        172436,
-        -18100
-      ],
-      [
-        172436,
-        -17100
-      ],
-      [
-        171436,
-        -17100
-      ]
-    ],
-    "selectionGeometry": "authored-extent"
-  },
-  "necropolis-disciples": {
     "x": 82688,
     "y": 209216,
     "z": -5437,
@@ -1107,6 +1028,85 @@ export default {
       [
         82188,
         209716
+      ]
+    ],
+    "selectionGeometry": "authored-extent"
+  },
+  "necropolis-disciples": {
+    "x": 171936,
+    "y": -17600,
+    "z": -4899,
+    "region": "goddard",
+    "regionAssociation": "nearest-source-mainland-town",
+    "dungeonEntranceSource": {
+      "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+      "files": {
+        "stats/npcs/31100-31199.xml": "d8016fcc0f156b3a248e023e3b28b3d76ee160a559dca936fa328cf60625cfff",
+        "spawns/Others/25_17.xml": "bd4c0e4d3135212c3da2faf6b32db255bdd79f4065cb12346a48958acde869f5",
+        "teleporters/dungeon/31101.xml": "ee4a31d826337367523b79ccca0e366a6ee980528fff64a8cd340dccd7ab46d3",
+        "html/teleporter/31101.htm": "ef599b93a44eafe79ee5451b3f489d2f468bad6e49b3ef18b3087bd70d81ffb4",
+        "teleporters/dungeon/31109.xml": "b0662dc923f7740e220112f92912d84366e7f42cfe4e59af6f58dc425799b895",
+        "html/teleporter/31109.htm": "5abf886c57b2ac80cb362a9fadc4da5a2d6f4a3f53241cda6e7794b58278f986"
+      },
+      "npcId": 31101,
+      "role": 0,
+      "interiorNpcId": 31109,
+      "signNumber": 1,
+      "insideDestination": {
+        "x": 172251,
+        "y": -17605,
+        "z": -4903
+      },
+      "returnDestination": {
+        "x": 171902,
+        "y": -17595,
+        "z": -4905
+      },
+      "legacyParameterDestinations": {
+        "inside": {
+          "x": 172351,
+          "y": -17600,
+          "z": -4928
+        },
+        "return": {
+          "x": 172031,
+          "y": -17600,
+          "z": -4928
+        }
+      },
+      "destinationSource": "OTHER teleport table, HTML command index 0",
+      "coreFiles": {
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/actor/instance/DungeonGatekeeper.java": "e601bf24d8d306b45195bb54c3176dbe5dc6b4d71a26b5e720c10e1945be3c8d",
+        "L2J_Mobius-9fb01cb20513e55190cdde8d91e41be2c0914f84-L2J_Mobius_CT_2.6_HighFive-java-org-l2jmobius-gameserver/L2J_Mobius_CT_2.6_HighFive/java/org/l2jmobius/gameserver/entity/teleporter/TeleportLocation.java": "0c861dac072dc6526c03567e628bdb262534ecfbaf059b2011ede62105f68dc7"
+      },
+      "nativeGroundApproach": null,
+      "teleportTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "returnTariff": {
+        "itemId": 57,
+        "count": 0
+      },
+      "seal": "avarice",
+      "sevenSignsStateAvailable": false
+    },
+    "polygon": [
+      [
+        171436,
+        -18100
+      ],
+      [
+        172436,
+        -18100
+      ],
+      [
+        172436,
+        -17100
+      ],
+      [
+        171436,
+        -17100
       ]
     ],
     "selectionGeometry": "authored-extent"
