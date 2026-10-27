@@ -2747,6 +2747,34 @@ export default {
       ],
       "count": 176,
       "unportedMinionTemplates": []
+    },
+    "catacomb-forbidden-path": {
+      "city": "hunters",
+      "interior": true,
+      "floors": [
+        1
+      ],
+      "dungeon": true,
+      "peacefulEntry": true,
+      "fixedCount": 0,
+      "territoryCount": 112,
+      "randomGroupCount": 0,
+      "initialCapacity": 112,
+      "unavailableCount": 0,
+      "availableCapacity": 112,
+      "npcIds": [
+        "21163",
+        "21164",
+        "21165",
+        "21185",
+        "21186",
+        "21206",
+        "21207",
+        "21254",
+        "21255"
+      ],
+      "count": 112,
+      "unportedMinionTemplates": []
     }
   },
   "source": {
@@ -2829,7 +2857,8 @@ export default {
       "spawns/Catacombs/CatacombOfTheBranded.xml": "73a34921e258f7844df239287e9c87bfd233be44df0da20601e989c15860862a",
       "spawns/Catacombs/CatacombOfTheApostate.xml": "3f08574048a9555abbdde67fe766c69b8a9f9586a907826955778e4caf809cb4",
       "spawns/Catacombs/CatacombOfTheWitch.xml": "ca6b03827c52f7c73c99401428d1746e9b3525ce4bf9ce2b13e27218ba0f5d30",
-      "spawns/Catacombs/CatacombOfDarkOmens.xml": "581e411f4cd1e9558dbf00dd75b811ff514f3ecaec098c904b3e8f8345ba578e"
+      "spawns/Catacombs/CatacombOfDarkOmens.xml": "581e411f4cd1e9558dbf00dd75b811ff514f3ecaec098c904b3e8f8345ba578e",
+      "spawns/Catacombs/CatacombOfTheForbiddenPath.xml": "5dc63fb6b2ac5adf32ae4b03f68cfdafd50b58f4d7653b898dfd96f159a1c5da"
     },
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
   },
@@ -4135,6 +4164,10 @@ export default {
     },
     "21163": {
       "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "21164": {
+      "runSpeed": 190.0,
       "attackRange": 40.0
     },
     "21165": {

@@ -505,6 +505,28 @@ export default {
         "spawns/Catacombs/CatacombOfDarkOmens.xml": "581e411f4cd1e9558dbf00dd75b811ff514f3ecaec098c904b3e8f8345ba578e",
         "spawns/Others/19_18.xml": "7e9ef04a3a97537b0a39940d1a17a9cfd36aa4b94d57029e3f8319c45d1c62cd"
       }
+    },
+    "catacomb-forbidden-path": {
+      "asset": "/art/world/native/catacomb-forbidden-path.svg",
+      "regions": {
+        "20_10": "bfcbbcfea4c926e98ec8625af21a1b03240c19c7f73b79f3120045d23405f646"
+      },
+      "bounds": {
+        "x": 12384,
+        "y": -249152,
+        "w": 11536,
+        "h": 5888
+      },
+      "cells": 104903,
+      "layerCells": 104903,
+      "contours": 37,
+      "corners": 2825,
+      "bytes": 21634,
+      "sha256": "3ac839fca1df8d9eaa700d7445a1c1b5cd7ed7c54acd86b67742c34fc233005e",
+      "files": {
+        "spawns/Catacombs/CatacombOfTheForbiddenPath.xml": "5dc63fb6b2ac5adf32ae4b03f68cfdafd50b58f4d7653b898dfd96f159a1c5da",
+        "spawns/Others/20_10.xml": "a740a326e744aaa98cf948eb636de7d2a57c80bdff4e0386d195823a8c668d32"
+      }
     }
   }
 };
