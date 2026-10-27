@@ -549,6 +549,28 @@ export default {
         "spawns/Catacombs/NecropolisOfSacrifice.xml": "46ee9c978c4ed6cf75957907db637750d190856c134013df30a85388fe6b82a3",
         "spawns/Others/18_24.xml": "4dbb41e0833c9597f4c78abe00adeca0990dbb927240b6aed3dfc4a7f76a88c4"
       }
+    },
+    "necropolis-pilgrims": {
+      "asset": "/art/world/native/necropolis-pilgrims.svg",
+      "regions": {
+        "21_21": "bbeda470d1968dd87a8b66c4cc81fbaf0829b08c03f4bebc6cfba257da514cee"
+      },
+      "bounds": {
+        "x": 44656,
+        "y": 112640,
+        "w": 11488,
+        "h": 11488
+      },
+      "cells": 164949,
+      "layerCells": 164949,
+      "contours": 51,
+      "corners": 4616,
+      "bytes": 36363,
+      "sha256": "7f84088b2af02031b685295876ef560b58aa325a6e20620f1dc8df5ba5c1d512",
+      "files": {
+        "spawns/Catacombs/NecropolisOfThePilgrims.xml": "cb152cfd8213df90ea2cd2f02bf45c5da7c6c3d920bc1167f9aea8b549b5f2d0",
+        "spawns/Others/21_21.xml": "9c6e622796ad3e070162b247138fa7f4a5187db78421c6627e1df20ee0c05374"
+      }
     }
   }
 };

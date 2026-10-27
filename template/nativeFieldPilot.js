@@ -2810,6 +2810,37 @@ export default {
       ],
       "count": 232,
       "unportedMinionTemplates": []
+    },
+    "necropolis-pilgrims": {
+      "city": "dion",
+      "interior": true,
+      "floors": [
+        1
+      ],
+      "dungeon": true,
+      "peacefulEntry": true,
+      "fixedCount": 0,
+      "territoryCount": 176,
+      "randomGroupCount": 0,
+      "initialCapacity": 176,
+      "unavailableCount": 0,
+      "availableCapacity": 176,
+      "npcIds": [
+        "21144",
+        "21145",
+        "21146",
+        "21170",
+        "21171",
+        "21172",
+        "21191",
+        "21192",
+        "21193",
+        "21213",
+        "21214",
+        "21215"
+      ],
+      "count": 176,
+      "unportedMinionTemplates": []
     }
   },
   "source": {
@@ -2894,7 +2925,8 @@ export default {
       "spawns/Catacombs/CatacombOfTheWitch.xml": "ca6b03827c52f7c73c99401428d1746e9b3525ce4bf9ce2b13e27218ba0f5d30",
       "spawns/Catacombs/CatacombOfDarkOmens.xml": "581e411f4cd1e9558dbf00dd75b811ff514f3ecaec098c904b3e8f8345ba578e",
       "spawns/Catacombs/CatacombOfTheForbiddenPath.xml": "5dc63fb6b2ac5adf32ae4b03f68cfdafd50b58f4d7653b898dfd96f159a1c5da",
-      "spawns/Catacombs/NecropolisOfSacrifice.xml": "46ee9c978c4ed6cf75957907db637750d190856c134013df30a85388fe6b82a3"
+      "spawns/Catacombs/NecropolisOfSacrifice.xml": "46ee9c978c4ed6cf75957907db637750d190856c134013df30a85388fe6b82a3",
+      "spawns/Catacombs/NecropolisOfThePilgrims.xml": "cb152cfd8213df90ea2cd2f02bf45c5da7c6c3d920bc1167f9aea8b549b5f2d0"
     },
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
   },
@@ -4408,6 +4440,18 @@ export default {
     },
     "21211": {
       "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "21213": {
+      "runSpeed": 110.0,
+      "attackRange": 40.0
+    },
+    "21214": {
+      "runSpeed": 140.0,
+      "attackRange": 40.0
+    },
+    "21215": {
+      "runSpeed": 120.0,
       "attackRange": 40.0
     },
     "21236": {
