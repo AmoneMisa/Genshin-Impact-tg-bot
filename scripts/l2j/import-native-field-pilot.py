@@ -9,7 +9,7 @@ from pathlib import Path
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
 fields={
-    "pagan-temple": {"city":"rune","interior":True,"floors":[1,2],"reviewedFloors":[1],"walkingFloors":[1],"peacefulEntry":True,"detachedInterior":True,"pendingFloorRoutes":{"2":"pagan_darkness_key"}},
+    "pagan-temple": {"city":"rune","interior":True,"floors":[1,2],"reviewedFloors":[1,2],"walkingFloors":[1,2],"peacefulEntry":True,"detachedInterior":True},
     "cruma-tower": {"city":"dion","interior":True,"floors":[1,2,3],"peacefulEntry":True,"npcEntry":True,"separateFloorMaps":True},
     "ivory-tower": {"city":"oren","interior":True,"floors":list(range(1,7)),"entryFloor":3,"peacefulEntry":True,"separateFloorMaps":True,"peacefulViewSize":3000,"walkingFloors":[3,1]},
     "tower-of-insolence": {"city":"aden","interior":True,"floors":list(range(1,14)),"sequentialFloors":True},

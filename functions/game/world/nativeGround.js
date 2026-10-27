@@ -5,6 +5,7 @@ import hellbound from '../../../template/hellboundAccess.js';
 import {hellboundStage} from '../hunt/sourcePopulation.js';
 import {nativeDoorStore,nativeOpenDoors} from './nativeDoorContext.js';
 import pagan from '../../../template/paganAccess.js';
+import keys from '../../../template/paganKeys.js';
 
 const SIZE=4096,index=new Map();
 const hellboundDoors=hellbound.doors.map(d=>({...d,geometry:nativeWorld.doors.find(g=>g.id===String(d.id))}));
@@ -31,6 +32,10 @@ export function nativeGroundBlock(point,{openDoors=null}={}){
  return null;
 }
 export const nativeGroundAllowed=point=>!nativeGroundBlock(point);
+/** Same conservative source volumes as movement; no client-supplied door state. */
+export function nativeGroundDoorIds(point){
+ return (index.get(Math.floor(point.x/SIZE)+':'+Math.floor(point.y/SIZE))||[]).filter(r=>r.kind==='door'&&point.x>=r.left&&point.x<=r.right&&point.y>=r.top&&point.y<=r.bottom&&point.z>=r.minZ&&point.z<=r.maxZ).map(r=>String(r.id));
+}
 /** Only pinned engine thresholds and trusted server phases can open doors. */
 export function nativeGroundAtStage(stage,{doors,now}={}){
  const openDoors=new Set(hellbound.doors.filter(d=>Number.isFinite(stage)&&stage>=d.minimumStage).map(d=>String(d.id)));
@@ -41,6 +46,6 @@ export const nativeGroundFor=(session,now=Date.now())=>nativeGroundAtStage(hellb
 export const nativeGroundForActor=(actor,now=actor?.native?.doorClock)=>nativeGroundAtStage(actor?.native?.hellboundStage,{doors:actor?.native?.doors,now});
 export const nativeDoorStates=stage=>hellboundDoors.filter(d=>d.geometry).map(d=>({id:String(d.id),polygon:d.geometry.polygon,open:Number.isFinite(stage)&&stage>=d.minimumStage}));
 export function nativePaganDoorStates(records,now){
- const open=nativeOpenDoors(records,now),ids=new Set(pagan.doors.flatMap(d=>d.doorIds.map(String)));
+ const open=nativeOpenDoors(records,now),ids=new Set([...pagan.doors.flatMap(d=>d.doorIds.map(String)),...Object.keys(keys.doors)]);
  return nativeWorld.doors.filter(d=>ids.has(d.id)).map(d=>({id:d.id,polygon:d.polygon,open:open.has(d.id)}));
 }

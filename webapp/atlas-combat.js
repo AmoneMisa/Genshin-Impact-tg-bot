@@ -3,6 +3,7 @@ import {COMBAT_ACTIONS,combatActionButton} from './combat-actions.js';
 import {enhanceSelects,syncSelect} from './design/select.js';
 import {combatSuppliesHtml} from './combat-supplies.js';
 import {showLootDetails} from './loot-notice.js';
+import {materialIcon} from './material-icons.js';
 
 /** Existing combat controls mounted in the Atlas; owns no polling or animation loop. */
 export function createAtlasCombat(root,action,{mapAvailable=true}={}){
@@ -12,7 +13,7 @@ export function createAtlasCombat(root,action,{mapAvailable=true}={}){
  host.innerHTML='<div class="atlas-combat-meters"></div><div class="atlas-combat-target"></div><div class="atlas-combat-controls"><label>Цель рядом<select aria-label="Цель рядом" data-native-target></select></label><div data-native-attack></div></div><div data-native-skills></div>';
  const select=host.querySelector('select');enhanceSelects(host);
  host.insertAdjacentHTML('beforeend','<details class="ui-disclosure"><summary>Расходники</summary><div data-native-supplies></div></details>');
- host.insertAdjacentHTML('beforeend','<details class="ui-disclosure" data-native-levels hidden><summary>Уровни локации</summary><div class="ui-action-stack"><div data-native-guide hidden></div><div class="ui-control-row" data-native-level-buttons></div></div></details>');
+ host.insertAdjacentHTML('beforeend','<details class="ui-disclosure" data-native-levels hidden><summary>Уровни локации</summary><div class="ui-action-stack"><div data-native-guide hidden></div><div class="ui-control-row" data-native-level-buttons></div><div class="ui-control-row" data-native-door-keys hidden></div></div></details>');
  host.insertAdjacentHTML('beforeend','<button type="button" class="ui-button ui-compact" data-last-loot hidden>Последняя добыча</button>');
  if(!mapAvailable)host.insertAdjacentHTML('beforeend','<div class="atlas-combat-directions" role="group" aria-label="Шаг по местности">'+[['north','На север'],['west','На запад'],['east','На восток'],['south','На юг']].map(([id,label])=>`<button type="button" class="ui-button" data-native-step="${id}">${label}</button>`).join('')+'</div>');
  select.onchange=()=>{if(select.value)action('/api/hunt/target',{targetId:select.value});};
@@ -25,6 +26,7 @@ export function createAtlasCombat(root,action,{mapAvailable=true}={}){
   }
   else if(button.hasAttribute('data-native-floor'))action('/api/world/action',{action:'native_floor',floor:Number(button.dataset.nativeFloor),routeId:button.dataset.nativeRoute});
   else if(button.hasAttribute('data-native-guide'))action('/api/world/action',{action:'native_guide',npcId:Number(button.dataset.nativeGuide)});
+  else if(button.hasAttribute('data-door-key'))action('/api/world/action',{action:button.dataset.doorApproach==='true'?'native_door_guide':'native_door_key',doorId:Number(button.dataset.doorId),itemId:Number(button.dataset.doorKey)});
   else if(button.hasAttribute('data-shots'))action('/api/shots/auto',{kind:button.dataset.shots,enabled:button.dataset.shots!==state.shots.selected||!state.shots.enabled});
   else if(button.hasAttribute('data-supply')){
    const item=state.supplies.rows.find(p=>p.slot===button.dataset.supply);
@@ -57,6 +59,12 @@ export function createAtlasCombat(root,action,{mapAvailable=true}={}){
   levels.hidden=routes.length<2&&!guides.length;if(levels.hidden)levels.open=false;levels.querySelector('summary').textContent=state.field.native.outside?'Вход в локацию':'Уровни локации · '+state.field.native.floor;
   const routeKey=JSON.stringify(routes)+':'+alive;
   if(routeKey!==levelsKey){if(buttons.contains(document.activeElement))levels.querySelector('summary').focus({preventScroll:true});buttons.innerHTML=routes.map(r=>`<button type="button" class="ui-button" data-native-floor="${r.floor}" ${r.routeId?`data-native-route="${escapeHtml(r.routeId)}"`:''} ${!alive||!r.enabled?'disabled':''}>${escapeHtml(r.title)}</button>`).join('');levelsKey=routeKey;}
+  const keys=state.field.native.doorKeys||[],keyHost=host.querySelector('[data-native-door-keys]'),keySignature=JSON.stringify(keys)+':'+alive+':'+state.field.action?.kind;
+  keyHost.hidden=!keys.length;
+  if(keyHost.dataset.key!==keySignature){
+   if(keyHost.contains(document.activeElement))levels.querySelector('summary').focus({preventScroll:true});
+   keyHost.innerHTML=keys.map(k=>`<button type="button" class="ui-button" data-door-key="${k.itemId}" data-door-id="${k.doorId}" data-door-approach="${!k.near}" ${!alive||!k.enabled?'disabled':''}>${materialIcon('l2_'+k.itemId)}<span>${state.field.action?.kind==='door-key'?'Открываю дверь…':escapeHtml((k.near?'Открыть: ':'Подойти: ')+k.title+' · '+k.keyName)}</span></button>`).join('');keyHost.dataset.key=keySignature;
+  }
   host.querySelector('[data-last-loot]').hidden=!state.lastLoot;
   if(focusSelector)host.querySelector(focusSelector)?.focus({preventScroll:true});
  }

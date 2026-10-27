@@ -1,0 +1,62 @@
+{
+  "conversion": "Original client PNG, nearest resize, lossless WebP",
+  "items": {
+    "8273": {
+      "icon": "icon.etc_old_key_i03",
+      "original": "icon.etc_old_key_i03.png",
+      "originalSha256": "871cc490c057b524571129534a50963055d87abf6aa5df80b846409be4c86dac",
+      "outputs": {
+        "32": {
+          "path": "webapp/art/l2-extra/icon-etc_old_key_i03-32.webp",
+          "sha256": "b6c59800d7b323d94a2f8cf0093ca0077456359fcb5948aed1724d5d07fddf90"
+        },
+        "64": {
+          "path": "webapp/art/l2-extra/icon-etc_old_key_i03-64.webp",
+          "sha256": "1aef8f9e26674ab2d49cad1bcb1610c706937f2cca236760647901b561117cc4"
+        },
+        "128": {
+          "path": "webapp/art/l2-extra/icon-etc_old_key_i03-128.webp",
+          "sha256": "6d21655a3d2d3e9866b53b3b6f3c3607c1e59de29c9bb2c7e22b2752ae9973c0"
+        }
+      }
+    },
+    "8274": {
+      "icon": "icon.etc_old_key_i01",
+      "original": "icon.etc_old_key_i01.png",
+      "originalSha256": "0b248671736fd9aec357800c4086656f955503adab302bb451a3cf7b92e9f10f",
+      "outputs": {
+        "32": {
+          "path": "webapp/art/l2-extra/icon-etc_old_key_i01-32.webp",
+          "sha256": "eefc2fede50e954b86cb4736baed7ae07ff0326569ddf36ff0472af541cbece4"
+        },
+        "64": {
+          "path": "webapp/art/l2-extra/icon-etc_old_key_i01-64.webp",
+          "sha256": "9fc29da20b96a51999f295a688e851cfb0e390fe0e5ac4ddf826b22226836521"
+        },
+        "128": {
+          "path": "webapp/art/l2-extra/icon-etc_old_key_i01-128.webp",
+          "sha256": "0df9f701321b0eb880c8c206ea4a27fc849721e8165ac8ce7211b5054209ef1d"
+        }
+      }
+    },
+    "8275": {
+      "icon": "icon.etc_old_key_i02",
+      "original": "icon.etc_old_key_i02.png",
+      "originalSha256": "eebb2f868816de7f169cc95d9cd662e50ddd3001b5f6bf2ffa2a0880f799c5b6",
+      "outputs": {
+        "32": {
+          "path": "webapp/art/l2-extra/icon-etc_old_key_i02-32.webp",
+          "sha256": "0809f15eacfde1d4acc96b2d854e714fb94f768b72a05aeed8fa7dceb84a596f"
+        },
+        "64": {
+          "path": "webapp/art/l2-extra/icon-etc_old_key_i02-64.webp",
+          "sha256": "497a27d7f66c753fd3d79725beb43591a46bd9669d712cca47bf5bb9aadd7a4d"
+        },
+        "128": {
+          "path": "webapp/art/l2-extra/icon-etc_old_key_i02-128.webp",
+          "sha256": "989062536236dcce30f450d42865e142451f9afa76418c333299abd01a050204"
+        }
+      }
+    }
+  }
+}

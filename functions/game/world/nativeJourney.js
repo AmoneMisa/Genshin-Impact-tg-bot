@@ -33,7 +33,14 @@ export function advanceNativeJourney(trip,now,speed,{allowed=nativeGroundAllowed
  let budget=elapsed/1000*Math.max(0,speed);
  while(route.index<route.path.length&&budget>0){
   const next=route.path[route.index],distance=nativeDistance(route.point,next);
-  const cells=nativeSegment(route.legStart,next,{allowed});
+  const dx=next.x-route.legStart.x,dy=next.y-route.legStart.y,length2=dx*dx+dy*dy;
+  const progress=p=>length2?((p.x-route.legStart.x)*dx+(p.y-route.legStart.y)*dy)/length2:0,current=progress(route.point);
+  const offset=length2?Math.abs((route.point.x-route.legStart.x)*dy-(route.point.y-route.legStart.y)*dx)/Math.sqrt(length2):nativeDistance(route.point,route.legStart);
+  if(current< -1e-7||current>1+1e-7||offset>1e-5){route.blocked='path_blocked';return false;}
+  // Preserve the original raster for geodata, while dynamic barriers are
+  // checked only on the remaining part. A door closing behind cannot cancel
+  // an already crossed section of this same leg.
+  const cells=nativeSegment(route.legStart,next,{allowed:p=>progress(p)<current-1e-9||allowed(p)});
   if(!cells){route.blocked='path_blocked';return false;}
   if(distance<=budget+1e-9){route.point={...next};route.legStart={...next};budget-=distance;route.remaining=Math.max(0,route.remaining-distance);route.index++;}
   else{

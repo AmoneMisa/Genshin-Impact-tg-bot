@@ -44,6 +44,7 @@ import {BASIC_ATTACK, hostileSkill, skillSpatial, weaponSpatial, needsTarget, in
 import {skillCombatType} from '../player/combatType.js';
 import {syncNativePopulation,moveNativeActor,advanceNativeActor,placeNativeActor,placeNativeSpawn,stopNativeActor,nativeFamilySocial} from '../world/nativeFieldSpace.js';
 import {syncNativeDoors} from '../world/nativeDoorContext.js';
+import {advanceNativeDoorKey} from '../world/nativeDoorKeys.js';
 import {nativeTerritorySource} from '../world/nativeSpawnTerritory.js';
 
 // A mob that was not attacked for this long loses interest and leaves.
@@ -343,6 +344,7 @@ export function setHuntAttack(session,enabled,now=Date.now()) {
 function advanceHuntAction(session,now,random=Math.random) {
     const hunt=session.game.hunt,field=hunt.field;
     if(!field||(!field.action&&!field.autoAttack))return [];
+    if(field.action?.kind==='door-key'){advanceNativeDoorKey(session,now);return [];}
     const action=field.action||{kind:'attack',targetId:field.autoAttack.targetId};
     const skill=action.kind==='attack'?{...BASIC_ATTACK,cost:weaponSpatial(session,now)?.costMp||0}:session.game.gameClass.skills[action.index];
     const geometry=skill&&skillSpatial(session,skill,now);

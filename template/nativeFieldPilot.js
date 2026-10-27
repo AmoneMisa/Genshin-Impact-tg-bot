@@ -1152,16 +1152,15 @@ export default {
         2
       ],
       "reviewedFloors": [
-        1
+        1,
+        2
       ],
       "walkingFloors": [
-        1
+        1,
+        2
       ],
       "peacefulEntry": true,
       "detachedInterior": true,
-      "pendingFloorRoutes": {
-        "2": "pagan_darkness_key"
-      },
       "interiorEntry": {
         "point": {
           "x": -12766,

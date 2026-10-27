@@ -71,6 +71,20 @@ export function nativeGuideTravel(session,now,speed,npcId){
    const join=findNativePath(from,c.point,{allowed,stride:2,maxNodes:1000,margin:128,heuristicWeight:2,reversible:true});if(join.ok){plan={...join,path:[...join.path,...c.suffix]};break;}
   }
  }
+ if(!plan.ok){
+  // Some original NPCs stand on a plinth or against a wall. The player needs
+  // the real interaction radius, not permission to occupy the NPC's cell.
+  const candidates=[];
+  for(const radius of [128,224,240])for(let i=0;i<32;i++){
+   const angle=i*Math.PI/16,point=worldGeodata.point({x:Math.trunc(port.point.x+radius*Math.cos(angle)),y:Math.trunc(port.point.y+radius*Math.sin(angle)),z:port.point.z});
+   if(point?.nswe&&allowed(point)&&distance(point,port.point)<=data.interactionDistance)candidates.push(point);
+  }
+  candidates.sort((a,b)=>distance(from,a)-distance(from,b));
+  for(const point of candidates)if(nativeSegment(from,point,{allowed,reversible:true})){plan={ok:true,start:from,path:[point]};break;}
+  if(!plan.ok)for(const point of candidates.slice(0,6)){
+   const attempt=findNativePath(from,point,{allowed,stride:2,maxNodes:3000,margin:128,heuristicWeight:2,reversible:true});if(attempt.ok){plan=attempt;break;}
+  }
+ }
  if(!plan.ok)return plan;const start=worldGeodata.point(plan.start);if(!start)return {ok:false,reason:'path_blocked'};
  const trip=createNativeJourney(start,plan.path,{now,speed,allowed});if(!trip)return {ok:false,reason:'path_blocked'};
  trip.native.historyStart={...start};return {ok:true,trip};

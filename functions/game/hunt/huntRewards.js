@@ -18,6 +18,7 @@ import { enchantGradeForLevel } from '../equipment/enchantDrops.js';
 import { gainExp, levelNeed } from '../player/vitality.js';
 import setLevel from '../player/setLevel.js';
 import npcSp from '../../../template/l2NpcSp.js';
+import paganKeys from '../../../template/paganKeys.js';
 import {EXP_RATE, readVitality, stageOf} from '../player/vitality.js';
 import {customDropChance, pickCustomPart, customPartRows} from '../equipment/customDrops.js';
 import {instantiate} from '../equipment/catalog.js';
@@ -48,6 +49,7 @@ export function dropGapFactor(heroLevel, mobLevel, {min, max, floor}) {
 const rateOf = row => (row.kind === 'seal' ? 1 : HUNT.dropRate);
 // Greed of the Clan Hall: adena, drop and spoil of a clan member
 const greedOf = session => getEquipStatByName(session, 'dropRateMul', true);
+const scriptKey=(npcId,key)=>{const d=paganKeys.scriptDrops[npcId];return d&&key==='l2_'+d.itemId?d:null;};
 
 /** How many times a row pays: its chance above 100% is guaranteed copies (as on a rated server), the rest a roll. */
 export function dropRolls(chancePercent, random) {
@@ -66,7 +68,7 @@ export function huntDropPreview(level, mobDef, champion = null, session = null) 
     const gap = dropGapFactor(level, mobDef.level, HUNT.itemGap) * (tier?.drops || 1);
     for (const drop of lootRows(mobDef.id)) {
         const info = materialInfo(drop.key);
-        rows.push({key: drop.key, name: info.name || drop.name, icon: info.icon, kind: drop.kind, min: drop.min, max: drop.max, chance: drop.chance * rateOf(drop) * gap * (drop.kind==='seal'?rune:session?greedOf(session):1)});
+        rows.push({key: drop.key, name: info.name || drop.name, icon: info.icon, kind: drop.kind, min: drop.min, max: drop.max, chance:scriptKey(mobDef.id,drop.key)?.chance??drop.chance * rateOf(drop) * gap * (drop.kind==='seal'?rune:session?greedOf(session):1)});
     }
     rows.push(...customPartRows(mobDef.level,session?.game?.gameClass?.stats?.name).map(row => ({...row,rollGroup:'custom-parts',chance:row.share*Math.min(100,customDropChance(mobDef.level)*HUNT.dropRate*gap*rune)})));
     if (hellboundMobs.has(mobDef.id) && mobDef.dropElement && ATTRIBUTE_GRADES.includes(enchantGradeForLevel(level))) {
@@ -159,6 +161,13 @@ export function grantKillRewards(session, mob, mobDef, {random = Math.random, no
         else result.items.push({item: key, name: info.name, icon: info.icon, amount});
     };
     for (const drop of lootRows(mobDef?.id ?? mob.mobId)) {
+        const scripted=scriptKey(mobDef?.id??mob.mobId,drop.key);
+        if(scripted){
+            // PaganKeys.onKill gives one key to the killer, with an unscaled
+            // script roll. It is not a second rated XML/party-loot drop.
+            if(random()*100<scripted.chance){addMaterial(session,drop.key,1);const info=materialInfo(drop.key);result.items.push({item:drop.key,name:info.name,icon:info.icon,amount:1});}
+            continue;
+        }
         const rolls = dropRolls(drop.chance * rateOf(drop) * (drop.kind === 'seal' ? (1+runeRate(session,'drop',now)) : greedOf(session)) * itemGap * (tier ? tier.drops : 1), random);
         if (rolls > 0) give(drop.key, getRandom(drop.min, drop.max) * rolls);
     }

@@ -4,12 +4,31 @@ import approaches from '../../../template/nativeInteriorRoutes.js';
 import {nativeTrailBack,rememberNativeTrail} from './nativeTrail.js';
 import {nativeActorPoint} from './nativeFieldSpace.js';
 import {nativeSegment,findNativePath} from './nativeNavigation.js';
-import {nativeGroundFor} from './nativeGround.js';
+import {nativeGroundFor,nativeGroundBlock,nativeGroundDoorIds} from './nativeGround.js';
+import pagan from '../../../template/paganAccess.js';
+import paganKeys from '../../../template/paganKeys.js';
 import {createNativeJourney,pruneNativeLoops,advanceNativeJourney} from './nativeJourney.js';
 import {nativePortOptions,nativeFloorPort} from './nativeFloorTransports.js';
 import {worldGeodata} from './l2jGeodata.js';
 const model=id=>data.geodataCommit===world.geodataCommit&&data.barriersSha256===world.barriersSha256?data.zones[id]:null;
+export const nativeLevelArrival=(id,floor)=>model(id)?.levels?.[floor]?.to||null;
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
+const paganDoors=new Set([...pagan.doors.flatMap(d=>d.doorIds.map(String)),...Object.keys(paganKeys.doors)]);
+/** A distant closed door stops the walk at its first blocked cell. It never
+ * requires all timed doors on a long route to remain open at the same time. */
+function paganWalkPrefix(from,path,allowed){
+ const geometry=p=>!nativeGroundBlock(p,{openDoors:paganDoors}),prefix=[];let previous=from;
+ for(const next of path){
+  const cells=nativeSegment(previous,next,{allowed:geometry,reversible:true});if(!cells)return null;
+  const blocked=cells.findIndex(p=>!allowed(p));
+  if(blocked>=0){
+   const count=Math.min(blocked,480-prefix.length),point=count===blocked?cells[blocked]:null;
+   return {path:[...prefix,...cells.slice(0,count)],partial:true,blockedPoint:point,closedDoors:point?nativeGroundDoorIds(point):[]};
+  }
+  prefix.push(next);previous=next;
+ }
+ return {path:prefix,partial:false};
+}
 export function nativeLevelOptions(hunt){
  const source=model(hunt?.zone),point=nativeActorPoint(hunt?.field);if(!point)return [];
  const port=nativeFloorPort(hunt),portals=nativePortOptions(hunt),choices=[...portals];
@@ -21,6 +40,8 @@ export function nativeLevelTravel(session,floor,now,speed){
  const hunt=session.game.hunt,source=model(hunt?.zone),from=nativeActorPoint(hunt?.field);
  if(!source||!from||!Number.isInteger(floor)||!source.levels[floor])return {ok:false,reason:'invalid_floor'};
  const target=source.levels[floor];if(distance(from,target.to)<=16)return {ok:false,reason:'invalid_floor'};
+ const gate=hunt.field.native.gatedWalk;
+ if(gate?.floor===floor&&gate.blockedPoint&&distance(from,gate.point)<=16&&!nativeGroundFor(session,now)(gate.blockedPoint))return {ok:false,reason:'door_closed'};
  const saved=hunt.field.native.floorResume;
  if(saved?.native?.floorTarget===floor&&distance(saved.native.point,from)<1e-7&&distance(saved.native.path?.at(-1)||{},target.to)<1e-7){
   const trip=structuredClone(saved);advanceNativeJourney(trip,now,0,{allowed:nativeGroundFor(session,now)});
@@ -75,7 +96,9 @@ export function nativeLevelTravel(session,floor,now,speed){
  // as findNativePath does, so its saved breadcrumbs contain actual ground.
  const start=worldGeodata.point(plan.start),path=plan.path.map(p=>worldGeodata.point(p));
  if(!start||path.some(p=>!p))return {ok:false,reason:'path_blocked'};
- const trip=createNativeJourney(start,pruneNativeLoops(start,path),{now,speed,allowed});if(!trip)return {ok:false,reason:'path_blocked'};
- trip.native.historyStart={...start};trip.native.floorTarget=floor;
+ const route=pruneNativeLoops(start,path),prefix=hunt.zone==='pagan-temple'?paganWalkPrefix(start,route,allowed):{path:route,partial:false};
+ if(!prefix?.path.length||prefix.partial&&prefix.path.every(p=>distance(p,start)<1e-7))return {ok:false,reason:hunt.zone==='pagan-temple'?'door_closed':'path_blocked'};
+ const trip=createNativeJourney(start,prefix.path,{now,speed,allowed});if(!trip)return {ok:false,reason:'path_blocked'};
+ trip.native.historyStart={...start};if(!prefix.partial)trip.native.floorTarget=floor;else Object.assign(trip.native,{floorGoal:floor,blockedPoint:prefix.blockedPoint,closedDoors:prefix.closedDoors});
  return {ok:true,trip};
 }

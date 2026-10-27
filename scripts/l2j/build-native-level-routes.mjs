@@ -2,6 +2,7 @@ import fs from 'node:fs';import {createHash} from 'node:crypto';
 import {LOCATION_LEVELS} from '../../template/locationLevels.js';import pilot from '../../template/nativeFieldPilot.js';import approaches from '../../template/nativeInteriorRoutes.js';
 import {findNativePath,nativeSegment} from '../../functions/game/world/nativeNavigation.js';import {nativeGroundAllowed,nativeGroundBlock} from '../../functions/game/world/nativeGround.js';import {worldGeodata} from '../../functions/game/world/l2jGeodata.js';
 import pagan from '../../template/paganAccess.js';
+import paganKeys from '../../template/paganKeys.js';
 import {nativeInteriorCandidates} from './native-interior-candidates.mjs';
 import outside from '../../template/nativeRoutes.js';
 import {LOCATIONS} from '../../template/worldMap.js';
@@ -11,10 +12,14 @@ for(const id of process.argv.slice(2).length?process.argv.slice(2):['forge-of-th
  const root=meta?.interiorEntry?{to:worldGeodata.point(meta.interiorEntry.point),sourceSpawn:meta.interiorEntry.source}:approaches.routes[id]||(meta?.entryFloor?{to:worldGeodata.point(outside.routes[id]?.to),sourceSpawn:entry.entrySource}:null);if(!root?.to||!meta?.floors)throw Error('Missing cave approach or reviewed floors');
  // Compile possible passages through only the three source-operated doors.
  // Runtime rechecks the entire journey against current server door timers.
- const openDoors=new Set(pagan.doors.flatMap(d=>d.doorIds.map(String))),allowed=id==='pagan-temple'?p=>!nativeGroundBlock(p,{openDoors}):nativeGroundAllowed;
+ const openDoors=new Set([...pagan.doors.flatMap(d=>d.doorIds.map(String)),...Object.keys(paganKeys.doors)]),allowed=id==='pagan-temple'?p=>!nativeGroundBlock(p,{openDoors}):nativeGroundAllowed;
  const levels={};let previousLevel;
  for(const floor of meta.walkingFloors||meta.floors){
-  const base=pilot.fields[id].sequentialFloors&&previousLevel?previousLevel:{to:root.to,path:[]};
+  let base=pilot.fields[id].sequentialFloors&&previousLevel?previousLevel:{to:root.to,path:[]};
+  if(id==='pagan-temple'&&floor===2){
+   const via=pagan.npcs[32037].point,plan=findNativePath(root.to,via,{allowed,stride:4,maxNodes:200000,margin:2048,heuristicWeight:2,reversible:true});
+   if(!plan.ok)throw Error('No source sanctuary approach');base={to:plan.path.at(-1),path:plan.path};
+  }
   const model=LOCATION_LEVELS[id].floors.find(f=>f.number===floor),candidates=nativeInteriorCandidates(id,model,base.to);
   if(floor===(meta.entryFloor||1)){previousLevel=levels[floor]={title:model.title,to:root.to,path:[],source:root.sourceSpawn};continue;}
   let result;

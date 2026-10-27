@@ -5,8 +5,8 @@
     "catalogZones": 72,
     "nativePopulationZones": 63,
     "adaptedPopulationZones": 9,
-    "reviewedFloors": 86,
-    "deferredFloors": 63,
+    "reviewedFloors": 87,
+    "deferredFloors": 62,
     "partialPopulationZones": 4,
     "guardedScenarioRoutes": 1
   },
@@ -250,15 +250,10 @@
         4
       ],
       "reviewedFloors": [
-        1
+        1,
+        2
       ],
       "deferredFloors": [
-        {
-          "floor": 2,
-          "title": "Храм Язычников · Ритуальные залы",
-          "boss": null,
-          "reason": "church_drop_mirrors_and_doors"
-        },
         {
           "floor": 3,
           "title": "Церковь Руны",

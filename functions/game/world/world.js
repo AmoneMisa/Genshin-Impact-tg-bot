@@ -1,8 +1,9 @@
-import {nativeLevelTravel} from './nativeLevelTravel.js';
+import {nativeLevelTravel,nativeLevelArrival} from './nativeLevelTravel.js';
 import {nativeFloorTeleport,nativeGuideTravel} from './nativeFloorTransports.js';
 import dungeons from '../../../template/nativeDungeonAccess.js';
 import pagan from '../../../template/paganAccess.js';
 import {syncNativeDoors} from './nativeDoorContext.js';
+import {beginNativeDoorKey,nativeDoorKeyGuide} from './nativeDoorKeys.js';
 import {findCityPath,advanceCityPath,ensureCityOrigin} from './cityNavigation.js';
 import {CITIES, REGIONS, LOCATIONS, CITY_NPCS} from '../../../template/worldMap.js';
 import {teleportPrice} from '../runes/labRunes.js';
@@ -138,10 +139,8 @@ export function advanceWorld(session,now=Date.now()) {
     if(w.mode==='location'){
         const dungeon=dungeons.zones[w.location],hunt=session.game.hunt;
         if(w.location==='pagan-temple'&&hunt?.field&&!hunt.field.native&&[1,2].includes(hunt.field.floor)){
-            const floor=hunt.field.floor;ensureHunt(session,now);
-            restoreNativeField(session,'pagan-temple',now);
-            activateNativeField(hunt,floor===1?pagan.mirrors[32039].to:pagan.npcs[32037].point,now);
-            hunt.field.native.sourceFloor=floor;session.needsSave=true;
+            const floor=hunt.field.floor,point=floor===1?pagan.mirrors[32039].to:nativeLevelArrival('pagan-temple',floor);
+            if(point){ensureHunt(session,now);restoreNativeField(session,'pagan-temple',now);activateNativeField(hunt,point,now);hunt.field.native.sourceFloor=floor;session.needsSave=true;}
         }
         if(dungeon&&nativeFieldSupported(w.location)&&hunt?.field&&!hunt.field.native){
             // Authored room XY cannot be scaled into a real dungeon position.
@@ -268,6 +267,15 @@ export function worldAction(session,body,now=Date.now()){
     if(body.action==='quick_travel')return quickTravel(session,body,now);
     const w=advanceWorld(session,now);
     if(!alive(session))return {ok:false,reason:'dead'};
+    if(body.action==='native_door_key'){
+        const result=beginNativeDoorKey(session,Number(body.itemId),Number(body.doorId),now);if(!result.ok)return result;
+        const f=session.game.hunt.field;stopHuntAction(f,now);f.action=result.action;f.seenAt=now;session.game.hunt.lastActionAt=now;return {ok:true,queued:true};
+    }
+    if(body.action==='native_door_guide'){
+        const denied=l2ActionBlock(session,{move:true},now);if(denied)return {ok:false,reason:denied};
+        const result=nativeDoorKeyGuide(session,Number(body.itemId),Number(body.doorId),now,getSpeed(session)*l2MoveMultiplier(session,now));if(!result.ok)return result;
+        const f=session.game.hunt.field;stopHuntAction(f,now);f.native.journey=result.trip;f.seenAt=now;return {ok:true};
+    }
     if(body.action==='native_floor'){
         const f=session.game.hunt?.field;
         if(w.mode!=='location'||!f?.native||w.instanceId||session.game.hunt.zone!==w.location)return {ok:false,reason:'invalid_floor'};

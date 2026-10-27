@@ -197,6 +197,7 @@ export function advanceNativeActor(actor,now,speed){
  actor.x=p.x/ROOM_SIZE;actor.y=p.y/ROOM_SIZE;actor.native.z=p.z;actor.moveAt=now;
  actor.path=trip.native.blocked?[]:trip.native.path.slice(trip.native.index,trip.native.index+16).map(p=>({x:p.x/ROOM_SIZE,y:p.y/ROOM_SIZE,z:p.z}));
  if(done&&trip.native.floorTarget)actor.native.sourceFloor=trip.native.floorTarget;
+ if(done&&trip.native.floorGoal&&trip.native.blockedPoint)actor.native.gatedWalk={floor:trip.native.floorGoal,point:{...p},blockedPoint:trip.native.blockedPoint,closedDoors:trip.native.closedDoors};
  if(done||trip.native.blocked)stopNativeActor(actor);
 }
 export function stopNativeActor(actor){

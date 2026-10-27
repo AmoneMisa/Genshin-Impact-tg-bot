@@ -62,9 +62,10 @@ test('Pagan door actions reject forged routes, wrong layer, distance and active 
  stand(s,32035);s.game.hunt.field.action={};assert.equal(nativeFloorTeleport(s,1,NOW,'32035:SCRIPT:0').reason,'npc_interaction_blocked');
  assert.equal(nativeActorPoint(s.game.hunt.field).z,p.z);assert.equal(Object.keys(nativeDoorStore(s)).length,0);
 });
-test('unimplemented secret-door keys do not turn the ritual floor into an authored teleport',()=>{
+test('the ritual route begins a real walk and cannot use the old authored floor teleport',()=>{
  const s=hero(),before=nativeActorPoint(s.game.hunt.field);
- assert.equal(worldAction(s,{action:'native_floor',floor:2},NOW).reason,'invalid_floor');
+ assert.ok(worldAction(s,{action:'native_floor',floor:2},NOW).ok);
+ assert.equal(s.game.hunt.field.native.journey.native.floorGoal,2);
  assert.equal(worldAction(s,{action:'floor',floor:2},NOW).reason,'invalid_floor');
  assert.deepEqual(nativeActorPoint(s.game.hunt.field),before);
  assert.equal(s.game.inventory.gold,1000000);
