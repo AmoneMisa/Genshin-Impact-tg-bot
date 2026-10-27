@@ -681,6 +681,28 @@ export default {
         "spawns/Catacombs/NecropolisOfTheSaints.xml": "1da680d9c8fa2dae438bb34d17fdaf52e661874c0f99d86f21a78db6bd374709",
         "spawns/Others/22_24.xml": "6642af364019bf2592d5fadb4b121b673d312585ba3be9f732d31db38aa65e29"
       }
+    },
+    "necropolis-disciples": {
+      "asset": "/art/world/native/necropolis-disciples.svg",
+      "regions": {
+        "25_17": "4dfb112e7cbabe8d840c0dc528aaf31da9323b72a40881741bbce70c4ce1e113"
+      },
+      "bounds": {
+        "x": 172032,
+        "y": -18224,
+        "w": 11568,
+        "h": 11552
+      },
+      "cells": 221728,
+      "layerCells": 221728,
+      "contours": 66,
+      "corners": 6110,
+      "bytes": 47527,
+      "sha256": "865c7b68cf8a40fc4d63a01ab1ba4688bb9e2d1b64a7cda3bc87449fff5d1c7c",
+      "files": {
+        "spawns/Catacombs/NecropolisOfTheDisciples.xml": "d4168e7e526333218451b219afdb55458769e4bc049c03605a1c46ac5b5967ba",
+        "spawns/Others/25_17.xml": "bd4c0e4d3135212c3da2faf6b32db255bdd79f4065cb12346a48958acde869f5"
+      }
     }
   }
 };

@@ -2996,6 +2996,41 @@ export default {
       ],
       "count": 176,
       "unportedMinionTemplates": []
+    },
+    "necropolis-disciples": {
+      "city": "goddard",
+      "interior": true,
+      "floors": [
+        1
+      ],
+      "dungeon": true,
+      "peacefulEntry": true,
+      "fixedCount": 0,
+      "territoryCount": 208,
+      "randomGroupCount": 0,
+      "initialCapacity": 208,
+      "unavailableCount": 0,
+      "availableCapacity": 208,
+      "npcIds": [
+        "21161",
+        "21162",
+        "21164",
+        "21165",
+        "21183",
+        "21184",
+        "21185",
+        "21186",
+        "21204",
+        "21205",
+        "21206",
+        "21207",
+        "21228",
+        "21229",
+        "21230",
+        "21231"
+      ],
+      "count": 208,
+      "unportedMinionTemplates": []
     }
   },
   "source": {
@@ -3086,7 +3121,8 @@ export default {
       "spawns/Catacombs/NecropolisOfThePatriots.xml": "dd987eb019debb2981fc5211f30340466bb15031ba4be796cd949c0c386adaae",
       "spawns/Catacombs/NecropolisOfDevotion.xml": "33f8b749819b0f5065636087984f8e80822863f34a290cb1719d072f5c6d3e29",
       "spawns/Catacombs/NecropolisOfMartyrdom.xml": "e8438d56c17a0d6cb044cda279bb55aa386462d552ab4c87a288b43e7628468c",
-      "spawns/Catacombs/NecropolisOfTheSaints.xml": "1da680d9c8fa2dae438bb34d17fdaf52e661874c0f99d86f21a78db6bd374709"
+      "spawns/Catacombs/NecropolisOfTheSaints.xml": "1da680d9c8fa2dae438bb34d17fdaf52e661874c0f99d86f21a78db6bd374709",
+      "spawns/Catacombs/NecropolisOfTheDisciples.xml": "d4168e7e526333218451b219afdb55458769e4bc049c03605a1c46ac5b5967ba"
     },
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
   },
@@ -4676,6 +4712,10 @@ export default {
     },
     "21230": {
       "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "21231": {
+      "runSpeed": 165.0,
       "attackRange": 40.0
     },
     "21236": {
