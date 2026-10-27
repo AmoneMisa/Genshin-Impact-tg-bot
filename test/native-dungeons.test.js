@@ -68,7 +68,8 @@ for(const [id,meta]of Object.entries(registry.fields).filter(([,m])=>m.dungeon))
 });
 
 for(const [id]of Object.entries(registry.fields).filter(([,m])=>m.dungeon))test(`${id}: an existing active room migrates once at the real interior arrival without recreating its wounded actors`,()=>{
- const {s}=hero(id);assert.ok(enterHuntField(s,id,{now:NOW}).ok);Object.assign(s.game.world,{mode:'location',location:id});
+ const {s}=hero(id),targetMobId=LOCATION_LEVELS[id].floors.flatMap(f=>f.rooms).flatMap(r=>r.spawns)[0].id;
+ assert.ok(enterHuntField(s,id,{now:NOW,targetMobId}).ok);Object.assign(s.game.world,{mode:'location',location:id});
  const old=actors(s);assert.ok(old.length);old[0].currentHp=2;quiet(s);const saved=old.map(m=>({id:m.instanceId,hp:m.currentHp})),inventory=JSON.stringify(s.game.inventory);
  assert.equal(s.game.hunt.field.native,undefined);worldState(s,NOW);
  assert.deepEqual(nativeActorPoint(s.game.hunt.field),data.zones[id].outside.targets[0].point);
