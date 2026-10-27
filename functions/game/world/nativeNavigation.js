@@ -24,7 +24,7 @@ export function nativeStep(geo,from,dx,dy,allowed=()=>true){
 }
 
 /** Every crossed cell is checked; simplification must never turn a path into a wall shortcut. */
-export function nativeSegment(from,to,{geo=worldGeodata,allowed=()=>true,maxCells=16384,reversible=false}={}){
+export function nativeSegment(from,to,{geo=worldGeodata,allowed=()=>true,maxCells=16384,reversible=false,step=nativeStep}={}){
  if(![from?.x,from?.y,from?.z,to?.x,to?.y,to?.z].every(Number.isFinite))return null;
  const gx=geoCell(from.x),gy=geoCell(from.y),tx=geoCell(to.x),ty=geoCell(to.y),first=geo.cell(gx,gy,from.z),last=geo.cell(tx,ty,to.z);
  if(!first||!last||!first.nswe||!last.nswe||!allowed({...from,z:first.z})||!allowed({...to,z:last.z}))return null;
@@ -35,13 +35,13 @@ export function nativeSegment(from,to,{geo=worldGeodata,allowed=()=>true,maxCell
   const twice=error*2;let mx=0,my=0;
   if(twice>-dy){error-=dy;mx=sx;}
   if(twice<dx){error+=dx;my=sy;}
-  node=nativeStep(geo,node,mx,my,allowed);if(!node)return null;
+  node=step(geo,node,mx,my,allowed);if(!node)return null;
   cells.push({x:geoWorld(node.gx),y:geoWorld(node.gy),z:node.z});
  }
  if(node.z!==last.z)return null;
  // A cell centre is an intermediate point, never a replacement for the requested endpoint.
  cells.push({x:to.x,y:to.y,z:last.z});
- if(reversible&&!nativeSegment({...to,z:last.z},{...from,z:first.z},{geo,allowed,maxCells}))return null;
+ if(reversible&&!nativeSegment({...to,z:last.z},{...from,z:first.z},{geo,allowed,maxCells,step}))return null;
  return cells;
 }
 
@@ -58,11 +58,12 @@ function simplify(from,path,options){
 }
 
 /** Bounded A* on native (x,y,height) nodes. Separate bridge/cave layers cannot share a search key. */
-export function findNativePath(from,to,{geo=worldGeodata,allowed=()=>true,maxNodes=12000,margin=256,stride=8,reversible=false,heuristicWeight=1}={}){
+export function findNativePath(from,to,{geo=worldGeodata,allowed=()=>true,maxNodes=12000,margin=256,stride=8,reversible=false,heuristicWeight=1,heightWeight=0,step=nativeStep}={}){
  // Offline route compilation may prefer progress toward the destination over shortest distance.
  // This only orders the bounded queue; every accepted edge still checks all native cells.
  const weight=Number.isFinite(heuristicWeight)?Math.max(1,Math.min(4,heuristicWeight)):1;
- const options={geo,allowed,reversible},start=geo.point(from),target=geo.point(to);
+ const vertical=Number.isFinite(heightWeight)?Math.max(0,Math.min(8,heightWeight)):0;
+ const options={geo,allowed,reversible,step},start=geo.point(from),target=geo.point(to);
  if(!start||!target)return {ok:false,reason:'geodata_missing'};
  if(!start.nswe||!target.nswe||!allowed(start)||!allowed(target))return {ok:false,reason:'path_blocked'};
  const direct=nativeSegment(start,target,options);
@@ -70,8 +71,8 @@ export function findNativePath(from,to,{geo=worldGeodata,allowed=()=>true,maxNod
  const sx=geoCell(start.x),sy=geoCell(start.y),tx=geoCell(target.x),ty=geoCell(target.y);
  const bounds={left:Math.min(sx,tx)-margin,right:Math.max(sx,tx)+margin,top:Math.min(sy,ty)-margin,bottom:Math.max(sy,ty)+margin};
  if([sx,sy,tx,ty].some(n=>n< -65536||n>=65536))return {ok:false,reason:'geodata_missing'};
- const heuristic=(x,y)=>{const dx=Math.abs(tx-x),dy=Math.abs(ty-y);return weight*(Math.max(dx,dy)+(Math.SQRT2-1)*Math.min(dx,dy));};
- const first={gx:sx,gy:sy,z:start.z,nswe:start.nswe,cost:0,score:heuristic(sx,sy),parent:null};
+ const heuristic=(x,y,z)=>{const dx=Math.abs(tx-x),dy=Math.abs(ty-y);return weight*(Math.max(dx,dy)+(Math.SQRT2-1)*Math.min(dx,dy))+vertical*Math.abs(target.z-z)/16;};
+ const first={gx:sx,gy:sy,z:start.z,nswe:start.nswe,cost:0,score:heuristic(sx,sy,start.z),parent:null};
  const heap=[],nodes=new Map([[key(sx,sy,start.z),first]]);push(heap,first);let visited=0;
  while(heap.length&&visited<maxNodes){
   const current=pop(heap);if(current.closed||nodes.get(key(current.gx,current.gy,current.z))!==current)continue;
@@ -86,8 +87,8 @@ export function findNativePath(from,to,{geo=worldGeodata,allowed=()=>true,maxNod
    const x=current.gx+dx*stride,y=current.gy+dy*stride;if(x<bounds.left||x>bounds.right||y<bounds.top||y>bounds.bottom)continue;
    let next;
    if(stride===1){
-    next=nativeStep(geo,current,dx,dy,allowed);
-    if(next&&reversible){const back=nativeStep(geo,next,-dx,-dy,allowed);if(!back||back.z!==current.z)next=null;}
+    next=step(geo,current,dx,dy,allowed);
+    if(next&&reversible){const back=step(geo,next,-dx,-dy,allowed);if(!back||back.z!==current.z)next=null;}
    }
    else{
     const segment=nativeSegment({x:geoWorld(current.gx),y:geoWorld(current.gy),z:current.z},{x:geoWorld(x),y:geoWorld(y),z:current.z},options);
@@ -96,7 +97,7 @@ export function findNativePath(from,to,{geo=worldGeodata,allowed=()=>true,maxNod
    if(!next)continue;
    const id=key(x,y,next.z),cost=current.cost+(dx&&dy?Math.SQRT2:1)*stride,old=nodes.get(id);
    if(old&&old.cost<=cost)continue;
-   const node={...next,cost,score:cost+heuristic(x,y),parent:current};nodes.set(id,node);push(heap,node);
+   const node={...next,cost,score:cost+heuristic(x,y,next.z),parent:current};nodes.set(id,node);push(heap,node);
   }
  }
  return {ok:false,reason:visited>=maxNodes?'geodata_search_limit':'path_blocked',visited};

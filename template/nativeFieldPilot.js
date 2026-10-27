@@ -1149,11 +1149,15 @@ export default {
       "interior": true,
       "floors": [
         1,
-        2
+        2,
+        3,
+        4
       ],
       "reviewedFloors": [
         1,
-        2
+        2,
+        3,
+        4
       ],
       "walkingFloors": [
         1,
@@ -1161,6 +1165,12 @@ export default {
       ],
       "peacefulEntry": true,
       "detachedInterior": true,
+      "cityLandings": [
+        3,
+        4
+      ],
+      "separateLandingMaps": true,
+      "cityLandingViewSize": 3000,
       "interiorEntry": {
         "point": {
           "x": -12766,
@@ -3243,6 +3253,10 @@ export default {
   },
   "source": {
     "files": {
+      "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+      "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
+      "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+      "stats/npcs/32000-32099.xml": "85b0f2a0f95198b026f7b649e546dcdc68336df1bbab875cb8142cd9f942f810",
       "stats/npcs/18000-18099.xml": "a03369c1002918c851f381845a2e096a950409aaa8a21f7e5d3ca0dca47a55d0",
       "stats/npcs/18300-18399.xml": "8f2d6841a154a3b33e0c9a4478df29934e4932915b4f684081194df83031484b",
       "stats/npcs/18400-18499.xml": "7db2b5743ab46a38ac0175f0e292cfe35f229569aa237c793000cada0d96c099",
@@ -3275,7 +3289,6 @@ export default {
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
-      "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
       "spawns/Others/20_21.xml": "3fb208271643f2d7f63f081f797169555dddc72d23a893759e01d28d83ce5737",
       "spawns/Oren/IvoryTower.xml": "cfbccd749dccb65226faff639603fc6de1b2e358b42389b9b03ee8c4581f607e",
       "spawns/Aden/TowerOfInsolence.xml": "06d8c63c7f15dd8f34aa0aeb269e33b3de88863cf34600d02250e889f46d653e",

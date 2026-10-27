@@ -724,6 +724,52 @@ export default {
       "files": {
         "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695"
       }
+    },
+    "pagan-temple:f3": {
+      "zone": "pagan-temple",
+      "sourceFloor": 3,
+      "asset": "/art/world/native/pagan-temple-floor-3.svg",
+      "regions": {
+        "21_16": "6dfe820f3a7434c389b83971162ab3606e2d448d1431d70112ac4746c9e68cec"
+      },
+      "bounds": {
+        "x": 35232,
+        "y": -51632,
+        "w": 2016,
+        "h": 1280
+      },
+      "cells": 2014,
+      "layerCells": 2014,
+      "contours": 1,
+      "corners": 65,
+      "bytes": 749,
+      "sha256": "b152bd18287a10da7ce7f605259cf18bbd6fbfddc83d17737577b57e2781b770",
+      "files": {
+        "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695"
+      }
+    },
+    "pagan-temple:f4": {
+      "zone": "pagan-temple",
+      "sourceFloor": 4,
+      "asset": "/art/world/native/pagan-temple-floor-4.svg",
+      "regions": {
+        "21_16": "6dfe820f3a7434c389b83971162ab3606e2d448d1431d70112ac4746c9e68cec"
+      },
+      "bounds": {
+        "x": 34448,
+        "y": -51520,
+        "w": 3824,
+        "h": 2384
+      },
+      "cells": 5872,
+      "layerCells": 7367,
+      "contours": 1,
+      "corners": 205,
+      "bytes": 1743,
+      "sha256": "bedad6097a9771e1478fb9d3fc95db27be78d24e2a19fa88cdad03dbfad66c71",
+      "files": {
+        "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570"
+      }
     }
   }
 };

@@ -695,6 +695,35 @@ export default {
           "sha256": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
           "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
         }
+      },
+      "3": {
+        "point": {
+          "x": 36640,
+          "y": -51218,
+          "z": 718
+        },
+        "matchHeight": 40,
+        "source": {
+          "type": "SCRIPT_LOCATION",
+          "symbol": "TRIOLS_MIRROR_2",
+          "file": "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java",
+          "sha256": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+        }
+      },
+      "4": {
+        "point": {
+          "x": 34842,
+          "y": -49756,
+          "z": -763
+        },
+        "source": {
+          "type": "SOURCE_NPC",
+          "id": 32039,
+          "file": "spawns/Others/21_16.xml",
+          "sha256": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+        }
       }
     }
   }

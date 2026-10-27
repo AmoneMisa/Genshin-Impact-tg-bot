@@ -1,5 +1,5 @@
 // H5 PaganTeleporters.java and spawns/Others/{19_16,21_16}.xml.
-// The church drop is authored traversal: client jump/geodata coordinates are unavailable.
+// Legacy room fallback only. Native church travel uses paganChurchRoute.js; original scripted jump coordinates remain unknown.
 import access from './paganAccess.js';
 export const PAGAN_CHURCH={id:'rune:pagan-church',name:'Церковь Руны',role:'Спуск к Храму Язычников',city:'rune',...access.mirrors[32040].to,service:'pagan-church',gateway:false,source:'PaganTeleporters.java#TRIOLS_MIRROR_2',adapted:true};
 export function withPaganRoutes(base){

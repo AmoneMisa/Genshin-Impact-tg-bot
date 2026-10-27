@@ -9,7 +9,7 @@ from pathlib import Path
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
 fields={
-    "pagan-temple": {"city":"rune","interior":True,"floors":[1,2],"reviewedFloors":[1,2],"walkingFloors":[1,2],"peacefulEntry":True,"detachedInterior":True},
+    "pagan-temple": {"city":"rune","interior":True,"floors":[1,2,3,4],"reviewedFloors":[1,2,3,4],"walkingFloors":[1,2],"peacefulEntry":True,"detachedInterior":True,"cityLandings":[3,4],"separateLandingMaps":True,"cityLandingViewSize":3000},
     "cruma-tower": {"city":"dion","interior":True,"floors":[1,2,3],"peacefulEntry":True,"npcEntry":True,"separateFloorMaps":True},
     "ivory-tower": {"city":"oren","interior":True,"floors":list(range(1,7)),"entryFloor":3,"peacefulEntry":True,"separateFloorMaps":True,"peacefulViewSize":3000,"walkingFloors":[3,1]},
     "tower-of-insolence": {"city":"aden","interior":True,"floors":list(range(1,14)),"sequentialFloors":True},
@@ -115,7 +115,7 @@ for id,field in fields.items():
         field['unavailableCount']+=matches[0]['count']
     field['availableCapacity']=field['initialCapacity']-field['unavailableCount']
     field['npcIds']=sorted({s['id'] for s in slots});field['count']=sum(s['count'] for s in slots);ids.update(field['npcIds'])
-actors={};files={};minions={}
+actors={};files={**pagan['source']['files']};minions={}
 for file in sorted({f'stats/npcs/{int(id)//100*100}-{int(id)//100*100+99}.xml' for id in ids}):
     source=base/file;files[file]=hashlib.sha256(source.read_bytes()).hexdigest()
     for npc in ET.parse(source).getroot().findall('npc'):

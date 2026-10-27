@@ -7,6 +7,7 @@ import {nativeSegment,findNativePath} from './nativeNavigation.js';
 import {nativeGroundFor,nativeGroundBlock,nativeGroundDoorIds} from './nativeGround.js';
 import pagan from '../../../template/paganAccess.js';
 import paganKeys from '../../../template/paganKeys.js';
+import {nativeChurchOptions} from './nativeChurchTravel.js';
 import {createNativeJourney,pruneNativeLoops,advanceNativeJourney} from './nativeJourney.js';
 import {nativePortOptions,nativeFloorPort} from './nativeFloorTransports.js';
 import {worldGeodata} from './l2jGeodata.js';
@@ -32,7 +33,8 @@ function paganWalkPrefix(from,path,allowed){
 export function nativeLevelOptions(hunt){
  const source=model(hunt?.zone),point=nativeActorPoint(hunt?.field);if(!point)return [];
  const port=nativeFloorPort(hunt),portals=nativePortOptions(hunt),choices=[...portals];
- for(const [floor,l] of Object.entries(source?.levels||{}))if(!choices.some(p=>p.floor===Number(floor))&&(!port||source.levels[hunt.field.native.sourceFloor]))choices.push({floor:Number(floor),title:l.title,enabled:distance(point,l.to)>16});
+ for(const [floor,l] of Object.entries(source?.levels||{}))if(!choices.some(p=>p.floor===Number(floor))&&source.levels[hunt.field.native.sourceFloor])choices.push({floor:Number(floor),title:l.title,enabled:distance(point,l.to)>16});
+ for(const route of nativeChurchOptions(hunt)){const at=choices.findIndex(p=>p.floor===route.floor&&!p.routeId);if(at>=0)choices[at]=route;else choices.push(route);}
  return choices.sort((a,b)=>a.floor-b.floor);
 }
 /** Rejoin only verified vertices. An inaccessible join never grants a floor switch. */

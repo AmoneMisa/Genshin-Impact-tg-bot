@@ -5,8 +5,8 @@
     "catalogZones": 72,
     "nativePopulationZones": 63,
     "adaptedPopulationZones": 9,
-    "reviewedFloors": 87,
-    "deferredFloors": 62,
+    "reviewedFloors": 89,
+    "deferredFloors": 60,
     "partialPopulationZones": 4,
     "guardedScenarioRoutes": 1
   },
@@ -251,22 +251,11 @@
       ],
       "reviewedFloors": [
         1,
-        2
+        2,
+        3,
+        4
       ],
-      "deferredFloors": [
-        {
-          "floor": 3,
-          "title": "Церковь Руны",
-          "boss": null,
-          "reason": "church_drop_mirrors_and_doors"
-        },
-        {
-          "floor": 4,
-          "title": "Под церковью Руны · Зеркало Триола",
-          "boss": null,
-          "reason": "church_drop_mirrors_and_doors"
-        }
-      ],
+      "deferredFloors": [],
       "catalogSourcePlaces": 364,
       "nativeSourcePlaces": 364,
       "unavailablePlaces": 0,

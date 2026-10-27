@@ -1,4 +1,7 @@
 export default {
+ 'Войти в Храм Язычников': 'Majusiylar ibodatxonasiga kirish',
+ 'Спуститься к зеркалу Триола': 'Triol oynasiga tushish',
+ 'Продолжить спуск к зеркалу Триола': 'Triol oynasiga tushishni davom ettirish',
  'Войти в подземелье':'Zindonga kirish',
  'Выйти к зиккурату':'Zikkurat yoniga chiqish',
  'Башня Крумы · 3 этаж':'Kruma minorasi · 3-qavat',

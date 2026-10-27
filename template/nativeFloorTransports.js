@@ -24,7 +24,9 @@ export default {
     "necropolis-martyrdom": [],
     "necropolis-saints": [],
     "necropolis-disciples": [],
-    "pagan-temple": []
+    "pagan-temple": [
+      3
+    ]
   },
   "zones": {
     "ivory-tower": {
@@ -1839,6 +1841,47 @@ export default {
               "floor": 2,
               "title": "Открыть выход из святилища",
               "kind": "pagan-door",
+              "fee": 0,
+              "item": 57,
+              "list": "SCRIPT",
+              "index": 0,
+              "source": {
+                "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+                "files": {
+                  "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+                  "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
+                  "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+                  "stats/npcs/32000-32099.xml": "85b0f2a0f95198b026f7b649e546dcdc68336df1bbab875cb8142cd9f942f810"
+                },
+                "coreFiles": {
+                  "org/l2jmobius/gameserver/mechanics/script/Quest.java": "d9241ccf7e0c1e8dd4c587de308e3790becaab6757f65457e203db8a3ddba0de"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "4": [
+        {
+          "npcId": 32039,
+          "name": "Triol's Mirror",
+          "title": "зеркалу Триола",
+          "point": {
+            "x": 34842,
+            "y": -49756,
+            "z": -763
+          },
+          "normal": false,
+          "castleIds": [],
+          "targets": [
+            {
+              "floor": 1,
+              "title": "Войти в Храм Язычников",
+              "point": {
+                "x": -12766,
+                "y": -35840,
+                "z": -10856
+              },
               "fee": 0,
               "item": 57,
               "list": "SCRIPT",

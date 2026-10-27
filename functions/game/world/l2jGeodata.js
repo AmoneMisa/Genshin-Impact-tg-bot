@@ -48,6 +48,14 @@ export class L2jRegion{
   }
   return result;
  }
+ layers(x,y){
+  const nearest=this.cell(x,y,0);if(!nearest)return [];
+  const block=Math.floor(x/8)*256+Math.floor(y/8),offset=this.offsets[block];
+  if(this.bytes[offset]!==2)return [nearest];
+  const pos=this.layerOffsets.get(block)[(x%8)*8+y%8],count=this.bytes[pos],layers=[];
+  for(let i=0;i<count;i++){const encoded=this.bytes.readUInt16LE(pos+1+i*2);layers.push({z:height(encoded),nswe:encoded&15});}
+  return layers;
+ }
  losCell(x,y,z){
   const raw=this.cell(x,y,z);if(!raw)return null;
   const offset=this.offsets[Math.floor(x/8)*256+Math.floor(y/8)];
@@ -84,6 +92,12 @@ export class L2jGeodata{
   const id=geoRegionId(gx*16,gy*16);let region;
   try{region=this.region(id);this.errors.delete(id);}catch(error){this.errors.set(id,error.message);return null;}
   return region?.cell((gx%2048+2048)%2048,(gy%2048+2048)%2048,z)||null;
+ }
+ layers(gx,gy){
+  if(![gx,gy].every(Number.isInteger))return [];
+  const id=geoRegionId(gx*16,gy*16);let region;
+  try{region=this.region(id);this.errors.delete(id);}catch(error){this.errors.set(id,error.message);return [];}
+  return region?.layers((gx%2048+2048)%2048,(gy%2048+2048)%2048)||[];
  }
  point({x,y,z}){if(![x,y,z].every(Number.isFinite))return null;const cell=this.cell(geoCell(x),geoCell(y),z);return cell?{x,y,...cell}:null;}
  losCell(gx,gy,z,regionAt=null){

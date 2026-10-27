@@ -1,13 +1,13 @@
 import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {createRequire} from 'node:module';
 import {bundlePageAssets} from '../../miniapp/pageAssets.js';
-import {worldAction,worldState,advanceWorld} from '../../functions/game/world/world.js';
+import {worldAction,worldState,advanceWorld,CITIES,CITY_NPCS,cityPoint} from '../../functions/game/world/world.js';
 import {enterHuntField} from '../../functions/game/hunt/huntFight.js';
 import {getHuntState} from '../../miniapp/hunt.js';
 import {activateNativeField,nativeActorPoint,nativeFieldBuckets} from '../../functions/game/world/nativeFieldSpace.js';
 import {nativeSegment} from '../../functions/game/world/nativeNavigation.js';
 import {nativeGroundFor} from '../../functions/game/world/nativeGround.js';
 import access from '../../template/paganAccess.js';
-const deep=process.env.PAGAN_KEYS==='1';
+const deep=process.env.PAGAN_KEYS==='1',church=process.env.PAGAN_CHURCH==='1';
 import change from '../../functions/game/player/changePlayerGameClass.js';import update from '../../functions/game/player/updatePlayerStats.js';
 const {chromium}=createRequire(process.env.PLAYWRIGHT_PACKAGE||'C:/Users/kubai/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json')('playwright');
 const root=path.resolve('webapp'),out=path.resolve('.tmp/native-pagan-ui');fs.mkdirSync(out,{recursive:true});
@@ -21,7 +21,8 @@ try{for(const {width,noCanvas=false,noImages=false} of [{width:320},{width:390},
  assert.ok(enterHuntField(s,'pagan-temple',{now,floor:1}).ok);activateNativeField(s.game.hunt,access.mirrors[32039].to,now);s.game.hunt.field.native.sourceFloor=1;
  const actors=()=>nativeFieldBuckets(s.game.hunt?.field).flatMap(b=>b.mobs||[]),quiet=()=>{for(const m of actors())Object.assign(m,{aggressive:false,aggro:false,nextAttackAt:now+1e9});};
  const dto=()=>{quiet();advanceWorld(s,now);quiet();return {world:{...worldState(s,now),holdings:[],corpses:[]}};};
- function finishWalk(){let ticks=0;while(s.game.hunt.field.native.journey){assert.ok(++ticks<1000);now+=1000;quiet();advanceWorld(s,now);quiet();}}
+ function finishWalk(){let ticks=0;while(s.game.hunt?.field?.native?.journey||Number.isInteger(s.game.hunt?.field?.native?.churchPendingStage)){assert.ok(++ticks<1000);now+=1000;quiet();advanceWorld(s,now);quiet();}}
+ if(church){const npc=CITY_NPCS.find(n=>n.service==='pagan-church');s.game.hunt=null;Object.assign(s.game.world,{mode:'city',city:'rune',location:null},cityPoint(CITIES.find(c=>c.id==='rune'),npc));const entered=worldAction(s,{action:'pagan_church'},now);assert.ok(entered.ok,JSON.stringify(entered));}
  if(deep){
   // Start at the pinned inside sanctuary NPC; the backend suite separately
   // walks both preceding guarded gates from the original mirror arrival.
@@ -54,7 +55,19 @@ try{for(const {width,noCanvas=false,noImages=false} of [{width:320},{width:390},
  });
  await page.goto('http://pagan.local/fixture');await page.evaluate(async()=>{await(await import('/feature-styles.js')).ensureFeatureStyles();(await import('/overlay-a11y.js')).installOverlayA11y();const api=async(u,o)=>{const r=await fetch(u,o);return r.json();};await(await import('/world-map.js')).openWorldMap({api,statusElement:document.createElement('p')});window.firstAtlas=document.querySelector('.atlas-panel');window.firstCanvas=document.querySelector('canvas');});
  await page.locator('.atlas-combat:not([hidden])').waitFor();await page.locator('[data-native-levels]>summary').click();
- if(deep){
+ if(church){
+  assert.equal(worldState(s,now).nativeField.ground.asset,'/art/world/native/pagan-temple-floor-3.svg');
+  const drop=page.locator('[data-native-floor="4"]:not([data-native-route])');assert.ok(await drop.isEnabled());
+  await drop.focus();assert.ok(await drop.evaluate(n=>n===document.activeElement));
+  await page.screenshot({path:path.join(out,`church-${width}${noCanvas?'-no-canvas':noImages?'-no-images':''}.png`)});
+  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_floor'),drop.click()]);
+  assert.equal(s.game.hunt.field.native.sourceFloor,4);assert.ok(s.game.world.lastFall);assert.ok(s.game.gameClass.stats.hp>=1);
+  assert.equal(worldState(s,now).nativeField.ground.asset,'/art/world/native/pagan-temple-floor-4.svg');
+  const mirror=page.locator('[data-native-route="32039:SCRIPT:0"]');await mirror.waitFor();assert.ok(await mirror.isEnabled());
+  await page.screenshot({path:path.join(out,`descent-${width}${noCanvas?'-no-canvas':noImages?'-no-images':''}.png`)});
+  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.routeId==='32039:SCRIPT:0'),mirror.click()]);
+  assert.equal(s.game.hunt.field.native.sourceFloor,1);assert.equal(s.game.inventory.gold,1e6);
+ }else if(deep){
   const key=page.locator('[data-door-id="19160013"][data-door-key="8275"]');assert.ok(await key.isDisabled());
   s.game.inventory.materials.l2_8275=2;await page.waitForFunction(()=>!document.querySelector('[data-door-id="19160013"][data-door-key="8275"]')?.disabled);
   if(await key.getAttribute('data-door-approach')==='true'){
@@ -79,11 +92,11 @@ try{for(const {width,noCanvas=false,noImages=false} of [{width:320},{width:390},
  await page.screenshot({path:path.join(out,`inside-${width}${noCanvas?'-no-canvas':noImages?'-no-images':''}.png`)});
  await page.locator('button[data-native-guide="32040"]').click();await page.waitForFunction(()=>!document.querySelector('[data-native-route="32040:SCRIPT:0"]')?.disabled);
  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.routeId==='32040:SCRIPT:0'),page.locator('[data-native-route="32040:SCRIPT:0"]').click()]);
- assert.equal(s.game.world.mode,'city');assert.equal(s.game.world.z,718);assert.ok(s.game.world.nativeFields['pagan-temple']);
+ assert.equal(s.game.world.mode,'location');assert.equal(s.game.hunt.field.native.sourceFloor,3);assert.deepEqual(nativeActorPoint(s.game.hunt.field),access.mirrors[32040].to);
  }
  assert.ok(await page.evaluate(()=>window.firstAtlas===document.querySelector('.atlas-panel')&&window.firstCanvas===document.querySelector('canvas')));
  assert.ok(await page.locator('.atlas-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1));assert.deepEqual(errors,[]);
  assert.equal(requests.some(u=>u.includes('/vendor/phaser/')||u.includes('l2j-geodata')||u.endsWith('.gz')),false);
  await page.locator('.atlas-panel>[data-close],.atlas-panel>.game-dialog-heading [data-close]').first().click();const count=requests.length;await page.waitForTimeout(2300);assert.equal(requests.length,count);assert.equal(await page.locator('.atlas-overlay,dialog[open],[inert]').count(),0);await page.close();
- console.log(`PASS Pagan ${deep?'key/ritual floor ':''}${width}${noCanvas?' no Canvas':noImages?' no images':''}: source movement, same Atlas, original items/doors, focus and cleanup`);
+ console.log(`PASS Pagan ${church?'church/descent ':deep?'key/ritual floor ':''}${width}${noCanvas?' no Canvas':noImages?' no images':''}: source movement, same Atlas, original items/doors, focus and cleanup`);
 }}finally{await browser.close();}

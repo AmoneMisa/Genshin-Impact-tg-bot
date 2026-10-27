@@ -176,6 +176,25 @@ export function passiveDeltas(info, level, damageType) {
 }
 
 /** Stat deltas of every active passive: {attackMul: 0.04, evasion: 4}. */
+function nativePassiveInfo(session,passive,level){
+    const enchant=enchantRecord(session,passive.id),effects=enchantedEffects(passive.id,enchant.route,enchant.level);
+    return effects.length?{...passive.info,stats:effects.flatMap(e=>(e.children||[]).filter(n=>n.stat).map(n=>({...n,value:Array(level).fill(Number(n.value)),when:passive.info.stats?.find(s=>s.stat===n.stat)?.when})))}:passive.info;
+}
+/** Unscaled source stat nodes for physical rules such as Acrobatics' FALL. */
+export function nativePassiveStat(session,stat,isMul=false){
+    let total=isMul?1:0;const classId=classIdOf(session);if(classId===undefined)return total;
+    const worn=wornKinds(session);
+    for(const passive of passiveTree(classId)){
+        const level=learnedLevel(session,passive.id);if(!level)continue;
+        for(const node of nativePassiveInfo(session,passive,level).stats||[]){
+            if(node.stat!==stat||!conditionHolds(node.when,worn,session))continue;
+            const values=node.value,value=Number(Array.isArray(values)?values[Math.min(level-1,values.length-1)]:values);if(!Number.isFinite(value))continue;
+            if(isMul&&node.tag==='mul')total*=value;
+            if(!isMul&&['add','sub'].includes(node.tag))total+=(node.tag==='sub'?-value:value);
+        }
+    }
+    return total;
+}
 export function passiveModifiers(session, damageType) {
     const result = {};
     const classId = classIdOf(session);
@@ -184,8 +203,7 @@ export function passiveModifiers(session, damageType) {
     for (const passive of passiveTree(classId)) {
         const level = learnedLevel(session, passive.id);
         if (!level) continue;
-        const enchant=enchantRecord(session,passive.id),effects=enchantedEffects(passive.id,enchant.route,enchant.level);
-        const info=effects.length?{...passive.info,stats:effects.flatMap(e=>(e.children||[]).filter(n=>n.stat).map(n=>({...n,value:Array(level).fill(Number(n.value)),when:passive.info.stats?.find(s=>s.stat===n.stat)?.when})))}:passive.info;
+        const info=nativePassiveInfo(session,passive,level);
         for (const row of passiveDeltas(info, level, damageType)) {
             if (!conditionHolds(row.when, worn, session)) continue;
             result[row.stat] = (result[row.stat] || 0) + row.delta;

@@ -45,6 +45,8 @@ import {skillCombatType} from '../player/combatType.js';
 import {syncNativePopulation,moveNativeActor,advanceNativeActor,placeNativeActor,placeNativeSpawn,stopNativeActor,nativeFamilySocial} from '../world/nativeFieldSpace.js';
 import {syncNativeDoors} from '../world/nativeDoorContext.js';
 import {advanceNativeDoorKey} from '../world/nativeDoorKeys.js';
+import {advanceNativeFallDamage} from '../world/nativeFallDamage.js';
+import {advanceNativeChurchTravel} from '../world/nativeChurchTravel.js';
 import {nativeTerritorySource} from '../world/nativeSpawnTerritory.js';
 
 // A mob that was not attacked for this long loses interest and leaves.
@@ -194,6 +196,7 @@ function applyHit(session, dmg, now) {
  * for IDLE_MS walks away; a hero that dies ends the fight.
  */
 export function advanceHunt(session, now = Date.now(), random = Math.random) {
+    advanceNativeFallDamage(session,now);
     tickL2Effects(session,now,{hp:getMaxHp(session)});
     const hunt = ensureHunt(session,now,random);
     if(isDead(session,now)){if(hunt.field)stopHuntAction(hunt.field,now);return [];}
@@ -276,7 +279,7 @@ export function advanceHunt(session, now = Date.now(), random = Math.random) {
     // Re-select a surviving actor after a kill; selecting alone never provokes it.
     hunt.field.target = battleActor(hunt,selected)?.instanceId || hunt.field.mobs[0]?.instanceId || null;
     hunt.mob = battleActor(hunt,hunt.field.target);
-    written.push(...advanceHuntAction(session,now,random));
+    written.push(...advanceHuntAction(session,now,random));advanceNativeChurchTravel(session,now);
     return written;
 }
 

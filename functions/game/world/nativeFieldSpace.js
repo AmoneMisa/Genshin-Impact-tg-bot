@@ -20,7 +20,15 @@ export const nativeFieldSupported=id=>Object.hasOwn(pilot.fields,id);
 export const nativeSourceGap=(zone,spawn)=>pilot.fields[zone]?.sourceGaps?.find(g=>g.npcId===spawn.id&&(g.kind==='point'?spawn.coordinateSource==='point'&&['x','y','z'].every(k=>g.source[k]===spawn[k]):spawn.coordinateSource!=='point'&&g.sourceGroup===spawn.sourceGroup&&g.sourceFile===(spawn.sourceFile||spawn.file)))||null;
 const sourceSpawns=Object.fromEntries(Object.keys(pilot.fields).map(id=>[id,nativeFieldRooms(id).flatMap(r=>r.spawns||[])]));
 const allSourceSpawns=Object.values(sourceSpawns).flat();
-const exteriorDistance=(point,id)=>{const p=pilot.fields[id]?.dungeon&&landmarks.zones[id]?.entrance?.point;return p?Math.hypot(point.x-p.x,point.y-p.y,point.z-p.z):Infinity;};
+const exteriorDistance=(point,id)=>{
+ const floors=pilot.fields[id]?.dungeon?['entrance']:pilot.fields[id]?.cityLandings||[];
+ return Math.min(Infinity,...floors.map(floor=>landmarks.zones[id]?.[floor]?.point).filter(Boolean).map(p=>Math.hypot(point.x-p.x,point.y-p.y,point.z-p.z)));
+};
+export function nativeFieldKeepsTownView(hunt){
+ const f=hunt?.field,floor=f?.native?.sourceFloor;if(!pilot.fields[hunt?.zone]?.cityLandings?.includes(floor))return false;
+ const marker=landmarks.zones[hunt.zone]?.[floor],ground=marker&&worldGeodata.point(marker.point);
+ return Boolean(ground&&(!marker.matchHeight||Math.abs(f.native.z-ground.z)<=marker.matchHeight));
+}
 export const nativeFieldNear=(point,id)=>Boolean(point&&((id?sourceSpawns[id]||[]:allSourceSpawns).some(s=>nativeSpawnDistance(point,s)<=NATIVE_FIELD_RADIUS)||(id?exteriorDistance(point,id)<=NATIVE_FIELD_RADIUS:Object.keys(pilot.fields).some(id=>exteriorDistance(point,id)<=NATIVE_FIELD_RADIUS))));
 export function nativeFieldZone(point,preferred=null){
  if(preferred)return nativeFieldNear(point,preferred)&&nativeFieldEntryVisible(point,preferred)?preferred:null;
@@ -102,7 +110,7 @@ export function activateNativeField(hunt,point,now){
  }
  Object.assign(f,{x:point.x/ROOM_SIZE,y:point.y/ROOM_SIZE,path:[],walls:[],moveAt:now,seenAt:now});
  const entrance=landmarks.zones[hunt.zone]?.entrance;f.native.outside=Boolean(entrance&&Math.hypot(point.x-entrance.point.x,point.y-entrance.point.y,point.z-entrance.point.z)<=NATIVE_FIELD_RADIUS&&nativeStaticSight(point,entrance.point,{allowed:nativeGroundAllowed}));
- f.native.z=point.z;f.native.nativeIsland=pilot.fields[hunt.zone]?.island||null;delete f.native.journey;delete f.native.nativeTrail;delete f.native.floorResume;
+ f.native.z=point.z;f.native.nativeIsland=pilot.fields[hunt.zone]?.island||null;delete f.native.journey;delete f.native.nativeTrail;delete f.native.floorResume;delete f.native.churchPendingStage;
  const nearest=nativeFieldRooms(hunt.zone).flatMap(r=>(r.spawns||[]).map(s=>({room:r.id,distance:nativeSpawnDistance(point,s)}))).sort((a,b)=>a.distance-b.distance)[0];
  if(nearest&&nearest.room!==f.room){
   f.rooms[f.room]={mobs:f.mobs};f.mobs=f.rooms[nearest.room]?.mobs||[];delete f.rooms[nearest.room];f.room=nearest.room;
@@ -172,7 +180,7 @@ export function nativeTerritoryFloorRoom(zone,rooms,point){
  for(const [floor,landmark] of Object.entries(landmarks.zones[zone]||{})){
   const room=rooms.find(r=>r.sourceFloor===Number(floor));if(!room)continue;
   const ground=worldGeodata.point(landmark.point);
-  if(ground&&Math.hypot(ground.x-point.x,ground.y-point.y,ground.z-point.z)<=NATIVE_FIELD_RADIUS&&nativeStaticSight(point,ground,{allowed:nativeGroundAllowed}))matches.set(Number(floor),room);
+  if(ground&&(!landmark.matchHeight||Math.abs(point.z-ground.z)<=landmark.matchHeight)&&Math.hypot(ground.x-point.x,ground.y-point.y,ground.z-point.z)<=NATIVE_FIELD_RADIUS&&nativeStaticSight(point,ground,{allowed:nativeGroundAllowed}))matches.set(Number(floor),room);
  }
  return matches.size===1?matches.values().next().value:null;
 }
@@ -198,12 +206,13 @@ export function advanceNativeActor(actor,now,speed){
  actor.path=trip.native.blocked?[]:trip.native.path.slice(trip.native.index,trip.native.index+16).map(p=>({x:p.x/ROOM_SIZE,y:p.y/ROOM_SIZE,z:p.z}));
  if(done&&trip.native.floorTarget)actor.native.sourceFloor=trip.native.floorTarget;
  if(done&&trip.native.floorGoal&&trip.native.blockedPoint)actor.native.gatedWalk={floor:trip.native.floorGoal,point:{...p},blockedPoint:trip.native.blockedPoint,closedDoors:trip.native.closedDoors};
- if(done||trip.native.blocked)stopNativeActor(actor);
+ if(done&&Number.isInteger(trip.native.churchNextStage))actor.native.churchPendingStage=trip.native.churchNextStage;
+ if(done||trip.native.blocked)stopNativeActor(actor,{completed:done});
 }
-export function stopNativeActor(actor){
+export function stopNativeActor(actor,{completed=false}={}){
  const trip=actor.native?.journey;if(actor.native?.version===1&&trip?.native?.floorTarget&&trip.native.remaining>0&&!trip.native.blocked)actor.native.floorResume=structuredClone(trip);
  if(actor.native?.version===1)rememberNativeTrail(actor.native,actor.native.journey);
- if(actor.native)delete actor.native.journey;actor.path=[];
+ if(actor.native){delete actor.native.journey;if(!completed)delete actor.native.churchPendingStage;}actor.path=[];
 }
 /** Original static H5 sight plus conservative door/water/holding vetoes. */
 export function nativeCombatLine(a,b){
@@ -223,7 +232,7 @@ export function nativeVisibleActors(hunt){
 }
 export function nativeFieldDto(session){
  const f=session.game.hunt?.field,point=nativeFieldPoint(session);if(!point)return null;
- return {zone:session.game.hunt.zone,point,target:f.target,ground:f.native.outside?null:nativeInteriorMap(session.game.hunt.zone,point,f.native.sourceFloor),...(pilot.fields[session.game.hunt.zone]?.peacefulViewSize&&f.native.sourceFloor!==1?{viewSize:pilot.fields[session.game.hunt.zone].peacefulViewSize}:{}),...(session.game.hunt.zone==='hellbound'?{doors:nativeDoorStates(f.populationStage)}:session.game.hunt.zone==='pagan-temple'?{doors:nativePaganDoorStates(f.native.doors,f.native.doorClock)}:{}),
+ return {zone:session.game.hunt.zone,point,target:f.target,ground:f.native.outside?null:nativeInteriorMap(session.game.hunt.zone,point,f.native.sourceFloor),...(pilot.fields[session.game.hunt.zone]?.peacefulViewSize&&f.native.sourceFloor!==1?{viewSize:pilot.fields[session.game.hunt.zone].peacefulViewSize}:{}),...(pilot.fields[session.game.hunt.zone]?.cityLandings?.includes(f.native.sourceFloor)?{viewSize:pilot.fields[session.game.hunt.zone].cityLandingViewSize}:{}),...(session.game.hunt.zone==='hellbound'?{doors:nativeDoorStates(f.populationStage)}:session.game.hunt.zone==='pagan-temple'?{doors:nativePaganDoorStates(f.native.doors,f.native.doorClock)}:{}),
   actors:nativeVisibleActors(session.game.hunt).map(m=>({
    ...nativeActorPoint(m),id:m.mobId,instanceId:m.instanceId,name:m.name,level:m.level,hp:m.hp,currentHp:m.currentHp,aggressive:Boolean(m.aggressive),social:Boolean(m.clanHelpRange>0&&m.socialClans?.length||nativeFamilySocial(m)),aggro:Boolean(m.aggro)
   }))};

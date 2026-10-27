@@ -38,5 +38,5 @@ with tarfile.open('.tmp/world-source/h5-java.tar.gz') as archive:
  assert sha=='d9241ccf7e0c1e8dd4c587de308e3790becaab6757f65457e203db8a3ddba0de'
  assert b'if (getQuestTimer(name, npc, player) == null)' in raw
  core_files={member.name.split('/java/',1)[1]:sha}
-data={'source':{'commit':manifest['commit'],'files':files,'coreFiles':core_files},'npcs':npcs,'mirrors':mirrors,'doors':doors,'churchDrop':{'sourcePosition':None,'implementedInNativeWorld':False,'reason':'client_jump_geometry_not_verified'}}
-Path('template/paganAccess.js').write_text('// Original PaganTeleporters.java and fixed NPC spawns; church drop remains unverified.\nexport default '+json.dumps(data,indent=2)+';\n',encoding='utf8')
+data={'source':{'commit':manifest['commit'],'files':files,'coreFiles':core_files},'npcs':npcs,'mirrors':mirrors,'doors':doors,'churchDrop':{'sourcePosition':None,'implementedInNativeWorld':True,'geometry':'derived-stored-layer-descent','route':'template/paganChurchRoute.js','reason':'original_script_jump_position_unavailable'}}
+Path('template/paganAccess.js').write_text('// Original PaganTeleporters.java and fixed NPC spawns; church descent uses separately verified stored geodata layers.\nexport default '+json.dumps(data,indent=2)+';\n',encoding='utf8')

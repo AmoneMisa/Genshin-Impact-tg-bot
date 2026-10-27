@@ -2,7 +2,7 @@
 export default {
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
   "barriersSha256": "a8d5c25223f54add9fb9359ec09bf9bdda6dcbcbf29c52af0066e8f76674a057",
-  "transportSha256": "bd2992fdfe664b0bbd4403d385eebca132c4bdeb8d2530bdd06e8180a1b84a5a",
+  "transportSha256": "8a052258fc50de500f83d55ae40c9777e655dbd257547f354cd598a4a3ae8b98",
   "zones": {
     "cruma-tower": [
       {

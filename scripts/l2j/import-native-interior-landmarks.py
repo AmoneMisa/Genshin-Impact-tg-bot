@@ -16,4 +16,7 @@ import runpy
 zones.update(runpy.run_path('scripts/l2j/import-native-dungeon-access.py')['build']()['landmarks'])
 pagan=json.loads(subprocess.check_output(['node','--input-type=module','-e','import p from "./template/paganAccess.js";console.log(JSON.stringify(p))'],encoding='utf8'))
 zones['pagan-temple']={floor:{'point':pagan['npcs'][str(npc)]['point'],'source':{'type':'SOURCE_NPC','id':npc,**pagan['npcs'][str(npc)]['source'],'commit':pagan['source']['commit']}} for floor,npc in [(1,32040)]}
+file='scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java'
+zones['pagan-temple'][3]={'point':pagan['mirrors']['32040']['to'],'matchHeight':40,'source':{'type':'SCRIPT_LOCATION','symbol':'TRIOLS_MIRROR_2','file':file,'sha256':pagan['source']['files'][file],'commit':pagan['source']['commit']}}
+npc=pagan['npcs']['32039'];zones['pagan-temple'][4]={'point':npc['point'],'source':{'type':'SOURCE_NPC','id':32039,**npc['source'],'commit':pagan['source']['commit']}}
 Path('template/nativeInteriorLandmarks.js').write_text('// Original NPC waypoints on empty public floors. No interaction or boss admission is granted.\nexport default '+json.dumps({'zones':zones},ensure_ascii=False,indent=2)+';\n',encoding='utf8')

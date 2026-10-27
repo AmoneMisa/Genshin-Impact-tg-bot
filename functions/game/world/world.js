@@ -34,7 +34,9 @@ import {nativeCityAt} from './nativeTownGraph.js';
 import {airshipJourneyPosition} from './graciaTravel.js';
 import {ferryOptions,buyFerryTicket,boardFerry,advanceFerry,leaveFerry,ferryJourneyPosition,ferryJourneyDto} from './ferryTravel.js';
 import {rememberNativeTrail,rememberNativeResume} from './nativeTrail.js';
-import {activateNativeField,nativeFieldPoint,nativeFieldDto,nativeFieldNear,nativeFieldZone,nativeFieldCity,nativeFieldSupported,nativeFieldIsland,nativeFieldInterior,nativeInteriorAt} from './nativeFieldSpace.js';
+import {activateNativeField,nativeFieldPoint,nativeFieldDto,nativeFieldNear,nativeFieldZone,nativeFieldCity,nativeFieldSupported,nativeFieldIsland,nativeFieldInterior,nativeInteriorAt,nativeFieldKeepsTownView} from './nativeFieldSpace.js';
+import {beginNativeChurchTravel} from './nativeChurchTravel.js';
+import {advanceNativeFallDamage} from './nativeFallDamage.js';
 import {ROOM_SIZE} from './navigation.js';
 import {hellboundNpcAction,hellboundAccessDto,hellboundNpc,hellboundPlayerPoint,hellboundApproachQuote,hellboundEscapePoint} from './hellboundAccess.js';
 import HELLBOUND_ACCESS from '../../../template/hellboundAccess.js';
@@ -71,15 +73,16 @@ function enterPublicField(session,id,{departure,entryPoint,...options}){
     const result=enterHuntField(session,id,{...(floor?{floor}:{}),...options});if(!result.ok)return result;
     session.game.world.nativeIsland=nativeFieldIsland(id)||nativeRoute(id)?.island||null;delete session.game.world.nativeTrail;delete session.game.world.nativeResume;
     if(departure)saveNativeField(session,options.now,departure);
-    const paganChurch=id==='pagan-temple'&&(options.floor||floor)===3;
-    if(!paganChurch)restoreNativeField(session,id,options.now);
+    const paganChurch=id==='pagan-temple'&&session.game.hunt.field.floor===3;
+    restoreNativeField(session,id,options.now);
     if(options.targetMobId&&!nativeFieldSupported(id)){
         const hunt=session.game.hunt,target=hunt.field.mobs.find(m=>String(m.mobId)===String(options.targetMobId)&&m.currentHp>0);
         hunt.field.target=target?.instanceId||null;hunt.mob=target||null;
     }
-    if(id==='pagan-temple'&&!paganChurch){
-        activateNativeField(session.game.hunt,entryPoint||pagan.mirrors[32039].to,options.now);
-    }else if(nativeRoute(id)&&!paganChurch){
+    if(id==='pagan-temple'){
+        activateNativeField(session.game.hunt,entryPoint||(paganChurch?pagan.mirrors[32040].to:pagan.mirrors[32039].to),options.now);
+        session.game.hunt.field.native.sourceFloor=paganChurch?3:1;
+    }else if(nativeRoute(id)){
         activateNativeField(session.game.hunt,entryPoint||nativeRoute(id).entry||nativeRoute(id).to,options.now);
     }else if(nativeFieldSupported(id)&&dungeons.zones[id]){
         activateNativeField(session.game.hunt,entryPoint||dungeons.zones[id].arrival,options.now);
@@ -95,6 +98,7 @@ function stopNativeWalk(w){
 }
 export function advanceWorld(session,now=Date.now()) {
     const w=ensureWorld(session,now);
+    advanceNativeFallDamage(session,now);
     if(!alive(session)){markWorldDeath(session,now);return w;}
     advanceFerry(session,now);
     let nativeDone=false;
@@ -138,8 +142,8 @@ export function advanceWorld(session,now=Date.now()) {
     if(w.died){delete w.died;delete w.death;}
     if(w.mode==='location'){
         const dungeon=dungeons.zones[w.location],hunt=session.game.hunt;
-        if(w.location==='pagan-temple'&&hunt?.field&&!hunt.field.native&&[1,2].includes(hunt.field.floor)){
-            const floor=hunt.field.floor,point=floor===1?pagan.mirrors[32039].to:nativeLevelArrival('pagan-temple',floor);
+        if(w.location==='pagan-temple'&&hunt?.field&&!hunt.field.native&&[1,2,3,4].includes(hunt.field.floor)){
+            const floor=hunt.field.floor,point=floor===1?pagan.mirrors[32039].to:floor===3?pagan.mirrors[32040].to:floor===4?pagan.npcs[32039].point:nativeLevelArrival('pagan-temple',floor);
             if(point){ensureHunt(session,now);restoreNativeField(session,'pagan-temple',now);activateNativeField(hunt,point,now);hunt.field.native.sourceFloor=floor;session.needsSave=true;}
         }
         if(dungeon&&nativeFieldSupported(w.location)&&hunt?.field&&!hunt.field.native){
@@ -166,7 +170,7 @@ export function advanceWorld(session,now=Date.now()) {
     }
     if(nativeFieldPoint(session)){
         const point=nativeFieldPoint(session),city=nativeCityAt(point);
-        if(city){w.city=city.id;arriveCity(session,w,now);Object.assign(w,cityPoint(city,point),{z:point.z});}
+        if(city&&!nativeFieldKeepsTownView(session.game.hunt)){w.city=city.id;arriveCity(session,w,now);Object.assign(w,cityPoint(city,point),{z:point.z});}
         else if(!nativeFieldNear(point,session.game.hunt.zone)){
             const native=session.game.hunt.field.native,trip=native.journey;
             if(native.nativeTrail)w.nativeTrail=native.nativeTrail;
@@ -279,13 +283,19 @@ export function worldAction(session,body,now=Date.now()){
     if(body.action==='native_floor'){
         const f=session.game.hunt?.field;
         if(w.mode!=='location'||!f?.native||w.instanceId||session.game.hunt.zone!==w.location)return {ok:false,reason:'invalid_floor'};
+        if(session.game.hunt.zone==='pagan-temple'&&[3,4].includes(f.native.sourceFloor)&&Number(body.floor)===4&&!body.routeId){
+            const denied=l2ActionBlock(session,{move:true},now);if(denied)return {ok:false,reason:denied};
+            const result=beginNativeChurchTravel(session,now,getSpeed(session)*l2MoveMultiplier(session,now));if(!result.ok)return result;
+            stopHuntAction(f,now);f.native.journey=result.trip;f.seenAt=now;w.channel=null;return {ok:true};
+        }
         const teleport=nativeFloorTeleport(session,Number(body.floor),now,body.routeId);
         const blocked=l2ActionBlock(session,{move:!teleport},now);if(blocked)return {ok:false,reason:blocked};
         if(teleport){
             if(!teleport.ok)return teleport;
             if(teleport.doorOpened){syncNativeDoors(session,now);return {ok:true};}
             stopHuntAction(f,now);
-            if(teleport.city){w.city=teleport.city;arriveCity(session,w,now);Object.assign(w,cityPoint(cityOf(w),teleport.point),{z:teleport.point.z});}
+            if(teleport.city&&session.game.hunt.zone==='pagan-temple'&&teleport.floor===3){activateNativeField(session.game.hunt,teleport.point,now);f.native.sourceFloor=3;}
+            else if(teleport.city){w.city=teleport.city;arriveCity(session,w,now);Object.assign(w,cityPoint(cityOf(w),teleport.point),{z:teleport.point.z});}
             else {activateNativeField(session.game.hunt,teleport.point,now);f.native.sourceFloor=teleport.floor;f.native.outside=teleport.outside;}
             w.channel=null;delete w.nativeResume;session.needsSave=true;return {ok:true};
         }
@@ -346,7 +356,7 @@ export function worldAction(session,body,now=Date.now()){
         Object.assign(w,{mode:'road',walkHome:result.trip,path:[],pending:null,channel:null,location:null});delete w.nativePosition;delete w.cityWalk;return {ok:true};
     }
     if(body.action==='native_stop'){
-        if(nativeFieldPoint(session)&&session.game.hunt.field.native.journey){rememberNativeResume(w,session.game.hunt.field.native.journey);stopHuntAction(session.game.hunt.field,now);return {ok:true};}
+        if(nativeFieldPoint(session)&&(session.game.hunt.field.native.journey||Number.isInteger(session.game.hunt.field.native.churchPendingStage))){if(session.game.hunt.field.native.journey)rememberNativeResume(w,session.game.hunt.field.native.journey);stopHuntAction(session.game.hunt.field,now);return {ok:true};}
         return stopNativeWalk(w)?{ok:true}:{ok:false,reason:'no_field'};
     }
     if(body.action==='native_step'){

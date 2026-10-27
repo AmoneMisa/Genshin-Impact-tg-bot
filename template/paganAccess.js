@@ -1,4 +1,4 @@
-// Original PaganTeleporters.java and fixed NPC spawns; church drop remains unverified.
+// Original PaganTeleporters.java and fixed NPC spawns; church descent uses separately verified stored geodata layers.
 export default {
   "source": {
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
@@ -168,7 +168,9 @@ export default {
   ],
   "churchDrop": {
     "sourcePosition": null,
-    "implementedInNativeWorld": false,
-    "reason": "client_jump_geometry_not_verified"
+    "implementedInNativeWorld": true,
+    "geometry": "derived-stored-layer-descent",
+    "route": "template/paganChurchRoute.js",
+    "reason": "original_script_jump_position_unavailable"
   }
 };

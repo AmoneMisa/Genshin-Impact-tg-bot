@@ -16,7 +16,7 @@ for(const [key,map] of Object.entries(maps.maps))test(`${key}: vector cave footp
  const id=map.zone||key;
  const text=fs.readFileSync('webapp'+map.asset,'utf8'),d=text.match(/ d="([^"]+)"/)[1],polygons=d.split('M').filter(Boolean).map(s=>s.replace(/Z$/,'').split('L').map(p=>p.split(' ').map(Number)));
  assert.equal(createHash('sha256').update(text).digest('hex'),map.sha256);assert.equal(Buffer.byteLength(text),map.bytes);assert.ok(map.bytes<200000);assert.equal(maps.geodataCommit,worldGeodata.manifest.commit);
- for(const [file,sha] of Object.entries(map.files))assert.equal(sha,MISSING_WORLD_SOURCE.files[file]);
+ for(const [file,sha] of Object.entries(map.files))assert.equal(sha,MISSING_WORLD_SOURCE.files[file]||registry.source.files[file]);
  const inside=point=>polygons.reduce((yes,polygon)=>yes!==pointInPolygon({x:(point.x-map.bounds.x)/16,y:(point.y-map.bounds.y)/16},polygon),false);
  const slots=nativeFieldRooms(id).filter(r=>!map.sourceFloor||r.sourceFloor===map.sourceFloor).flatMap(r=>r.spawns||[]);let checked=0,placementSeed=42;
  const placementRandom=()=>((placementSeed=(Math.imul(placementSeed,1664525)+1013904223)>>>0)/4294967296);
@@ -24,7 +24,7 @@ for(const [key,map] of Object.entries(maps.maps))test(`${key}: vector cave footp
   const points=slot.coordinateSource==='point'?[slot]:Array.from({length:3},()=>sampleNativeTerritory(nativeTerritorySource(id,slot),{random:placementRandom}));assert.ok(points.every(Boolean));
   for(const point of points){const floor=worldGeodata.point(point),roof=worldGeodata.point({...point,z:32767});if(roof.z<=floor.z)continue;assert.equal(inside(point),true,`${id} ${slot.id} ${point.x},${point.y}`);checked++;}
  }
- const markers=Object.entries(landmarks.zones[id]||{}).filter(([floor])=>(!registry.fields[id]?.dungeon||floor!=='entrance')&&(!map.sourceFloor||Number(floor)===map.sourceFloor)).map(([,m])=>m.point);
+ const markers=Object.entries(landmarks.zones[id]||{}).filter(([floor])=>(!registry.fields[id]?.dungeon||floor!=='entrance')&&(map.sourceFloor?Number(floor)===map.sourceFloor:!registry.fields[id]?.cityLandings?.includes(Number(floor)))).map(([,m])=>m.point);
  for(const p of markers){assert.equal(inside(p),true);assert.equal(nativeInteriorMap(id,p,map.sourceFloor)?.asset,map.asset);checked++;}
  // Independent raw-layer check at deterministic vector samples. A filled
  // pixel must correspond to a real NSWE cell beneath another stored layer.

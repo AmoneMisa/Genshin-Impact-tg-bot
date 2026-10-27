@@ -82,20 +82,13 @@ test('Pagan opened door affects real cells, survives JSON and blocks a saved wal
  assert.equal(advanceNativeJourney(trip,NOW+10000,100,{allowed:nativeGroundFor(s,NOW+10000)}),false);
  assert.equal(trip.native.blocked,'path_blocked');assert.deepEqual(trip.native.point,from);
 });
-test('Pagan mirror returns to its original Rune point and church overlay preserves the underground bank',()=>{
+test('Pagan return mirror retains the exact Rune landing and the same native bank',()=>{
  const s=hero();advanceWorld(s,NOW);quiet(s);const victim=actors(s)[0];assert.ok(victim);victim.currentHp=2;const id=victim.instanceId;
  stand(s,32040);assert.ok(worldAction(s,{action:'native_floor',floor:3,routeId:'32040:SCRIPT:0'},NOW).ok);
- assert.equal(s.game.world.mode,'city');assert.equal(s.game.world.z,718);assert.equal(s.game.hunt.field,null);
- const city=CITIES.find(c=>c.id==='rune');assert.deepEqual({x:s.game.world.x,y:s.game.world.y},cityPoint(city,access.mirrors[32040].to));
- const bank=s.game.world.nativeFields[zone].data;
- const church=CITY_NPCS.find(n=>n.service==='pagan-church');Object.assign(s.game.world,cityPoint(city,church));
- assert.ok(worldAction(s,{action:'pagan_church'},NOW).ok);assert.equal(s.game.hunt.field.floor,3);assert.equal(s.game.hunt.field.native,undefined);
- saveNativeField(s,NOW+1);assert.equal(s.game.world.nativeFields[zone].data,bank);
- for(const floor of [4,1]){
-  const f=s.game.hunt.field,d=levelTransitions(zone,f).destinations.find(d=>d.floor===floor);assert.ok(d);
-  Object.assign(f,{room:d.room,...d.point});assert.ok(worldAction(s,{action:'floor',floor},NOW+2).ok);
- }
- assert.deepEqual(nativeActorPoint(s.game.hunt.field),access.mirrors[32039].to);
- const restored=actors(s).filter(m=>m.instanceId===id);assert.equal(restored.length,1);assert.equal(restored[0].currentHp,2);
- assert.equal(s.game.inventory.gold,1000000);assert.equal(s.game.world.nativeFields[zone],undefined);
+ assert.equal(s.game.world.mode,'location');assert.equal(s.game.hunt.field.native.sourceFloor,3);
+ assert.deepEqual(nativeActorPoint(s.game.hunt.field),access.mirrors[32040].to);
+ saveNativeField(s,NOW+1);
+ assert.equal(actors(s).filter(m=>m.instanceId===id).length,1);
+ assert.equal(actors(s).find(m=>m.instanceId===id).currentHp,2);
+ assert.equal(s.game.inventory.gold,1000000);
 });

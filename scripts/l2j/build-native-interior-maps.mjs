@@ -9,18 +9,21 @@ import {MISSING_WORLD_SOURCE} from '../../docs/missing-world-sources.js';
 import approaches from '../../template/nativeInteriorRoutes.js';
 import landmarks from '../../template/nativeInteriorLandmarks.js';
 import pilot from '../../template/nativeFieldPilot.js';
+import church from '../../template/paganChurchRoute.js';
 import {geoCell,geoRegionId,worldGeodata} from '../../functions/game/world/l2jGeodata.js';
 import {nativeStep} from '../../functions/game/world/nativeNavigation.js';
 const file='template/nativeInteriorMaps.js',previous=fs.existsSync(file)?(await import(new URL('../../template/nativeInteriorMaps.js',import.meta.url))).default:null;
 const requested=process.argv.slice(2),ids=requested.length?requested:['antharas-lair','stakato-nest'],maps={...previous?.maps};
-const requests=ids.flatMap(id=>[{id,key:id},...(pilot.fields[id]?.separateFloorMaps?Object.keys(landmarks.zones[id]||{}).filter(floor=>Number.isInteger(Number(floor))).map(floor=>({id,key:id+':f'+floor,sourceFloor:Number(floor)})):[])]);
+const requests=ids.flatMap(id=>[{id,key:id},...(pilot.fields[id]?.separateLandingMaps?pilot.fields[id].cityLandings:pilot.fields[id]?.separateFloorMaps?Object.keys(landmarks.zones[id]||{}).filter(floor=>Number.isInteger(Number(floor))):[]).map(floor=>({id,key:id+':f'+floor,sourceFloor:Number(floor)}))]);
 for(const {id,key,sourceFloor} of requests){
  const dungeon=pilot.fields[id]?.dungeon||pilot.fields[id]?.detachedInterior;
- const allSlots=nativeFieldRooms(id).flatMap(r=>r.spawns||[]),allMarkers=Object.entries(landmarks.zones[id]||{}).filter(([floor])=>!dungeon||floor!=='entrance').map(([,m])=>m);
+ const landing=pilot.fields[id]?.cityLandings?.includes(sourceFloor);
+ const allSlots=nativeFieldRooms(id).flatMap(r=>r.spawns||[]),allMarkers=Object.entries(landmarks.zones[id]||{}).filter(([floor])=>(!dungeon||floor!=='entrance')&&(landing?Number(floor)===sourceFloor:!pilot.fields[id]?.cityLandings?.includes(Number(floor)))).map(([,m])=>m);
  const slots=nativeFieldRooms(id).filter(r=>!sourceFloor||r.sourceFloor===sourceFloor).flatMap(r=>r.spawns||[]),fixed=slots.filter(s=>s.coordinateSource==='point'),areas=slots.filter(s=>s.coordinateSource!=='point');
  const markers=sourceFloor?[landmarks.zones[id][sourceFloor]]:allMarkers;
- const files=Object.fromEntries([...new Set([...slots.map(s=>s.file||s.sourceFile),...markers.map(m=>m.source.file)])].map(f=>{if(!MISSING_WORLD_SOURCE.files[f])throw Error('Missing source provenance');return [f,MISSING_WORLD_SOURCE.files[f]];}));
- const anchors=[...allSlots.filter(s=>s.coordinateSource==='point'),...allMarkers.map(m=>m.point),...allSlots.filter(s=>s.coordinateSource!=='point').flatMap(s=>s.polygon.map(([x,y])=>({x,y}))),...(dungeon?[]:[LOCATIONS.find(l=>l.id===id)]),...(approaches.routes[id]?.path||[])];
+ const files=Object.fromEntries([...new Set([...slots.map(s=>s.file||s.sourceFile),...markers.map(m=>m.source.file)])].map(f=>{const sha=MISSING_WORLD_SOURCE.files[f]||pilot.source.files[f];if(!sha)throw Error('Missing source provenance');return [f,sha];}));
+ const footprint=id==='pagan-temple'&&landing?church.presentationBounds[sourceFloor]:null;
+ const anchors=footprint?[{x:footprint.x,y:footprint.y},{x:footprint.x+footprint.w,y:footprint.y+footprint.h}]:[...allSlots.filter(s=>s.coordinateSource==='point'),...allMarkers.map(m=>m.point),...allSlots.filter(s=>s.coordinateSource!=='point').flatMap(s=>s.polygon.map(([x,y])=>({x,y}))),...(dungeon?[]:[LOCATIONS.find(l=>l.id===id)]),...(approaches.routes[id]?.path||[])];
  // Presentation crop only. It never participates in movement or placement.
  const left=geoCell(Math.min(...anchors.map(s=>s.x)))-16,top=geoCell(Math.min(...anchors.map(s=>s.y)))-16,right=geoCell(Math.max(...anchors.map(s=>s.x)))+16,bottom=geoCell(Math.max(...anchors.map(s=>s.y)))+16;
  const width=right-left+1,height=bottom-top+1,roof=new Int16Array(width*height);roof.fill(32767);
@@ -28,7 +31,7 @@ for(const {id,key,sourceFloor} of requests){
  const covered=n=>{const i=index(n.gx,n.gy);if(roof[i]===32767)roof[i]=worldGeodata.cell(n.gx,n.gy,32767)?.z??-32768;return roof[i]>n.z;};
  const queue=[],seen=new Set(),mask=new Set();
  function add(n){if(!n?.nswe||!inside(n)||!covered(n))return;const i=index(n.gx,n.gy),key=i+':'+n.z;if(seen.has(key))return;seen.add(key);mask.add(i);queue.push(n);if(seen.size>1500000)throw Error('Cave footprint node budget');}
- for(const s of [...fixed,...markers.map(m=>m.point)])add({gx:geoCell(s.x),gy:geoCell(s.y),...worldGeodata.point(s)});
+ for(const s of [...fixed,...markers.map(m=>m.point),...(id==='pagan-temple'&&landing?church.floorSeeds[sourceFloor]:[])])add({gx:geoCell(s.x),gy:geoCell(s.y),...worldGeodata.point(s)});
  const territories=new Set();
  for(const area of areas){
   const key=(area.file||area.sourceFile)+':'+area.sourceGroup;if(territories.has(key))continue;territories.add(key);
