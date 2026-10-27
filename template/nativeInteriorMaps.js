@@ -659,6 +659,28 @@ export default {
         "spawns/Catacombs/NecropolisOfMartyrdom.xml": "e8438d56c17a0d6cb044cda279bb55aa386462d552ab4c87a288b43e7628468c",
         "spawns/Others/23_22.xml": "0f9cfa3e19fa3fbf18d698283456df4a0070daeb8b322543ba335417ea6c3fe6"
       }
+    },
+    "necropolis-saints": {
+      "asset": "/art/world/native/necropolis-saints.svg",
+      "regions": {
+        "22_24": "6ba624ee27c1f600a8a0dfb628606726781277411d5efe6aff638ca705cae9a7"
+      },
+      "bounds": {
+        "x": 82848,
+        "y": 208576,
+        "w": 11472,
+        "h": 11552
+      },
+      "cells": 162639,
+      "layerCells": 162639,
+      "contours": 60,
+      "corners": 4802,
+      "bytes": 37377,
+      "sha256": "c15ef7292999b1b3c0b70a07f927f709e73845b93507d56ebdc118470876c4ab",
+      "files": {
+        "spawns/Catacombs/NecropolisOfTheSaints.xml": "1da680d9c8fa2dae438bb34d17fdaf52e661874c0f99d86f21a78db6bd374709",
+        "spawns/Others/22_24.xml": "6642af364019bf2592d5fadb4b121b673d312585ba3be9f732d31db38aa65e29"
+      }
     }
   }
 };
