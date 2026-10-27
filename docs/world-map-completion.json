@@ -3,10 +3,10 @@
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
   "totals": {
     "catalogZones": 72,
-    "nativePopulationZones": 51,
-    "adaptedPopulationZones": 21,
-    "reviewedFloors": 74,
-    "deferredFloors": 75,
+    "nativePopulationZones": 52,
+    "adaptedPopulationZones": 20,
+    "reviewedFloors": 75,
+    "deferredFloors": 74,
     "partialPopulationZones": 4,
     "guardedScenarioRoutes": 1
   },
@@ -1611,21 +1611,16 @@
     {
       "id": "catacomb-witch",
       "name": "Катакомбы Ведьм",
-      "nativePopulation": false,
+      "nativePopulation": true,
       "catalogFloors": [
         1
       ],
-      "reviewedFloors": [],
-      "deferredFloors": [
-        {
-          "floor": 1,
-          "title": "Катакомбы Ведьм",
-          "boss": null,
-          "reason": "dungeon_native_movement_and_gates"
-        }
+      "reviewedFloors": [
+        1
       ],
+      "deferredFloors": [],
       "catalogSourcePlaces": 224,
-      "nativeSourcePlaces": 0,
+      "nativeSourcePlaces": 224,
       "unavailablePlaces": 0,
       "sourceGaps": [],
       "guardedScenarioRoutes": [],

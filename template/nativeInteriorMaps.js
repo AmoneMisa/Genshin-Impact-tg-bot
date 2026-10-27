@@ -461,6 +461,28 @@ export default {
         "spawns/Catacombs/CatacombOfTheApostate.xml": "3f08574048a9555abbdde67fe766c69b8a9f9586a907826955778e4caf809cb4",
         "spawns/Others/19_10.xml": "297642f70d3f9d434bfaaf522ad8c04ebd8bbdc383c5cc4083f7c78fe01a771e"
       }
+    },
+    "catacomb-witch": {
+      "asset": "/art/world/native/catacomb-witch.svg",
+      "regions": {
+        "24_20": "743198939d1f160a2156d8f691907a90b22d175724d55fc88ba90fe3374ac588"
+      },
+      "bounds": {
+        "x": 140176,
+        "y": 79056,
+        "w": 11488,
+        "h": 11520
+      },
+      "cells": 221277,
+      "layerCells": 221277,
+      "contours": 69,
+      "corners": 6055,
+      "bytes": 47053,
+      "sha256": "7cb81cede23953ecf40f096c9f405c05325ead5a7fa340eecebd753a570d9bd9",
+      "files": {
+        "spawns/Catacombs/CatacombOfTheWitch.xml": "ca6b03827c52f7c73c99401428d1746e9b3525ce4bf9ce2b13e27218ba0f5d30",
+        "spawns/Others/24_20.xml": "120af1a0077ed82ad185b1e72e7d272b893c2f5d5f96ad55cc6c918e5ccf3faa"
+      }
     }
   }
 };
