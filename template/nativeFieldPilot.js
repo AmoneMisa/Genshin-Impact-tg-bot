@@ -2903,6 +2903,37 @@ export default {
       ],
       "count": 188,
       "unportedMinionTemplates": []
+    },
+    "necropolis-devotion": {
+      "city": "gludio",
+      "interior": true,
+      "floors": [
+        1
+      ],
+      "dungeon": true,
+      "peacefulEntry": true,
+      "fixedCount": 0,
+      "territoryCount": 168,
+      "randomGroupCount": 0,
+      "initialCapacity": 168,
+      "unavailableCount": 0,
+      "availableCapacity": 168,
+      "npcIds": [
+        "21156",
+        "21157",
+        "21158",
+        "21179",
+        "21180",
+        "21181",
+        "21200",
+        "21201",
+        "21202",
+        "21224",
+        "21225",
+        "21226"
+      ],
+      "count": 168,
+      "unportedMinionTemplates": []
     }
   },
   "source": {
@@ -2990,7 +3021,8 @@ export default {
       "spawns/Catacombs/NecropolisOfSacrifice.xml": "46ee9c978c4ed6cf75957907db637750d190856c134013df30a85388fe6b82a3",
       "spawns/Catacombs/NecropolisOfThePilgrims.xml": "cb152cfd8213df90ea2cd2f02bf45c5da7c6c3d920bc1167f9aea8b549b5f2d0",
       "spawns/Catacombs/NecropolisOfWorship.xml": "1f97378b6b34897283ff97fb8fbd802888c0eeec5ccb647173e10346d29f6087",
-      "spawns/Catacombs/NecropolisOfThePatriots.xml": "dd987eb019debb2981fc5211f30340466bb15031ba4be796cd949c0c386adaae"
+      "spawns/Catacombs/NecropolisOfThePatriots.xml": "dd987eb019debb2981fc5211f30340466bb15031ba4be796cd949c0c386adaae",
+      "spawns/Catacombs/NecropolisOfDevotion.xml": "33f8b749819b0f5065636087984f8e80822863f34a290cb1719d072f5c6d3e29"
     },
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
   },
@@ -4302,6 +4334,10 @@ export default {
       "runSpeed": 175.0,
       "attackRange": 40.0
     },
+    "21158": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
     "21159": {
       "runSpeed": 175.0,
       "attackRange": 40.0
@@ -4544,6 +4580,18 @@ export default {
     },
     "21223": {
       "runSpeed": 145.0,
+      "attackRange": 40.0
+    },
+    "21224": {
+      "runSpeed": 190.0,
+      "attackRange": 40.0
+    },
+    "21225": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "21226": {
+      "runSpeed": 190.0,
       "attackRange": 40.0
     },
     "21236": {

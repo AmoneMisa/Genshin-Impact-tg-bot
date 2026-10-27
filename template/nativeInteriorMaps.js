@@ -615,6 +615,28 @@ export default {
         "spawns/Catacombs/NecropolisOfThePatriots.xml": "dd987eb019debb2981fc5211f30340466bb15031ba4be796cd949c0c386adaae",
         "spawns/Others/19_20.xml": "9288973c393d4b37001bb9ed71607be55d02f3714bf3255c2cda98a9384c63b0"
       }
+    },
+    "necropolis-devotion": {
+      "asset": "/art/world/native/necropolis-devotion.svg",
+      "regions": {
+        "18_20": "fce866ab93b52b5afcd2c53c28ca4d46cddda0318735fd8d62ae9a6376ed88b7"
+      },
+      "bounds": {
+        "x": -52528,
+        "y": 78512,
+        "w": 11488,
+        "h": 11472
+      },
+      "cells": 159515,
+      "layerCells": 159515,
+      "contours": 53,
+      "corners": 4445,
+      "bytes": 34670,
+      "sha256": "3efc492de1d2b1302ea3cce20abdce5338dabf13ba41ac1ac9a433cf19cc899b",
+      "files": {
+        "spawns/Catacombs/NecropolisOfDevotion.xml": "33f8b749819b0f5065636087984f8e80822863f34a290cb1719d072f5c6d3e29",
+        "spawns/Others/18_20.xml": "ba7a4304d86eab26aa136e82212e9deb54401531e367a574bcf07293ce584dae"
+      }
     }
   }
 };

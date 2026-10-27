@@ -3,10 +3,10 @@
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
   "totals": {
     "catalogZones": 72,
-    "nativePopulationZones": 58,
-    "adaptedPopulationZones": 14,
-    "reviewedFloors": 81,
-    "deferredFloors": 68,
+    "nativePopulationZones": 59,
+    "adaptedPopulationZones": 13,
+    "reviewedFloors": 82,
+    "deferredFloors": 67,
     "partialPopulationZones": 4,
     "guardedScenarioRoutes": 1
   },
@@ -1719,21 +1719,16 @@
     {
       "id": "necropolis-devotion",
       "name": "Некрополь Посвящения",
-      "nativePopulation": false,
+      "nativePopulation": true,
       "catalogFloors": [
         1
       ],
-      "reviewedFloors": [],
-      "deferredFloors": [
-        {
-          "floor": 1,
-          "title": "Некрополь Посвящения",
-          "boss": null,
-          "reason": "dungeon_native_movement_and_gates"
-        }
+      "reviewedFloors": [
+        1
       ],
+      "deferredFloors": [],
       "catalogSourcePlaces": 168,
-      "nativeSourcePlaces": 0,
+      "nativeSourcePlaces": 168,
       "unavailablePlaces": 0,
       "sourceGaps": [],
       "guardedScenarioRoutes": [],
