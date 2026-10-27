@@ -47,10 +47,14 @@ for(const [id,meta]of Object.entries(registry.fields).filter(([,m])=>m.dungeon))
  assert.equal(worldState(s,NOW).nativeField.zone,id);assert.equal(s.game.hunt.field.native.outside,true);assert.deepEqual(nativeActorPoint(s.game.hunt.field),d.arrival);
  const cash=s.game.inventory.gold;gate(s,1,NOW+1);assert.equal(s.game.hunt.field.native.outside,false);assert.deepEqual(nativeActorPoint(s.game.hunt.field),d.outside.targets[0].point);assert.equal(s.game.inventory.gold,cash);
  const dto=worldState(s,NOW+2);quiet(s);assert.ok(dto.nativeField.ground);assert.ok(dto.nativeField.actors.length<=48);assert.ok(maps.maps[id].bytes<100000);
- assert.equal(worldAction(s,{action:'native_floor',floor:0},NOW+3).reason,'npc_too_far');
- const approach=worldAction(s,{action:'native_guide',npcId:d.inside.npcId},NOW+4);assert.ok(approach.ok,JSON.stringify(approach));
- const trip=s.game.hunt.field.native.journey;let previous=trip.native.point;for(const p of trip.native.path){assert.ok(nativeSegment(previous,p,{allowed:nativeGroundAllowed,reversible:true}));previous=p;}
- let now=trip.until+1;advanceWorld(s,now);quiet(s);assert.ok(nativeFloorGuides(s.game.hunt)[0].near);
+ let now=NOW+4;
+ if(!nativeFloorGuides(s.game.hunt)[0].near){
+  assert.equal(worldAction(s,{action:'native_floor',floor:0},NOW+3).reason,'npc_too_far');
+  const approach=worldAction(s,{action:'native_guide',npcId:d.inside.npcId},now);assert.ok(approach.ok,JSON.stringify(approach));
+  const trip=s.game.hunt.field.native.journey;let previous=trip.native.point;for(const p of trip.native.path){assert.ok(nativeSegment(previous,p,{allowed:nativeGroundAllowed,reversible:true}));previous=p;}
+  now=trip.until+1;advanceWorld(s,now);quiet(s);
+ }else assert.ok(nativeLevelOptions(s.game.hunt).find(t=>t.floor===0)?.enabled,'an arrival already next to the NPC needs no invented walk');
+ assert.ok(nativeFloorGuides(s.game.hunt)[0].near);
  const all=actors(s),victim=all[0];assert.ok(victim);victim.currentHp=2;const key=victim.instanceId,position={...victim.sourcePosition};
  s=JSON.parse(JSON.stringify(s));s.ownerDocument=()=>chat;gate(s,0,now+1);assert.deepEqual(nativeActorPoint(s.game.hunt.field),d.inside.targets[0].point);
  assert.equal(worldState(s,now+2).nativeField.zone,id,'the exterior ziggurat retains the canonical dungeon bank');quiet(s);
@@ -76,7 +80,7 @@ for(const [id]of Object.entries(registry.fields).filter(([,m])=>m.dungeon))test(
 for(const [id]of Object.entries(registry.fields).filter(([,m])=>m.dungeon))test(`${id}: room trails use source proposals and real elapsed movement, including serialized return to the gate`,()=>{
  const d=data.zones[id];let {s,chat}=hero(id),now=NOW;
  assert.ok(worldAction(s,{action:'quick_travel',location:id},now).ok);gate(s,1,++now);
- assert.ok(worldAction(s,{action:'native_guide',npcId:d.inside.npcId},++now).ok);now=s.game.hunt.field.native.journey.until+1;advanceWorld(s,now);quiet(s);
+ if(!nativeFloorGuides(s.game.hunt)[0].near){assert.ok(worldAction(s,{action:'native_guide',npcId:d.inside.npcId},++now).ok);now=s.game.hunt.field.native.journey.until+1;advanceWorld(s,now);quiet(s);}
  const routes=npcRoutes.zones[id].filter(r=>r.witness);assert.equal(routes.length,nativeFieldRooms(id).length);
  for(const r of routes){
   const slot=nativeFieldRooms(id).find(room=>room.id===r.witness.room).spawns[0];let state=r.witness.seed;

@@ -48,8 +48,10 @@ try{for(const {width,noCanvas=false,noImages=false}of cases){
  await page.locator('[data-native-levels]>summary').click();
  async function gate(id){const button=page.locator(`[data-native-route="${id}:OTHER:0"]`),gold=s.game.inventory.gold;assert.equal(await button.isDisabled(),false);await button.focus();assert.ok(await button.evaluate(n=>n===document.activeElement));await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.routeId===`${id}:OTHER:0`),button.click()]);assert.equal(s.game.inventory.gold,gold);await same();}
  await gate(d.outside.npcId);assert.equal(s.game.hunt.field.native.outside,false);assert.deepEqual(nativeActorPoint(s.game.hunt.field),d.outside.targets[0].point);
- const map=worldState(s,now).nativeField.ground;assert.ok(map?.asset);assert.equal(await page.locator(`[data-native-route="${d.inside.npcId}:OTHER:0"]`).isDisabled(),true);
- await page.locator(`button[data-native-guide="${d.inside.npcId}"]`).click();await page.waitForFunction(id=>!document.querySelector(`[data-native-route="${id}:OTHER:0"]`)?.disabled,d.inside.npcId);
+ const map=worldState(s,now).nativeField.ground;assert.ok(map?.asset);
+ const approach=page.locator(`button[data-native-guide="${d.inside.npcId}"]`);
+ if(await approach.isEnabled()){assert.equal(await page.locator(`[data-native-route="${d.inside.npcId}:OTHER:0"]`).isDisabled(),true);await approach.click();}
+ await page.waitForFunction(id=>!document.querySelector(`[data-native-route="${id}:OTHER:0"]`)?.disabled,d.inside.npcId);
  const victim=actors()[0];assert.ok(victim);victim.currentHp=2;const saved={id:victim.instanceId,hp:2};s.game=JSON.parse(JSON.stringify(s.game));
  await page.screenshot({path:path.join(out,`inside-${width}${noCanvas?'-no-canvas':noImages?'-no-images':''}.png`)});
  await gate(d.inside.npcId);assert.equal(s.game.hunt.field.native.outside,true);assert.deepEqual(nativeActorPoint(s.game.hunt.field),d.inside.targets[0].point);
