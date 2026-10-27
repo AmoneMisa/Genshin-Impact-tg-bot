@@ -27,7 +27,7 @@ export const nativeFloorGuide=hunt=>nativeFloorGuides(hunt)[0]||null;
 export function nativePortOptions(hunt){
  const ports=nativeFloorPorts(hunt),guides=nativeFloorGuides(hunt);if(!ports.length)return [];
  const model=LOCATION_LEVELS[hunt.zone];
- const targets=ports.flatMap((port,i)=>port.targets.map(t=>({floor:t.floor,title:t.floor===0?'Вход в локацию':model.floors.find(f=>f.number===t.floor).title,routeId:identity(port,t),mode:'teleport',enabled:guides[i].near&&!t.scenarioRequired,...(t.floor===hunt.field.native.sourceFloor&&!hunt.field.native.outside?{title:'К северному залу'}:{})})));
+ const targets=ports.flatMap((port,i)=>port.targets.map(t=>({floor:t.floor,title:t.title||(t.floor===0?'Вход в локацию':model.floors.find(f=>f.number===t.floor).title),routeId:identity(port,t),mode:'teleport',enabled:guides[i].near&&!t.scenarioRequired,...(t.floor===hunt.field.native.sourceFloor&&!hunt.field.native.outside?{title:'К северному залу'}:{})})));
  if(!hunt.field.native.outside&&!targets.some(t=>t.floor===hunt.field.native.sourceFloor))targets.push({floor:hunt.field.native.sourceFloor,title:model.floors.find(f=>f.number===hunt.field.native.sourceFloor).title,mode:'teleport',enabled:false});
  return targets;
 }

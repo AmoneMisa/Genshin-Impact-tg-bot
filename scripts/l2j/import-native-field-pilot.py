@@ -4,6 +4,7 @@ import json
 import xml.etree.ElementTree as ET
 import tarfile
 import subprocess
+import sys
 from pathlib import Path
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
@@ -57,6 +58,10 @@ fields={
     'cruma-marshlands': {'city': 'dion'},
     'plains-of-dion': {'city': 'dion'},
 }
+dungeon_data=json.loads(subprocess.check_output(['node','--input-type=module','-e','import d from "./template/nativeDungeonAccess.js";import p from "./template/nativeFieldPilot.js";console.log(JSON.stringify({zones:d.zones,enabled:Object.keys(p.fields).filter(id=>p.fields[id].dungeon)}))'],encoding='utf8'))
+for id in dict.fromkeys([*dungeon_data['enabled'],*sys.argv[1:]]):
+    assert id in dungeon_data['zones'],id
+    fields[id]={'city':dungeon_data['zones'][id]['city'],'interior':True,'floors':[1],'dungeon':True,'peacefulEntry':True}
 catalog=json.loads(subprocess.check_output(['node','--input-type=module','-e',
     'import {LOCATION_LEVELS} from "./template/locationLevels.js";console.log(JSON.stringify(Object.fromEntries('+json.dumps(list(fields))+'.map(id=>[id,LOCATION_LEVELS[id]]))))'],encoding='utf-8'))
 source_manifest=json.loads(subprocess.check_output(['node','--input-type=module','-e',

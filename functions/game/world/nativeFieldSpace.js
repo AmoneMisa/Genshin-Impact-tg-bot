@@ -20,13 +20,15 @@ export const nativeFieldSupported=id=>Object.hasOwn(pilot.fields,id);
 export const nativeSourceGap=(zone,spawn)=>pilot.fields[zone]?.sourceGaps?.find(g=>g.npcId===spawn.id&&(g.kind==='point'?spawn.coordinateSource==='point'&&['x','y','z'].every(k=>g.source[k]===spawn[k]):spawn.coordinateSource!=='point'&&g.sourceGroup===spawn.sourceGroup&&g.sourceFile===(spawn.sourceFile||spawn.file)))||null;
 const sourceSpawns=Object.fromEntries(Object.keys(pilot.fields).map(id=>[id,nativeFieldRooms(id).flatMap(r=>r.spawns||[])]));
 const allSourceSpawns=Object.values(sourceSpawns).flat();
-export const nativeFieldNear=(point,id)=>Boolean(point&&(id?sourceSpawns[id]||[]:allSourceSpawns).some(s=>nativeSpawnDistance(point,s)<=NATIVE_FIELD_RADIUS));
+const exteriorDistance=(point,id)=>{const p=pilot.fields[id]?.dungeon&&landmarks.zones[id]?.entrance?.point;return p?Math.hypot(point.x-p.x,point.y-p.y,point.z-p.z):Infinity;};
+export const nativeFieldNear=(point,id)=>Boolean(point&&((id?sourceSpawns[id]||[]:allSourceSpawns).some(s=>nativeSpawnDistance(point,s)<=NATIVE_FIELD_RADIUS)||(id?exteriorDistance(point,id)<=NATIVE_FIELD_RADIUS:Object.keys(pilot.fields).some(id=>exteriorDistance(point,id)<=NATIVE_FIELD_RADIUS))));
 export function nativeFieldZone(point,preferred=null){
  if(preferred)return nativeFieldNear(point,preferred)&&nativeFieldEntryVisible(point,preferred)?preferred:null;
  if(!point)return null;
  let zone=null,distance=NATIVE_FIELD_RADIUS;
  for(const [id,spawns] of Object.entries(sourceSpawns)){
   if(!nativeFieldEntryVisible(point,id))continue;
+  const exterior=exteriorDistance(point,id);if(exterior<=distance){zone=id;distance=exterior;}
   for(const spawn of spawns){const next=nativeSpawnDistance(point,spawn);if(next<=distance){zone=id;distance=next;}}
  }
  return zone;

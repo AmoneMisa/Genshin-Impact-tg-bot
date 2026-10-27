@@ -30,7 +30,7 @@ function hero(zone){
  const chat={game:{},members:[s]};s.ownerDocument=()=>chat;change(s,'humanFighter');update(s);return s;
 }
 for(const [zone,meta]of Object.entries(registry.fields)){
- if(meta.island)continue; // Island travel and source quotas: primeval-navigation and native-random-population.
+ if(meta.island||meta.dungeon)continue; // Islands and dungeon NPC gates have dedicated access/population suites.
  test(`${zone}: source ground spawns, bounded DTO, saved ownership and physical city return`,()=>{
   const slots=nativeFieldRooms(zone).flatMap(r=>r.spawns||[]);
   assert.equal(slots.reduce((n,s)=>n+s.count,0),meta.count);

@@ -1,4 +1,6 @@
 export default {
+ 'Войти в подземелье':'Zindonga kirish',
+ 'Выйти к зиккурату':'Zikkurat yoniga chiqish',
  'Башня Крумы · 3 этаж':'Kruma minorasi · 3-qavat',
  'Подойти к {2}':'{2} yoniga borish',
  'Вход в локацию':'Hududga kirish',

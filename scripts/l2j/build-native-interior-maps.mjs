@@ -15,11 +15,12 @@ const file='template/nativeInteriorMaps.js',previous=fs.existsSync(file)?(await 
 const requested=process.argv.slice(2),ids=requested.length?requested:['antharas-lair','stakato-nest'],maps={...previous?.maps};
 const requests=ids.flatMap(id=>[{id,key:id},...(pilot.fields[id]?.separateFloorMaps?Object.keys(landmarks.zones[id]||{}).filter(floor=>Number.isInteger(Number(floor))).map(floor=>({id,key:id+':f'+floor,sourceFloor:Number(floor)})):[])]);
 for(const {id,key,sourceFloor} of requests){
- const allSlots=nativeFieldRooms(id).flatMap(r=>r.spawns||[]),allMarkers=Object.values(landmarks.zones[id]||{});
+ const dungeon=pilot.fields[id]?.dungeon;
+ const allSlots=nativeFieldRooms(id).flatMap(r=>r.spawns||[]),allMarkers=Object.entries(landmarks.zones[id]||{}).filter(([floor])=>!dungeon||floor!=='entrance').map(([,m])=>m);
  const slots=nativeFieldRooms(id).filter(r=>!sourceFloor||r.sourceFloor===sourceFloor).flatMap(r=>r.spawns||[]),fixed=slots.filter(s=>s.coordinateSource==='point'),areas=slots.filter(s=>s.coordinateSource!=='point');
  const markers=sourceFloor?[landmarks.zones[id][sourceFloor]]:allMarkers;
  const files=Object.fromEntries([...new Set([...slots.map(s=>s.file||s.sourceFile),...markers.map(m=>m.source.file)])].map(f=>{if(!MISSING_WORLD_SOURCE.files[f])throw Error('Missing source provenance');return [f,MISSING_WORLD_SOURCE.files[f]];}));
- const anchors=[...allSlots.filter(s=>s.coordinateSource==='point'),...allMarkers.map(m=>m.point),...allSlots.filter(s=>s.coordinateSource!=='point').flatMap(s=>s.polygon.map(([x,y])=>({x,y}))),LOCATIONS.find(l=>l.id===id),...(approaches.routes[id]?.path||[])];
+ const anchors=[...allSlots.filter(s=>s.coordinateSource==='point'),...allMarkers.map(m=>m.point),...allSlots.filter(s=>s.coordinateSource!=='point').flatMap(s=>s.polygon.map(([x,y])=>({x,y}))),...(dungeon?[]:[LOCATIONS.find(l=>l.id===id)]),...(approaches.routes[id]?.path||[])];
  // Presentation crop only. It never participates in movement or placement.
  const left=geoCell(Math.min(...anchors.map(s=>s.x)))-16,top=geoCell(Math.min(...anchors.map(s=>s.y)))-16,right=geoCell(Math.max(...anchors.map(s=>s.x)))+16,bottom=geoCell(Math.max(...anchors.map(s=>s.y)))+16;
  const width=right-left+1,height=bottom-top+1,roof=new Int16Array(width*height);roof.fill(32767);

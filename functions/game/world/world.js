@@ -1,12 +1,13 @@
 import {nativeLevelTravel} from './nativeLevelTravel.js';
 import {nativeFloorTeleport,nativeGuideTravel} from './nativeFloorTransports.js';
+import dungeons from '../../../template/nativeDungeonAccess.js';
 import {findCityPath,advanceCityPath,ensureCityOrigin} from './cityNavigation.js';
 import {CITIES, REGIONS, LOCATIONS, CITY_NPCS} from '../../../template/worldMap.js';
 import {teleportPrice} from '../runes/labRunes.js';
 import {pointInPolygon, findPath, advancePath} from './navigation.js';
 import getSpeed from '../player/getters/getSpeed.js';
 import {l2MoveMultiplier,l2ActionBlock} from '../player/l2Effects.js';
-import {enterHuntField, advanceHunt, moveHuntField, resetInstanceRoom,stopHuntAction,changeHuntFloor} from '../hunt/huntFight.js';
+import {enterHuntField,ensureHunt, advanceHunt, moveHuntField, resetInstanceRoom,stopHuntAction,changeHuntFloor} from '../hunt/huntFight.js';
 import {levelTransitions} from '../hunt/locationLevels.js';
 import {spendMaterials, addMaterial} from '../player/materials.js';
 import {getZone} from '../hunt/huntMobs.js';
@@ -74,6 +75,9 @@ function enterPublicField(session,id,{departure,entryPoint,...options}){
     }
     if(nativeRoute(id)){
         activateNativeField(session.game.hunt,entryPoint||nativeRoute(id).entry||nativeRoute(id).to,options.now);
+    }else if(nativeFieldSupported(id)&&dungeons.zones[id]){
+        activateNativeField(session.game.hunt,entryPoint||dungeons.zones[id].arrival,options.now);
+        session.game.hunt.field.native.sourceFloor=1;
     }
     return result;
 }
@@ -126,7 +130,16 @@ export function advanceWorld(session,now=Date.now()) {
         }
     }
     if(w.died){delete w.died;delete w.death;}
-    if(w.mode==='location')advanceHunt(session,now);
+    if(w.mode==='location'){
+        const dungeon=dungeons.zones[w.location],hunt=session.game.hunt;
+        if(dungeon&&nativeFieldSupported(w.location)&&hunt?.field&&!hunt.field.native){
+            // Authored room XY cannot be scaled into a real dungeon position.
+            // Adopt the saved population at the pinned interior arrival once.
+            ensureHunt(session,now);activateNativeField(hunt,dungeon.outside.targets[0].point,now);
+            Object.assign(hunt.field.native,{sourceFloor:1,legacyArrival:'source-dungeon-teleport'});session.needsSave=true;
+        }
+        advanceHunt(session,now);
+    }
     // A visible cave entrance hands off the public bank at the current XYZ.
     // Preserve the same journey and history; switching populations grants no step.
     if(nativeFieldPoint(session)&&!w.instanceId&&!nativeFieldInterior(session.game.hunt.zone)){

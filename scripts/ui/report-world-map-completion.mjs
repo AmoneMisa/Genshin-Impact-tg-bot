@@ -7,7 +7,7 @@ import routes from '../../template/nativeRoutes.js';
 
 // Inventory of this game's catalog, not a claim to cover the entire H5 world.
 const labels={
- sevensigns_access_and_entrance:'Вход и состояние Семи Печатей',
+ dungeon_native_movement_and_gates:'Подключение геодаты и исходных зиккуратов (свободный вход)',
  swimming_and_vertical_routes:'Плавание и переходы между ярусами',
  swimming_ship_and_zaken_scenario:'Водный подход, корабль и сценарий Закена',
  church_drop_mirrors_and_doors:'Спуск из церкви, зеркала и двери Пагана',
@@ -17,7 +17,7 @@ const labels={
  native_population_and_routes:'Перенос населения и проверка маршрутов',
 };
 function pending(id,location){
- if(location?.dungeonType)return 'sevensigns_access_and_entrance';
+ if(location?.dungeonType)return 'dungeon_native_movement_and_gates';
  if(id==='garden-of-eva')return 'swimming_and_vertical_routes';
  if(id==='devils-isle')return 'swimming_ship_and_zaken_scenario';
  if(id==='pagan-temple')return 'church_drop_mirrors_and_doors';

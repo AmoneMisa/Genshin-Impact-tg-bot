@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 import maps from '../template/nativeInteriorMaps.js';
 import landmarks from '../template/nativeInteriorLandmarks.js';
+import registry from '../template/nativeFieldPilot.js';
 import {MISSING_WORLD_SOURCE} from '../docs/missing-world-sources.js';
 import {worldGeodata,geoCell,geoRegionId} from '../functions/game/world/l2jGeodata.js';
 import {nativeInteriorMap} from '../functions/game/world/nativeInteriorMap.js';
@@ -23,7 +24,7 @@ for(const [key,map] of Object.entries(maps.maps))test(`${key}: vector cave footp
   const points=slot.coordinateSource==='point'?[slot]:Array.from({length:3},()=>sampleNativeTerritory(nativeTerritorySource(id,slot),{random:placementRandom}));assert.ok(points.every(Boolean));
   for(const point of points){const floor=worldGeodata.point(point),roof=worldGeodata.point({...point,z:32767});if(roof.z<=floor.z)continue;assert.equal(inside(point),true,`${id} ${slot.id} ${point.x},${point.y}`);checked++;}
  }
- const markers=Object.entries(landmarks.zones[id]||{}).filter(([floor])=>!map.sourceFloor||Number(floor)===map.sourceFloor).map(([,m])=>m.point);
+ const markers=Object.entries(landmarks.zones[id]||{}).filter(([floor])=>(!registry.fields[id]?.dungeon||floor!=='entrance')&&(!map.sourceFloor||Number(floor)===map.sourceFloor)).map(([,m])=>m.point);
  for(const p of markers){assert.equal(inside(p),true);assert.equal(nativeInteriorMap(id,p,map.sourceFloor)?.asset,map.asset);checked++;}
  // Independent raw-layer check at deterministic vector samples. A filled
  // pixel must correspond to a real NSWE cell beneath another stored layer.
