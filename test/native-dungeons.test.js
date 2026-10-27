@@ -82,7 +82,13 @@ for(const [id]of Object.entries(registry.fields).filter(([,m])=>m.dungeon))test(
  const d=data.zones[id];let {s,chat}=hero(id),now=NOW;
  assert.ok(worldAction(s,{action:'quick_travel',location:id},now).ok);gate(s,1,++now);
  if(!nativeFloorGuides(s.game.hunt)[0].near){assert.ok(worldAction(s,{action:'native_guide',npcId:d.inside.npcId},++now).ok);now=s.game.hunt.field.native.journey.until+1;advanceWorld(s,now);quiet(s);}
- const routes=npcRoutes.zones[id].filter(r=>r.witness);assert.equal(routes.length,nativeFieldRooms(id).length);
+ const routes=npcRoutes.zones[id].filter(r=>r.witness),farRooms=[];
+ for(const room of nativeFieldRooms(id)){
+  const slot=room.spawns[0];if(!slot)continue;let state=42;
+  const p=sampleNativeTerritory(nativeTerritorySource(id,slot),{random:()=>((state=(Math.imul(state,1664525)+1013904223)>>>0)/4294967296)});
+  if(Math.hypot(p.x-d.inside.point.x,p.y-d.inside.point.y,p.z-d.inside.point.z)>250)farRooms.push(room.id);
+ }
+ assert.deepEqual(new Set(routes.map(r=>r.witness.room)),new Set(farRooms),'empty source partitions and already-near samples need no invented route');
  for(const r of routes){
   const slot=nativeFieldRooms(id).find(room=>room.id===r.witness.room).spawns[0];let state=r.witness.seed;
   const p=sampleNativeTerritory(nativeTerritorySource(id,slot),{random:()=>((state=(Math.imul(state,1664525)+1013904223)>>>0)/4294967296)});
