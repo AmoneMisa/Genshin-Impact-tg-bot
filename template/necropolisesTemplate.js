@@ -1059,8 +1059,8 @@ export default [
       }
     ],
     "entrance": {
-      "x": 171936,
-      "y": -17600
+      "x": 82688,
+      "y": 209216
     },
     "sourceFile": "NecropolisOfTheSaints.xml"
   },
@@ -1211,8 +1211,8 @@ export default [
       }
     ],
     "entrance": {
-      "x": 82688,
-      "y": 209216
+      "x": 171936,
+      "y": -17600
     },
     "sourceFile": "NecropolisOfTheDisciples.xml"
   }
