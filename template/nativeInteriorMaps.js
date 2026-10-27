@@ -439,6 +439,28 @@ export default {
         "spawns/Catacombs/CatacombOfTheBranded.xml": "73a34921e258f7844df239287e9c87bfd233be44df0da20601e989c15860862a",
         "spawns/Others/21_23.xml": "7b40f748a5e5d4e458fc84a0c68eb5335ddd5a7f6786f27ca349ea472555af91"
       }
+    },
+    "catacomb-apostate": {
+      "asset": "/art/world/native/catacomb-apostate.svg",
+      "regions": {
+        "19_10": "750cc04fe55d9e58dcf0d5189461b0a6ad7598621733aefee1e0bd83683a1b66"
+      },
+      "bounds": {
+        "x": -20800,
+        "y": -251360,
+        "w": 11552,
+        "h": 11472
+      },
+      "cells": 215842,
+      "layerCells": 215842,
+      "contours": 87,
+      "corners": 5710,
+      "bytes": 44202,
+      "sha256": "16f8a0397eb476cbc701e7334d5155ae8135b59b72f74d8742671c657c044684",
+      "files": {
+        "spawns/Catacombs/CatacombOfTheApostate.xml": "3f08574048a9555abbdde67fe766c69b8a9f9586a907826955778e4caf809cb4",
+        "spawns/Others/19_10.xml": "297642f70d3f9d434bfaaf522ad8c04ebd8bbdc383c5cc4083f7c78fe01a771e"
+      }
     }
   }
 };
