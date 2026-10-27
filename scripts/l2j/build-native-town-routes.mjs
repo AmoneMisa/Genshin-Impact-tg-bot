@@ -6,7 +6,7 @@ import fieldRoutes from '../../template/nativeRoutes.js';
 import {worldGeodata,L2jGeodata} from '../../functions/game/world/l2jGeodata.js';
 import {findNativePath,nativeSegment} from '../../functions/game/world/nativeNavigation.js';
 import {nativeGroundAllowed} from '../../functions/game/world/nativeGround.js';
-import {meetNativePath,nativeMeetingSeeds} from './meet-native-path.mjs';
+import {meetNativePath,nativeMeetingSeeds,restoreNativeMeetingProgress} from './meet-native-path.mjs';
 
 const viaOnly=process.argv.includes('--via-fields-only'),reverseOnly=process.argv.includes('--reverse-only'),meetingOnly=process.argv.includes('--meeting-only');
 const meetingWeightArg=process.argv.find(v=>v.startsWith('--meeting-weight='));
@@ -19,6 +19,7 @@ const selected=process.argv.slice(2).filter(v=>!v.startsWith('--meeting-weight='
 const geo=new L2jGeodata({capacity:32});
 const previous=fs.existsSync(file)?(await import(new URL('../../template/nativeTownRoutes.js',import.meta.url))).default:null;
 const routes={...previous?.routes};
+const stamp={geodataCommit:worldGeodata.manifest.commit,worldCommit:nativeWorld.source.commit,barriersSha256:createHash('sha256').update(fs.readFileSync('template/nativeWorld.js')).digest('hex')};
 for(const [fromCity,toCity] of TOWN_LINKS){
  const id=[fromCity,toCity].sort().join(':');if(selected.length&&!selected.includes(id))continue;
  if(routes[id]?.available&&!rebuild){
@@ -50,10 +51,23 @@ for(const [fromCity,toCity] of TOWN_LINKS){
   const knownRoads={...routes};delete knownRoads[id];
   const seeds=city=>nativeMeetingSeeds(city,geo.point(TOWN_ANCHORS[city]),knownRoads,fieldRoutes.routes);
   const a=seeds(fromCity),b=seeds(toCity);
-  for(const [stride,maxNodes,refine] of [[8,240000,false],[8,240000,true],[8,480000,true],[4,240000,false]]){
-   plan=meetNativePath(from,to,{geo,allowed:nativeGroundAllowed,stride,refine,maxNodes,margin:2048,heuristicWeight:meetingWeight,fromSeeds:a,toSeeds:b});
-   attempts.push({method:'meeting',seedScope:'connected-component',stride,refine,maxNodes,heuristicWeight:meetingWeight,margin:2048,fromSeeds:a.map(r=>r.id),toSeeds:b.map(r=>r.id),visited:plan.visited,reason:plan.reason||null});
+  const progressFile='.tmp/geodata/native-town-progress/'+id.replace(':','--')+'.json';
+  if(!rebuild&&fs.existsSync(progressFile)){
+   let record;try{record=JSON.parse(fs.readFileSync(progressFile,'utf8'));}catch{console.warn(id,'ignoring malformed search progress');}
+   const saved=restoreNativeMeetingProgress(record,{stamp,from:geo.point(from),to:geo.point(to),geo,allowed:nativeGroundAllowed});
+   a.push(...saved[0]);b.push(...saved[1]);console.log(id,'revalidated progress trails',saved[0].length,saved[1].length);
+  }
+  for(const [stride,maxNodes,refine] of [[8,50000,false],[8,50000,true],[4,50000,false],[4,50000,true],[8,240000,false],[8,240000,true],[8,480000,true],[4,240000,false]]){
+   console.log(id,'attempt',stride,refine,maxNodes);
+   plan=meetNativePath(from,to,{geo,allowed:nativeGroundAllowed,stride,refine,maxNodes,margin:2048,heuristicWeight:meetingWeight,fromSeeds:a,toSeeds:b,onProgress:p=>console.log(id,'search',stride,refine,p.visited,JSON.stringify(p.best))});
+   attempts.push({method:'meeting',seedScope:'connected-component',stride,refine,maxNodes,heuristicWeight:meetingWeight,margin:2048,fromSeeds:a.map(r=>r.id),toSeeds:b.map(r=>r.id),visited:plan.visited,reason:plan.reason||null,...(plan.best?{best:plan.best}:{} )});
    console.log(id,'meeting',stride,plan.ok,plan.reason||'',plan.visited);if(plan.ok)break;
+   for(const [side,trail] of (plan.trails||[]).entries())if(trail.path.length&&trail.path.length<=512){
+    const list=side?b:a,end=trail.path.at(-1);
+    if(!list.some(s=>s.path.length&&['x','y','z'].every(k=>s.path.at(-1)[k]===end[k])))list.push({id:'verified-search-progress:'+attempts.length,...trail});
+   }
+   fs.mkdirSync('.tmp/geodata/native-town-progress',{recursive:true});
+   fs.writeFileSync(progressFile,JSON.stringify({stamp,trails:[a,b].map(list=>list.filter(s=>s.id.startsWith('verified-search-progress:')||s.id.startsWith('revalidated-progress:')).slice(-16))}));
   }
  }
  if(!plan.ok){
