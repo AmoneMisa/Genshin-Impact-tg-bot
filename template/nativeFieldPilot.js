@@ -2934,6 +2934,37 @@ export default {
       ],
       "count": 168,
       "unportedMinionTemplates": []
+    },
+    "necropolis-martyrdom": {
+      "city": "giran",
+      "interior": true,
+      "floors": [
+        1
+      ],
+      "dungeon": true,
+      "peacefulEntry": true,
+      "fixedCount": 0,
+      "territoryCount": 116,
+      "randomGroupCount": 0,
+      "initialCapacity": 116,
+      "unavailableCount": 0,
+      "availableCapacity": 116,
+      "npcIds": [
+        "21158",
+        "21159",
+        "21160",
+        "21181",
+        "21182",
+        "21183",
+        "21202",
+        "21203",
+        "21204",
+        "21226",
+        "21227",
+        "21228"
+      ],
+      "count": 116,
+      "unportedMinionTemplates": []
     }
   },
   "source": {
@@ -3022,7 +3053,8 @@ export default {
       "spawns/Catacombs/NecropolisOfThePilgrims.xml": "cb152cfd8213df90ea2cd2f02bf45c5da7c6c3d920bc1167f9aea8b549b5f2d0",
       "spawns/Catacombs/NecropolisOfWorship.xml": "1f97378b6b34897283ff97fb8fbd802888c0eeec5ccb647173e10346d29f6087",
       "spawns/Catacombs/NecropolisOfThePatriots.xml": "dd987eb019debb2981fc5211f30340466bb15031ba4be796cd949c0c386adaae",
-      "spawns/Catacombs/NecropolisOfDevotion.xml": "33f8b749819b0f5065636087984f8e80822863f34a290cb1719d072f5c6d3e29"
+      "spawns/Catacombs/NecropolisOfDevotion.xml": "33f8b749819b0f5065636087984f8e80822863f34a290cb1719d072f5c6d3e29",
+      "spawns/Catacombs/NecropolisOfMartyrdom.xml": "e8438d56c17a0d6cb044cda279bb55aa386462d552ab4c87a288b43e7628468c"
     },
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
   },
@@ -4592,6 +4624,14 @@ export default {
     },
     "21226": {
       "runSpeed": 190.0,
+      "attackRange": 40.0
+    },
+    "21227": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "21228": {
+      "runSpeed": 200.0,
       "attackRange": 40.0
     },
     "21236": {

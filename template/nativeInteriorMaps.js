@@ -637,6 +637,28 @@ export default {
         "spawns/Catacombs/NecropolisOfDevotion.xml": "33f8b749819b0f5065636087984f8e80822863f34a290cb1719d072f5c6d3e29",
         "spawns/Others/18_20.xml": "ba7a4304d86eab26aa136e82212e9deb54401531e367a574bcf07293ce584dae"
       }
+    },
+    "necropolis-martyrdom": {
+      "asset": "/art/world/native/necropolis-martyrdom.svg",
+      "regions": {
+        "23_22": "2bd7afd8a86f9db5cd752bcf9a1df38df4daa849fe79f1d566eaef6ade943e72"
+      },
+      "bounds": {
+        "x": 118064,
+        "y": 132192,
+        "w": 11456,
+        "h": 5840
+      },
+      "cells": 113112,
+      "layerCells": 113112,
+      "contours": 39,
+      "corners": 3189,
+      "bytes": 24428,
+      "sha256": "b2a2578c0313a25a929d38d509d10d25ca2c5ce7c89a0829855902426e53d231",
+      "files": {
+        "spawns/Catacombs/NecropolisOfMartyrdom.xml": "e8438d56c17a0d6cb044cda279bb55aa386462d552ab4c87a288b43e7628468c",
+        "spawns/Others/23_22.xml": "0f9cfa3e19fa3fbf18d698283456df4a0070daeb8b322543ba335417ea6c3fe6"
+      }
     }
   }
 };
