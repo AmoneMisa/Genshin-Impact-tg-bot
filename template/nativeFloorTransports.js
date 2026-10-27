@@ -23,7 +23,8 @@ export default {
     "necropolis-devotion": [],
     "necropolis-martyrdom": [],
     "necropolis-saints": [],
-    "necropolis-disciples": []
+    "necropolis-disciples": [],
+    "pagan-temple": []
   },
   "zones": {
     "ivory-tower": {
@@ -1492,6 +1493,372 @@ export default {
           }
         ]
       }
+    },
+    "pagan-temple": {
+      "1": [
+        {
+          "npcId": 32040,
+          "name": "Triol's Mirror",
+          "title": "зеркалу Триола",
+          "point": {
+            "x": -11986,
+            "y": -35903,
+            "z": -10857
+          },
+          "normal": false,
+          "castleIds": [],
+          "targets": [
+            {
+              "floor": 3,
+              "title": "Вернуться в церковь Руны",
+              "point": {
+                "x": 36640,
+                "y": -51218,
+                "z": 718
+              },
+              "city": "rune",
+              "fee": 0,
+              "item": 57,
+              "list": "SCRIPT",
+              "index": 0,
+              "source": {
+                "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+                "files": {
+                  "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+                  "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
+                  "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+                  "stats/npcs/32000-32099.xml": "85b0f2a0f95198b026f7b649e546dcdc68336df1bbab875cb8142cd9f942f810"
+                },
+                "coreFiles": {
+                  "org/l2jmobius/gameserver/mechanics/script/Quest.java": "d9241ccf7e0c1e8dd4c587de308e3790becaab6757f65457e203db8a3ddba0de"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "npcId": 32034,
+          "name": "Temple Gatekeeper",
+          "title": "стражу входа в храм",
+          "point": {
+            "x": -15934,
+            "y": -36605,
+            "z": -10693
+          },
+          "normal": false,
+          "castleIds": [],
+          "targets": [
+            {
+              "floor": 1,
+              "title": "Открыть вход в храм",
+              "kind": "pagan-door",
+              "fee": 0,
+              "item": 57,
+              "list": "SCRIPT",
+              "index": 0,
+              "source": {
+                "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+                "files": {
+                  "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+                  "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
+                  "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+                  "stats/npcs/32000-32099.xml": "85b0f2a0f95198b026f7b649e546dcdc68336df1bbab875cb8142cd9f942f810"
+                },
+                "coreFiles": {
+                  "org/l2jmobius/gameserver/mechanics/script/Quest.java": "d9241ccf7e0c1e8dd4c587de308e3790becaab6757f65457e203db8a3ddba0de"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "npcId": 32035,
+          "name": "Temple Gatekeeper",
+          "title": "стражу выхода из храма",
+          "point": {
+            "x": -16722,
+            "y": -36928,
+            "z": -10725
+          },
+          "normal": false,
+          "castleIds": [],
+          "targets": [
+            {
+              "floor": 1,
+              "title": "Открыть выход из храма",
+              "kind": "pagan-door",
+              "fee": 0,
+              "item": 57,
+              "list": "SCRIPT",
+              "index": 0,
+              "source": {
+                "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+                "files": {
+                  "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+                  "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
+                  "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+                  "stats/npcs/32000-32099.xml": "85b0f2a0f95198b026f7b649e546dcdc68336df1bbab875cb8142cd9f942f810"
+                },
+                "coreFiles": {
+                  "org/l2jmobius/gameserver/mechanics/script/Quest.java": "d9241ccf7e0c1e8dd4c587de308e3790becaab6757f65457e203db8a3ddba0de"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "npcId": 32036,
+          "name": "Temple Gatekeeper",
+          "title": "стражу входа в святилище",
+          "point": {
+            "x": -15853,
+            "y": -43811,
+            "z": -10685
+          },
+          "normal": false,
+          "castleIds": [],
+          "targets": [
+            {
+              "floor": 1,
+              "title": "Открыть вход в святилище",
+              "kind": "pagan-door",
+              "fee": 0,
+              "item": 57,
+              "list": "SCRIPT",
+              "index": 0,
+              "source": {
+                "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+                "files": {
+                  "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+                  "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
+                  "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+                  "stats/npcs/32000-32099.xml": "85b0f2a0f95198b026f7b649e546dcdc68336df1bbab875cb8142cd9f942f810"
+                },
+                "coreFiles": {
+                  "org/l2jmobius/gameserver/mechanics/script/Quest.java": "d9241ccf7e0c1e8dd4c587de308e3790becaab6757f65457e203db8a3ddba0de"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "npcId": 32037,
+          "name": "Temple Gatekeeper",
+          "title": "стражу выхода из святилища",
+          "point": {
+            "x": -16629,
+            "y": -44290,
+            "z": -10725
+          },
+          "normal": false,
+          "castleIds": [],
+          "targets": [
+            {
+              "floor": 1,
+              "title": "Открыть выход из святилища",
+              "kind": "pagan-door",
+              "fee": 0,
+              "item": 57,
+              "list": "SCRIPT",
+              "index": 0,
+              "source": {
+                "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+                "files": {
+                  "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+                  "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
+                  "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+                  "stats/npcs/32000-32099.xml": "85b0f2a0f95198b026f7b649e546dcdc68336df1bbab875cb8142cd9f942f810"
+                },
+                "coreFiles": {
+                  "org/l2jmobius/gameserver/mechanics/script/Quest.java": "d9241ccf7e0c1e8dd4c587de308e3790becaab6757f65457e203db8a3ddba0de"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "2": [
+        {
+          "npcId": 32040,
+          "name": "Triol's Mirror",
+          "title": "зеркалу Триола",
+          "point": {
+            "x": -11986,
+            "y": -35903,
+            "z": -10857
+          },
+          "normal": false,
+          "castleIds": [],
+          "targets": [
+            {
+              "floor": 3,
+              "title": "Вернуться в церковь Руны",
+              "point": {
+                "x": 36640,
+                "y": -51218,
+                "z": 718
+              },
+              "city": "rune",
+              "fee": 0,
+              "item": 57,
+              "list": "SCRIPT",
+              "index": 0,
+              "source": {
+                "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+                "files": {
+                  "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+                  "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
+                  "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+                  "stats/npcs/32000-32099.xml": "85b0f2a0f95198b026f7b649e546dcdc68336df1bbab875cb8142cd9f942f810"
+                },
+                "coreFiles": {
+                  "org/l2jmobius/gameserver/mechanics/script/Quest.java": "d9241ccf7e0c1e8dd4c587de308e3790becaab6757f65457e203db8a3ddba0de"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "npcId": 32034,
+          "name": "Temple Gatekeeper",
+          "title": "стражу входа в храм",
+          "point": {
+            "x": -15934,
+            "y": -36605,
+            "z": -10693
+          },
+          "normal": false,
+          "castleIds": [],
+          "targets": [
+            {
+              "floor": 2,
+              "title": "Открыть вход в храм",
+              "kind": "pagan-door",
+              "fee": 0,
+              "item": 57,
+              "list": "SCRIPT",
+              "index": 0,
+              "source": {
+                "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+                "files": {
+                  "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+                  "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
+                  "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+                  "stats/npcs/32000-32099.xml": "85b0f2a0f95198b026f7b649e546dcdc68336df1bbab875cb8142cd9f942f810"
+                },
+                "coreFiles": {
+                  "org/l2jmobius/gameserver/mechanics/script/Quest.java": "d9241ccf7e0c1e8dd4c587de308e3790becaab6757f65457e203db8a3ddba0de"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "npcId": 32035,
+          "name": "Temple Gatekeeper",
+          "title": "стражу выхода из храма",
+          "point": {
+            "x": -16722,
+            "y": -36928,
+            "z": -10725
+          },
+          "normal": false,
+          "castleIds": [],
+          "targets": [
+            {
+              "floor": 2,
+              "title": "Открыть выход из храма",
+              "kind": "pagan-door",
+              "fee": 0,
+              "item": 57,
+              "list": "SCRIPT",
+              "index": 0,
+              "source": {
+                "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+                "files": {
+                  "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+                  "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
+                  "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+                  "stats/npcs/32000-32099.xml": "85b0f2a0f95198b026f7b649e546dcdc68336df1bbab875cb8142cd9f942f810"
+                },
+                "coreFiles": {
+                  "org/l2jmobius/gameserver/mechanics/script/Quest.java": "d9241ccf7e0c1e8dd4c587de308e3790becaab6757f65457e203db8a3ddba0de"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "npcId": 32036,
+          "name": "Temple Gatekeeper",
+          "title": "стражу входа в святилище",
+          "point": {
+            "x": -15853,
+            "y": -43811,
+            "z": -10685
+          },
+          "normal": false,
+          "castleIds": [],
+          "targets": [
+            {
+              "floor": 2,
+              "title": "Открыть вход в святилище",
+              "kind": "pagan-door",
+              "fee": 0,
+              "item": 57,
+              "list": "SCRIPT",
+              "index": 0,
+              "source": {
+                "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+                "files": {
+                  "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+                  "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
+                  "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+                  "stats/npcs/32000-32099.xml": "85b0f2a0f95198b026f7b649e546dcdc68336df1bbab875cb8142cd9f942f810"
+                },
+                "coreFiles": {
+                  "org/l2jmobius/gameserver/mechanics/script/Quest.java": "d9241ccf7e0c1e8dd4c587de308e3790becaab6757f65457e203db8a3ddba0de"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "npcId": 32037,
+          "name": "Temple Gatekeeper",
+          "title": "стражу выхода из святилища",
+          "point": {
+            "x": -16629,
+            "y": -44290,
+            "z": -10725
+          },
+          "normal": false,
+          "castleIds": [],
+          "targets": [
+            {
+              "floor": 2,
+              "title": "Открыть выход из святилища",
+              "kind": "pagan-door",
+              "fee": 0,
+              "item": 57,
+              "list": "SCRIPT",
+              "index": 0,
+              "source": {
+                "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
+                "files": {
+                  "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+                  "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
+                  "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+                  "stats/npcs/32000-32099.xml": "85b0f2a0f95198b026f7b649e546dcdc68336df1bbab875cb8142cd9f942f810"
+                },
+                "coreFiles": {
+                  "org/l2jmobius/gameserver/mechanics/script/Quest.java": "d9241ccf7e0c1e8dd4c587de308e3790becaab6757f65457e203db8a3ddba0de"
+                }
+              }
+            }
+          ]
+        }
+      ]
     }
   },
   "source": {
@@ -1559,7 +1926,11 @@ export default {
       "teleporters/dungeon/31102.xml": "d63adafe83d2ce531511165b24dc554cfb64cacc1ce626ca1b8b50a665ac7921",
       "teleporters/dungeon/31110.xml": "6d2fe9f3e7c18515702bf02e2f6e5ea051ef1bc11e4e5dd0f278e053c155b801",
       "teleporters/dungeon/31101.xml": "ee4a31d826337367523b79ccca0e366a6ee980528fff64a8cd340dccd7ab46d3",
-      "teleporters/dungeon/31109.xml": "b0662dc923f7740e220112f92912d84366e7f42cfe4e59af6f58dc425799b895"
+      "teleporters/dungeon/31109.xml": "b0662dc923f7740e220112f92912d84366e7f42cfe4e59af6f58dc425799b895",
+      "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+      "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
+      "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+      "stats/npcs/32000-32099.xml": "85b0f2a0f95198b026f7b649e546dcdc68336df1bbab875cb8142cd9f942f810"
     },
     "npcSha256": "ec380d608d02e02fb12a7ac1e5c82c05a1a2c2252f08bb591cde15ae316220e2",
     "holderSha256": "a5f44d6a29d599177cf8b7ea253e098969960f9646e07b9f7ed79e0b424e6fa1",

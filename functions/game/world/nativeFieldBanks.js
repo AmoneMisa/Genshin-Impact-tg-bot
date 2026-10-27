@@ -12,6 +12,8 @@ const publicFloors=(id,banks)=>Object.fromEntries(Object.entries(banks||{}).filt
 export function saveNativeField(session,now,hunt=session.game.hunt){
  if(!hunt?.field||!getZone(hunt.zone)||getZone(hunt.zone).instance||session.game.world?.instanceId||!publicFloor(hunt.zone,hunt.field.floor||1))return;
  const banks=session.game.world.nativeFields||={};
+ // The peaceful church/drop overlay must not replace a saved underground bank.
+ if(hunt.zone==='pagan-temple'&&!hunt.field.native&&[3,4].includes(hunt.field.floor)&&banks[hunt.zone])return;
  banks[hunt.zone]={at:now,data:deflateSync(Buffer.from(JSON.stringify({...hunt.field,floorStates:publicFloors(hunt.zone,hunt.field.floorStates)}))).toString('base64')};
 }
 export function restoreNativeField(session,id,now){

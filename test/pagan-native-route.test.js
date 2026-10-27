@@ -17,21 +17,23 @@ test('Pagan source keeps both mirror NPCs, exact door passes and an explicit unr
   [32034,[19160001],[8064,8065,8067]],[32035,[19160001],[]],
   [32036,[19160010,19160011],[8067]],[32037,[19160010,19160011],[]]
  ]);
- assert.ok(access.doors.every(d=>d.openMs===10000&&!d.consumeItem&&!d.worldScenarioImplemented));
+ assert.ok(access.doors.every(d=>d.openMs===10000&&!d.consumeItem&&d.worldScenarioImplemented));
  assert.equal(access.churchDrop.sourcePosition,null);assert.equal(access.churchDrop.implementedInNativeWorld,false);
  for(const npc of Object.values(access.npcs))assert.equal(npc.source.sha256,access.source.files[npc.source.file]);
 });
 function hero(){const s={userId:1,game:{stats:{lvl:85},inventory:{gold:1000000,materials:{},equipment:{items:[]},potions:{items:[]}},equipmentStats:{},effects:[],builds:{},respawnTime:0,world:{mode:'city',city:'rune',x:.5,y:.5,path:[],moveAt:NOW,locks:{}}}};change(s,'humanFighter');update(s);return s;}
 function quiet(s){const f=s.game.hunt.field;for(const m of [f,...Object.values(f.rooms||{})].flatMap(r=>r.mobs||[]))Object.assign(m,{aggressive:false,aggro:false,aggroRange:0,nextAttackAt:NOW+1e12});}
-test('native Pagan approach enters the church, retains its authored drop and requires the mirror before walking back',async()=>{
+test('Pagan church retains its explicit authored drop and the native interior requires the source mirror for return',async()=>{
  let s=hero();assert.equal(worldAction(s,{action:'walk_location',location:'pagan-temple'},NOW).ok,true);s=JSON.parse(JSON.stringify(s));advanceWorld(s,NOW+1e7);
  assert.equal(s.game.hunt.field.floor,3);assert.equal(s.game.hunt.field.mobs.length,0);assert.equal(nativeExit(s).floor,3);assert.equal(nativeExit(s).near,true);
  const take=(floor,now)=>{quiet(s);const f=s.game.hunt.field,d=levelTransitions('pagan-temple',f).destinations.find(d=>d.floor===floor);assert.ok(d);Object.assign(f,{room:d.room,...d.point});assert.equal(worldAction(s,{action:'floor',floor},now).ok,true);};
  take(4,NOW+1e7);assert.equal(nativeExit(s).near,false);assert.equal(worldAction(s,{action:'walk_exit'},NOW+1e7).reason,'entrance_required');
  assert.equal(levelTransitions('pagan-temple',s.game.hunt.field).destinations.some(d=>d.floor===3),false);assert.equal(locationLevel('pagan-temple',3).transports[0].sourcePosition,null);
- take(1,NOW+1e7);await getHuntState(s,NOW+1e7);quiet(s);const mob=s.game.hunt.field.mobs[0],id=mob.instanceId;mob.currentHp=2;
- assert.equal(worldAction(s,{action:'walk_exit'},NOW+1e7).reason,'entrance_required');take(3,NOW+1e7);
- Object.assign(s.game.hunt.field,{x:.5,y:.95});assert.equal(worldAction(s,{action:'native_walk_city',city:'rune'},NOW+1e7).ok,true);advanceWorld(s,NOW+2e7);assert.equal(s.game.world.mode,'city');
+ take(1,NOW+1e7);await getHuntState(s,NOW+1e7);quiet(s);const mob=[s.game.hunt.field,...Object.values(s.game.hunt.field.rooms)].flatMap(b=>b.mobs)[0],id=mob.instanceId;mob.currentHp=2;
+ assert.equal(worldAction(s,{action:'native_walk_city',city:'rune'},NOW+1e7).reason,'npc_floor_exit_required');
+ assert.equal(worldAction(s,{action:'floor',floor:2},NOW+1e7).reason,'invalid_floor');
+ assert.ok(worldAction(s,{action:'native_guide',npcId:32040},NOW+1e7).ok);const end=s.game.hunt.field.native.journey.until+1;advanceWorld(s,end);quiet(s);
+ assert.ok(worldAction(s,{action:'native_floor',floor:3,routeId:'32040:SCRIPT:0'},end).ok);assert.equal(s.game.world.mode,'city');
  const npc=CITY_NPCS.find(n=>n.service==='pagan-church');Object.assign(s.game.world,cityPoint(CITIES.find(c=>c.id==='rune'),npc));
  assert.equal(worldAction(s,{action:'pagan_church'},NOW+2e7).ok,true);assert.equal(s.game.hunt.field.floor,3);take(4,NOW+2e7);take(1,NOW+2e7);
  const f=s.game.hunt.field,restored=[f,...Object.values(f.rooms||{})].flatMap(r=>r.mobs).find(m=>m.instanceId===id);assert.equal(restored?.currentHp,2);assert.equal(s.game.inventory.gold,1000000);

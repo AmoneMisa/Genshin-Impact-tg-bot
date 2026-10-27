@@ -643,6 +643,131 @@ export default {
         ]
       }
     ],
+    "22155": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "22156",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "22157",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "22158",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "22159": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "22160",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "22161",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "22162",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "22163": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "22164",
+            "count": "1",
+            "respawnTime": "2",
+            "weightPoint": "1"
+          },
+          {
+            "id": "22165",
+            "count": "2",
+            "respawnTime": "1",
+            "weightPoint": "1"
+          },
+          {
+            "id": "22166",
+            "count": "2",
+            "respawnTime": "2",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "22167": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "22168",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "22169",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "22170",
+            "count": "3",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
+    "22171": [
+      {
+        "name": "Privates",
+        "npcs": [
+          {
+            "id": "22172",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "22173",
+            "count": "1",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          },
+          {
+            "id": "22174",
+            "count": "2",
+            "respawnTime": "0",
+            "weightPoint": "1"
+          }
+        ]
+      }
+    ],
     "22196": [
       {
         "name": "Privates",
@@ -1019,6 +1144,90 @@ export default {
     ]
   },
   "fields": {
+    "pagan-temple": {
+      "city": "rune",
+      "interior": true,
+      "floors": [
+        1,
+        2
+      ],
+      "reviewedFloors": [
+        1
+      ],
+      "walkingFloors": [
+        1
+      ],
+      "peacefulEntry": true,
+      "detachedInterior": true,
+      "pendingFloorRoutes": {
+        "2": "pagan_darkness_key"
+      },
+      "interiorEntry": {
+        "point": {
+          "x": -12766,
+          "y": -35840,
+          "z": -10856
+        },
+        "source": {
+          "type": "SCRIPT_LOCATION",
+          "symbol": "TRIOLS_MIRROR_1",
+          "file": "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java",
+          "sha256": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+        }
+      },
+      "fixedCount": 364,
+      "territoryCount": 0,
+      "randomGroupCount": 0,
+      "initialCapacity": 364,
+      "unavailableCount": 0,
+      "availableCapacity": 364,
+      "npcIds": [
+        "22137",
+        "22139",
+        "22140",
+        "22141",
+        "22142",
+        "22143",
+        "22144",
+        "22145",
+        "22146",
+        "22147",
+        "22149",
+        "22151",
+        "22152",
+        "22153",
+        "22154",
+        "22155",
+        "22156",
+        "22157",
+        "22158",
+        "22159",
+        "22160",
+        "22161",
+        "22162",
+        "22163",
+        "22164",
+        "22165",
+        "22166",
+        "22167",
+        "22168",
+        "22169",
+        "22170",
+        "22171",
+        "22172",
+        "22173",
+        "22174"
+      ],
+      "count": 364,
+      "unportedMinionTemplates": [
+        "22155",
+        "22159",
+        "22163",
+        "22167",
+        "22171"
+      ]
+    },
     "cruma-tower": {
       "city": "dion",
       "interior": true,
@@ -3067,6 +3276,7 @@ export default {
       "stats/npcs/22600-22699.xml": "d851058a2dc25ec61ba14a836920b0b829a5424deb0c331c23a2072d38116e15",
       "stats/npcs/22700-22799.xml": "1aa0ca85fbf506c7fc63bdf8f92358f4b680456ab082d95355b04c7fc4322eff",
       "stats/npcs/22800-22899.xml": "a13e5f4f328970c1c93396f077b3c1be7c9e12d4d995413921fb3ff6b938df53",
+      "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
       "spawns/Others/20_21.xml": "3fb208271643f2d7f63f081f797169555dddc72d23a893759e01d28d83ce5737",
       "spawns/Oren/IvoryTower.xml": "cfbccd749dccb65226faff639603fc6de1b2e358b42389b9b03ee8c4581f607e",
       "spawns/Aden/TowerOfInsolence.xml": "06d8c63c7f15dd8f34aa0aeb269e33b3de88863cf34600d02250e889f46d653e",
@@ -5445,6 +5655,146 @@ export default {
     "22098": {
       "runSpeed": 170.0,
       "attackRange": 40.0
+    },
+    "22137": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "22139": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22140": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "22141": {
+      "runSpeed": 120.0,
+      "attackRange": 40.0
+    },
+    "22142": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22143": {
+      "runSpeed": 200.0,
+      "attackRange": 80.0
+    },
+    "22144": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22145": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22146": {
+      "runSpeed": 200.0,
+      "attackRange": 80.0
+    },
+    "22147": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22149": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22151": {
+      "runSpeed": 180.0,
+      "attackRange": 80.0
+    },
+    "22152": {
+      "runSpeed": 180.0,
+      "attackRange": 80.0
+    },
+    "22153": {
+      "runSpeed": 180.0,
+      "attackRange": 80.0
+    },
+    "22154": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22155": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22156": {
+      "runSpeed": 180.0,
+      "attackRange": 80.0
+    },
+    "22157": {
+      "runSpeed": 180.0,
+      "attackRange": 80.0
+    },
+    "22158": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22159": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22160": {
+      "runSpeed": 180.0,
+      "attackRange": 80.0
+    },
+    "22161": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22162": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22163": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22164": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22165": {
+      "runSpeed": 180.0,
+      "attackRange": 80.0
+    },
+    "22166": {
+      "runSpeed": 180.0,
+      "attackRange": 80.0
+    },
+    "22167": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22168": {
+      "runSpeed": 180.0,
+      "attackRange": 80.0
+    },
+    "22169": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22170": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22171": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "22172": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "22173": {
+      "runSpeed": 180.0,
+      "attackRange": 80.0
+    },
+    "22174": {
+      "runSpeed": 180.0,
+      "attackRange": 80.0
     },
     "22196": {
       "runSpeed": 180.0,

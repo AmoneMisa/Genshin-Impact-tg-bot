@@ -9,6 +9,7 @@ from pathlib import Path
 
 base=next(Path('.tmp/world-source/h5-data').glob('*/L2J*/dist/game/data'))
 fields={
+    "pagan-temple": {"city":"rune","interior":True,"floors":[1,2],"reviewedFloors":[1],"walkingFloors":[1],"peacefulEntry":True,"detachedInterior":True,"pendingFloorRoutes":{"2":"pagan_darkness_key"}},
     "cruma-tower": {"city":"dion","interior":True,"floors":[1,2,3],"peacefulEntry":True,"npcEntry":True,"separateFloorMaps":True},
     "ivory-tower": {"city":"oren","interior":True,"floors":list(range(1,7)),"entryFloor":3,"peacefulEntry":True,"separateFloorMaps":True,"peacefulViewSize":3000,"walkingFloors":[3,1]},
     "tower-of-insolence": {"city":"aden","interior":True,"floors":list(range(1,14)),"sequentialFloors":True},
@@ -59,7 +60,9 @@ fields={
     'plains-of-dion': {'city': 'dion'},
 }
 dungeon_data=json.loads(subprocess.check_output(['node','--input-type=module','-e','import d from "./template/nativeDungeonAccess.js";import p from "./template/nativeFieldPilot.js";console.log(JSON.stringify({zones:d.zones,enabled:Object.keys(p.fields).filter(id=>p.fields[id].dungeon)}))'],encoding='utf8'))
-for id in dict.fromkeys([*dungeon_data['enabled'],*sys.argv[1:]]):
+pagan=json.loads(subprocess.check_output(['node','--input-type=module','-e','import p from "./template/paganAccess.js";console.log(JSON.stringify(p))'],encoding='utf8'))
+fields['pagan-temple']['interiorEntry']={'point':pagan['mirrors']['32039']['to'],'source':{'type':'SCRIPT_LOCATION','symbol':'TRIOLS_MIRROR_1','file':'scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java','sha256':pagan['source']['files']['scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java'],'commit':pagan['source']['commit']}}
+for id in dict.fromkeys([*dungeon_data['enabled'],*[id for id in sys.argv[1:] if id not in fields]]):
     assert id in dungeon_data['zones'],id
     fields[id]={'city':dungeon_data['zones'][id]['city'],'interior':True,'floors':[1],'dungeon':True,'peacefulEntry':True}
 catalog=json.loads(subprocess.check_output(['node','--input-type=module','-e',

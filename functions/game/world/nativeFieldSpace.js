@@ -5,7 +5,7 @@ import minions from '../../../template/nativeMinions.js';
 import {nativeInteriorMap} from './nativeInteriorMap.js';
 import {ROOM_SIZE} from './navigation.js';
 import {worldGeodata} from './l2jGeodata.js';
-import {nativeGroundAllowed,nativeGroundAtStage,nativeDoorStates} from './nativeGround.js';
+import {nativeGroundAllowed,nativeGroundForActor,nativeDoorStates,nativePaganDoorStates} from './nativeGround.js';
 import {findNativePath} from './nativeNavigation.js';
 import {nativeStaticSight} from './nativeVisibility.js';
 import {createNativeJourney,advanceNativeJourney} from './nativeJourney.js';
@@ -182,7 +182,7 @@ export function moveNativeActor(actor,target,now,speed){
  // XY, so a client cannot choose a floor by supplying a height.
  const goal={x:worldAxis(target.x),y:worldAxis(target.y),z:Number.isFinite(target.native?.z)?target.native.z:from.z};
  if(Math.hypot(goal.x-from.x,goal.y-from.y)>8192)return {ok:false,reason:'path_blocked'};
- const allowed=nativeGroundAtStage(actor.native?.hellboundStage??target.native?.hellboundStage);
+ const allowed=nativeGroundForActor(actor,now);
  const plan=findNativePath(from,goal,{allowed,maxNodes:6000,stride:2,reversible:true,heuristicWeight:2});
  if(!plan.ok)return plan;
  const trip=createNativeJourney(plan.start,plan.path,{now,speed,allowed});
@@ -193,7 +193,7 @@ export function moveNativeActor(actor,target,now,speed){
 }
 export function advanceNativeActor(actor,now,speed){
  const trip=actor.native?.journey;if(!trip){actor.path=[];actor.moveAt=now;return;}
- const done=advanceNativeJourney(trip,now,speed,{allowed:nativeGroundAtStage(actor.native?.hellboundStage)}),p=trip.native.point;
+ const done=advanceNativeJourney(trip,now,speed,{allowed:nativeGroundForActor(actor,now)}),p=trip.native.point;
  actor.x=p.x/ROOM_SIZE;actor.y=p.y/ROOM_SIZE;actor.native.z=p.z;actor.moveAt=now;
  actor.path=trip.native.blocked?[]:trip.native.path.slice(trip.native.index,trip.native.index+16).map(p=>({x:p.x/ROOM_SIZE,y:p.y/ROOM_SIZE,z:p.z}));
  if(done&&trip.native.floorTarget)actor.native.sourceFloor=trip.native.floorTarget;
@@ -207,7 +207,7 @@ export function stopNativeActor(actor){
 /** Original static H5 sight plus conservative door/water/holding vetoes. */
 export function nativeCombatLine(a,b){
  const from=nativeActorPoint(a),to=nativeActorPoint(b);
- return Boolean(from&&to&&nativeStaticSight(from,to,{allowed:nativeGroundAtStage(a.native?.hellboundStage??b.native?.hellboundStage)}));
+ return Boolean(from&&to&&nativeStaticSight(from,to,{allowed:nativeGroundForActor(a)}));
 }
 const movement={...pilot.actors};
 for(const [id,actor] of Object.entries(minions.actors))movement[id]={...actor.movement,...movement[id]};
@@ -222,7 +222,7 @@ export function nativeVisibleActors(hunt){
 }
 export function nativeFieldDto(session){
  const f=session.game.hunt?.field,point=nativeFieldPoint(session);if(!point)return null;
- return {zone:session.game.hunt.zone,point,target:f.target,ground:f.native.outside?null:nativeInteriorMap(session.game.hunt.zone,point,f.native.sourceFloor),...(pilot.fields[session.game.hunt.zone]?.peacefulViewSize&&f.native.sourceFloor!==1?{viewSize:pilot.fields[session.game.hunt.zone].peacefulViewSize}:{}),...(session.game.hunt.zone==='hellbound'?{doors:nativeDoorStates(f.populationStage)}:{}),
+ return {zone:session.game.hunt.zone,point,target:f.target,ground:f.native.outside?null:nativeInteriorMap(session.game.hunt.zone,point,f.native.sourceFloor),...(pilot.fields[session.game.hunt.zone]?.peacefulViewSize&&f.native.sourceFloor!==1?{viewSize:pilot.fields[session.game.hunt.zone].peacefulViewSize}:{}),...(session.game.hunt.zone==='hellbound'?{doors:nativeDoorStates(f.populationStage)}:session.game.hunt.zone==='pagan-temple'?{doors:nativePaganDoorStates(f.native.doors,f.native.doorClock)}:{}),
   actors:nativeVisibleActors(session.game.hunt).map(m=>({
    ...nativeActorPoint(m),id:m.mobId,instanceId:m.instanceId,name:m.name,level:m.level,hp:m.hp,currentHp:m.currentHp,aggressive:Boolean(m.aggressive),social:Boolean(m.clanHelpRange>0&&m.socialClans?.length||nativeFamilySocial(m)),aggro:Boolean(m.aggro)
   }))};

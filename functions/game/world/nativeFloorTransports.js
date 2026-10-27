@@ -9,6 +9,9 @@ import {findNativePath} from './nativeNavigation.js';
 import {nativeGroundFor} from './nativeGround.js';
 import {createNativeJourney} from './nativeJourney.js';
 import {teleportCastleAllowed} from './teleportSieges.js';
+import pagan from '../../../template/paganAccess.js';
+import {getMaterialCount} from '../player/materials.js';
+import {openNativeDoors} from './nativeDoorContext.js';
 
 const context=hunt=>hunt?.field?.native?.outside?'entrance':hunt?.field?.native?.sourceFloor;
 export const nativeFloorPorts=hunt=>{const p=data.zones[hunt?.zone]?.[context(hunt)];return p?(Array.isArray(p)?p:[p]):[];};
@@ -20,14 +23,14 @@ export function nativeFloorGuides(hunt){
  const point=nativeActorPoint(hunt?.field);if(!point)return [];
  return nativeFloorPorts(hunt).map(port=>{
   const npc=LOCATION_LEVELS[hunt.zone].floors.flatMap(f=>f.npcs||[]).find(n=>Number(n.id)===port.npcId);
-  return {npcId:port.npcId,name:port.name||npc?.name||String(port.npcId),near:distance(point,port.point)<=data.interactionDistance};
+  return {npcId:port.npcId,name:port.title||port.name||npc?.name||String(port.npcId),near:distance(point,port.point)<=data.interactionDistance};
  });
 }
 export const nativeFloorGuide=hunt=>nativeFloorGuides(hunt)[0]||null;
 export function nativePortOptions(hunt){
  const ports=nativeFloorPorts(hunt),guides=nativeFloorGuides(hunt);if(!ports.length)return [];
  const model=LOCATION_LEVELS[hunt.zone];
- const targets=ports.flatMap((port,i)=>port.targets.map(t=>({floor:t.floor,title:t.title||(t.floor===0?'Вход в локацию':model.floors.find(f=>f.number===t.floor).title),routeId:identity(port,t),mode:'teleport',enabled:guides[i].near&&!t.scenarioRequired,...(t.floor===hunt.field.native.sourceFloor&&!hunt.field.native.outside?{title:'К северному залу'}:{})})));
+ const targets=ports.flatMap((port,i)=>port.targets.filter(t=>t.kind!=='pagan-door'||guides[i].near).map(t=>({floor:t.floor,title:t.title||(t.floor===0?'Вход в локацию':model.floors.find(f=>f.number===t.floor).title),routeId:identity(port,t),mode:'teleport',enabled:guides[i].near&&!t.scenarioRequired,...(!t.title&&t.floor===hunt.field.native.sourceFloor&&!hunt.field.native.outside?{title:'К северному залу'}:{})})));
  if(!hunt.field.native.outside&&!targets.some(t=>t.floor===hunt.field.native.sourceFloor))targets.push({floor:hunt.field.native.sourceFloor,title:model.floors.find(f=>f.number===hunt.field.native.sourceFloor).title,mode:'teleport',enabled:false});
  return targets;
 }
@@ -43,13 +46,19 @@ export function nativeFloorTeleport(session,floor,now,routeId){
  if(port.normal&&!data.normalKarmaAllowed&&session.game.karma>0)return {ok:false,reason:'karma_gatekeeper'};
  if(!teleportCastleAllowed(session,port.castleIds,now))return {ok:false,reason:'quick_travel_siege'};
  if(target.fee!==0||target.item!==57)return {ok:false,reason:'not_allowed'};
+ if(target.kind==='pagan-door'){
+  const rule=hunt.zone==='pagan-temple'&&pagan.doors.find(d=>d.npcId===port.npcId);
+  if(!rule)return {ok:false,reason:'not_allowed'};
+  if(rule.anyCarriedItem.length&&!rule.anyCarriedItem.some(id=>getMaterialCount(session,'l2_'+id)>0))return {ok:false,reason:'pagan_mark_required'};
+  openNativeDoors(session,rule,now);return {ok:true,doorOpened:true};
+ }
  const points=[target.point,...target.alternatives||[]],point=points[Math.floor(Math.random()*points.length)];
- return {ok:true,point,floor:target.floor||1,outside:target.floor===0};
+ return {ok:true,point,floor:target.floor||1,outside:target.floor===0,...(target.city?{city:target.city}:{})};
 }
 export function nativeGuideTravel(session,now,speed,npcId){
  const hunt=session.game.hunt,ports=nativeFloorPorts(hunt),port=npcId==null?ports[0]:ports.find(p=>p.npcId===Number(npcId)),from=nativeActorPoint(hunt?.field);if(!port||!from)return {ok:false,reason:'unknown_npc'};
  if(distance(from,port.point)<=data.interactionDistance)return {ok:false,reason:'npc_already_near'};
- const allowed=nativeGroundFor(session);let plan=findNativePath(from,port.point,{allowed,stride:2,maxNodes:6000,margin:128,heuristicWeight:2,reversible:true});
+ const allowed=nativeGroundFor(session,now);let plan=findNativePath(from,port.point,{allowed,stride:2,maxNodes:6000,margin:128,heuristicWeight:2,reversible:true});
  if(!plan.ok&&npcRoutes.geodataCommit===routes.geodataCommit&&npcRoutes.barriersSha256===routes.barriersSha256){
   const candidates=[];
   for(const r of npcRoutes.zones[hunt.zone]||[])if(r.npcId===port.npcId&&String(context(hunt))===r.floor){

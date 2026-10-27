@@ -21,7 +21,7 @@ export function nativeMinionProposal(master,radius,random=Math.random){
  * remains an explicit omission, never a made-up nearby replacement or reroll. */
 export function syncNativeMinions(session,now,random=Math.random){
  const hunt=session.game.hunt,field=hunt?.field,ids=data.zones[hunt?.zone];if(!field?.native||!ids)return;
- const allowed=nativeGroundFor(session),families=field.native.minionFamilies||={},buckets=nativeFieldBuckets(field),actors=buckets.flatMap(b=>b.mobs||[]);
+ const allowed=nativeGroundFor(session,now),families=field.native.minionFamilies||={},buckets=nativeFieldBuckets(field),actors=buckets.flatMap(b=>b.mobs||[]);
  for(const master of actors){
   if(master.sourceMinion||master.currentHp<=0||!ids.includes(master.mobId))continue;
   const key=owner(master),config=data.masters[master.mobId];let family=families[key];

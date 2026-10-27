@@ -680,6 +680,22 @@ export default {
           "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
         }
       }
+    },
+    "pagan-temple": {
+      "1": {
+        "point": {
+          "x": -11986,
+          "y": -35903,
+          "z": -10857
+        },
+        "source": {
+          "type": "SOURCE_NPC",
+          "id": 32040,
+          "file": "spawns/Others/19_16.xml",
+          "sha256": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
+          "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+        }
+      }
     }
   }
 };

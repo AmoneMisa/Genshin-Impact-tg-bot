@@ -1,11 +1,15 @@
-// Original PaganTeleporters.java and fixed NPC spawns. Door metadata is not an implemented world scenario.
+// Original PaganTeleporters.java and fixed NPC spawns; church drop remains unverified.
 export default {
   "source": {
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84",
     "files": {
       "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
       "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695",
-      "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570"
+      "spawns/Others/21_16.xml": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570",
+      "stats/npcs/32000-32099.xml": "85b0f2a0f95198b026f7b649e546dcdc68336df1bbab875cb8142cd9f942f810"
+    },
+    "coreFiles": {
+      "org/l2jmobius/gameserver/mechanics/script/Quest.java": "d9241ccf7e0c1e8dd4c587de308e3790becaab6757f65457e203db8a3ddba0de"
     }
   },
   "npcs": {
@@ -18,7 +22,8 @@ export default {
       "source": {
         "file": "spawns/Others/19_16.xml",
         "sha256": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695"
-      }
+      },
+      "name": "Temple Gatekeeper"
     },
     "32035": {
       "point": {
@@ -29,7 +34,8 @@ export default {
       "source": {
         "file": "spawns/Others/19_16.xml",
         "sha256": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695"
-      }
+      },
+      "name": "Temple Gatekeeper"
     },
     "32036": {
       "point": {
@@ -40,7 +46,8 @@ export default {
       "source": {
         "file": "spawns/Others/19_16.xml",
         "sha256": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695"
-      }
+      },
+      "name": "Temple Gatekeeper"
     },
     "32037": {
       "point": {
@@ -51,7 +58,8 @@ export default {
       "source": {
         "file": "spawns/Others/19_16.xml",
         "sha256": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695"
-      }
+      },
+      "name": "Temple Gatekeeper"
     },
     "32040": {
       "point": {
@@ -62,7 +70,8 @@ export default {
       "source": {
         "file": "spawns/Others/19_16.xml",
         "sha256": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695"
-      }
+      },
+      "name": "Triol's Mirror"
     },
     "32039": {
       "point": {
@@ -73,7 +82,8 @@ export default {
       "source": {
         "file": "spawns/Others/21_16.xml",
         "sha256": "2a5f9862d8fcbe2908737d8d8fd0a22783b7feafbf27e64b5c7174b2ab1be570"
-      }
+      },
+      "name": "Triol's Mirror"
     }
   },
   "mirrors": {
@@ -119,7 +129,7 @@ export default {
       ],
       "consumeItem": false,
       "openMs": 10000,
-      "worldScenarioImplemented": false
+      "worldScenarioImplemented": true
     },
     {
       "npcId": 32035,
@@ -129,7 +139,7 @@ export default {
       "anyCarriedItem": [],
       "consumeItem": false,
       "openMs": 10000,
-      "worldScenarioImplemented": false
+      "worldScenarioImplemented": true
     },
     {
       "npcId": 32036,
@@ -142,7 +152,7 @@ export default {
       ],
       "consumeItem": false,
       "openMs": 10000,
-      "worldScenarioImplemented": false
+      "worldScenarioImplemented": true
     },
     {
       "npcId": 32037,
@@ -153,7 +163,7 @@ export default {
       "anyCarriedItem": [],
       "consumeItem": false,
       "openMs": 10000,
-      "worldScenarioImplemented": false
+      "worldScenarioImplemented": true
     }
   ],
   "churchDrop": {

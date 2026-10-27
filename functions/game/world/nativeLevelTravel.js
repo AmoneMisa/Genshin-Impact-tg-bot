@@ -23,10 +23,10 @@ export function nativeLevelTravel(session,floor,now,speed){
  const target=source.levels[floor];if(distance(from,target.to)<=16)return {ok:false,reason:'invalid_floor'};
  const saved=hunt.field.native.floorResume;
  if(saved?.native?.floorTarget===floor&&distance(saved.native.point,from)<1e-7&&distance(saved.native.path?.at(-1)||{},target.to)<1e-7){
-  const trip=structuredClone(saved);advanceNativeJourney(trip,now,0,{allowed:nativeGroundFor(session)});
+  const trip=structuredClone(saved);advanceNativeJourney(trip,now,0,{allowed:nativeGroundFor(session,now)});
   if(!trip.native.blocked){trip.until=now+Math.ceil(trip.native.remaining/Math.max(1,speed)*1000);delete hunt.field.native.floorResume;return {ok:true,trip};}
  }
- const allowed=nativeGroundFor(session);
+ const allowed=nativeGroundFor(session,now);
  function rejoin(at){
  const joins=new Map();
  function candidate(point,suffix){

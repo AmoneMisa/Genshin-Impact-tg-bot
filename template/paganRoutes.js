@@ -3,6 +3,7 @@
 import access from './paganAccess.js';
 export const PAGAN_CHURCH={id:'rune:pagan-church',name:'Церковь Руны',role:'Спуск к Храму Язычников',city:'rune',...access.mirrors[32040].to,service:'pagan-church',gateway:false,source:'PaganTeleporters.java#TRIOLS_MIRROR_2',adapted:true};
 export function withPaganRoutes(base){
+ base={...base,floors:base.floors.map(f=>({...f,rooms:f.rooms.map(r=>({...r,spawns:r.spawns.map(s=>({...s,sourceFile:'spawns/Others/19_16.xml'}))}))}))};
  const point={x:.5,y:.5},landing={room:'r0c0',point:{x:.5,y:.75}};
  const peaceful=(number,title,asset,source)=>({number,title,asset,environment:'catacomb',rooms:[{id:'r0c0',row:0,col:0,name:title,spawns:[],mobIds:[],cap:0}],cols:1,rows:1,startId:'r0c0',sourceBounds:null,npcs:[],boss:null,layoutSource:'authored-route',source,stairs:{}});
  const church=peaceful(3,'Церковь Руны','city-rune',access.mirrors[32040].to);

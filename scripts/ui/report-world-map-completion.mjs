@@ -26,7 +26,7 @@ function pending(id,location){
  return 'native_population_and_routes';
 }
 const rows=Object.entries(LOCATION_LEVELS).map(([id,model])=>{
- const location=LOCATIONS.find(l=>l.id===id),native=registry.fields[id],reviewed=native?(native.floors||[1]):[];
+ const location=LOCATIONS.find(l=>l.id===id),native=registry.fields[id],reviewed=native?(native.reviewedFloors||native.floors||[1]):[];
  const deferred=model.floors.filter(f=>!reviewed.includes(f.number)).map(f=>({floor:f.number,title:f.title,boss:f.boss||null,reason:f.boss?'epic_admission_and_instance':pending(id,location)}));
  const scripted=Object.values(ports.zones[id]||{}).flatMap(p=>Array.isArray(p)?p:[p]).flatMap(p=>p.targets.filter(t=>t.scenarioRequired).map(t=>({npcId:p.npcId,list:t.list,index:t.index,scenario:t.scenarioRequired,source:t.source})));
  return {id,name:location?.name||id,nativePopulation:Boolean(native),catalogFloors:model.floors.map(f=>f.number),reviewedFloors:reviewed,deferredFloors:deferred,catalogSourcePlaces:model.floors.flatMap(f=>f.rooms).flatMap(r=>r.spawns||[]).reduce((n,s)=>n+s.count,0),nativeSourcePlaces:native?.count||0,unavailablePlaces:native?.unavailableCount||0,sourceGaps:native?.sourceGaps||[],guardedScenarioRoutes:scripted,groundApproach:Boolean(routes.routes[id]&&!routes.routes[id].unavailable)};

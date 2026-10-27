@@ -703,6 +703,27 @@ export default {
         "spawns/Catacombs/NecropolisOfTheDisciples.xml": "d4168e7e526333218451b219afdb55458769e4bc049c03605a1c46ac5b5967ba",
         "spawns/Others/25_17.xml": "bd4c0e4d3135212c3da2faf6b32db255bdd79f4065cb12346a48958acde869f5"
       }
+    },
+    "pagan-temple": {
+      "asset": "/art/world/native/pagan-temple.svg",
+      "regions": {
+        "19_16": "7478d51f636b94e45983054b444eca4c8ecae9bdc95a3f0b16ad48693d32145a"
+      },
+      "bounds": {
+        "x": -24144,
+        "y": -57360,
+        "w": 15456,
+        "h": 21728
+      },
+      "cells": 562422,
+      "layerCells": 588054,
+      "contours": 51,
+      "corners": 9161,
+      "bytes": 75122,
+      "sha256": "243ba9a131ea841ac3d55c60f362dafabddb120451824a864f68489aa7968153",
+      "files": {
+        "spawns/Others/19_16.xml": "db3161a76c100488c28f5a6e6bf033e190f49407e8b77ed00607a685c6a7c695"
+      }
     }
   }
 };

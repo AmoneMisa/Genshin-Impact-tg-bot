@@ -43,6 +43,7 @@ import getSpeed from '../player/getters/getSpeed.js';
 import {BASIC_ATTACK, hostileSkill, skillSpatial, weaponSpatial, needsTarget, inSkillReach, spatialTargets, spatialDistance,clearLine} from './huntSpatial.js';
 import {skillCombatType} from '../player/combatType.js';
 import {syncNativePopulation,moveNativeActor,advanceNativeActor,placeNativeActor,placeNativeSpawn,stopNativeActor,nativeFamilySocial} from '../world/nativeFieldSpace.js';
+import {syncNativeDoors} from '../world/nativeDoorContext.js';
 import {nativeTerritorySource} from '../world/nativeSpawnTerritory.js';
 
 // A mob that was not attacked for this long loses interest and leaves.
@@ -122,7 +123,9 @@ export function ensureHunt(session, now = Date.now(),random=Math.random) {
             }
         }
     }
+    syncNativeDoors(session,now);
     syncResident(session,game.hunt,now,random);
+    syncNativeDoors(session,now);
     if(field?.native&&game.hunt.zone==='hellbound'){
         // Refresh from trusted world state before path advancement or combat.
         field.native.hellboundStage=field.populationStage;

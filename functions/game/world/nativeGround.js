@@ -3,6 +3,8 @@ import holdings from '../../../template/worldHoldings.js';
 import {pointInPolygon} from './navigation.js';
 import hellbound from '../../../template/hellboundAccess.js';
 import {hellboundStage} from '../hunt/sourcePopulation.js';
+import {nativeDoorStore,nativeOpenDoors} from './nativeDoorContext.js';
+import pagan from '../../../template/paganAccess.js';
 
 const SIZE=4096,index=new Map();
 const hellboundDoors=hellbound.doors.map(d=>({...d,geometry:nativeWorld.doors.find(g=>g.id===String(d.id))}));
@@ -30,9 +32,15 @@ export function nativeGroundBlock(point,{openDoors=null}={}){
 }
 export const nativeGroundAllowed=point=>!nativeGroundBlock(point);
 /** Only pinned engine thresholds and trusted server phases can open doors. */
-export function nativeGroundAtStage(stage){
+export function nativeGroundAtStage(stage,{doors,now}={}){
  const openDoors=new Set(hellbound.doors.filter(d=>Number.isFinite(stage)&&stage>=d.minimumStage).map(d=>String(d.id)));
+ for(const id of nativeOpenDoors(doors,now))openDoors.add(id);
  return point=>!nativeGroundBlock(point,{openDoors});
 }
-export const nativeGroundFor=session=>nativeGroundAtStage(hellboundStage(session));
+export const nativeGroundFor=(session,now=Date.now())=>nativeGroundAtStage(hellboundStage(session),{doors:nativeDoorStore(session),now});
+export const nativeGroundForActor=(actor,now=actor?.native?.doorClock)=>nativeGroundAtStage(actor?.native?.hellboundStage,{doors:actor?.native?.doors,now});
 export const nativeDoorStates=stage=>hellboundDoors.filter(d=>d.geometry).map(d=>({id:String(d.id),polygon:d.geometry.polygon,open:Number.isFinite(stage)&&stage>=d.minimumStage}));
+export function nativePaganDoorStates(records,now){
+ const open=nativeOpenDoors(records,now),ids=new Set(pagan.doors.flatMap(d=>d.doorIds.map(String)));
+ return nativeWorld.doors.filter(d=>ids.has(d.id)).map(d=>({id:d.id,polygon:d.polygon,open:open.has(d.id)}));
+}

@@ -1,6 +1,8 @@
 import {nativeLevelTravel} from './nativeLevelTravel.js';
 import {nativeFloorTeleport,nativeGuideTravel} from './nativeFloorTransports.js';
 import dungeons from '../../../template/nativeDungeonAccess.js';
+import pagan from '../../../template/paganAccess.js';
+import {syncNativeDoors} from './nativeDoorContext.js';
 import {findCityPath,advanceCityPath,ensureCityOrigin} from './cityNavigation.js';
 import {CITIES, REGIONS, LOCATIONS, CITY_NPCS} from '../../../template/worldMap.js';
 import {teleportPrice} from '../runes/labRunes.js';
@@ -68,12 +70,15 @@ function enterPublicField(session,id,{departure,entryPoint,...options}){
     const result=enterHuntField(session,id,{...(floor?{floor}:{}),...options});if(!result.ok)return result;
     session.game.world.nativeIsland=nativeFieldIsland(id)||nativeRoute(id)?.island||null;delete session.game.world.nativeTrail;delete session.game.world.nativeResume;
     if(departure)saveNativeField(session,options.now,departure);
-    restoreNativeField(session,id,options.now);
+    const paganChurch=id==='pagan-temple'&&(options.floor||floor)===3;
+    if(!paganChurch)restoreNativeField(session,id,options.now);
     if(options.targetMobId&&!nativeFieldSupported(id)){
         const hunt=session.game.hunt,target=hunt.field.mobs.find(m=>String(m.mobId)===String(options.targetMobId)&&m.currentHp>0);
         hunt.field.target=target?.instanceId||null;hunt.mob=target||null;
     }
-    if(nativeRoute(id)){
+    if(id==='pagan-temple'&&!paganChurch){
+        activateNativeField(session.game.hunt,entryPoint||pagan.mirrors[32039].to,options.now);
+    }else if(nativeRoute(id)&&!paganChurch){
         activateNativeField(session.game.hunt,entryPoint||nativeRoute(id).entry||nativeRoute(id).to,options.now);
     }else if(nativeFieldSupported(id)&&dungeons.zones[id]){
         activateNativeField(session.game.hunt,entryPoint||dungeons.zones[id].arrival,options.now);
@@ -92,7 +97,7 @@ export function advanceWorld(session,now=Date.now()) {
     if(!alive(session)){markWorldDeath(session,now);return w;}
     advanceFerry(session,now);
     let nativeDone=false;
-    if(w.mode==='road'&&w.walkHome?.native)nativeDone=advanceNativeJourney(w.walkHome,now,l2ActionBlock(session,{move:true},now)?0:getSpeed(session)*l2MoveMultiplier(session,now),{allowed:nativeGroundFor(session)});
+    if(w.mode==='road'&&w.walkHome?.native)nativeDone=advanceNativeJourney(w.walkHome,now,l2ActionBlock(session,{move:true},now)?0:getSpeed(session)*l2MoveMultiplier(session,now),{allowed:nativeGroundFor(session,now)});
     // Stream the pilot's source population as the walking camera approaches it.
     // Carry the very same remaining journey: entering the field grants no movement.
     if(w.mode==='road'&&!nativeDone&&w.walkHome?.native&&!w.walkHome.city&&!w.walkHome.port&&(!w.walkHome.location||nativeFieldSupported(w.walkHome.location))){
@@ -132,6 +137,12 @@ export function advanceWorld(session,now=Date.now()) {
     if(w.died){delete w.died;delete w.death;}
     if(w.mode==='location'){
         const dungeon=dungeons.zones[w.location],hunt=session.game.hunt;
+        if(w.location==='pagan-temple'&&hunt?.field&&!hunt.field.native&&[1,2].includes(hunt.field.floor)){
+            const floor=hunt.field.floor;ensureHunt(session,now);
+            restoreNativeField(session,'pagan-temple',now);
+            activateNativeField(hunt,floor===1?pagan.mirrors[32039].to:pagan.npcs[32037].point,now);
+            hunt.field.native.sourceFloor=floor;session.needsSave=true;
+        }
         if(dungeon&&nativeFieldSupported(w.location)&&hunt?.field&&!hunt.field.native){
             // Authored room XY cannot be scaled into a real dungeon position.
             // Adopt the saved population at the pinned interior arrival once.
@@ -262,7 +273,14 @@ export function worldAction(session,body,now=Date.now()){
         if(w.mode!=='location'||!f?.native||w.instanceId||session.game.hunt.zone!==w.location)return {ok:false,reason:'invalid_floor'};
         const teleport=nativeFloorTeleport(session,Number(body.floor),now,body.routeId);
         const blocked=l2ActionBlock(session,{move:!teleport},now);if(blocked)return {ok:false,reason:blocked};
-        if(teleport){if(!teleport.ok)return teleport;stopHuntAction(f,now);activateNativeField(session.game.hunt,teleport.point,now);f.native.sourceFloor=teleport.floor;f.native.outside=teleport.outside;w.channel=null;delete w.nativeResume;session.needsSave=true;return {ok:true};}
+        if(teleport){
+            if(!teleport.ok)return teleport;
+            if(teleport.doorOpened){syncNativeDoors(session,now);return {ok:true};}
+            stopHuntAction(f,now);
+            if(teleport.city){w.city=teleport.city;arriveCity(session,w,now);Object.assign(w,cityPoint(cityOf(w),teleport.point),{z:teleport.point.z});}
+            else {activateNativeField(session.game.hunt,teleport.point,now);f.native.sourceFloor=teleport.floor;f.native.outside=teleport.outside;}
+            w.channel=null;delete w.nativeResume;session.needsSave=true;return {ok:true};
+        }
         const result=nativeLevelTravel(session,Number(body.floor),now,getSpeed(session)*l2MoveMultiplier(session,now));if(!result.ok)return result;
         stopHuntAction(f,now);f.native.journey=result.trip;f.seenAt=now;w.channel=null;return {ok:true};
     }
@@ -286,7 +304,7 @@ export function worldAction(session,body,now=Date.now()){
         if(!npc)return {ok:false,reason:'unknown_npc'};
         if(!from||nativeIsland(session))return {ok:false,reason:'hellbound_ground_required'};
         const blocked=l2ActionBlock(session,{move:true},now);if(blocked)return {ok:false,reason:blocked};
-        const allowed=nativeGroundFor(session),plan=findNativePath(from,npc,{allowed,maxNodes:12000,stride:8,reversible:true,heuristicWeight:2});if(!plan.ok)return plan;
+        const allowed=nativeGroundFor(session,now),plan=findNativePath(from,npc,{allowed,maxNodes:12000,stride:8,reversible:true,heuristicWeight:2});if(!plan.ok)return plan;
         const trip=createNativeJourney(plan.start,plan.path,{now,speed:getSpeed(session)*l2MoveMultiplier(session,now),allowed});if(!trip)return {ok:false,reason:'path_blocked'};
         trip.npc=npc.id;trip.native.historyStart={...plan.start};
         w.channel=null;w.pending=null;w.path=[];
@@ -470,6 +488,7 @@ export function worldAction(session,body,now=Date.now()){
     }
     if(body.action==='floor'){
         const f=session.game.hunt?.field,l=LOCATIONS.find(l=>l.id===w.location),floor=Number(body.floor);
+        if(f?.native)return {ok:false,reason:'invalid_floor'};
         if(w.mode!=='location'||!f||!l||session.game.hunt.zone!==l.id||!Number.isInteger(floor)||floor<1||floor>l.floors||floor===(f.floor||1))return {ok:false,reason:'invalid_floor'};
         const blocked=l2ActionBlock(session,{move:true},now);if(blocked)return {ok:false,reason:blocked};
         if(l.access?.kind==='seed-instance'){
@@ -490,7 +509,12 @@ export function worldAction(session,body,now=Date.now()){
             if(f.floor!==3||floor!==4)return {ok:false,reason:'ship_required'};
             return enterZakenShip(session,now);
         }
-        const result=changeHuntFloor(session,floor,{now,arrival:destination?.arrival});
+          const result=changeHuntFloor(session,floor,{now,arrival:destination?.arrival});
+        if(result.ok&&l.id==='pagan-temple'&&floor===1){
+            restoreNativeField(session,l.id,now);
+            activateNativeField(session.game.hunt,pagan.mirrors[32039].to,now);
+            session.game.hunt.field.native.sourceFloor=1;
+        }
         if(result.ok){if(l.access?.kind==='seed-instance'&&floor===1)w.instanceId=null;session.game.inventory.gold-=gold;if(l.id==='devils-isle'&&floor===3)w.instanceId=null;}
         return result;
     }

@@ -14,4 +14,6 @@ for zone,floor,npc_id,file in [('tower-of-insolence',13,31862,'spawns/Others/23_
     zones.setdefault(zone,{})[floor]={'point':point,'source':{'type':'SOURCE_NPC','id':npc_id,**point,'file':file,'sha256':sha,'commit':source['commit']}}
 import runpy
 zones.update(runpy.run_path('scripts/l2j/import-native-dungeon-access.py')['build']()['landmarks'])
+pagan=json.loads(subprocess.check_output(['node','--input-type=module','-e','import p from "./template/paganAccess.js";console.log(JSON.stringify(p))'],encoding='utf8'))
+zones['pagan-temple']={floor:{'point':pagan['npcs'][str(npc)]['point'],'source':{'type':'SOURCE_NPC','id':npc,**pagan['npcs'][str(npc)]['source'],'commit':pagan['source']['commit']}} for floor,npc in [(1,32040)]}
 Path('template/nativeInteriorLandmarks.js').write_text('// Original NPC waypoints on empty public floors. No interaction or boss admission is granted.\nexport default '+json.dumps({'zones':zones},ensure_ascii=False,indent=2)+';\n',encoding='utf8')

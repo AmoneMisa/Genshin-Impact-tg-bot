@@ -15,7 +15,7 @@ const file='template/nativeInteriorMaps.js',previous=fs.existsSync(file)?(await 
 const requested=process.argv.slice(2),ids=requested.length?requested:['antharas-lair','stakato-nest'],maps={...previous?.maps};
 const requests=ids.flatMap(id=>[{id,key:id},...(pilot.fields[id]?.separateFloorMaps?Object.keys(landmarks.zones[id]||{}).filter(floor=>Number.isInteger(Number(floor))).map(floor=>({id,key:id+':f'+floor,sourceFloor:Number(floor)})):[])]);
 for(const {id,key,sourceFloor} of requests){
- const dungeon=pilot.fields[id]?.dungeon;
+ const dungeon=pilot.fields[id]?.dungeon||pilot.fields[id]?.detachedInterior;
  const allSlots=nativeFieldRooms(id).flatMap(r=>r.spawns||[]),allMarkers=Object.entries(landmarks.zones[id]||{}).filter(([floor])=>!dungeon||floor!=='entrance').map(([,m])=>m);
  const slots=nativeFieldRooms(id).filter(r=>!sourceFloor||r.sourceFloor===sourceFloor).flatMap(r=>r.spawns||[]),fixed=slots.filter(s=>s.coordinateSource==='point'),areas=slots.filter(s=>s.coordinateSource!=='point');
  const markers=sourceFloor?[landmarks.zones[id][sourceFloor]]:allMarkers;

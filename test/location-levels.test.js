@@ -7,6 +7,8 @@ import {enterHuntField,changeHuntFloor,ensureHunt,advanceHunt,moveHuntField} fro
 import {roomLayout,adjacent} from '../functions/game/hunt/huntRooms.js';
 import {getZone} from '../functions/game/hunt/huntMobs.js';
 import {initialPopulationSlots} from '../functions/game/hunt/sourcePopulation.js';
+import {activateNativeField} from '../functions/game/world/nativeFieldSpace.js';
+import paganAccess from '../template/paganAccess.js';
 import {CITIES,CITY_NPCS,cityPoint,worldAction,ensureWorld,enterZakenShip,bindWorldInstances} from '../functions/game/world/world.js';
 import {candleRoom,shipDto,locationBossGate,tickShip} from '../functions/game/world/zakenShip.js';
 import {grantKillRewards} from '../functions/game/hunt/huntRewards.js';
@@ -190,6 +192,9 @@ test('Rune church drop is one-way and Triol mirrors retain their H5 destinations
  const take=(floor)=>{quiet(s);const f=s.game.hunt.field,d=levelTransitions('pagan-temple',f).destinations.find(d=>d.floor===floor);assert.ok(d);Object.assign(f,{room:d.room,...d.point});assert.equal(worldAction(s,{action:'floor',floor},NOW).ok,true);};
  take(4);assert.equal(levelTransitions('pagan-temple',s.game.hunt.field).destinations.some(d=>d.floor===3),false);
  take(1);assert.equal(locationLevel('pagan-temple',4).transports[0].source.z,-10856);
- take(3);assert.equal(locationLevel('pagan-temple',1).transports.find(d=>d.floor===3).source.z,718);
+ activateNativeField(s.game.hunt,paganAccess.npcs[32040].point,NOW);s.game.hunt.field.native.sourceFloor=1;quiet(s);
+ assert.ok(worldAction(s,{action:'native_floor',floor:3,routeId:'32040:SCRIPT:0'},NOW).ok);
+ assert.equal(s.game.world.mode,'city');assert.equal(s.game.world.z,718);
+ assert.equal(locationLevel('pagan-temple',1).transports.find(d=>d.floor===3).source.z,718);
  assert.equal(locationLevel('pagan-temple',3).transports[0].sourcePosition,null);
 });

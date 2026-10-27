@@ -10422,6 +10422,33 @@ export default {
           }
         }
       }
+    },
+    "pagan-temple": {
+      "root": {
+        "x": -12766,
+        "y": -35840,
+        "z": -10856,
+        "nswe": 15
+      },
+      "levels": {
+        "1": {
+          "title": "Храм Язычников · Галереи",
+          "to": {
+            "x": -12766,
+            "y": -35840,
+            "z": -10856,
+            "nswe": 15
+          },
+          "path": [],
+          "source": {
+            "type": "SCRIPT_LOCATION",
+            "symbol": "TRIOLS_MIRROR_1",
+            "file": "scripts/ai/areas/PaganTemple/PaganTeleporters/PaganTeleporters.java",
+            "sha256": "b75cd4f86100a9899a582dab425c8ce8b5c16d17a7655189d4582c57ae089695",
+            "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
+          }
+        }
+      }
     }
   }
 };

@@ -147,7 +147,7 @@ export function nativeFreeWalk(session,point,now,speed){
  const x=Number(point?.x),y=Number(point?.y);
  if(![x,y].every(Number.isFinite)||Math.hypot(x-from.x,y-from.y)>8192)return {ok:false,reason:'path_blocked'};
  // The client never selects a height, layer, room, instance, or zone.
- const allowed=nativeGroundFor(session),plan=findNativePath(from,{x,y,z:from.z},{allowed,maxNodes:6000,reversible:true});
+ const allowed=nativeGroundFor(session,now),plan=findNativePath(from,{x,y,z:from.z},{allowed,maxNodes:6000,reversible:true});
  if(!plan.ok)return plan;
  const trip=createNativeJourney(plan.start,plan.path,{now,speed,allowed});
  if(trip){trip.native.historyStart={x:plan.start.x,y:plan.start.y,z:plan.start.z};delete w.nativeResume;}
