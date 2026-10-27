@@ -62,7 +62,8 @@ for(const [id,meta]of Object.entries(registry.fields).filter(([,m])=>m.dungeon))
  const point=nativeActorPoint(s.game.hunt.field);assert.equal(worldAction(s,{action:'native_floor',floor:0,routeId:'forged'},now+4).ok,false);assert.deepEqual(nativeActorPoint(s.game.hunt.field),point);
  assert.equal(s.game.inventory.gold,cash);assert.equal(new Set(actors(s).map(m=>m.sourceRoom+':'+m.sourceSlot)).size,actors(s).length);
  // A normal quick departure/re-entry consumes the saved bank, keeping wounds.
- quiet(s);assert.ok(worldAction(s,{action:'quick_travel',city:meta.city},now+5).ok);assert.ok(worldAction(s,{action:'quick_travel',location:id},now+6).ok);gate(s,1,now+7);
+ quiet(s);const cities=worldState(s,now+5).quickTravel.cities,city=cities.find(c=>c.id===meta.city)||cities[0];assert.ok(city,'an existing permitted town route is required');
+ const departure=worldAction(s,{action:'quick_travel',city:city.id},now+5);assert.ok(departure.ok,JSON.stringify(departure));assert.ok(worldAction(s,{action:'quick_travel',location:id},now+6).ok);gate(s,1,now+7);
  const restored=actors(s).find(m=>m.instanceId===key);assert.ok(restored);assert.equal(restored.currentHp,2);assert.equal(s.game.world.nativeFields[id],undefined);
 });
 
