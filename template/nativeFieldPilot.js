@@ -2716,6 +2716,37 @@ export default {
       ],
       "count": 224,
       "unportedMinionTemplates": []
+    },
+    "catacomb-dark-omens": {
+      "city": "dark-elven-village",
+      "interior": true,
+      "floors": [
+        1
+      ],
+      "dungeon": true,
+      "peacefulEntry": true,
+      "fixedCount": 0,
+      "territoryCount": 176,
+      "randomGroupCount": 0,
+      "initialCapacity": 176,
+      "unavailableCount": 0,
+      "availableCapacity": 176,
+      "npcIds": [
+        "21162",
+        "21163",
+        "21165",
+        "21184",
+        "21185",
+        "21186",
+        "21205",
+        "21206",
+        "21207",
+        "21253",
+        "21254",
+        "21255"
+      ],
+      "count": 176,
+      "unportedMinionTemplates": []
     }
   },
   "source": {
@@ -2797,7 +2828,8 @@ export default {
       "spawns/Catacombs/CatacombOfTheHeretic.xml": "6c72c23ba243dd76bae5c1486145afd551e6644cf44bc7a2426b3746d556c77d",
       "spawns/Catacombs/CatacombOfTheBranded.xml": "73a34921e258f7844df239287e9c87bfd233be44df0da20601e989c15860862a",
       "spawns/Catacombs/CatacombOfTheApostate.xml": "3f08574048a9555abbdde67fe766c69b8a9f9586a907826955778e4caf809cb4",
-      "spawns/Catacombs/CatacombOfTheWitch.xml": "ca6b03827c52f7c73c99401428d1746e9b3525ce4bf9ce2b13e27218ba0f5d30"
+      "spawns/Catacombs/CatacombOfTheWitch.xml": "ca6b03827c52f7c73c99401428d1746e9b3525ce4bf9ce2b13e27218ba0f5d30",
+      "spawns/Catacombs/CatacombOfDarkOmens.xml": "581e411f4cd1e9558dbf00dd75b811ff514f3ecaec098c904b3e8f8345ba578e"
     },
     "commit": "9fb01cb20513e55190cdde8d91e41be2c0914f84"
   },
@@ -4097,6 +4129,18 @@ export default {
       "runSpeed": 160.0,
       "attackRange": 40.0
     },
+    "21162": {
+      "runSpeed": 160.0,
+      "attackRange": 40.0
+    },
+    "21163": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "21165": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
     "21169": {
       "runSpeed": 140.0,
       "attackRange": 40.0
@@ -4157,6 +4201,18 @@ export default {
       "runSpeed": 190.0,
       "attackRange": 40.0
     },
+    "21184": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "21185": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "21186": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
     "21190": {
       "runSpeed": 140.0,
       "attackRange": 40.0
@@ -4215,6 +4271,18 @@ export default {
     },
     "21204": {
       "runSpeed": 190.0,
+      "attackRange": 40.0
+    },
+    "21205": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "21206": {
+      "runSpeed": 180.0,
+      "attackRange": 40.0
+    },
+    "21207": {
+      "runSpeed": 200.0,
       "attackRange": 40.0
     },
     "21236": {
@@ -4283,6 +4351,18 @@ export default {
     },
     "21252": {
       "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "21253": {
+      "runSpeed": 165.0,
+      "attackRange": 40.0
+    },
+    "21254": {
+      "runSpeed": 200.0,
+      "attackRange": 40.0
+    },
+    "21255": {
+      "runSpeed": 165.0,
       "attackRange": 40.0
     },
     "21261": {

@@ -483,6 +483,28 @@ export default {
         "spawns/Catacombs/CatacombOfTheWitch.xml": "ca6b03827c52f7c73c99401428d1746e9b3525ce4bf9ce2b13e27218ba0f5d30",
         "spawns/Others/24_20.xml": "120af1a0077ed82ad185b1e72e7d272b893c2f5d5f96ad55cc6c918e5ccf3faa"
       }
+    },
+    "catacomb-dark-omens": {
+      "asset": "/art/world/native/catacomb-dark-omens.svg",
+      "regions": {
+        "19_18": "722e8acf42b64e75ff0ff7c97eb1abfebea195dceafbec092421f5f2c403f946"
+      },
+      "bounds": {
+        "x": -19680,
+        "y": 12896,
+        "w": 11536,
+        "h": 11504
+      },
+      "cells": 163150,
+      "layerCells": 163150,
+      "contours": 60,
+      "corners": 4403,
+      "bytes": 34177,
+      "sha256": "4b8203b184aeded996cc31ea23e38eaa6478259d757c9b5224cf1aaf8e356864",
+      "files": {
+        "spawns/Catacombs/CatacombOfDarkOmens.xml": "581e411f4cd1e9558dbf00dd75b811ff514f3ecaec098c904b3e8f8345ba578e",
+        "spawns/Others/19_18.xml": "7e9ef04a3a97537b0a39940d1a17a9cfd36aa4b94d57029e3f8319c45d1c62cd"
+      }
     }
   }
 };
