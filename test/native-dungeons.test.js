@@ -107,3 +107,18 @@ for(const [id]of Object.entries(registry.fields).filter(([,m])=>m.dungeon))test(
  assert.ok(travelled>400);
  assert.ok(worldAction(s,{action:'native_guide',npcId:d.inside.npcId},++now).ok);now=s.game.hunt.field.native.journey.until+1;advanceWorld(s,now);quiet(s);assert.ok(nativeFloorGuides(s.game.hunt)[0].near);gate(s,0,++now);
 });
+
+for(const [id]of Object.entries(registry.fields).filter(([,m])=>m.dungeon))test(`${id}: an old pending respawn keeps its due time and cannot refill its slot twice after migration`,()=>{
+ const {s}=hero(id),targetMobId=LOCATION_LEVELS[id].floors.flatMap(f=>f.rooms).flatMap(r=>r.spawns)[0].id;
+ assert.ok(enterHuntField(s,id,{now:NOW,targetMobId}).ok);Object.assign(s.game.world,{mode:'location',location:id});
+ const field=s.game.hunt.field,victim=actors(s)[0];assert.ok(victim);assert.ok(Number.isInteger(victim.sourceSlot));
+ for(const bank of nativeFieldBuckets(field))bank.mobs=bank.mobs.filter(m=>m!==victim);
+ const due=NOW+50000,room='f1/'+victim.sourceRoom,slot=victim.sourceSlot;
+ field.respawns.push({at:due,room:victim.sourceRoom,sourceSlot:slot});quiet(s);worldState(s,NOW+1);quiet(s);
+ const sameSlot=()=>actors(s).filter(m=>m.sourceRoom===room&&m.sourceSlot===slot);
+ assert.equal(sameSlot().length,0);assert.ok(field.respawns.some(r=>r.room===room&&r.sourceSlot===slot&&r.at===due));
+ worldState(s,due-1);quiet(s);assert.equal(sameSlot().length,0);
+ worldState(s,due+1);quiet(s);assert.equal(sameSlot().length,1);assert.equal(sameSlot()[0].mobId,victim.mobId);assert.notEqual(sameSlot()[0].instanceId,victim.instanceId);
+ worldState(s,due+2);quiet(s);assert.equal(sameSlot().length,1,'residency must remember the completed legacy respawn');
+ assert.equal(field.respawns.filter(r=>r.room===room&&r.sourceSlot===slot).length,0);
+});

@@ -470,7 +470,14 @@ function settleRespawns(session, hunt, now, random) {
         const [fresh] = populateRoom(session, zone, room, {now, random, count: 1,sourceSlot:entry.sourceSlot??null, prefix: `${now}:${room.id}:r${field.seq}`});
         if(!fresh)continue;
         // a new monster appears somewhere in the upper part of the area
-        if(field.native){if(!placeNativeActor(fresh,fresh.sourcePosition)){field.native.missing[room.id+':'+entry.sourceSlot]='source_ground_unavailable';continue;}fresh.ai=null;if(zone.id==='hellbound')fresh.native.hellboundStage=field.populationStage;}
+        if(field.native){
+            const key=room.id+':'+entry.sourceSlot;
+            if(!placeNativeActor(fresh,fresh.sourcePosition)){field.native.missing[key]='source_ground_unavailable';continue;}
+            fresh.ai=null;if(zone.id==='hellbound')fresh.native.hellboundStage=field.populationStage;
+            // A dead legacy slot had no living actor to seed this journal.
+            // Completing its timer must prevent the next residency refill.
+            field.native.loaded[key]=true;delete field.native.missing[key];
+        }
         else {fresh.x = .12 + random() * .76;fresh.y = .12 + random() * .43;Object.assign(fresh,nearestOpenPoint(fresh,room.walls));fresh.ai = AI_ROLES[Math.floor(random() * AI_ROLES.length)];}
         bucket.push(fresh);
     }
