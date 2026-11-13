@@ -65,41 +65,55 @@ export async function generateFunnyLine({
   }
 
   const timeoutMs = Math.max(1000, Number(process.env.FREE_LLM_TIMEOUT_MS) || DEFAULT_TIMEOUT_MS);
-  const model = process.env.FREE_LLM_MODEL || DEFAULT_MODEL;
+  // A comma-separated chain: each model is tried in turn within one shared time budget.
+  const models = String(process.env.FREE_LLM_MODEL || DEFAULT_MODEL).split(',').map(m => m.trim()).filter(Boolean);
+  const deadline = Date.now() + timeoutMs;
+  const failures = [];
 
-  try {
-    const response = await fetch(endpoint(), {
-      method: 'POST',
-      headers: {
-        authorization: `Bearer ${apiKey}`,
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        model,
-        messages: [
-          { role: 'system', content: String(system || '') },
-          { role: 'user', content: String(user || '') },
-        ],
-        temperature,
-        max_tokens: 100,
-        stream: false,
-      }),
-      signal: AbortSignal.timeout(timeoutMs),
-    });
+  for (const model of models) {
+    const left = deadline - Date.now();
+    if (left < 300) break;
+    try {
+      const response = await fetch(endpoint(), {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${apiKey}`,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: 'system', content: String(system || '') },
+            { role: 'user', content: String(user || '') },
+          ],
+          temperature,
+          max_tokens: 100,
+          stream: false,
+        }),
+        signal: AbortSignal.timeout(left),
+      });
 
-    if (!response.ok) {
-      const details = await response.text().catch(() => '');
-      throw new Error(`HTTP ${response.status}${details ? `: ${details.slice(0, 180)}` : ''}`);
+      if (!response.ok) {
+        const details = await response.text().catch(() => '');
+        throw new Error(`HTTP ${response.status}${details ? `: ${details.slice(0, 120)}` : ''}`);
+      }
+
+      const payload = await response.json();
+      const generated = normalizeLine(payload?.choices?.[0]?.message?.content, maxLength);
+      if (!generated) throw new Error('empty completion');
+      if (!usableLine(generated)) throw new Error('reasoning text instead of an answer');
+      return generated;
+    } catch (error) {
+      failures.push(`${model}: ${error?.message || error}`);
     }
-
-    const payload = await response.json();
-    const generated = normalizeLine(payload?.choices?.[0]?.message?.content, maxLength);
-    if (!generated) throw new Error('FreeLLMAPI returned an empty completion');
-    return generated;
-  } catch (error) {
-    console.error('[freellmapi] generation failed:', error?.message || error);
-    return fallbackLine(fallbacks, avoid);
   }
+  console.error('[freellmapi] generation failed:', failures.join(' | ') || 'no time left');
+  return fallbackLine(fallbacks, avoid);
+}
+
+/** Reasoning models sometimes answer with their English thinking; a usable line is Russian text. */
+function usableLine(text) {
+  return /[А-Яа-яЁё]{3}/.test(text) && !/^(thinking process|we need|the user|okay|let me|analy[sz]e)/i.test(text.replace(/^\W+/, ''));
 }
 
 export { normalizeLine };

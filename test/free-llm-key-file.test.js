@@ -28,3 +28,27 @@ test('the proxy key is read from its key file once the proxy has created it', as
     fs.rmSync(dir, {recursive: true, force: true});
   }
 });
+
+test('a model chain skips rate limits and English reasoning, then answers in Russian', async () => {
+  const saved = {key: process.env.FREE_LLM_API_KEY, model: process.env.FREE_LLM_MODEL, fetch: globalThis.fetch};
+  process.env.FREE_LLM_API_KEY = 'k';
+  process.env.FREE_LLM_MODEL = 'busy, thinker, good';
+  const asked = [];
+  globalThis.fetch = async (url, options) => {
+    const {model} = JSON.parse(options.body);
+    asked.push(model);
+    if (model === 'busy') return {ok: false, status: 429, text: async () => 'rate limited'};
+    const content = model === 'thinker' ? 'Thinking Process: analyze the request…' : '♌ Лев: Сегодня корона сидит ровно.';
+    return {ok: true, json: async () => ({choices: [{message: {content}}]})};
+  };
+  try {
+    const {generateFunnyLine} = await import(`../functions/llm/freeLlmClient.js?chain=${Date.now()}`);
+    assert.equal(await generateFunnyLine({fallbacks: ['F']}), '♌ Лев: Сегодня корона сидит ровно.');
+    assert.deepEqual(asked, ['busy', 'thinker', 'good']);
+  } finally {
+    globalThis.fetch = saved.fetch;
+    for (const [name, value] of [['FREE_LLM_API_KEY', saved.key], ['FREE_LLM_MODEL', saved.model]]) {
+      if (value === undefined) delete process.env[name]; else process.env[name] = value;
+    }
+  }
+});

@@ -1,39 +1,104 @@
-# Example: the bot's own FreeLLMAPI proxy for horoscope texts. Copy next to docker-compose.yml as
-# docker-compose.override.yml (merge with an existing override), create freellmapi.env with
-# NODE_ENV=production, PORT=3001, FREEAPI_DB_PATH=/app/server/data/freellmapi.db and
-# ENCRYPTION_KEY=$(openssl rand -hex 32), then: docker compose up -d. Finish the first setup and add
-# provider keys in the dashboard; the bot picks up the unified key from the shared volume by itself.
+# The bot's own FreeLLMAPI gateway for horoscope texts, run as a local orchestrator:
+# no dashboard account. Provider keys are imported declaratively at boot from
+# freellmapi.env (chmod 600, never committed); keyless providers are a safety net.
+# The gateway exports its unified client key to its volume; the bot reads it there.
+#
+# Server setup (next to docker-compose.yml):
+#   cp docker/freellmapi.override.example.yml docker-compose.override.yml   # or merge with an existing override
+#   printf 'ENCRYPTION_KEY=%s\n' "$(openssl rand -hex 32)" > freellmapi.env && chmod 600 freellmapi.env
+#   # optional provider keys in freellmapi.env: GROQ_API_KEY, GEMINI_API_KEY, OPENROUTER_API_KEY, MISTRAL_API_KEY,
+#   # NVIDIA_API_KEY, HUGGINGFACE_API_KEY, LLM7_API_KEY, CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN
+#   docker compose up -d
 services:
   bot:
-    ports: !override
-      - "127.0.0.1:8090:8090"
     environment:
-      # The bot's own FreeLLMAPI proxy (service below), reached over the compose network.
       FREE_LLM_API_BASE_URL: http://freellmapi:3001/v1
-      # The proxy writes its unified client key here after the first setup; the bot reads it from the shared volume.
       FREE_LLM_API_KEY_FILE: /run/freellm/unified.key
-      FREE_LLM_MODEL: auto:fast
+      # Keyless routes: fast non-reasoning models first, then automatic routing; prepared lines remain the safety net.
+      FREE_LLM_MODEL: mistral-small-3.2-24b,llama-3.3-70b,auto
+      FREE_LLM_TIMEOUT_MS: "8000"
     volumes:
       - freellm-data:/run/freellm:ro
 
-  # Own FreeLLMAPI instance for the horoscope texts. Other projects on this host
-  # run their own instances; nothing is shared with them.
-  # Secrets (ENCRYPTION_KEY, provider API keys) live in freellmapi.env (chmod 600).
-  # Dashboard: ssh -L 3101:127.0.0.1:3101 root@whiteslove.me, then http://127.0.0.1:3101
   freellmapi:
     image: ghcr.io/tashfeenahmed/freellmapi:v0.9.0
     restart: unless-stopped
+    init: true
     env_file: freellmapi.env
-    ports:
-      - "127.0.0.1:3101:3001"
+    environment:
+      NODE_ENV: production
+      PORT: "3001"
+      FREEAPI_DB_PATH: /app/server/data/freellmapi.db
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -eu
+        export FREEAPI_CONFIG_JSON="$$(node - <<'NODE'
+        const keys = [];
+        const add = (platform, raw) => {
+          const key = String(raw || '').trim();
+          keys.push(key
+            ? { platform, key, label: 'env', enabled: true }
+            : { platform, key: 'disabled-by-env', label: 'env', enabled: false });
+        };
+        add('groq', process.env.GROQ_API_KEY);
+        add('google', process.env.GEMINI_API_KEY);
+        add('nvidia', process.env.NVIDIA_API_KEY);
+        add('huggingface', process.env.HUGGINGFACE_API_KEY);
+        add('llm7', process.env.LLM7_API_KEY);
+        add('openrouter', process.env.OPENROUTER_API_KEY);
+        add('mistral', process.env.MISTRAL_API_KEY);
+        const cfAccount = String(process.env.CLOUDFLARE_ACCOUNT_ID || '').trim();
+        const cfToken = String(process.env.CLOUDFLARE_API_TOKEN || '').trim();
+        keys.push(cfAccount && cfToken
+          ? { platform: 'cloudflare', key: cfAccount + ':' + cfToken, label: 'env', enabled: true }
+          : { platform: 'cloudflare', key: 'disabled:disabled', label: 'env', enabled: false });
+        // Keyless safety net; Kilo stays off because its anonymous route may log prompts.
+        keys.push({ platform: 'ovh', label: 'keyless', enabled: true });
+        keys.push({ platform: 'aihorde', label: 'keyless', enabled: true });
+        process.stdout.write(JSON.stringify({ keys, routing: { strategy: 'balanced', keySelectionStrategy: 'least-remaining' } }));
+        NODE
+        )"
+        rm -f /app/server/data/unified.key
+        node server/dist/index.js &
+        server_pid=$$!
+        terminate() { kill -TERM "$$server_pid" >/dev/null 2>&1 || true; wait "$$server_pid" || true; }
+        trap terminate TERM INT
+        exported=false
+        attempt=0
+        while [ "$$attempt" -lt 100 ]; do
+          attempt=$$((attempt + 1))
+          if ! kill -0 "$$server_pid" >/dev/null 2>&1; then wait "$$server_pid"; exit $$?; fi
+          if (cd /app/server && node - <<'NODE'
+        const fs = require('node:fs');
+        const Database = require('better-sqlite3');
+        try {
+          const db = new Database(process.env.FREEAPI_DB_PATH, { readonly: true, fileMustExist: true });
+          const row = db.prepare("SELECT value FROM settings WHERE key = 'unified_api_key' LIMIT 1").get();
+          db.close();
+          const key = String(row?.value || '').trim();
+          if (!key) process.exit(1);
+          // The bot runs as the same uid (node) and reads it through the shared read-only volume.
+          fs.writeFileSync('/app/server/data/unified.key', key + '\n', { mode: 0o600 });
+        } catch { process.exit(1); }
+        NODE
+          ); then exported=true; break; fi
+          sleep 0.1
+        done
+        if [ "$$exported" != "true" ]; then echo "FreeLLMAPI started but its unified key could not be exported." >&2; terminate; exit 1; fi
+        wait "$$server_pid"
     volumes:
       - freellm-data:/app/server/data
+    mem_limit: 512m
+    cpus: "0.5"
+    stop_grace_period: 30s
     healthcheck:
-      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3001/api/ping').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      test: ["CMD-SHELL", "test -s /app/server/data/unified.key && node -e \"fetch('http://127.0.0.1:3001/api/ping').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
       interval: 30s
       timeout: 5s
-      retries: 5
-      start_period: 30s
+      retries: 3
+      start_period: 15s
 
 volumes:
   freellm-data:
