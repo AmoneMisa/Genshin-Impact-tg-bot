@@ -2,7 +2,7 @@
 // Derived physical level routes. Endpoints are pinned NPCs or explicitly derived territory witnesses; no authored stair teleport.
 export default {
   "geodataCommit": "378672ee9bffa47b37956911040fc7d5b1a7258e",
-  "barriersSha256": "a8d5c25223f54add9fb9359ec09bf9bdda6dcbcbf29c52af0066e8f76674a057",
+  "barriersSha256": "b6032a650ddb5d08371eb8a8778836e39538776cdda0e195fd2a26a682041d79",
   "zones": {
     "forge-of-the-gods": {
       "root": {

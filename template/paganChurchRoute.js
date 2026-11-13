@@ -369,6 +369,6 @@ export default {
     "regions": {
       "21_16": "6dfe820f3a7434c389b83971162ab3606e2d448d1431d70112ac4746c9e68cec"
     },
-    "barriersSha256": "a8d5c25223f54add9fb9359ec09bf9bdda6dcbcbf29c52af0066e8f76674a057"
+    "barriersSha256": "b6032a650ddb5d08371eb8a8778836e39538776cdda0e195fd2a26a682041d79"
   }
 };

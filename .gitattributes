@@ -6,3 +6,6 @@ art-source/geodata/**/*.java -text whitespace=-blank-at-eol
 
 # Generated cave vectors have recorded SHA-256 values; preserve LF on checkout.
 webapp/art/world/native/*.svg text eol=lf
+
+# Route templates pin the SHA-256 of these bytes; keep LF on every checkout.
+template/nativeWorld.js text eol=lf
