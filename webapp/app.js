@@ -394,6 +394,10 @@ async function boot() {
     if (gwentEntry) await launchFeature({id:'gwent',title:'Гвинт',status:'webgl'},render,{initialInvite:gwentEntry.kind==='invite'?gwentEntry.token:null,initialWatch:gwentEntry.kind==='watch'?gwentEntry.token:null});
     const diceEntry = parseDiceEntry(tg?.initDataUnsafe?.start_param);
     if (diceEntry) await launchFeature({id:'dicePoker',title:'Кости',status:'webgl'},render,{initialInvite:diceEntry.token});
+    // Bot quick commands (/gwent, /dice, /blackjack…) open their screen right away; unknown or disabled screens are ignored.
+    const screenEntry = /_f_([A-Za-z0-9]+)$/.exec(tg?.initDataUnsafe?.start_param || '')?.[1] || new URLSearchParams(location.search).get('feature');
+    const screenFeature = !gwentEntry && !diceEntry && screenEntry && currentState?.features?.find(item => item.id === screenEntry && !item.adminOnly);
+    if (screenFeature) await launchFeature(screenFeature, render);
     showHelloNotices({ api, haptic }).catch(error => console.warn('[notices]', error));
   } catch (error) {
     console.error(error);

@@ -1,3 +1,4 @@
+import { QUICK_MENU } from './miniapp/quickCommandList.js';
 import errorHandler from './errorHandler.js';
 errorHandler();
 
@@ -23,11 +24,12 @@ import evenWeek from './functions/shedullers/evenWeek.js';
 await bot.setMyCommands([
     {command: "start", description: "Открыть игру"},
     {command: "play", description: "Открыть игру"},
+    ...QUICK_MENU,
 ], {
     scope: {type: "default"}
 });
-await bot.setMyCommands([{command:'start',description:'Открыть игру'},{command:'play',description:'Открыть игру'},{command:'admin',description:'Администрирование бота'}],{scope:{type:'chat',chat_id:myId}}).catch(error=>console.warn('Owner commands:',error.message));
-await bot.setMyCommands([{command:'play',description:'Открыть игру'},{command:'unstack',description:'Сбросить зависшую игру: 21 или elements'}],{scope:{type:'all_chat_administrators'}});
+await bot.setMyCommands([{command:'start',description:'Открыть игру'},{command:'play',description:'Открыть игру'},...QUICK_MENU,{command:'admin',description:'Администрирование бота'}],{scope:{type:'chat',chat_id:myId}}).catch(error=>console.warn('Owner commands:',error.message));
+await bot.setMyCommands([{command:'play',description:'Открыть игру'},...QUICK_MENU,{command:'unstack',description:'Сбросить зависшую игру: 21 или elements'}],{scope:{type:'all_chat_administrators'}});
 
 // The game lives in the Mini App. Player text commands are gone: any other
 // /command just answers with the launcher. Owner tools in onTextsAdmin and

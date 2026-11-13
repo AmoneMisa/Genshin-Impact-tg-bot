@@ -1455,4 +1455,12 @@ export default {
   "Удача заглянет ненадолго — не заставляй её ждать у двери.": "Omad qisqa muddatga kiradi — uni eshik oldida kuttirma.",
   "Удача сегодня рядом: стоит прямо за спиной и молча осуждает.": "Omad bugun yoningda: ortingda turib jimgina qoralaydi.",
   "Чашка чая и пара добрых слов сработают лучше любого зелья.": "Bir piyola choy va bir-ikki iliq so'z har qanday iksirdan yaxshiroq ishlaydi.",
+  "Звёзды ещё думают над прошлым предсказанием. Попробуй через несколько секунд.": "Yulduzlar hali oldingi bashorat ustida o'ylashyapti. Bir necha soniyadan keyin urinib ko'r.",
+  "Открыть в игре:": "O'yinda ochish:",
+  "Порыбачить": "Baliq ovlash",
+  "Сразиться на арене": "Arenada jang qilish",
+  "Сыграть в 21": "21 o'ynash",
+  "Сыграть в гвинт": "Gvint o'ynash",
+  "Сыграть в кости": "Suyaklar o'ynash",
+  "Сыграть в стихии": "Stixiyalar o'ynash",
 };

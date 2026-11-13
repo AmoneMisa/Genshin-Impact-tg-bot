@@ -3,12 +3,16 @@ import './index.js';
 import bot from './bot.js';
 import sendMiniAppLauncher from './miniapp/launcher.js';
 import startMiniAppServer from './miniapp/chatSettingsServer.js';
+import { registerQuickCommands } from './miniapp/quickCommands.js';
 
 const miniAppServer = startMiniAppServer();
 
 bot.onText(/^\/play(?:@\w+)?$/, async (msg) => {
   return sendMiniAppLauncher(msg);
 });
+
+// /horoscope answers with the text; game commands open the Mini App on their screen.
+registerQuickCommands(bot);
 
 // The Main Mini App is configured in BotFather, so it remains discoverable
 // without racing index.js over setMyCommands. /play still works when typed.

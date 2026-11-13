@@ -5,7 +5,7 @@ import { shouldRedirectCommand } from '../miniapp/launcher.js';
 const options = { adminPatterns: [/^\/add_gold(?:@\w+)?(?: .*)?$/], botUsername: 'GameBot' };
 
 test('player text commands are answered with the launcher', () => {
-  for (const text of ['/start', '/help', '/games', '/boss', '/arena@GameBot', '/settings']) {
+  for (const text of ['/start', '/help', '/games', '/boss', '/clan@GameBot', '/settings']) {
     assert.equal(shouldRedirectCommand(text, options), true, text);
   }
 });
