@@ -34,11 +34,11 @@ function passHtml(pass) {
   const have = pass.owned ? `${escapeHtml(pass.title)} ×${fmt(pass.owned)} · привязан к персонажу` : '';
   if (!pass.active && pass.owned) {
     return `<article class="academy-row done"><div>${head}<small>${have}</small></div>
-      <button type="button" class="city-btn" data-academy-pass="pass_start:${escapeHtml(pass.name)}" ${pass.canStart ? '' : 'disabled'}>Ещё квест</button></article>`;
+      ${pass.canStart ? `<button type="button" class="city-btn" data-academy-pass="pass_start:${escapeHtml(pass.name)}">Ещё квест</button>` : ''}</article>`;
   }
   if (!pass.active) {
     return `<article class="academy-row"><div>${head}<small>Квест: ${escapeHtml(pass.npc)} · с ${fmt(pass.minLevel)} ур. · или ${fmt(pass.price)} ${luckCoinHtml(14)} в разделе «Квест» магазина</small></div>
-      <button type="button" class="city-btn" data-academy-pass="pass_start:${escapeHtml(pass.name)}" ${pass.canStart ? '' : 'disabled'}>${pass.canStart ? 'Взять квест' : `С ${fmt(pass.minLevel)} ур.`}</button></article>`;
+      ${pass.canStart ? `<button type="button" class="city-btn" data-academy-pass="pass_start:${escapeHtml(pass.name)}">Взять квест</button>` : `<small class="academy-status">Доступно с ${fmt(pass.minLevel)} уровня</small>`}</article>`;
   }
   const step = pass.step;
   const where = `Шаг ${fmt(pass.stepIndex + 1)} из ${fmt(pass.stepCount)}`;
@@ -48,7 +48,7 @@ function passHtml(pass) {
   }
   // the quest item is the pass: it drops by itself, there is nothing to hand in
   return `<article class="academy-row"><div>${head}<small>${where} · ${escapeHtml(step.text || '')} · ${fmt(step.progress)} / ${fmt(step.target)}${have ? ` · ${have}` : ''}</small></div>
-    <button type="button" class="city-btn" disabled>Ищи в бою</button></article>`;
+    <small class="academy-status">Предмет добывается в бою</small></article>`;
 }
 
 function mainQuestsHtml(view) {

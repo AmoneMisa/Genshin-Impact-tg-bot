@@ -45,7 +45,7 @@ try{for(const width of [320,390,1100]){
   await page.evaluate(async({module,fn})=>{const code=await import('/'+module+'.js');await code[fn]({api:async(p,o)=>(await fetch(p,o)).json(),renderState:()=>{},haptic:()=>{},statusElement:document.createElement('span')});},{module,fn});
   await page.waitForTimeout(250);
   await page.locator(panel).evaluate(async n=>{for(const i of n.querySelectorAll('img')){i.loading='eager';await i.decode();}});
-  assert.ok(await page.locator(panel+' img[src*="/l2-extra/"]').count()>0,module+' native icons');
+  assert.ok(await page.locator(panel+' :is(img[src*="/l2-extra/"],img[src*="/l2-effects/"])').count()>0,module+' native icons');
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,module+' page overflow');
   assert.equal(await page.locator(panel+' .overlay-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false,module+' panel overflow');
   if(width===390)await page.locator(panel+' .overlay-panel').screenshot({path:'docs/l2-'+module+'-icons-390.png'});
@@ -55,9 +55,12 @@ try{for(const width of [320,390,1100]){
  session.game.gameClass.stats.name='warlock';session.game.gameClass.stats.translateName='Призыватель';session.game.l2CastAt={};session.game.effects=[];
  await page.evaluate(async()=>{const {openBuffsGame}=await import('/buffs.js');await openBuffsGame({api:async(p,o)=>(await fetch(p,o)).json()});});
  await page.locator('[data-effect-kind="pet"]').click();
- assert.ok(await page.locator('.buff-card').count()>0,'pet skills');assert.equal(await page.locator('[data-buff-target]').count(),0,'summon needs no target');
+ assert.ok(await page.locator('.buffs-overlay .item-grid [data-buff]').count()>0,'pet skills');assert.equal(await page.locator('[data-buff-target]').count(),0,'summon needs no target');
+ assert.equal(await page.locator('.buffs-overlay [data-grid-empty]').count(),0,'only real skills in the grid');assert.equal(await page.locator('.buffs-overlay [data-buff-cast]').count(),0,'cast only after a skill is chosen');
  await page.locator('.buffs-overlay').evaluate(n=>Promise.all([...n.querySelectorAll('img')].map(i=>i.decode())));
- await page.locator('[data-buff-cast="l2:1111"]').click();await page.waitForFunction(()=>document.querySelector('.feedback-result')?.textContent.includes('питомец призван'));
+ await page.locator('[data-buff="l2:1111"]').click();await page.locator('dialog[open] [data-buff-cast="l2:1111"]').waitFor();
+ await page.keyboard.press('Escape');assert.equal(await page.locator('dialog[open]').count(),0,'Escape closes skill details');
+ await page.locator('[data-buff="l2:1111"]').click();await page.locator('dialog[open] [data-buff-cast="l2:1111"]').click();await page.waitForFunction(()=>document.querySelector('.feedback-result')?.textContent.includes('питомец призван'));
  assert.ok(session.game.effects.some(e=>e.l2SkillId===1111),'summon saved');
  assert.equal(await page.locator('.buffs-overlay .overlay-panel').evaluate(n=>n.scrollWidth>n.clientWidth+1),false,'pets overflow');
  if(width===390)await page.locator('.buffs-overlay .overlay-panel').screenshot({path:'docs/l2-pets-icons-390.png'});

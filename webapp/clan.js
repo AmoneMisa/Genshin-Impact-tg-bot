@@ -1,4 +1,5 @@
 import {polishIcon} from './art/polish-icon-art.js';
+import {confirmDialog} from './confirm-dialog.js';
 import {hallAuctionView} from './clan-hall-auction-view.js';
 import {openWarehouseGame} from './warehouse.js';
 import {clanHallView} from './clan-hall-view.js';
@@ -271,7 +272,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         <div class="clan-daily-row">
           <span class="clan-daily-icon">📜</span>
           <div><strong>Викторина</strong><small>${quiz?.answered ? (quiz.correct ? 'Сегодня отвечено верно ✅' : 'Сегодня уже отвечено') : quiz?.available ? '+золото, опыт и вклад' : 'Недоступна'}</small></div>
-          <button type="button" class="clan-play" data-clan-tab="quiz" ${quiz?.available && !quiz.answered ? '' : 'disabled'}>Играть</button>
+          ${quiz?.available && !quiz.answered ? '<button type="button" class="clan-play" data-clan-tab="quiz">Играть</button>' : ''}
         </div>
         ${tasks ? `<div class="clan-daily-row"><span class="clan-daily-icon">📋</span><div><strong>Задания дня</strong><small>${done} / ${tasks.items.length} выполнено</small></div><button type="button" class="clan-play ghost" data-clan-tab="tasks">Открыть</button></div>` : ''}
       </section>
@@ -368,7 +369,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
         : tab === 'management' && clan.canManage ? managementHtml(clan)
         : overviewTabHtml(clan)}
       </div>
-      <button type="button" class="clan-danger" data-clan-exit>${clan.isOwner ? 'Расформировать клан' : 'Покинуть клан'}</button>`;
+      ${main === 'overview' ? `<button type="button" class="clan-danger" data-clan-exit>${clan.isOwner ? 'Расформировать клан' : 'Покинуть клан'}</button>` : ''}`;
   }
 
   function membersHtml(clan) {
@@ -657,7 +658,8 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     content.querySelectorAll('[data-clan-kick]').forEach(button => button.addEventListener('click', () => activity({ action: 'kick', targetId: button.dataset.clanKick })));
     content.querySelectorAll('[data-clan-promote]').forEach(button => button.addEventListener('click', () => activity({ action: 'promote', targetId: button.dataset.clanPromote })));
     content.querySelectorAll('[data-clan-transfer]').forEach(button => button.addEventListener('click', () => {
-      if (window.confirm(`Передать клан игроку ${button.dataset.name}? Ты станешь офицером.`)) activity({ action: 'transfer', targetId: button.dataset.clanTransfer });
+      confirmDialog({ owner: overlay, title: 'Передать клан', text: `Передать клан игроку ${button.dataset.name}? Ты станешь офицером.`, confirmLabel: 'Передать' })
+        .then(ok => { if (ok) activity({ action: 'transfer', targetId: button.dataset.clanTransfer }); });
     }));
     content.querySelectorAll('[data-clan-demote]').forEach(button => button.addEventListener('click', () => activity({ action: 'demote', targetId: button.dataset.clanDemote })));
     content.querySelector('[data-clan-settings-save]')?.addEventListener('click', () => {
@@ -706,7 +708,8 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     content.querySelector('[data-clan-task-bonus]')?.addEventListener('click', () => activity({ action: 'task_claim_bonus' }));
     content.querySelector('[data-clan-exit]')?.addEventListener('click', async () => {
       const actionName = dashboard.clan?.isOwner ? 'disband' : 'leave';
-      if (!window.confirm(actionName === 'disband' ? 'Расформировать клан?' : 'Покинуть клан?')) return;
+      const disband = actionName === 'disband';
+      if (!await confirmDialog({ owner: overlay, title: disband ? 'Расформировать клан' : 'Покинуть клан', text: disband ? 'Клан будет расформирован для всех участников.' : 'Ты выйдешь из клана.', confirmLabel: disband ? 'Расформировать' : 'Покинуть' })) return;
       const payload = await action({ action: actionName });
       if (payload?.ok) tab = 'discover';
     });

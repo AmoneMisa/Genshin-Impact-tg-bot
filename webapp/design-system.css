@@ -1179,7 +1179,7 @@ body input:is([type="checkbox"],[type="radio"]):disabled { opacity: .46; cursor:
 .skill-book-group{display:grid;gap:var(--space-2);min-width:0}
 .skill-book-group h3{margin:0;font:600 14px/1.4 system-ui;color:var(--text-soft)}
 .skill-book-group .item-grid{--item-cell-size:42px}
-.skill-book-group .item-grid-cell.unlearned{opacity:.45}
+.item-grid-cell.unlearned{opacity:.45}
 .skill-book-group .item-grid-cell em{position:absolute;right:2px;bottom:0;font:600 10px/1.2 system-ui;color:#eee}
 .game-overlay .skill-detail{display:grid;gap:var(--space-3);max-width:430px;min-width:0}
 .skill-detail p{margin:0;line-height:1.5;overflow-wrap:anywhere}
@@ -1211,16 +1211,16 @@ body .ui-map-tools .ds-select-trigger {font-size:13px;}
 .ui-check {display:flex;align-items:center;gap:var(--space-2);min-height:44px;padding:var(--space-2);font-size:14px;line-height:1.4;cursor:pointer;}
 /* Long lists scroll inside their own box; the box keeps the rounded border. */
 .ui-choice-list.ui-scroll {overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
-body .ui-button.ui-choice-row {display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);width:100%;min-height:56px;padding:var(--space-3) var(--space-4);border:0;border-bottom:1px solid var(--border-soft);border-radius:0;background:transparent;box-shadow:none;font-size:14px;}
-body .ui-button.ui-choice-row:last-child {border-bottom:0;}
-body .ui-button.ui-choice-row.active {background:var(--button-gold);color:var(--gold-bright);}
-.ui-choice-row>span {min-width:0;overflow-wrap:anywhere;}
-.ui-choice-row>span:last-child {flex-shrink:0;}
+body .ui-button.ui-choice-row,body .game-overlay .overlay-panel .ui-button.ui-choice-row {display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);width:100%;min-height:56px;padding:var(--space-3) var(--space-4);border:0;border-bottom:1px solid var(--border-soft);border-radius:0;background:transparent;box-shadow:none;font-size:14px;}
+body .ui-button.ui-choice-row:last-child,body .game-overlay .overlay-panel .ui-button.ui-choice-row:last-child {border-bottom:0;}
+body .ui-button.ui-choice-row.active,body .game-overlay .overlay-panel .ui-button.ui-choice-row.active {background:var(--button-gold);color:var(--gold-bright);}
+.ui-choice-row>span {min-width:0;overflow-wrap:anywhere;white-space:normal;}
+.ui-choice-row>span:last-child:not(:first-child) {flex-shrink:0;}
 .ui-choice-row small {display:block;color:var(--muted);margin-top:var(--space-1);font-size:11px;}
 .ui-inset-row {display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);padding:var(--space-3) var(--space-4);border:1px solid var(--border-soft);border-radius:var(--radius-sm);background:var(--surface-control);}
 body .ui-button.prominent {min-height:56px;padding:var(--space-3) var(--space-4);font:600 18px/1.3 Georgia,serif;display:flex;align-items:center;justify-content:center;gap:var(--space-3);}
 .ui-navigation-icon {display:block;flex:none;width:24px;height:24px;}
-body .ui-button.ui-choice-row {font-size:16px;font-weight:400;text-align:left;}
+body .ui-button.ui-choice-row,body .game-overlay .overlay-panel .ui-button.ui-choice-row {font-size:16px;font-weight:400;text-align:left;}
 .ui-choice-row .ui-navigation-icon {width:20px;height:20px;color:var(--muted);}
 .ui-selection-summary {display:flex;align-items:center;justify-content:center;gap:var(--space-3);min-height:80px;padding:var(--space-3) var(--space-4);border:1px solid var(--border-soft);border-radius:var(--radius-sm);background:var(--surface-control);color:var(--text-soft);text-align:center;}
 .ui-selection-summary>span {min-width:0;overflow-wrap:anywhere;}
@@ -1328,7 +1328,7 @@ body .ui-icon-button.ui-frameless>.class-emblem{width:32px;height:32px}
 .l2-status-window>.game-dialog-heading:has([data-heading-action])::before{display:none}
 body .game-overlay .overlay-panel .game-dialog-heading .ui-icon-button[data-heading-action]{--control-icon-size:var(--dialog-close-size,34px);width:var(--control-icon-size);height:var(--control-icon-size);min-width:var(--control-icon-size);min-height:var(--control-icon-size);padding:var(--space-1)}
 .game-dialog-heading [data-heading-action] img{width:20px;height:20px;object-fit:contain}
-body .ui-button.ui-choice-row.compact{min-height:44px;padding:var(--space-2);font-size:12px;gap:var(--space-2)}
+body .ui-button.ui-choice-row.compact,body .game-overlay .overlay-panel .ui-button.ui-choice-row.compact{min-height:44px;padding:var(--space-2);font-size:12px;gap:var(--space-2)}
 .l2-status-window.profile-panel h3{font:600 13px/1.3 Arial,sans-serif;color:var(--gold-bright)}
 .l2-status-window.profile-panel p,.profile-hero-copy>span{font-size:12px;line-height:1.4;color:var(--muted)}
 .ui-profession-tree,.ui-profession-tree ul{list-style:none;margin:0;padding:0}

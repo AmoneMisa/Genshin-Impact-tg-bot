@@ -223,6 +223,7 @@
 .academy-window .academy-row small { font: 400 12px/1.5 system-ui; color: #c3baa7; overflow-wrap: anywhere; }
 .academy-window .academy-row .city-btn { justify-self: start; min-height: 44px; padding: 8px 14px; }
 .academy-window .academy-row.claimed { opacity: .65; }
+.academy-window .academy-row .academy-status { color: var(--gold-bright); }
 .city-window-body { display: grid; gap: 12px; padding: 4px 16px 8px; }
 .city-window-body .city-costs { justify-content: flex-start; }
 .city-window-body .city-cost { font-size: 13px; }

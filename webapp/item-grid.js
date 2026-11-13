@@ -1,9 +1,10 @@
 import {escapeHtml} from './escape-html.js';
 
 /** Shared bag surface. Callers supply cells and retain ownership of item actions. */
-export function itemGridHtml(cells, {className = '', min = 30, label = 'Предметы'} = {}) {
+/** `fill: false` lists only real objects: no padding cells to complete the last row. */
+export function itemGridHtml(cells, {className = '', min = 30, label = 'Предметы', fill = true} = {}) {
   const empty = '<span class="item-grid-cell empty" data-grid-empty aria-hidden="true"></span>';
-  return `<l2-item-grid class="item-grid ${escapeHtml(className)}" data-min="${min}" role="group" aria-label="${escapeHtml(label)}">${cells.join('')}${empty.repeat(Math.max(0, min - cells.length))}</l2-item-grid>`;
+  return `<l2-item-grid class="item-grid ${escapeHtml(className)}" data-min="${fill ? min : 0}"${fill ? '' : ' data-fill="false"'} role="group" aria-label="${escapeHtml(label)}">${cells.join('')}${fill ? empty.repeat(Math.max(0, min - cells.length)) : ''}</l2-item-grid>`;
 }
 
 // Fit complete rows to the available width without changing the caller's item cells.
@@ -15,7 +16,7 @@ if (typeof customElements !== 'undefined' && !customElements.get('l2-item-grid')
     }
     disconnectedCallback() { this.observer?.disconnect(); }
     fillRows() {
-      if (!this.clientWidth) return;
+      if (!this.clientWidth || this.dataset.fill === 'false') return;
       const columns = getComputedStyle(this).gridTemplateColumns.split(' ').length;
       const empty = [...this.querySelectorAll(':scope > [data-grid-empty]')];
       const items = this.children.length - empty.length;

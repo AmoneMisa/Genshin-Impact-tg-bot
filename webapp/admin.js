@@ -207,7 +207,7 @@ export async function openAdminGame({ api, haptic }) {
       }, 'Промокод создан.');
     });
     body.querySelectorAll('[data-p-delete]').forEach(button => button.addEventListener('click', () => {
-      if (window.confirm(`Удалить промокод ${button.dataset.pDelete}?`)) post('/api/admin/promo', { action: 'delete', code: button.dataset.pDelete }, 'Промокод удалён.');
+      confirmDialog({ title: 'Удалить промокод', text: `Удалить промокод ${button.dataset.pDelete}?`, confirmLabel: 'Удалить' }).then(ok => ok && post('/api/admin/promo', { action: 'delete', code: button.dataset.pDelete }, 'Промокод удалён.'));
     }));
     body.querySelectorAll('[data-p-expiry]').forEach(button => button.addEventListener('click', () => {
       const input = body.querySelector(`[data-p-expiry-input="${CSS.escape(button.dataset.pExpiry)}"]`);
@@ -223,7 +223,7 @@ export async function openAdminGame({ api, haptic }) {
       }, 'Объявление опубликовано.');
     });
     body.querySelectorAll('[data-n-delete]').forEach(button => button.addEventListener('click', () => {
-      if (window.confirm('Удалить объявление?')) post('/api/admin/notice', { action: 'delete', id: button.dataset.nDelete }, 'Объявление удалено.');
+      confirmDialog({ title: 'Удалить объявление', text: 'Удалить объявление?', confirmLabel: 'Удалить' }).then(ok => ok && post('/api/admin/notice', { action: 'delete', id: button.dataset.nDelete }, 'Объявление удалено.'));
     }));
     body.querySelectorAll('[data-n-toggle]').forEach(button => button.addEventListener('click', () => {
       const notice = data.notices.find(item => item.id === button.dataset.nToggle);

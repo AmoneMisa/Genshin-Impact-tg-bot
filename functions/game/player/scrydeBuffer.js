@@ -48,7 +48,7 @@ export function bufferEntries(session, now = Date.now()) {
     for (const entry of SPELL_TABLE) {
         const open = level >= Math.max(BUFFER_MIN_LEVEL, entry.level);
         rows.push({
-            id: `${SCRYDE_PREFIX}${entry.key}`, name: entry.name, kind: 'buff', group: `${SCRYDE_GROUP}: ${entry.group}`, level: open ? 1 : 0, maxLevel: 1,
+            id: `${SCRYDE_PREFIX}${entry.key}`, iconId: `l2:${entry.id}`, name: entry.name, kind: 'buff', group: `${SCRYDE_GROUP}: ${entry.group}`, level: open ? 1 : 0, maxLevel: 1,
             firstLevelAt: Math.max(BUFFER_MIN_LEVEL, entry.level), nextLevelAt: open ? null : Math.max(BUFFER_MIN_LEVEL, entry.level),
             effect: `${entry.text}${entry.scale < 1 ? ` (мощность ${Math.round(entry.scale * 100)}%)` : ''}${entry.items ? ' · 40 Spirit Ore' : ''}`,
             seconds: entry.seconds || BUFFER_SECONDS, toggle: false, cost: 0, costOthers: 0, cooldownUntil: 0,
