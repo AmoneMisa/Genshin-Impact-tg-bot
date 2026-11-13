@@ -1425,4 +1425,13 @@ export default {
   "Касиан": "Kasian",
   "Получено:": "Olindi:",
   "Точка выбрана. Нажмите «Идти сюда» или выберите другое место.": "Nuqta tanlandi. «Bu yerga borish» tugmasini bosing yoki boshqa joyni tanlang.",
+  "{0} К списку": "{0} Ro'yxatga",
+  "{0} Календарь": "{0} Taqvim",
+  "{0} Купоны": "{0} Kuponlar",
+  "{0} Обзор": "{0} Umumiy ko'rinish",
+  "{1} Добавить друга": "{1} Do'st qo'shish",
+  "{11} {12} адены": "{11} {12} adena",
+  "{4} дн.": "{4} kun",
+  "Количество · {3}": "Miqdor · {3}",
+  "Награда {1}": "Mukofot {1}",
 };

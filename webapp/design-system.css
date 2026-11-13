@@ -1205,6 +1205,9 @@ body .ui-icon-button {display:grid;place-items:center;width:var(--control-icon-s
 .ui-icon-button svg {display:block;width:24px;height:24px;}
 body .ui-map-control,body .ui-map-tools .ds-select-trigger {background:var(--surface-dialog-solid);}
 body .ui-map-control {font-size:24px;}
+/* Plain SVG control glyphs (plus, minus, close, arrows, refresh, help) share one size and colour. */
+.ui-control-glyph {display:block;flex:none;width:20px;height:20px;color:currentColor;}
+body .ui-map-control .ui-control-glyph {width:22px;height:22px;}
 body .ui-map-tools .ds-select-trigger {font-size:13px;}
 .ui-choice-list {border:1px solid var(--border-soft);border-radius:var(--radius-sm);background:var(--surface-control);overflow:hidden;}
 /* Checkbox / radio with its caption: one row, 44px touch target, padding from the shared scale. */

@@ -5,7 +5,7 @@ import {flaskHtml} from './inventory.js';
 import {itemArtKey,itemArtSources} from './art/items-art.js';
 import {normalizeLootKind} from './loot-renderer.js';
 import {l2CategoryIcon} from './art/l2-icon-art.js';
-import {icon} from './icons.js';
+import {icon,controlIcon} from './icons.js';
 import {costumeIconHtml} from './costume-preview.js';
 
 // Аукцион чата: лоты других игроков, продажа своих вещей и список своих лотов.
@@ -93,15 +93,15 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement,
       <div class="auction-filter-field"><span>Вид</span>${dropdown('type','Вид предмета',type,Object.entries(TYPES))}</div>
       <div class="auction-filter-field"><span>Ранг</span>${dropdown('grade','Ранг предмета',grade,[['','Все ранги'],...grades.map(id=>[id,id==='noGrade'?'Без ранга':id])])}</div>
       <label class="auction-filter-field auction-keywords"><span>Поиск предмета</span><input type="search" placeholder="Название предмета…" maxlength="40" data-auction-search value="${escapeHtml(search)}"></label>
-      <div class="auction-filter-actions"><button type="submit">${icon('search')} Поиск</button><button type="button" data-auction-reset>${icon('rotate-ccw')} Сброс</button></div>
+      <div class="auction-filter-actions"><button type="submit">${icon('search')} Поиск</button><button type="button" data-auction-reset>${controlIcon('rotate-ccw')} Сброс</button></div>
     </form>
     <div class="auction-market">
       <div class="auction-results"><div class="auction-list-title"><span>Список предметов <b>${matches.length}</b></span>${dropdown('sort','Сортировка',sort,Object.entries(SORT_LABELS))}</div>
       <table class="auction-table"><thead><tr><th>Предмет</th><th class="auction-grade">Ранг</th><th class="auction-count">Кол-во</th><th>Цена</th></tr></thead><tbody>${matches.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE).map(lotHtml).join('')}</tbody></table>
       ${!matches.length?'<p class="auction-empty">Лотов не найдено.</p>':''}
-      ${pages>1?`<div class="auction-pagination"><button type="button" aria-label="Предыдущая страница" data-auction-page="${page-1}" ${page===1?'disabled':''}>${icon('chevron-left')}</button><span>${page} / ${pages}</span><button type="button" aria-label="Следующая страница" data-auction-page="${page+1}" ${page===pages?'disabled':''}>${icon('chevron-right')}</button></div>`:''}
+      ${pages>1?`<div class="auction-pagination"><button type="button" aria-label="Предыдущая страница" data-auction-page="${page-1}" ${page===1?'disabled':''}>${controlIcon('chevron-left')}</button><span>${page} / ${pages}</span><button type="button" aria-label="Следующая страница" data-auction-page="${page+1}" ${page===pages?'disabled':''}>${controlIcon('chevron-right')}</button></div>`:''}
       ${active?`<div class="auction-detail"><strong>${escapeHtml(active.title)}</strong>${detailsHtml(active)}<small>Ещё ${active.hoursLeft} ч.</small></div>`:''}
-      <div class="auction-actions"><button type="button" class="ui-button ui-icon-button" data-auction-refresh aria-label="Обновить список" title="Обновить список">${icon('rotate-ccw')}</button>${active?active.mine?`<button type="button" data-auction-cancel="${escapeHtml(active.id)}">Снять с продажи</button>`:`<button type="button" class="ui-button primary" data-auction-buy="${escapeHtml(active.id)}" ${state.gold<active.price||pending?'disabled':''}>${materialIcon('gold')} Купить · ${formatNumber(active.price)}</button>`:'<p class="auction-hint">Выбери лот в списке, чтобы купить его.</p>'}</div></div></div>`;
+      <div class="auction-actions"><button type="button" class="ui-button ui-icon-button" data-auction-refresh aria-label="Обновить список" title="Обновить список">${controlIcon('rotate-ccw')}</button>${active?active.mine?`<button type="button" data-auction-cancel="${escapeHtml(active.id)}">Снять с продажи</button>`:`<button type="button" class="ui-button primary" data-auction-buy="${escapeHtml(active.id)}" ${state.gold<active.price||pending?'disabled':''}>${materialIcon('gold')} Купить · ${formatNumber(active.price)}</button>`:'<p class="auction-hint">Выбери лот в списке, чтобы купить его.</p>'}</div></div></div>`;
   }
 
   function sellTab() {
@@ -132,7 +132,7 @@ export async function openAuctionGame({ api, renderState, haptic, statusElement,
       </form>
       <section class="auction-registered"><h3>Предметы торговли</h3><div class="auction-list-title">Список предметов (${state.mine.length}/${state.maxLots})</div>
         <table class="auction-table auction-registered-table"><thead><tr><th>Предмет</th><th class="auction-grade">Ранг</th><th class="auction-count">Кол-во</th><th>Цена</th><th>До конца</th></tr></thead><tbody>${state.mine.slice((sellPage-1)*6,sellPage*6).map(lot=>`<tr><td><span class="auction-registered-item"><span class="auction-art">${auctionArt(lot)}</span><span>${escapeHtml(lot.title)}</span></span></td><td class="auction-grade">${escapeHtml(lot.grade==='noGrade'?'—':lot.grade||'—')}</td><td class="auction-count">${formatNumber(lot.count)}</td><td class="auction-price">${formatNumber(lot.price)}</td><td>${lot.hoursLeft} ч.</td></tr>`).join('')||'<tr><td colspan="5" class="auction-empty">Активных лотов нет.</td></tr>'}</tbody></table>
-        ${pages>1?`<div class="auction-pagination"><button type="button" data-sell-page="${sellPage-1}" aria-label="Предыдущая страница" ${sellPage===1?'disabled':''}>${icon('chevron-left')}</button><span>${sellPage} / ${pages}</span><button type="button" data-sell-page="${sellPage+1}" aria-label="Следующая страница" ${sellPage===pages?'disabled':''}>${icon('chevron-right')}</button></div>`:''}
+        ${pages>1?`<div class="auction-pagination"><button type="button" data-sell-page="${sellPage-1}" aria-label="Предыдущая страница" ${sellPage===1?'disabled':''}>${controlIcon('chevron-left')}</button><span>${sellPage} / ${pages}</span><button type="button" data-sell-page="${sellPage+1}" aria-label="Следующая страница" ${sellPage===pages?'disabled':''}>${controlIcon('chevron-right')}</button></div>`:''}
         <div class="auction-actions"><button type="button" data-auction-tab="lots">Отмена</button></div>
       </section>
     </div>`;

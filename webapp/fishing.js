@@ -2,7 +2,7 @@ import {dialogHeading} from './dialog-heading.js';
 import {l2SkillIcon} from './art/l2-extra-art.js';
 import { materialIcon } from './material-icons.js';
 import { escapeHtml } from './escape-html.js';
-import {icon} from './icons.js';
+import {icon,controlIcon} from './icons.js';
 
 // Fishing: no minigame. Cast by hand or switch on auto fishing; a daily number of casts limits both. The catch is
 // fish, which turn into oils, scales and bones (the dye ingredients) when opened.
@@ -42,7 +42,7 @@ export async function openFishingGame({ api, renderState, haptic, statusElement 
       <header class="ds-head">
         <button class="overlay-close ds-round" type="button" aria-label="Закрыть">←</button>
         <h2>Рыбалка</h2>
-        <button class="ds-round" type="button" data-fishing-info aria-label="Где взять удочку и соски">${icon('circle-help')}</button>
+        <button class="ds-round" type="button" data-fishing-info aria-label="Где взять удочку и соски">${controlIcon('circle-help')}</button>
       </header>
       <div data-content></div>
       <div class="boss-feedback" data-feedback aria-live="polite"></div>

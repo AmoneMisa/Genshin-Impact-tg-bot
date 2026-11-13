@@ -1,6 +1,6 @@
 import {polishIcon} from './art/polish-icon-art.js';
 import {dialogHeading} from './dialog-heading.js';
-import {icon} from './icons.js';
+import {icon,controlIcon} from './icons.js';
 import {confirmDialog} from './confirm-dialog.js';
 import {openDetailDialog} from './detail-dialog.js';
 import {hallAuctionView} from './clan-hall-auction-view.js';
@@ -357,7 +357,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     return `
       ${bannerHtml(clan)}
       <nav class="clan-tabs">${TABS.map(([id, label]) => `<button type="button" data-clan-tab="${id}" class="${main === id ? 'active' : ''}">${label}</button>`).join('')}</nav>
-      ${main ? '' : `<button type="button" class="ui-button ui-compact clan-backlink" data-clan-tab="overview">‹ Обзор</button>`}
+      ${main ? '' : `<button type="button" class="ui-button ui-compact clan-backlink" data-clan-tab="overview">${controlIcon('arrow-left')} Обзор</button>`}
       <div class="clan-tab-body">
       ${tab === 'warehouse' ? warehouseHtml(clan)
         : tab === 'quiz' ? quizHtml()

@@ -1,5 +1,5 @@
 import {escapeHtml as esc} from './escape-html.js';
-import {icon} from './icons.js';
+import {icon,controlIcon} from './icons.js';
 import {materialIcon} from './material-icons.js';
 import {loginItemArt} from './art/login-item-art.js';
 import {createGamePopup} from './game-popup.js';
@@ -27,7 +27,7 @@ export async function openLoginRewards({api,renderState,haptic=()=>{},onClose,in
     function detail() {
         const coupon=state.coupons.find(c=>c.key===selectedKey);
         if(coupon){const required=coupon.choices.length>0;
-            return `<section class="login-detail"><button type="button" class="login-back" data-login-back>← Купоны</button><h3>${esc(coupon.name)}</h3><p>${esc(coupon.description)}</p><small>Количество · ${number(coupon.count)}</small>
+            return `<section class="login-detail"><button type="button" class="login-back" data-login-back>${controlIcon('arrow-left')} Купоны</button><h3>${esc(coupon.name)}</h3><p>${esc(coupon.description)}</p><small>Количество · ${number(coupon.count)}</small>
                 ${coupon.needLevel>1?`<p>Нужен уровень ${coupon.needLevel}</p>`:''}
                 ${required?`<label class="login-choice">Выберите награду<select data-login-choice><option value="">Выбрать…</option>${coupon.choices.map(c=>`<option value="${esc(c.id)}">${esc(c.name)} · ${number(c.count)} шт.</option>`).join('')}</select></label><p class="login-selected-reward" data-login-choice-hint></p>`:''}
                 ${coupon.pendingReward?`<p>Подарок сохранён до освобождения места.</p>${rowsHtml(coupon.pendingReward)}`:''}
@@ -35,7 +35,7 @@ export async function openLoginRewards({api,renderState,haptic=()=>{},onClose,in
                 ${coupon.kind==='box'?boxHtml():''}</section>`;
         }
         const day=state.days.find(d=>d.day===selectedDay);
-        if(day)return `<section class="login-detail"><button type="button" class="login-back" data-login-back>← Календарь</button><h3>Награда ${day.day}</h3>${rowsHtml(day.rewards)}${day.rewards.some(r=>r.key?.includes('_box_'))?boxHtml():''}${day.status==='today'&&state.canClaim?'<button type="button" class="login-primary" data-login-claim>Получить награду</button>':`<p class="login-status" role="status">${day.status==='claimed'?'Награда получена.':day.status==='missed'?'День пропущен: его закрывает тикет пропущенного дня.':day.status==='today'?'Сегодняшняя награда уже получена.':'Откроется после предыдущих наград.'}</p>`}</section>`;
+        if(day)return `<section class="login-detail"><button type="button" class="login-back" data-login-back>${controlIcon('arrow-left')} Календарь</button><h3>Награда ${day.day}</h3>${rowsHtml(day.rewards)}${day.rewards.some(r=>r.key?.includes('_box_'))?boxHtml():''}${day.status==='today'&&state.canClaim?'<button type="button" class="login-primary" data-login-claim>Получить награду</button>':`<p class="login-status" role="status">${day.status==='claimed'?'Награда получена.':day.status==='missed'?'День пропущен: его закрывает тикет пропущенного дня.':day.status==='today'?'Сегодняшняя награда уже получена.':'Откроется после предыдущих наград.'}</p>`}</section>`;
         return '';
     }
     function boxHtml(){const pool=state.coupons.find(c=>c.key===selectedKey)?.boxPool||state.days.find(d=>d.day===selectedDay)?.boxPool||state.boxPool;return `<details class="login-box-pool"><summary>Возможные подарки</summary><p>Один случайный подарок. Вероятности зависят от грейда коробки.</p><ul>${pool.map(row=>`<li><span>${esc(row.name)}</span><small>${row.chance}%</small></li>`).join('')}</ul></details>`;}

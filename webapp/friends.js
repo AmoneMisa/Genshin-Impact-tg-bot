@@ -1,6 +1,6 @@
 import { escapeHtml } from './escape-html.js';
 import { dialogHeading } from './dialog-heading.js';
-import { icon } from './icons.js';
+import { icon, controlIcon } from './icons.js';
 import { confirmDialog } from './confirm-dialog.js';
 // Friends / clanmates (prototype "Друзья / Соклановцы") and the public player
 // card ("Чужой персонаж"): portrait, clan, gear on the paper doll, stats and a
@@ -186,7 +186,7 @@ export async function openFriendsGame({ api, renderState, haptic, statusElement 
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
     <div class="overlay-panel game-dialog-panel fr-panel">
-      ${dialogHeading('Друзья', {leadingAction: {action: 'refresh', label: 'Обновить список', icon: icon('rotate-ccw')}}).replace('data-dismiss', 'class="overlay-close" data-dismiss')}
+      ${dialogHeading('Друзья', {leadingAction: {action: 'refresh', label: 'Обновить список', icon: controlIcon('rotate-ccw')}}).replace('data-dismiss', 'class="overlay-close" data-dismiss')}
       <nav class="fr-tabs" data-fr-tabs></nav>
       <div data-fr-body></div>
       <div class="fr-feedback" data-fr-feedback aria-live="polite"></div>
@@ -226,7 +226,7 @@ export async function openFriendsGame({ api, renderState, haptic, statusElement 
     }
     return `
       <div class="fr-list">${social.friends.length ? social.friends.map(person => friendRowHtml(person)).join('') : '<p class="fr-empty">Пока никого. Добавь игроков из этого чата.</p>'}</div>
-      <button type="button" class="fr-btn gold" data-fr-pick>＋ Добавить друга</button>`;
+      <button type="button" class="fr-btn gold" data-fr-pick>${controlIcon('plus')} Добавить друга</button>`;
   }
 
   function render() {

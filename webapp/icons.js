@@ -15,7 +15,8 @@ export function controlIcon(name){
  if(name==='plus'||name==='minus')return `<svg class="ui-control-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14${name==='plus'?'M12 5v14':''}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
  if(name==='system-chat')return '<svg class="ui-control-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H9l-5 4V4Zm4 4h8M8 12h6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
  if(name==='minimize')return '<svg class="ui-control-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h6V3M21 15h-6v6M9 9 3 3m12 12 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
- const paths={check:'M4 12l5 5L20 5','chevron-left':'M15 5l-7 7 7 7','chevron-right':'M9 5l7 7-7 7','chevron-up':'M5 15l7-7 7 7','chevron-down':'M5 9l7 7 7-7','arrow-up':'M12 20V4M5 11l7-7 7 7','arrow-left-right':'M4 7h16m-5-5 5 5-5 5M20 17H4m5-5-5 5 5 5',anvil:'M3 7h18l-5 5h-3v5h4v3H7v-3h4v-5H7L3 7Z'};
+ if(name==='circle-help')return '<svg class="ui-control-glyph" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.6.3-.9.8-.9 1.5v.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1.2" fill="currentColor"/></svg>';
+ const paths={check:'M4 12l5 5L20 5',x:'M6 6l12 12M18 6 6 18','arrow-left':'M20 12H4m7-7-7 7 7 7','arrow-right':'M4 12h16m-7-7 7 7-7 7',refresh:'M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5','rotate-ccw':'M4 12a8 8 0 1 0 2.3-5.7M4 4v5h5','chevron-left':'M15 5l-7 7 7 7','chevron-right':'M9 5l7 7-7 7','chevron-up':'M5 15l7-7 7 7','chevron-down':'M5 9l7 7 7-7','arrow-up':'M12 20V4M5 11l7-7 7 7','arrow-left-right':'M4 7h16m-5-5 5 5-5 5M20 17H4m5-5-5 5 5 5',anvil:'M3 7h18l-5 5h-3v5h4v3H7v-3h4v-5H7L3 7Z'};
  return paths[name]?`<svg class="ui-control-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="${paths[name]}" fill="${name==='anvil'?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`:icon(name);
 }
 
@@ -51,13 +52,14 @@ export function stripEmoji(text) {
 function convertTextNode(node, doc) {
   if (node.parentElement?.closest('.no-emoji-icons,[contenteditable="true"]')) return;
   const text = node.nodeValue;
-  const actions={'←':'chevron-left','→':'chevron-right','?':'circle-help','×':'x','+':'plus','−':'minus','-':'minus'};
+  const actions={'←':'arrow-left','→':'arrow-right','‹':'chevron-left','›':'chevron-right','?':'circle-help','×':'x','✕':'x','✖':'x','+':'plus','＋':'plus','−':'minus','-':'minus','✓':'check','✔':'check','↻':'refresh','⟳':'refresh','↺':'rotate-ccw'};
   const button=node.parentElement?.closest('button');
   if (button?.classList.contains('overlay-close')) return;
   const action=button && actions[button.textContent.trim()];
   if(action && text.trim()===button.textContent.trim()) {
-    if(!button.hasAttribute('aria-label'))button.setAttribute('aria-label',button.title || ({'chevron-left':'Назад','chevron-right':'Далее','circle-help':'Справка',x:'Закрыть',plus:'Увеличить',minus:'Уменьшить'}[action]));
-    node.replaceWith(iconNode(action,doc));
+    if(!button.hasAttribute('aria-label'))button.setAttribute('aria-label',button.title || ({'arrow-left':'Назад','arrow-right':'Далее','chevron-left':'Назад','chevron-right':'Далее','circle-help':'Справка',x:'Закрыть',plus:'Увеличить',minus:'Уменьшить',check:'Готово',refresh:'Обновить','rotate-ccw':'Обновить'}[action]));
+    const glyph=doc.createElement('template');glyph.innerHTML=controlIcon(action);
+    node.replaceWith(glyph.content.firstElementChild);
     return;
   }
   EMOJI_RX.lastIndex = 0;
