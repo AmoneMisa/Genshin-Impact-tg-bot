@@ -94,7 +94,7 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
  await page.locator('.atlas-combat:not([hidden])').waitFor();
  assert.ok(s.game.hunt.field.native.journey?.native.remaining>0,'native population streams before the road endpoint');
  if(process.env.NATIVE_RESUME){
-  await page.locator('[data-movement]').click();await page.locator('[data-native-stop]').click();
+  await page.locator('[data-walk-stop]').click();
   const stopped=worldState(s,now).nativeField.point;assert.equal(s.game.hunt.field.native.journey,undefined);
   await page.locator('[data-movement]').click();await page.getByRole('combobox',{name:'Разделы телепорта',exact:true}).click();await page.getByRole('option',{name:'Охота',exact:true}).click();
   await page.locator('[data-quick-go]').filter({hasText:zoneName}).click();assert.equal(await page.locator('[data-native-walk]').isEnabled(),true);
@@ -235,7 +235,7 @@ try{for(const {width,noCanvas=false,noImages=false} of cases){
    const visible=await page.locator('canvas').evaluate((n,p)=>document.elementFromPoint(p.x,p.y)===n,{x:box.x+box.width/2+(candidate.x-before.x)*box.width/14000,y:box.y+box.height/2+(candidate.y-before.y)*box.width/14000});
    if(visible&&findNativePath(before,candidate,{allowed:nativeGroundAllowed,maxNodes:6000,stride:2,reversible:true,heuristicWeight:2}).ok){goal=candidate;break;}
   }
-  assert.ok(goal);const [moveResponse]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('canvas').click({position:{x:box.width/2+(goal.x-before.x)*box.width/14000,y:box.height/2+(goal.y-before.y)*box.width/14000}})]);const movePayload=await moveResponse.json();assert.equal(moveResponse.status(),200,JSON.stringify({reason:movePayload.reason,visited:movePayload.visited,goal,requested:moveResponse.request().postDataJSON().point,from:before}));now+=3000;
+  assert.ok(goal);const [moveResponse]=await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('canvas').click({position:{x:box.width/2+(goal.x-before.x)*box.width/14000,y:box.height/2+(goal.y-before.y)*box.width/14000}}).then(()=>page.locator('[data-walk-here]').click())]);const movePayload=await moveResponse.json();assert.equal(moveResponse.status(),200,JSON.stringify({reason:movePayload.reason,visited:movePayload.visited,goal,requested:moveResponse.request().postDataJSON().point,from:before}));now+=3000;
  }
  await page.waitForTimeout(2100);assert.equal(s.game.hunt.kills,1);assert.equal(await page.locator('.hunt-overlay').count(),0);
  const after=worldState(s,now).player.worldPoint;assert.ok(Math.hypot(after.x-before.x,after.y-before.y)>0);

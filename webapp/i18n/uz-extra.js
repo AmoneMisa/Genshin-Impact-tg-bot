@@ -1418,4 +1418,11 @@ export default {
   "Условия": "Shartlar",
   "Участник": "A'zo",
   "Хочет в друзья": "Do'st bo'lishni xohlaydi",
+  "· нажмите на карту, чтобы сменить точку": "· nuqtani o'zgartirish uchun xaritaga bosing",
+  "· нажмите на свободное место карты, чтобы выбрать точку": "· nuqtani tanlash uchun xaritaning bo'sh joyiga bosing",
+  "Галате": "Galate",
+  "Идти сюда": "Bu yerga borish",
+  "Касиан": "Kasian",
+  "Получено:": "Olindi:",
+  "Точка выбрана. Нажмите «Идти сюда» или выберите другое место.": "Nuqta tanlandi. «Bu yerga borish» tugmasini bosing yoki boshqa joyni tanlang.",
 };

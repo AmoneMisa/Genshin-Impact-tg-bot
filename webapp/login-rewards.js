@@ -64,7 +64,7 @@ export async function openLoginRewards({api,renderState,haptic=()=>{},onClose,in
     async function act(body) {
         if(pending)return;pending=true;content.querySelectorAll('button,select').forEach(e=>e.disabled=true);feedback.textContent='';
         try{const result=await api('/api/login-rewards/action',{method:'POST',body:JSON.stringify(['claim','fill'].includes(body.action)?{...body,month:state.month,day:state.day}:body)});state=result.loginRewards;selectedKey=null;selectedDay=null;
-            if(body.action==='claim')tab='coupons';feedback.textContent=result.rewards.map(r=>`${r.name} ×${number(r.count)}`).join(' · ');if(result.state)renderState?.(result.state);haptic('light');
+            if(body.action==='claim')tab='coupons';feedback.textContent=result.rewards.map(r=>`${r.name} ×${number(r.count)}`).join(' · ');if(result.state)renderState?.(result.state);window.dispatchEvent(new Event('game:badges-stale'));haptic('light');
         }catch(error){if(error.payload?.loginRewards)state=error.payload.loginRewards;feedback.textContent=REASONS[error.payload?.reason]||error.message;}
         finally{pending=false;if(overlay.isConnected)render();}
     }

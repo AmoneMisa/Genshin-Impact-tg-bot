@@ -59,7 +59,7 @@ try{for(const reverse of [false,true])for(const {width,noCanvas=false} of [{widt
  now=ferryDock(originPort,now).dockAt+1000;await live(p=>atShore(p,shores.routes[originPort].to));
  await menu();await action('board');const trip={...s.game.world.walkHome};
  await page.waitForFunction(()=>document.querySelector('.atlas-status')?.textContent.includes('Ожидание отправления'));
- await menu();assert.equal(await page.locator('[data-native-stop]').count(),0);assert.equal(await page.locator('[data-ferry-action="leave"]').isEnabled(),true);
+ await menu();assert.equal(await page.locator('[data-walk-stop]:visible').count(),0);assert.equal(await page.locator('[data-ferry-action="leave"]').isEnabled(),true);
  assert.equal(await page.locator('.atlas-popup').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);await page.keyboard.press('Escape');
  const countBefore=calls.length;if(!noCanvas){await page.locator('canvas').click({position:{x:10,y:10}});assert.equal(calls.length,countBefore);}
  now=trip.departureAt+12000;s.game=JSON.parse(JSON.stringify(s.game));await live(p=>p.transportPhase==='sailing');

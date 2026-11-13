@@ -112,7 +112,7 @@ try{for(const {width,noCanvas=false} of configurations){
  assert.equal(await page.locator('.atlas-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  await page.screenshot({path:path.join(out,`native-route-${width}${noCanvas?'-fallback':''}.png`)});
  await page.locator('[data-movement]').click();
- await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_stop'),page.locator('[data-native-stop]').click()]);await page.waitForTimeout(100);
+ await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_stop'),page.locator('[data-walk-stop]').click()]);await page.waitForTimeout(100);
  assert.equal(s.game.world.mode,'native');assert.ok(s.game.world.nativePosition);
  if(!noCanvas){
   const from=s.game.world.nativePosition,box=await page.locator('canvas').boundingBox();
@@ -122,7 +122,7 @@ try{for(const {width,noCanvas=false} of configurations){
   for(const p of first.path)if(Math.hypot(p.x-from.x,p.y-from.y)<=6500)candidates.push([p.x-from.x,p.y-from.y]);
   const goal=candidates.map(([dx,dy])=>({x:from.x+dx,y:from.y+dy,z:from.z})).find(p=>{const x=box.width/2+(p.x-from.x)*box.width/14000,y=box.height/2+(p.y-from.y)*box.width/14000;return x>40&&x<box.width-40&&y>40&&y<box.height-40&&centres.every(n=>Math.hypot(p.x-n.x,p.y-n.y)*box.width/14000>30)&&findNativePath(from,p,{allowed:nativeGroundAllowed,maxNodes:6000,reversible:true}).ok;});
   assert.ok(goal,'a nearby verified click target exists');
-  try{await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('canvas').click({position:{x:box.width/2+(goal.x-from.x)*box.width/14000,y:box.height/2+(goal.y-from.y)*box.width/14000}})]);await page.waitForTimeout(100);}catch(error){await page.screenshot({path:path.join(out,`native-click-failure-${width}.png`)});console.error(JSON.stringify({from,goal,calls,errors,status:await page.locator('.atlas-status').textContent(),popup:await page.locator('.atlas-popup').textContent()}));throw error;}
+  try{await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('canvas').click({position:{x:box.width/2+(goal.x-from.x)*box.width/14000,y:box.height/2+(goal.y-from.y)*box.width/14000}}).then(()=>page.locator('[data-walk-here]').click())]);await page.waitForTimeout(100);}catch(error){await page.screenshot({path:path.join(out,`native-click-failure-${width}.png`)});console.error(JSON.stringify({from,goal,calls,errors,status:await page.locator('.atlas-status').textContent(),popup:await page.locator('.atlas-popup').textContent()}));throw error;}
   assert.ok(calls.some(c=>c.action==='native_move'),'background click submits a native walk');
   assert.equal(s.game.world.walkHome.location,null);
   finishNext=true;await page.waitForFunction(()=>/Выберите место на карте|Вы в /.test(document.querySelector('.atlas-status')?.textContent||''));
@@ -141,7 +141,7 @@ try{for(const {width,noCanvas=false} of configurations){
  await selectWalk(zoneName(secondId));assert.ok(s.game.world.nativeFields[firstId]);
  await page.locator('[data-movement]').click();finishNext=true;
  // The trip can finish on the server just before a stop request arrives.
- await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_stop'),page.locator('[data-native-stop]').click()]);
+ await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_stop'),page.locator('[data-walk-stop]').click()]);
  await page.waitForSelector('.hunt-ground');assert.equal(s.game.world.location,secondId);
  assert.equal(await page.locator('.hunt-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  await page.screenshot({path:path.join(out,`native-arrival-${width}${noCanvas?'-fallback':''}.png`)});

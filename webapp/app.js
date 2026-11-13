@@ -404,6 +404,8 @@ async function boot() {
 
 boot();
 window.setInterval(() => { if (!document.hidden) refreshBadges(); }, BADGE_REFRESH_MS);
+// Screens that change a counted state (mail, rewards) ask for fresh dots right away.
+window.addEventListener('game:badges-stale', () => refreshBadges());
 document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshBadges(); });
 
 installOverlayA11y();

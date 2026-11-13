@@ -79,8 +79,8 @@ try{for(const {width,noCanvas=false} of configurations){
  assert.equal(await page.locator('.atlas-panel').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  await page.screenshot({path:path.join(out,`town-road-${width}${noCanvas?'-fallback':''}.png`)});
  now+=Math.floor((s.game.world.walkHome.until-now)*.53);
- await page.locator('[data-movement]').click();
- await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_stop'),page.locator('[data-native-stop]').click()]);
+ // Stopping is a footer action next to the map; the movement menu no longer repeats it.
+ await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_stop'),page.locator('[data-walk-stop]').click()]);
  await page.waitForTimeout(100);assert.equal(s.game.world.mode,'native');
  const stop={...s.game.world.nativePosition};s.game=JSON.parse(JSON.stringify(s.game));
  const walk=await selectCity(destinationName);

@@ -106,9 +106,11 @@ export async function openMailGame({api,haptic,statusElement,renderState}){
   overlay.querySelector('.overlay-panel').classList.add('mail-panel');
   const content=overlay.querySelector('[data-mail-body]'),result=overlay.querySelector('[data-mail-result]');
   function notice(text,error=false){result.hidden=false;result.className=`feedback-result ${error?'error':'success'}`;result.textContent=text;if(statusElement)statusElement.textContent=text;}
+  // Claimed rewards reuse the attachment chips, so the notice shows the same currency art as the letter.
+  function rewardNotice(rewards){result.hidden=false;result.className='feedback-result success';result.innerHTML='Получено: '+rewardsHtml(rewards);if(statusElement)statusElement.textContent=result.textContent;}
   async function action(body){
     if(busy)return;busy=true;content.querySelectorAll('button').forEach(b=>b.disabled=true);
-    try{haptic?.('light');const payload=await api('/api/mail/action',{method:'POST',body:JSON.stringify(body)});mail=payload.mail;if(payload.state)renderState?.(payload.state);notice(payload.message||'Готово.');if(body.action==='send'||body.action==='delete'){compose=null;letter=null;}else if(letter)letter=mail.letters.find(l=>l.id===letter.id)||letter;}
+    try{haptic?.('light');const payload=await api('/api/mail/action',{method:'POST',body:JSON.stringify(body)});const claimed=body.action==='claim'&&letter?.rewards?.length?letter.rewards:null;mail=payload.mail;if(payload.state)renderState?.(payload.state);if(claimed)rewardNotice(claimed);else notice(payload.message||'Готово.');window.dispatchEvent(new Event('game:badges-stale'));if(body.action==='send'||body.action==='delete'){compose=null;letter=null;}else if(letter)letter=mail.letters.find(l=>l.id===letter.id)||letter;}
     catch(e){if(e.payload?.mail)mail=e.payload.mail;notice(e.payload?.reason==='costume_expired'?COSTUME_EXPIRED_MESSAGE:MAIL_ERRORS[e.payload?.reason]||e.message,true);}
     finally{busy=false;render();}
   }

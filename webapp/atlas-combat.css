@@ -1,5 +1,5 @@
-.atlas-combat{display:grid;flex:none;gap:var(--space-2);padding:var(--space-3);min-width:0;max-height:45dvh;overflow:auto}
-.atlas-combat[hidden]{display:none}
+.atlas-combat,.atlas-water{display:grid;flex:none;gap:var(--space-2);padding:var(--space-3);min-width:0;max-height:45dvh;overflow:auto}
+.atlas-combat[hidden],.atlas-water[hidden]{display:none}
 .atlas-combat-meters{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2);min-width:0}
 .atlas-combat-target{display:grid;grid-template-columns:minmax(0,1fr) minmax(110px,1fr);align-items:center;gap:var(--space-2)}
 .atlas-combat-target>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

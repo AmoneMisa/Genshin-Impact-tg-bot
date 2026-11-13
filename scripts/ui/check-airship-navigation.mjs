@@ -42,7 +42,7 @@ try{for(const reverse of [false,true])for(const {width,noCanvas=false} of [{widt
   await(await import('/world-map.js')).openWorldMap({api,haptic:()=>{},renderState:()=>{}});
  });
  if(!noCanvas)assert.match(await page.locator('.atlas-status').textContent(),/Ожидание отправления/);
- await page.locator('[data-movement]').click();assert.equal(await page.locator('[data-native-stop]').count(),0);
+ await page.locator('[data-movement]').click();assert.equal(await page.locator('[data-walk-stop]:visible').count(),0);
  assert.equal(await page.locator('.atlas-popup').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
  await page.keyboard.press('Escape');
  if(!noCanvas){await page.locator('canvas').click({position:{x:10,y:10}});assert.equal(calls.length,0);}

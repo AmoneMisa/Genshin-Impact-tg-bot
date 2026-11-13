@@ -68,7 +68,7 @@ try{for(const {width,noCanvas=false,noImages=false}of cases){
   const box=await page.locator('.atlas-stage canvas').boundingBox(),scale=box.width/14000,visible=initial.actors.slice(0,width<700?8:16);
   const candidates=[1000,2000,3000,4000,5000].flatMap(n=>[[n,0],[-n,0],[0,n],[0,-n]]).map(([dx,dy])=>({x:initial.point.x+dx,y:initial.point.y+dy,z:initial.point.z,px:box.width/2+dx*scale,py:box.height/2+dy*scale}));
   const point=candidates.find(p=>p.px>24&&p.px<box.width-24&&p.py>24&&p.py<box.height-24&&visible.every(a=>Math.hypot(a.x-p.x,a.y-p.y)*scale>34)&&findNativePath(initial.point,p,{allowed:nativeGroundAllowed,maxNodes:6000,reversible:true}).ok);assert.ok(point);
-  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('.atlas-stage canvas').click({position:{x:point.px,y:point.py}})]);
+  await Promise.all([page.waitForResponse(r=>r.url().endsWith('/api/world/action')&&r.request().postDataJSON()?.action==='native_move'),page.locator('.atlas-stage canvas').click({position:{x:point.px,y:point.py}}).then(()=>page.locator('[data-walk-here]').click())]);
  }
  await page.waitForTimeout(100);assert.ok(Math.hypot(worldState(s,now).nativeField.point.x-initial.point.x,worldState(s,now).nativeField.point.y-initial.point.y)>0);await same();
  const wounded=nativeFieldBuckets(s.game.hunt.field).flatMap(b=>b.mobs||[]).find(m=>m.currentHp>0),saved={id:wounded.instanceId,hp:Math.floor(wounded.hp/2)};wounded.currentHp=saved.hp;
