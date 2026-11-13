@@ -1,0 +1,41 @@
+# Example: the bot's own FreeLLMAPI proxy for horoscope texts. Copy next to docker-compose.yml as
+# docker-compose.override.yml (merge with an existing override), create freellmapi.env with
+# NODE_ENV=production, PORT=3001, FREEAPI_DB_PATH=/app/server/data/freellmapi.db and
+# ENCRYPTION_KEY=$(openssl rand -hex 32), then: docker compose up -d. Finish the first setup and add
+# provider keys in the dashboard; the bot picks up the unified key from the shared volume by itself.
+services:
+  bot:
+    ports: !override
+      - "127.0.0.1:8090:8090"
+    environment:
+      # The bot's own FreeLLMAPI proxy (service below), reached over the compose network.
+      FREE_LLM_API_BASE_URL: http://freellmapi:3001/v1
+      # The proxy writes its unified client key here after the first setup; the bot reads it from the shared volume.
+      FREE_LLM_API_KEY_FILE: /run/freellm/unified.key
+      FREE_LLM_MODEL: auto:fast
+    volumes:
+      - freellm-data:/run/freellm:ro
+
+  # Own FreeLLMAPI instance for the horoscope texts. Other projects on this host
+  # run their own instances; nothing is shared with them.
+  # Secrets (ENCRYPTION_KEY, provider API keys) live in freellmapi.env (chmod 600).
+  # Dashboard: ssh -L 3101:127.0.0.1:3101 root@whiteslove.me, then http://127.0.0.1:3101
+  freellmapi:
+    image: ghcr.io/tashfeenahmed/freellmapi:v0.9.0
+    restart: unless-stopped
+    env_file: freellmapi.env
+    ports:
+      - "127.0.0.1:3101:3001"
+    volumes:
+      - freellm-data:/app/server/data
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3001/api/ping').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  freellm-data:
+    labels:
+      com.genshin-bot.keep: "true"

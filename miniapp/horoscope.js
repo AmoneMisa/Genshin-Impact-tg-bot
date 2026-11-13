@@ -69,7 +69,8 @@ export function updateHoroscopeSettings(session, patch = {}) {
 
 export async function generateHoroscopeForMiniApp(session, { generate = generateShortHoroText, now = Date.now() } = {}) {
   const settings = ensureSettings(session);
-  const text = await generate(session);
+  // "One more" never repeats the previous prepared line while another one exists.
+  const text = await generate(session, { avoid: settings.prediction?.text || '' });
   settings.prediction = {text, generatedAt: now, sharedAt: null};
   return {
     ok: true,
@@ -83,7 +84,9 @@ export async function shareHoroscopeForMiniApp(session, { send, now = Date.now()
   const prediction = ensureSettings(session).prediction;
   if (!prediction?.text) return {ok: false, reason: 'no_prediction'};
   if (prediction.sharedAt) return {ok: false, reason: 'already_shared'};
-  await send(memberName(session) + ' · шуточный гороскоп\n' + prediction.text);
+  // The chat gets one heading and the sign line, not the personal greeting with a self-mention.
+  const line = String(prediction.text).split(/\n\s*\n/).at(-1).trim();
+  await send(memberName(session) + ' · шуточный гороскоп\n' + line);
   prediction.sharedAt = now;
   return {ok: true, horoscope: getHoroscopeState(session)};
 }

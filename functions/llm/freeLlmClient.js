@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+
 const DEFAULT_BASE_URL = 'http://127.0.0.1:3001/v1';
 const DEFAULT_MODEL = 'auto:fast';
 const DEFAULT_TIMEOUT_MS = 6500;
@@ -26,10 +28,25 @@ function normalizeLine(value, maxLength = 160) {
   return text;
 }
 
-function fallbackLine(fallbacks) {
+/** A random prepared line; `avoid` (the previous result) is skipped while another one exists. */
+function fallbackLine(fallbacks, avoid = '') {
   const list = Array.isArray(fallbacks) ? fallbacks.filter(Boolean) : [];
   if (!list.length) return 'Звёзды зависли на загрузке. Попробуй ещё раз чуть позже.';
-  return list[Math.floor(Math.random() * list.length)];
+  const fresh = list.filter(line => !String(avoid).includes(line));
+  const pool = fresh.length ? fresh : list;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+let missingKeyReported = false, fileKey = '';
+
+/** The proxy's own unified key file (FREE_LLM_API_KEY_FILE), read until it appears after the proxy's first setup. */
+function apiKeyFromEnv() {
+  if (process.env.FREE_LLM_API_KEY) return process.env.FREE_LLM_API_KEY;
+  const file = process.env.FREE_LLM_API_KEY_FILE;
+  if (!fileKey && file) {
+    try { fileKey = fs.readFileSync(file, 'utf8').trim(); } catch { /* not created yet */ }
+  }
+  return fileKey;
 }
 
 export async function generateFunnyLine({
@@ -38,9 +55,14 @@ export async function generateFunnyLine({
   maxLength = 160,
   fallbacks = [],
   temperature = 0.75,
+  avoid = '',
 } = {}) {
-  const apiKey = process.env.FREE_LLM_API_KEY;
-  if (!apiKey) return fallbackLine(fallbacks);
+  const apiKey = apiKeyFromEnv();
+  if (!apiKey) {
+    // Without the proxy key every text is a prepared line; say so once instead of failing silently.
+    if (!missingKeyReported) { missingKeyReported = true; console.warn('[freellmapi] no FREE_LLM_API_KEY or key file yet: funny lines use prepared fallbacks only'); }
+    return fallbackLine(fallbacks, avoid);
+  }
 
   const timeoutMs = Math.max(1000, Number(process.env.FREE_LLM_TIMEOUT_MS) || DEFAULT_TIMEOUT_MS);
   const model = process.env.FREE_LLM_MODEL || DEFAULT_MODEL;
@@ -76,7 +98,7 @@ export async function generateFunnyLine({
     return generated;
   } catch (error) {
     console.error('[freellmapi] generation failed:', error?.message || error);
-    return fallbackLine(fallbacks);
+    return fallbackLine(fallbacks, avoid);
   }
 }
 

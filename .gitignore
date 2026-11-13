@@ -27,3 +27,6 @@ api.access.log
 # local tool attachments
 /.codex-remote-attachments/
 /.tmp/
+
+# Secrets of the bot's own FreeLLMAPI proxy (encryption and provider keys)
+freellmapi.env
