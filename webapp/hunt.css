@@ -133,24 +133,15 @@
 .hunt-drop-group>summary{font:600 11px/1.4 system-ui;cursor:pointer;padding:4px 0;color:var(--muted,#b9ad94)}
 .hunt-loot-wait{font:11px/1.4 system-ui;opacity:.7;padding:8px 0}
 
-.party-panel{display:grid;gap:10px}
-.party-members{display:grid;gap:8px}
-.party-member{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center;padding:8px;border-radius:10px;background:rgba(0,0,0,.28)}
-.party-member-actions{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.party-member.me{outline:1px solid rgba(255,214,120,.45)}
-.party-member img{width:44px;height:44px;border-radius:8px;object-fit:cover}
-.party-member-body{flex:1;min-width:0;display:grid;gap:3px}
-.party-member-body small{opacity:.75}
-.party-invite,.party-candidate{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:6px 0}
-.party-invite span,.party-candidate span{flex:1;min-width:0}
+/* Party window: one row per member with compact CP/HP/MP; actions live in the member menu. */
+.party-panel .party-row{justify-content:flex-start}.party-row>img{flex:none;width:32px;height:32px;object-fit:cover}
+.party-panel .party-row.ui-choice-row>span.party-row-body{display:grid;gap:var(--space-1);flex:1 1 auto;min-width:0}
+.party-row-body strong{display:flex;align-items:center;gap:var(--space-1);overflow-wrap:anywhere}.party-row-body strong img{width:16px;height:16px;flex:none}
+.party-row.me{box-shadow:inset 2px 0 var(--gold-bright)}
+.party-invite,.party-candidate{display:flex;flex-wrap:wrap;justify-content:space-between;width:100%;padding:var(--space-2);font-size:14px}.party-candidate small{color:var(--muted);font-size:12px}
+.party-exit{margin-top:var(--space-3)}.party-feedback{margin:var(--space-2) 0 0}
 .party-actions{display:flex;gap:8px;flex-wrap:wrap}
 .party-note,.party-empty p{font:12px/1.5 system-ui;opacity:.85}
-.party-loot-modes{display:flex;gap:6px;flex-wrap:wrap;padding:6px 0}
-.party-panel .mmo-frame{display:block;min-width:0;margin:10px 0;}
-.party-panel .mmo-section-title{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
-.party-member .mat-icon{width:18px;height:18px;border-radius:0;object-fit:contain;}
-.party-member-body strong{overflow-wrap:anywhere;}
-.party-loot-modes .equipment-filter{display:flex;align-items:center;gap:4px;min-width:0;}
 
 .merchant-note{font:12px/1.5 system-ui;opacity:.8;margin:0 0 6px}
 .merchant-item .missing{color:#e07a6a}
@@ -162,16 +153,14 @@
 .merchant-row select,.merchant-row input{flex:1;min-width:0;padding:7px 9px;border-radius:8px;border:1px solid rgba(255,214,120,.35);background:rgba(0,0,0,.35);color:inherit}
 .convert-row{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center;padding:8px 0;border-top:1px solid rgba(255,255,255,.08)}
 .convert-row .equipment-action{grid-column:span 2}
-.tattoo-slots{display:grid;gap:6px;padding:6px 0}
+.tattoo-slots{margin-bottom:var(--space-2)}.tattoos-panel .tattoo-slot{border-radius:0;border-bottom:1px solid var(--border-soft);background:transparent}.tattoos-panel .tattoo-slot:last-child{border-bottom:0}
+.tattoos-panel .tattoo-dyes{margin-block:var(--space-2)}.tattoo-effect{margin:0}.tattoo-feedback{margin:var(--space-2) 0 0}
 .tattoo-slot{display:grid;gap:3px;padding:8px;border-radius:10px;background:rgba(0,0,0,.28)}
 .tattoo-slot.locked{opacity:.55}
 .tattoo-totals{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:6px 0}
 .tattoo-totals span{display:grid;text-align:center;padding:6px;border-radius:8px;background:rgba(0,0,0,.28)}
-.tattoo-totals .plus b,.tattoo-dye .plus{color:#8fd694}
-.tattoo-totals .minus b,.tattoo-dye .minus{color:#e07a6a}
-.tattoo-dyes{display:grid;gap:8px;padding:6px 0}
-.tattoo-dye{display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px;background:rgba(0,0,0,.28)}
-.tattoo-dye.poor{opacity:.7}
+.tattoo-totals .plus b,.tattoos-panel .plus{color:#8fd694}
+.tattoo-totals .minus b,.tattoos-panel .minus{color:#e07a6a}
 .tattoos-panel{min-width:0;scrollbar-width:thin;scrollbar-color:#9b7b43 #100d16}
 .tattoos-panel [data-content]{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}
 .tattoos-panel .mmo-frame{display:block;min-width:0;width:auto;margin:0;box-sizing:border-box}
@@ -182,12 +171,6 @@
 .tattoos-panel .tattoo-slot,.tattoos-panel .tattoo-totals>span{min-width:0;overflow-wrap:anywhere}
 .tattoos-panel .tattoo-slot small{line-height:1.5}
 .tattoos-panel .tattoo-totals small{font:11px/1.4 system-ui}
-.tattoos-panel .tattoo-dye{display:grid;grid-template-columns:40px minmax(0,1fr);min-width:0;align-items:start}
-.tattoos-panel .tattoo-dye .shop-icon{width:40px;min-width:0}
-.tattoos-panel .tattoo-dye .shop-price{grid-column:2;justify-self:start;max-width:100%;white-space:normal}
-.tattoos-panel .tattoo-dye .shop-item-copy{min-width:0;overflow-wrap:anywhere}
-.tattoos-panel .tattoo-dye h3{white-space:normal;font-size:14px}
-.tattoos-panel .tattoo-dye p{display:flex;flex-wrap:wrap;gap:6px}
 .tattoos-panel .ds-head{min-width:0;grid-template-columns:34px minmax(0,1fr) 34px;gap:8px}
 .tattoos-panel .ds-head h2{font-size:clamp(18px,5vw,24px);white-space:normal;overflow-wrap:anywhere}
 

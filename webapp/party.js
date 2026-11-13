@@ -3,6 +3,9 @@ import { bar, escapeHtml, formatNumber } from './boss-hud.js';
 import { icon } from './icons.js';
 import { classArtUrl } from './boss-stage.js';
 import {L2_UI_ART,l2IconHtml} from './art/l2-icon-art.js';
+import {installOverlayA11y} from './overlay-a11y.js';
+import {openDetailDialog} from './detail-dialog.js';
+import {confirmDialog} from './confirm-dialog.js';
 
 // Parties of up to nine players. Ordinary buffs require selecting each recipient.
 
@@ -22,24 +25,26 @@ const REASONS = {
 };
 
 export async function openPartyGame({ api, haptic, statusElement }) {
+  installOverlayA11y();
   let state = await api('/api/party');
-  let pending = false;
-  let feedback = '';
+  let pending = false, feedback = '', memberId = null, detail = null;
 
   const overlay = document.createElement('section');
-  overlay.className = 'game-overlay party-overlay';
+  overlay.className = 'game-overlay party-overlay character-overlay';
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
-    <div class="overlay-panel glass party-panel">
-      ${dialogHeading("Группа").replace('data-dismiss','class="overlay-close" data-dismiss')}
-      <div data-party-content></div>
-      <div class="boss-feedback" data-party-feedback aria-live="polite"></div>
+    <div class="overlay-panel game-dialog-panel l2-status-window character-panel party-panel">
+      ${dialogHeading('Группа').replace('data-dismiss', 'class="overlay-close" data-dismiss')}
+      <div class="character-scroll" data-party-content></div>
+      <p class="party-feedback" data-party-feedback role="status" hidden></p>
     </div>`;
   const content = overlay.querySelector('[data-party-content]');
   const feedbackNode = overlay.querySelector('[data-party-feedback]');
   let poll = 0;
+  const closeDetail = () => { memberId = null; detail?.close(); detail = null; };
   const close = () => {
     window.clearInterval(poll);
+    closeDetail();
     overlay.classList.add('closing');
     window.setTimeout(() => overlay.remove(), 180);
   };
@@ -51,59 +56,85 @@ export async function openPartyGame({ api, haptic, statusElement }) {
     random: ['Случайно', 'Каждый предмет получает случайный игрок группы.'],
     turn: ['По очереди', 'Предметы раздаются участникам по кругу.'],
   };
+  const lootIcon = mode => mode === 'turn' ? icon('rotate-cw') : l2IconHtml(L2_UI_ART['loot-' + mode]);
+  const section = (title, html, note = '') => `<section class="character-section"><h3>${escapeHtml(title)}${note ? ` <small>${escapeHtml(note)}</small>` : ''}</h3><div class="character-section-body">${html}</div></section>`;
+  const row = (label, value) => `<div class="character-row"><span>${escapeHtml(label)}</span><strong>${escapeHtml(String(value))}</strong></div>`;
+  const vitals = member => `<span class="ui-party-vitals" role="group" aria-label="CP ${Number(member.cp) || 0}, HP ${Number(member.hp) || 0}, MP ${Number(member.mp) || 0}">${['cp', 'hp', 'mp'].map(kind => bar(kind, member[kind] || 0, member['max' + kind[0].toUpperCase() + kind.slice(1)] || 1, { text: '', variant: 'l2' })).join('')}</span>`;
 
-  function memberHtml(member, amLeader) {
-    return `<article class="party-member ${member.me ? 'me' : ''}">
-      <img src="${classArtUrl(member.className, member.gender)}" alt="" width="44" height="44">
-      <div class="party-member-body">
-        <strong>${escapeHtml(member.name)}${member.leader ? ' '+l2IconHtml(L2_UI_ART.leader) : ''}</strong>
-        <small>${escapeHtml(member.classTitle)} · ${formatNumber(member.level)} ур.</small>
-        ${bar('cp', member.cp||0, member.maxCp||1, { label: 'CP' })}
-        ${bar('hp', member.hp, member.maxHp, { label: 'HP' })}
-        ${bar('mp', member.mp, member.maxMp, { label: 'MP' })}
-      </div>
-      ${amLeader && !member.me ? `<div class="party-member-actions"><button type="button" class="equipment-action" data-party-transfer="${escapeHtml(member.userId)}">Передать лидерство</button><button type="button" class="equipment-action party-kick" data-party-kick="${escapeHtml(member.userId)}">Исключить</button></div>` : ''}
-    </article>`;
+  // A member is one row; leadership and removal live in the selected member's menu.
+  function memberHtml(member) {
+    return `<button type="button" class="ui-button ui-choice-row compact party-row ${member.me ? 'me' : ''}" data-party-member="${escapeHtml(member.userId)}" aria-label="${escapeHtml(member.name)}${member.leader ? ' · Лидер' : ''}">
+      <img src="${classArtUrl(member.className, member.gender)}" alt="" width="32" height="32">
+      <span class="party-row-body"><strong>${escapeHtml(member.name)}${member.leader ? ' ' + l2IconHtml(L2_UI_ART.leader) : ''}</strong><small>${escapeHtml(member.classTitle)} · ${formatNumber(member.level)} ур.</small>${vitals(member)}</span>
+    </button>`;
+  }
+
+  function memberDetailHtml(member, party) {
+    const stats = row('Класс', `${member.classTitle} · ${formatNumber(member.level)} ур.`)
+      + row('CP', `${formatNumber(member.cp || 0)} / ${formatNumber(member.maxCp || 0)}`)
+      + row('HP', `${formatNumber(member.hp)} / ${formatNumber(member.maxHp)}`)
+      + row('MP', `${formatNumber(member.mp)} / ${formatNumber(member.maxMp)}`);
+    const actions = party.amLeader && !member.me
+      ? `<div class="ui-action-stack"><button type="button" class="ui-button" data-party-transfer="${escapeHtml(member.userId)}" ${pending ? 'disabled' : ''}>Передать лидерство</button><button type="button" class="ui-button" data-party-kick="${escapeHtml(member.userId)}" ${pending ? 'disabled' : ''}>Исключить из группы</button></div>` : '';
+    return `<div class="ui-stat-table">${stats}</div>${member.leader ? '<p class="character-empty">Лидер группы.</p>' : ''}${actions}`;
+  }
+
+  function showMember(id) {
+    const member = state.party?.members.find(m => String(m.userId) === String(id));
+    if (!member) { closeDetail(); return; }
+    memberId = member.userId;
+    if (detail?.open) { detail.update(member.name, memberDetailHtml(member, state.party)); return; }
+    detail = openDetailDialog({
+      owner: overlay, title: member.name, html: memberDetailHtml(member, state.party),
+      onAction: async button => {
+        if (button.dataset.partyTransfer) {
+          if (await confirmDialog({ owner: overlay, title: 'Передать лидерство', text: `Сделать лидером игрока ${member.name}?`, confirmLabel: 'Передать' })) act('transfer', { userId: button.dataset.partyTransfer });
+        }
+        if (button.dataset.partyKick) {
+          if (await confirmDialog({ owner: overlay, title: 'Исключить из группы', text: `Исключить игрока ${member.name} из группы?`, confirmLabel: 'Исключить' })) act('kick', { userId: button.dataset.partyKick });
+        }
+      },
+      onClose: () => { memberId = null; detail = null; },
+    });
   }
 
   function invitesHtml() {
     if (!state.invites.length) return '';
-    return `<section class="mmo-frame party-invites"><div class="mmo-section-title"><strong>Приглашения</strong><small>${state.invites.length}</small></div>${state.invites.map(invite => `
-      <div class="party-invite"><span>${escapeHtml(invite.fromName)} · ${invite.size} в группе</span>
-        <button type="button" class="equipment-action forge-action" data-party-accept="${escapeHtml(invite.partyId)}">Принять</button>
-        <button type="button" class="equipment-action" data-party-decline="${escapeHtml(invite.partyId)}">Отклонить</button></div>`).join('')}</section>`;
+    return section('Приглашения', state.invites.map(invite => `<div class="ui-inline-content party-invite"><span>${escapeHtml(invite.fromName)} · ${invite.size} в группе</span>
+      <span class="ui-control-row"><button type="button" class="ui-button primary" data-party-accept="${escapeHtml(invite.partyId)}">Принять</button><button type="button" class="ui-button" data-party-decline="${escapeHtml(invite.partyId)}">Отклонить</button></span></div>`).join(''), String(state.invites.length));
   }
 
+  // Candidates open on request; a row invites that player, an invited player shows a state.
   function candidatesHtml(party) {
-    if (!state.candidates.length) return party.amLeader ? '<p class="party-note">Некого приглашать: все игроки чата уже в группах.</p>' : '';
-    return `<section class="mmo-frame party-candidates"><div class="mmo-section-title"><strong>Пригласить</strong><small>${party.members.length} / ${state.max}</small></div>${state.candidates.map(candidate => `
-      <div class="party-candidate"><span>${escapeHtml(candidate.name)} · ${formatNumber(candidate.level)} ур.</span>
-        <button type="button" class="equipment-action" data-party-invite="${escapeHtml(candidate.userId)}" ${candidate.invited || party.members.length >= state.max ? 'disabled' : ''}>${candidate.invited ? 'Приглашён' : 'Позвать'}</button></div>`).join('')}</section>`;
+    if (!state.candidates.length) return '<p class="character-empty">Некого приглашать: все игроки чата уже в группах.</p>';
+    const full = party.members.length >= state.max;
+    return `<details class="ui-disclosure party-candidates"><summary>Пригласить игрока · ${party.members.length} / ${state.max}</summary>${full ? '<p class="character-empty">Группа заполнена.</p>' : ''}<div class="ui-choice-list">${state.candidates.map(candidate => candidate.invited || full
+      ? `<div class="ui-inline-content party-candidate"><span>${escapeHtml(candidate.name)} · ${formatNumber(candidate.level)} ур.</span><small>${candidate.invited ? 'Приглашён' : ''}</small></div>`
+      : `<button type="button" class="ui-button ui-choice-row compact" data-party-invite="${escapeHtml(candidate.userId)}"><span>${escapeHtml(candidate.name)} · ${formatNumber(candidate.level)} ур.<small>Пригласить в группу</small></span></button>`).join('')}</div></details>`;
   }
 
   function render() {
     const party = state.party;
-    let body;
+    const opened = content.querySelector('.party-candidates')?.open;
+    const scroll = content.scrollTop;
     if (!party) {
-      body = `${invitesHtml()}<section class="mmo-frame party-empty"><p>Ты не в группе. Создай группу до ${state.max} игроков: баффы накладываются вручную на выбранного участника. Стоимость MP не зависит от размера группы.</p>
-        <button type="button" class="ui-button primary equipment-action forge-action" data-party-action="create">Создать группу</button></section>`;
+      content.innerHTML = invitesHtml() + section('Группа', `<div class="party-empty"><p class="character-empty">Ты не в группе. Создай группу до ${state.max} игроков: баффы накладываются вручную на выбранного участника. Стоимость MP не зависит от размера группы.</p>
+        <button type="button" class="ui-button primary" data-party-action="create" ${pending ? 'disabled' : ''}>Создать группу</button></div>`);
     } else {
-      body = `${invitesHtml()}<section class="mmo-frame party-roster"><div class="mmo-section-title"><strong>Состав</strong><small>${party.members.length} / ${state.max}</small></div>
-          <div class="party-members">${party.members.map(member => memberHtml(member, party.amLeader)).join('')}</div></section>
-        <section class="mmo-frame party-loot"><div class="mmo-section-title"><strong>Добыча</strong><small>адена делится поровну</small></div>
-          ${party.amLeader
-            ? `<div class="party-loot-modes">${state.lootModes.map(mode => `<button type="button" class="equipment-filter ${party.loot === mode ? 'active' : ''}" data-party-loot="${mode}">${mode==='turn'?icon('rotate-cw'):l2IconHtml(L2_UI_ART['loot-'+mode])} ${LOOT_LABELS[mode][0]}</button>`).join('')}</div>`
-            : `<strong>${party.loot==='turn'?icon('rotate-cw'):l2IconHtml(L2_UI_ART['loot-'+party.loot])} ${LOOT_LABELS[party.loot][0]}</strong>`}
-          <p class="party-note">${LOOT_LABELS[party.loot][1]}</p></section>
-        ${party.amLeader ? candidatesHtml(party) : ''}
-        <div class="party-actions">
-          <button type="button" class="ui-button primary equipment-action" data-party-action="leave">Покинуть группу</button>
-          ${party.amLeader ? '<button type="button" class="ui-button primary equipment-action" data-party-action="disband">Распустить</button>' : ''}
-        </div>`;
+      const loot = party.amLeader
+        ? `<div class="ui-control-row" role="group" aria-label="Распределение добычи">${state.lootModes.map(mode => `<button type="button" class="ui-button ${party.loot === mode ? 'active' : ''}" aria-pressed="${party.loot === mode}" data-party-loot="${mode}">${lootIcon(mode)} ${LOOT_LABELS[mode][0]}</button>`).join('')}</div>`
+        : `<div class="ui-stat-table">${row('Режим', LOOT_LABELS[party.loot][0])}</div>`;
+      content.innerHTML = invitesHtml()
+        + section('Состав', `<div class="ui-choice-list party-members">${party.members.map(memberHtml).join('')}</div>`, `${party.members.length} / ${state.max}`)
+        + section('Добыча', `${loot}<p class="character-empty">${LOOT_LABELS[party.loot][1]} Адена делится поровну.</p>`)
+        + (party.amLeader ? `<section class="character-section">${candidatesHtml(party)}</section>` : '')
+        + `<div class="ui-control-row party-exit"><button type="button" class="ui-button" data-party-action="leave">Покинуть группу</button>${party.amLeader ? '<button type="button" class="ui-button" data-party-action="disband">Распустить</button>' : ''}</div>`;
+      if (opened) content.querySelector('.party-candidates')?.setAttribute('open', '');
     }
-    content.innerHTML = body;
+    content.scrollTop = scroll;
+    feedbackNode.hidden = !feedback;
     feedbackNode.textContent = feedback;
-    bind();
+    if (memberId) showMember(memberId);
   }
 
   async function act(action, extra = {}) {
@@ -115,6 +146,7 @@ export async function openPartyGame({ api, haptic, statusElement }) {
       const payload = await api('/api/party/action', { method: 'POST', body: JSON.stringify({ action, ...extra }) });
       state = payload.party;
       feedback = '';
+      if (action === 'kick' || action === 'transfer') closeDetail();
     } catch (error) {
       if (error.payload?.party) state = error.payload.party;
       feedback = REASONS[error.payload?.reason] || error.message;
@@ -125,15 +157,18 @@ export async function openPartyGame({ api, haptic, statusElement }) {
     }
   }
 
-  function bind() {
-    content.querySelectorAll('[data-party-transfer]').forEach(button=>button.addEventListener('click',()=>act('transfer',{userId:button.dataset.partyTransfer})));
-    content.querySelectorAll('[data-party-action]').forEach(button => button.addEventListener('click', () => act(button.dataset.partyAction)));
-    content.querySelectorAll('[data-party-loot]').forEach(button => button.addEventListener('click', () => act('loot', { mode: button.dataset.partyLoot })));
-    content.querySelectorAll('[data-party-invite]').forEach(button => button.addEventListener('click', () => act('invite', { userId: button.dataset.partyInvite })));
-    content.querySelectorAll('[data-party-kick]').forEach(button => button.addEventListener('click', () => act('kick', { userId: button.dataset.partyKick })));
-    content.querySelectorAll('[data-party-accept]').forEach(button => button.addEventListener('click', () => act('accept', { partyId: button.dataset.partyAccept })));
-    content.querySelectorAll('[data-party-decline]').forEach(button => button.addEventListener('click', () => act('decline', { partyId: button.dataset.partyDecline })));
-  }
+  content.addEventListener('click', async event => {
+    const button = event.target.closest('button');
+    if (!button || button.disabled) return;
+    const data = button.dataset;
+    if (data.partyMember) { haptic('light'); showMember(data.partyMember); return; }
+    if (data.partyAction === 'disband' && !await confirmDialog({ owner: overlay, title: 'Распустить группу', text: 'Группа распадётся для всех участников.', confirmLabel: 'Распустить' })) return;
+    if (data.partyAction) act(data.partyAction);
+    if (data.partyLoot) act('loot', { mode: data.partyLoot });
+    if (data.partyInvite) act('invite', { userId: data.partyInvite });
+    if (data.partyAccept) act('accept', { partyId: data.partyAccept });
+    if (data.partyDecline) act('decline', { partyId: data.partyDecline });
+  });
 
   // Members' HP/MP and invitations change from outside: refresh while the screen is open.
   poll = window.setInterval(async () => {
@@ -143,6 +178,6 @@ export async function openPartyGame({ api, haptic, statusElement }) {
 
   document.body.append(overlay);
   render();
-  requestAnimationFrame(()=>overlay.classList.add('visible'));
+  requestAnimationFrame(() => overlay.classList.add('visible'));
   if (statusElement) statusElement.textContent = 'Группа';
 }

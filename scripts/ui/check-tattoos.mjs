@@ -36,12 +36,17 @@ try{for(const width of [320,390,540,1100])for(const className of ['warrior','pho
  await page.locator('[data-owned]').check();await page.waitForFunction(()=>document.querySelector('[data-owned]').checked);
  assert.ok(queries.at(-1).owned);
  await page.locator('[data-owned]').uncheck();await page.locator('[data-usable]').uncheck();
- await page.waitForFunction(()=>document.querySelectorAll('.tattoo-dye').length>0);
- const icons=await page.locator('.tattoo-dye .shop-icon').evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect();return Math.abs(r.width-r.height);}));
+ await page.waitForFunction(()=>document.querySelectorAll('.tattoo-dyes [data-dye]').length>0);
+ assert.equal(await page.locator('.tattoos-panel [data-grid-empty]').count(),0,'only real dyes in the grid');assert.equal(await page.locator('.tattoos-panel [data-apply]').count(),0,'applying starts from a chosen dye');
+ const icons=await page.locator('.tattoo-dyes [data-dye]').evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect();return Math.abs(r.width-r.height);}));
  assert.ok(icons.every(delta=>delta<1),'dye icon frames must be square');
  await checkOverflow();
  await page.locator('[data-stat=CON]').click();await page.waitForFunction(()=>document.querySelector('[data-stat=CON]').classList.contains('active'));
  assert.equal(queries.at(-1).stat,'CON');await checkOverflow();
+ await page.locator('.tattoo-dyes [data-dye]').first().click();await page.locator('dialog[open] .tattoo-compare').waitFor();
+ assert.ok(await page.locator('dialog[open] .tattoo-compare .character-row').count()>0,'before/after comparison');
+ assert.equal(await page.locator('dialog[open]').evaluate(n=>n.scrollWidth>n.clientWidth+1),false,'details fit');
+ await page.keyboard.press('Escape');assert.equal(await page.locator('dialog[open]').count(),0,'Escape closes details');
  if(width===390){
   await page.addStyleTag({content:'.tattoos-overlay{position:static!important;height:auto!important;max-height:none!important}.tattoos-panel{position:static!important;height:auto!important;max-height:none!important;overflow:visible!important}.overlay-backdrop{display:none!important}body{overflow:visible!important}'});
   await page.locator('.tattoos-panel img').evaluateAll(nodes=>Promise.all(nodes.map(n=>{n.loading='eager';return n.decode();})));

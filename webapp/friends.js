@@ -1,4 +1,7 @@
 import { escapeHtml } from './escape-html.js';
+import { dialogHeading } from './dialog-heading.js';
+import { icon } from './icons.js';
+import { confirmDialog } from './confirm-dialog.js';
 // Friends / clanmates (prototype "Друзья / Соклановцы") and the public player
 // card ("Чужой персонаж"): portrait, clan, gear on the paper doll, stats and a
 // "Написать" link into Telegram.
@@ -54,27 +57,18 @@ function openChat(person, haptic) {
   else window.open(url, '_blank', 'noopener');
 }
 
-export function friendRowHtml(person, { action = 'chat' } = {}) {
-  const link = chatLink(person);
+export function friendRowHtml(person, { action = 'open' } = {}) {
   const id = escapeHtml(person.userId);
-  const name = escapeHtml(person.name);
-  const button = action === 'request'
-    ? `<span class="fr-actions"><button type="button" class="fr-icon add" data-fr-accept="${id}" aria-label="Принять ${name}">✓</button><button type="button" class="fr-icon" data-fr-decline="${id}" aria-label="Отклонить ${name}">✕</button></span>`
-    : action === 'cancel'
-    ? `<button type="button" class="fr-icon" data-fr-cancel="${id}" aria-label="Отозвать заявку ${name}">↩</button>`
-    : action === 'add'
-    ? `<button type="button" class="fr-icon add" data-fr-add="${escapeHtml(person.userId)}" aria-label="Добавить ${escapeHtml(person.name)} в друзья">＋</button>`
-    : `<button type="button" class="fr-icon" data-fr-chat="${escapeHtml(person.userId)}" ${link ? '' : 'disabled'} aria-label="Написать ${escapeHtml(person.name)}">💬</button>`;
+  const state = action === 'add' ? 'Добавить в друзья' : action === 'request' ? 'Хочет в друзья' : action === 'cancel' ? 'Заявка отправлена' : '';
   return `
-    <article class="fr-row" data-fr-open="${escapeHtml(person.userId)}" role="button" tabindex="0">
+    <button type="button" class="fr-row" ${action === 'add' ? `data-fr-add="${id}"` : `data-fr-open="${id}"`}>
       <span class="fr-avatar ${person.online ? 'online' : ''}" style="--art:url('${portraitFor(person)}')"><i></i></span>
-      <div class="fr-copy">
+      <span class="fr-copy">
         <strong>${escapeHtml(person.name)}</strong>
         <small>Ур. ${formatNumber(person.level)}${person.classTitle ? ` · ${escapeHtml(person.classTitle)}` : ''}</small>
-        <em class="${person.online ? 'online' : ''}">${escapeHtml(person.text || '')}</em>
-      </div>
-      ${button}
-    </article>`;
+        <em class="${person.online ? 'online' : ''}">${escapeHtml(state || person.text || '')}</em>
+      </span>
+    </button>`;
 }
 
 export function statsHtml(stats = {}) {
@@ -94,12 +88,8 @@ export async function openPlayerCard({ api, renderState, haptic = () => {}, user
   overlay.className = 'game-overlay player-card-overlay';
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
-    <div class="overlay-panel fr-panel player-card-panel">
-      <header class="fr-head">
-        <button class="overlay-close fr-round" type="button" aria-label="Назад">←</button>
-        <h2>Игрок</h2>
-        <span class="fr-round" aria-hidden="true">👤</span>
-      </header>
+    <div class="overlay-panel game-dialog-panel fr-panel player-card-panel">
+      ${dialogHeading('Игрок').replace('data-dismiss', 'class="overlay-close" data-dismiss')}
       <div data-pc-body></div>
       <div class="fr-feedback" data-pc-feedback aria-live="polite"></div>
     </div>`;
@@ -128,7 +118,7 @@ export async function openPlayerCard({ api, renderState, haptic = () => {}, user
         ${card.canInviteClan?'<button type="button" class="fr-btn gold" data-pc-clan>Пригласить в клан</button>':''}
         ${card.canInviteParty?'<button type="button" class="fr-btn gold" data-pc-party>Пригласить в группу</button>':''}
         ${card.canDuel?'<button type="button" class="fr-btn ghost" data-pc-duel>Кинуть дуэль</button>':''}
-        <button type="button" class="fr-btn gold" data-pc-chat ${chatLink(card) ? '' : 'disabled'}>${chatLink(card) ? 'Написать' : 'Нет @username'}</button>
+        ${chatLink(card) ? '<button type="button" class="fr-btn gold" data-pc-chat>Написать</button>' : ''}
         <button type="button" class="fr-btn ${card.isFriend || card.requestState === 'outgoing' ? 'ghost' : 'blue'}" data-pc-friend>${friendLabel(card)}</button>
         ${card.requestState === 'incoming' ? '<button type="button" class="fr-btn ghost" data-pc-decline>Отклонить</button>' : ''}
       </div>`}`;
@@ -137,7 +127,10 @@ export async function openPlayerCard({ api, renderState, haptic = () => {}, user
     body.querySelector('[data-pc-clan]')?.addEventListener('click',()=>interact('/api/clan/activity',{action:'invite',targetId:card.userId},'Игрок приглашён в клан.'));
     body.querySelector('[data-pc-party]')?.addEventListener('click',()=>interact('/api/party/action',{action:'invite',userId:card.userId},'Приглашение в группу отправлено.'));
     body.querySelector('[data-pc-duel]')?.addEventListener('click',()=>interact('/api/clan/activity',{action:'pvp_fight',opponentId:card.userId},'Дуэль завершена.'));
-    body.querySelector('[data-pc-friend]')?.addEventListener('click', () => toggleFriend());
+    body.querySelector('[data-pc-friend]')?.addEventListener('click', async () => {
+      if (card.isFriend && !await confirmDialog({ owner: overlay, title: 'Удалить из друзей', text: `Удалить игрока ${card.name} из друзей?`, confirmLabel: 'Удалить' })) return;
+      toggleFriend();
+    });
     body.querySelector('[data-pc-decline]')?.addEventListener('click', () => toggleFriend('decline'));
   }
 
@@ -192,12 +185,8 @@ export async function openFriendsGame({ api, renderState, haptic, statusElement 
   overlay.className = 'game-overlay friends-overlay';
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
-    <div class="overlay-panel fr-panel">
-      <header class="fr-head">
-        <button class="overlay-close fr-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Друзья</h2>
-        <button class="fr-round" type="button" data-fr-refresh aria-label="Обновить">↻</button>
-      </header>
+    <div class="overlay-panel game-dialog-panel fr-panel">
+      ${dialogHeading('Друзья', {leadingAction: {action: 'refresh', label: 'Обновить список', icon: icon('rotate-ccw')}}).replace('data-dismiss', 'class="overlay-close" data-dismiss')}
       <nav class="fr-tabs" data-fr-tabs></nav>
       <div data-fr-body></div>
       <div class="fr-feedback" data-fr-feedback aria-live="polite"></div>
@@ -208,7 +197,7 @@ export async function openFriendsGame({ api, renderState, haptic, statusElement 
   const close = () => { overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
-  overlay.querySelector('[data-fr-refresh]').addEventListener('click', async () => { haptic('light'); social = await api('/api/social'); render(); });
+  overlay.querySelector('[data-heading-action="refresh"]').addEventListener('click', async () => { haptic('light'); social = await api('/api/social'); render(); });
 
   function findPerson(userId) {
     return [...social.friends, ...social.clanmates, ...social.candidates].find(person => person.userId === String(userId));
@@ -233,7 +222,7 @@ export async function openFriendsGame({ api, renderState, haptic, statusElement 
       if (!social.clanName) return '<p class="fr-empty">Ты пока не состоишь в клане.</p>';
       return `
         <p class="fr-hint">Клан «${escapeHtml(social.clanName)}» · в этом чате ${social.clanmates.length}</p>
-        <div class="fr-list">${social.clanmates.length ? social.clanmates.map(person => friendRowHtml(person, { action: person.isFriend ? 'chat' : 'add' })).join('') : '<p class="fr-empty">Соклановцев в этом чате нет.</p>'}</div>`;
+        <div class="fr-list">${social.clanmates.length ? social.clanmates.map(person => friendRowHtml(person)).join('') : '<p class="fr-empty">Соклановцев в этом чате нет.</p>'}</div>`;
     }
     return `
       <div class="fr-list">${social.friends.length ? social.friends.map(person => friendRowHtml(person)).join('') : '<p class="fr-empty">Пока никого. Добавь игроков из этого чата.</p>'}</div>
@@ -250,19 +239,8 @@ export async function openFriendsGame({ api, renderState, haptic, statusElement 
     tabs.querySelectorAll('[data-fr-tab]').forEach(button => button.addEventListener('click', () => { tab = button.dataset.frTab; picking = false; haptic('light'); render(); }));
     body.querySelector('[data-fr-pick]')?.addEventListener('click', () => { picking = true; haptic('light'); render(); });
     body.querySelector('[data-fr-pick-done]')?.addEventListener('click', () => { picking = false; render(); });
-    body.querySelectorAll('[data-fr-add]').forEach(button => button.addEventListener('click', event => { event.stopPropagation(); addFriend(button.dataset.frAdd, button); }));
-    for (const action of ['accept', 'decline', 'cancel']) {
-      body.querySelectorAll(`[data-fr-${action}]`).forEach(button => button.addEventListener('click', event => {
-        event.stopPropagation();
-        addFriend(button.getAttribute(`data-fr-${action}`), button, action);
-      }));
-    }
-    body.querySelectorAll('[data-fr-chat]').forEach(button => button.addEventListener('click', event => { event.stopPropagation(); openChat(findPerson(button.dataset.frChat), haptic); }));
-    body.querySelectorAll('[data-fr-open]').forEach(row => {
-      const open = () => openPlayerCard({ api, renderState, haptic, userId: row.dataset.frOpen, onChange: next => { social = next; render(); } });
-      row.addEventListener('click', open);
-      row.addEventListener('keydown', event => { if (event.key === 'Enter') open(); });
-    });
+    body.querySelectorAll('[data-fr-add]').forEach(row => row.addEventListener('click', () => addFriend(row.dataset.frAdd, row)));
+    body.querySelectorAll('[data-fr-open]').forEach(row => row.addEventListener('click', () => openPlayerCard({ api, renderState, haptic, userId: row.dataset.frOpen, onChange: next => { social = next; render(); } })));
   }
 
   async function addFriend(userId, button, action = 'add') {

@@ -7,10 +7,6 @@
   padding-top: 12px;
   color: #eee4cf;
 }
-.clan-head { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; }
-.clan-head h2 { margin: 0; text-align: center; font: 700 19px/1 var(--serif); color: #f3dca6; text-shadow: 0 2px 0 #000; }
-.clan-round { position: static; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--gold-dim); background: rgba(14, 11, 18, .85); color: #e9dcbc; font: 700 16px/1 var(--serif); }
-.clan-round[hidden] { visibility: hidden; display: grid; }
 .clan-panel [data-clan-content] { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
 
 .clan-hero { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center; }
@@ -37,7 +33,6 @@
 .clan-tabs button { min-height: 36px; padding: 0 4px; border: 0; border-right: 1px solid rgba(107, 83, 38, .45); background: transparent; color: rgba(238, 228, 207, .7); font: 600 12px/1 var(--serif); }
 .clan-tabs button:last-child { border-right: 0; }
 .clan-tabs button.active { color: #fbeccb; background: linear-gradient(180deg, #6a4f1f, #3a2a10); box-shadow: inset 0 1px 0 rgba(255, 236, 190, .3), inset 0 0 0 1px var(--gold); }
-.clan-backlink { justify-self: start; padding: 0; border: 0; background: none; color: var(--gold); font: 600 13px/1 var(--serif); }
 .clan-tab-body { display: grid; gap: 10px; animation: clan-in .3s ease both; }
 
 .clan-card, .clan-section, .clan-activity-group {
@@ -129,8 +124,6 @@
 .clan-banner.painted { padding: 0; height: 96px; border: 0; background: none; clip-path: none; box-shadow: none; animation: none; }
 .clan-banner.painted img { width: 100%; height: 100%; object-fit: contain; }
 
-.clan-head { grid-template-columns: 44px 1fr 44px; }
-.clan-round { width: 44px; height: 44px; }
 .clan-tabs button { min-height: 44px; }
 .clan-hall-art{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border:1px solid rgba(199,163,91,.45);border-radius:12px;margin:0 0 14px;box-sizing:border-box}
 .clan-hall-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
@@ -180,3 +173,9 @@
 @media(min-width:680px){.hall-management{grid-template-columns:155px minmax(0,1fr)}.hall-menu,.hall-summary{grid-template-columns:1fr}}
 @media(max-width:679px){.hall-emblem{display:flex;align-items:center;justify-content:space-between;gap:12px}.hall-menu{grid-template-columns:repeat(3,minmax(0,1fr))}.hall-summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;font-size:11px}}
 @media(max-width:360px){.clan-hall-settings{padding:12px}.hall-service{gap:8px;padding:12px 10px}.hall-service-body h4{font-size:13px}}
+/* Member rows open the member menu; role and contribution are read as text. */
+.clan-backlink{justify-self:start}
+.clan-overlay .clan-member-row{justify-content:flex-start}.clan-overlay .clan-member-row.ui-choice-row>span.clan-member-text{display:grid;gap:var(--space-1);flex:1 1 auto;min-width:0}.clan-member-text strong{overflow-wrap:anywhere}
+.clan-application-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-2);width:100%}
+/* The whole task row opens the tasks, like the warehouse card. */
+body .clan-overlay .overlay-panel button.clan-daily-link{width:100%;min-height:44px;padding:var(--space-2);border:0;border-radius:0;background:transparent;color:inherit;font:inherit;text-align:left;box-shadow:none}.clan-daily-link>b{margin-left:auto;color:var(--gold)}

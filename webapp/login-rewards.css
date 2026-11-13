@@ -12,3 +12,4 @@
 @media(max-width:360px){.login-panel{padding:14px!important}.login-grid{gap:4px}.login-day{height:66px}.login-day-number{left:4px}.login-day-item{right:3px;bottom:5px;width:27px;height:27px}.login-day-item img{width:25px;height:25px}}
 
 .login-ticket{margin-top:var(--space-3)}.login-ticket small{display:block;margin-top:var(--space-2)}.login-ticket img{width:28px;height:28px;object-fit:contain}
+.login-status{margin:var(--space-4) 0 0;padding:var(--space-3);border:1px solid var(--border-soft);color:var(--muted);font-size:13px;line-height:1.5;text-align:center}

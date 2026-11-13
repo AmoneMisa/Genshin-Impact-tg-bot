@@ -1,5 +1,8 @@
 import {polishIcon} from './art/polish-icon-art.js';
+import {dialogHeading} from './dialog-heading.js';
+import {icon} from './icons.js';
 import {confirmDialog} from './confirm-dialog.js';
+import {openDetailDialog} from './detail-dialog.js';
 import {hallAuctionView} from './clan-hall-auction-view.js';
 import {openWarehouseGame} from './warehouse.js';
 import {clanHallView} from './clan-hall-view.js';
@@ -137,12 +140,8 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
   overlay.className = 'game-overlay clan-overlay';
   overlay.innerHTML = `
     <div class="overlay-backdrop"></div>
-    <div class="overlay-panel glass clan-panel">
-      <header class="clan-head">
-        <button class="overlay-close clan-round" type="button" aria-label="Закрыть">←</button>
-        <h2>Клан</h2>
-        <button class="clan-round" type="button" data-clan-gear aria-label="Управление" hidden>⚙</button>
-      </header>
+    <div class="overlay-panel game-dialog-panel clan-panel">
+      ${dialogHeading('Клан', {leadingAction: {action: 'management', label: 'Управление кланом', icon: icon('settings')}}).replace('data-dismiss', 'class="overlay-close" data-dismiss')}
       <div data-clan-content></div>
       <div class="utility-feedback" data-clan-feedback aria-live="polite"></div>
     </div>`;
@@ -155,7 +154,8 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
   };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
-  overlay.querySelector('[data-clan-gear]').addEventListener('click', () => {
+  overlay.querySelector('[data-heading-action="management"]').hidden = true;
+  overlay.querySelector('[data-heading-action="management"]').addEventListener('click', () => {
     tab = tab === 'management' ? 'overview' : 'management';
     haptic('light');
     render();
@@ -274,7 +274,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
           <div><strong>Викторина</strong><small>${quiz?.answered ? (quiz.correct ? 'Сегодня отвечено верно ✅' : 'Сегодня уже отвечено') : quiz?.available ? '+золото, опыт и вклад' : 'Недоступна'}</small></div>
           ${quiz?.available && !quiz.answered ? '<button type="button" class="clan-play" data-clan-tab="quiz">Играть</button>' : ''}
         </div>
-        ${tasks ? `<div class="clan-daily-row"><span class="clan-daily-icon">📋</span><div><strong>Задания дня</strong><small>${done} / ${tasks.items.length} выполнено</small></div><button type="button" class="clan-play ghost" data-clan-tab="tasks">Открыть</button></div>` : ''}
+        ${tasks ? `<button type="button" class="clan-daily-row clan-daily-link" data-clan-tab="tasks"><span class="clan-daily-icon">📋</span><div><strong>Задания дня</strong><small>${done} / ${tasks.items.length} выполнено</small></div><b aria-hidden="true">›</b></button>` : ''}
       </section>
       <section class="clan-card">
         <h4>Твой вклад</h4>
@@ -350,14 +350,14 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
   }
 
   function overviewHtml(clan) {
-    const gear = overlay.querySelector('[data-clan-gear]');
+    const gear = overlay.querySelector('[data-heading-action="management"]');
     if (gear) gear.hidden = !clan.canManage;
     // Right after creating or joining a clan the tab is still "discover": show the overview.
     const main = TABS.some(([id]) => id === tab) ? tab : tab === 'discover' ? 'overview' : null;
     return `
       ${bannerHtml(clan)}
       <nav class="clan-tabs">${TABS.map(([id, label]) => `<button type="button" data-clan-tab="${id}" class="${main === id ? 'active' : ''}">${label}</button>`).join('')}</nav>
-      ${main ? '' : `<button type="button" class="clan-backlink" data-clan-tab="overview">‹ Обзор</button>`}
+      ${main ? '' : `<button type="button" class="ui-button ui-compact clan-backlink" data-clan-tab="overview">‹ Обзор</button>`}
       <div class="clan-tab-body">
       ${tab === 'warehouse' ? warehouseHtml(clan)
         : tab === 'quiz' ? quizHtml()
@@ -372,19 +372,52 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
       ${main === 'overview' ? `<button type="button" class="clan-danger" data-clan-exit>${clan.isOwner ? 'Расформировать клан' : 'Покинуть клан'}</button>` : ''}`;
   }
 
+  // One row per member; profile and management actions open in the member menu.
   function membersHtml(clan) {
     return `
       <section class="clan-section">
         <h4>Участники · ${clan.members.length}</h4>
-        <div class="clan-members">
+        <div class="ui-choice-list clan-members">
           ${clan.members.map(member => `
-            <article class="clan-member" data-player-card="${escapeHtml(member.userId)}">
+            <button type="button" class="ui-button ui-choice-row compact clan-member-row" data-clan-member="${escapeHtml(member.userId)}">
               <span class="clan-avatar" aria-hidden="true">${escapeHtml(String(member.name || '?').trim().charAt(0).toUpperCase())}</span>
-              <div><strong>${escapeHtml(member.name)}</strong><small>Вклад: ${formatNumber(member.contribution)}</small></div>
-              <span class="clan-role">${member.role === 'owner' ? '👑 глава' : member.role === 'officer' ? 'со-лидер' : 'участник'}</span>
-            </article>`).join('')}
+              <span class="clan-member-text"><strong>${escapeHtml(member.name)}</strong><small>${member.role === 'owner' ? 'Глава клана' : member.role === 'officer' ? 'Со-лидер' : 'Участник'} · вклад ${formatNumber(member.contribution)}</small></span>
+            </button>`).join('')}
         </div>
       </section>`;
+  }
+
+  function memberDetailHtml(member) {
+    const management = dashboard.management, id = String(member.userId);
+    const canKick = management?.kickable?.some(m => String(m.userId) === id);
+    const roleTarget = management?.isOwner && management.roleTargets?.find(m => String(m.userId) === id);
+    const buttons = [
+      member.me ? '' : `<button type="button" class="ui-button" data-player-card="${escapeHtml(id)}">Профиль игрока</button>`,
+      roleTarget ? `<button type="button" class="ui-button" data-clan-role="${roleTarget.role === 'officer' ? 'demote' : 'promote'}">${roleTarget.role === 'officer' ? 'Разжаловать в участники' : 'Назначить со-лидером'}</button>` : '',
+      roleTarget ? '<button type="button" class="ui-button" data-clan-member-transfer>Передать клан</button>' : '',
+      canKick ? '<button type="button" class="ui-button" data-clan-member-kick>Исключить из клана</button>' : '',
+    ].join('');
+    return `<div class="ui-stat-table"><div class="character-row"><span>Роль</span><strong>${member.role === 'owner' ? 'Глава клана' : member.role === 'officer' ? 'Со-лидер' : 'Участник'}</strong></div><div class="character-row"><span>Вклад</span><strong>${formatNumber(member.contribution)}</strong></div></div>${buttons ? `<div class="ui-action-stack">${buttons}</div>` : ''}`;
+  }
+
+  let memberMenu = null, memberMenuId = null;
+  function showMember(id) {
+    const member = dashboard.clan?.members.find(m => String(m.userId) === String(id));
+    if (!member) { memberMenu?.close(); return; }
+    memberMenuId = member.userId;
+    if (memberMenu?.open) { memberMenu.update(member.name, memberDetailHtml(member)); return; }
+    memberMenu = openDetailDialog({
+      owner: overlay, title: member.name, html: memberDetailHtml(member),
+      onClose: () => { memberMenu = null; memberMenuId = null; },
+      onAction: async button => {
+        // The shared player card handler opens the profile; the menu steps aside first.
+        if (button.dataset.playerCard) { memberMenu?.close(); return; }
+        const targetId = member.userId;
+        if (button.dataset.clanRole) { memberMenu?.close(); activity({ action: button.dataset.clanRole, targetId }); }
+        if (button.hasAttribute('data-clan-member-transfer') && await confirmDialog({ owner: overlay, title: 'Передать клан', text: `Передать клан игроку ${member.name}? Ты станешь офицером.`, confirmLabel: 'Передать' })) { memberMenu?.close(); activity({ action: 'transfer', targetId }); }
+        if (button.hasAttribute('data-clan-member-kick') && await confirmDialog({ owner: overlay, title: 'Исключить из клана', text: `Исключить игрока ${member.name} из клана?`, confirmLabel: 'Исключить' })) { memberMenu?.close(); activity({ action: 'kick', targetId }); }
+      },
+    });
   }
 
   function warehouseHtml(clan) {
@@ -524,37 +557,21 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     return `
       <section class="clan-activity-group"><h4>📨 Заявки</h4>
         ${clan.applications.length ? `<div class="clan-activity-list">${clan.applications.map(app => `
-          <article class="clan-activity-row"><div><strong>${escapeHtml(app.name)}</strong></div><div class="clan-activity-list">
-            <button type="button" data-clan-application-accept="${app.userId}">✅</button>
-            <button type="button" data-clan-application-reject="${app.userId}">❌</button>
+          <article class="clan-activity-row"><div><strong>${escapeHtml(app.name)}</strong></div><div class="clan-application-actions">
+            <button type="button" class="ui-button primary" data-clan-application-accept="${app.userId}">Принять</button>
+            <button type="button" class="ui-button" data-clan-application-reject="${app.userId}">Отклонить</button>
           </div></article>`).join('')}</div>` : '<p class="clan-muted">Нет новых заявок.</p>'}
       </section>`;
   }
 
-  function inviteKickHtml() {
+  function invitesHtml() {
     const management = dashboard.management;
     if (!management) return '';
     return `
-      <section class="clan-activity-group"><h4>➕ Пригласить</h4>
-        ${management.inviteCandidates.length ? `<div class="clan-activity-list">${management.inviteCandidates.map(member => `
-          <article class="clan-activity-row"><div><strong>${escapeHtml(member.name)}</strong></div><button type="button" data-clan-invite="${member.userId}">Пригласить</button></article>`).join('')}</div>` : '<p class="clan-muted">Нет игроков без клана в этом чате.</p>'}
-      </section>
-      <section class="clan-activity-group"><h4>➖ Исключить</h4>
-        ${management.kickable.length ? `<div class="clan-activity-list">${management.kickable.map(member => `
-          <article class="clan-activity-row"><div><strong>${escapeHtml(member.name)}</strong></div><button type="button" data-clan-kick="${member.userId}">Исключить</button></article>`).join('')}</div>` : '<p class="clan-muted">Некого исключить.</p>'}
-      </section>`;
-  }
-
-  function rolesHtml() {
-    const management = dashboard.management;
-    if (!management?.isOwner) return '';
-    return `
-      <section class="clan-activity-group"><h4>⭐ Роли</h4>
-        ${management.roleTargets.length ? `<div class="clan-activity-list">${management.roleTargets.map(member => `
-          <article class="clan-activity-row"><div><strong>${escapeHtml(member.name)}</strong><small>${member.role === 'officer' ? 'со-лидер' : 'участник'}</small></div>
-            <button type="button" data-clan-${member.role === 'officer' ? 'demote' : 'promote'}="${member.userId}">${member.role === 'officer' ? 'Разжаловать' : 'В со-лидеры'}</button>
-            <button type="button" data-clan-transfer="${member.userId}" data-name="${escapeHtml(member.name)}">Передать клан</button>
-          </article>`).join('')}</div>` : '<p class="clan-muted">В клане пока нет других участников.</p>'}
+      <section class="clan-activity-group"><h4>Пригласить в клан</h4>
+        ${management.inviteCandidates.length ? `<div class="ui-choice-list">${management.inviteCandidates.map(member => `
+          <button type="button" class="ui-button ui-choice-row compact" data-clan-invite="${member.userId}"><span>${escapeHtml(member.name)}<small>Пригласить в клан</small></span></button>`).join('')}</div>` : '<p class="clan-muted">Нет игроков без клана в этом чате.</p>'}
+        <p class="clan-muted">Роли, передача клана и исключение — в меню участника на вкладке «Участники».</p>
       </section>`;
   }
 
@@ -597,8 +614,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
   function managementHtml(clan) {
     return `
       ${applicationsHtml(clan)}
-      ${inviteKickHtml()}
-      ${rolesHtml()}
+      ${invitesHtml()}
       ${settingsHtml(clan)}`;
   }
 
@@ -655,13 +671,6 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     content.querySelectorAll('[data-clan-application-accept]').forEach(button => button.addEventListener('click', () => activity({ action: 'application_accept', applicantId: button.dataset.clanApplicationAccept })));
     content.querySelectorAll('[data-clan-application-reject]').forEach(button => button.addEventListener('click', () => activity({ action: 'application_reject', applicantId: button.dataset.clanApplicationReject })));
     content.querySelectorAll('[data-clan-invite]').forEach(button => button.addEventListener('click', () => activity({ action: 'invite', targetId: button.dataset.clanInvite })));
-    content.querySelectorAll('[data-clan-kick]').forEach(button => button.addEventListener('click', () => activity({ action: 'kick', targetId: button.dataset.clanKick })));
-    content.querySelectorAll('[data-clan-promote]').forEach(button => button.addEventListener('click', () => activity({ action: 'promote', targetId: button.dataset.clanPromote })));
-    content.querySelectorAll('[data-clan-transfer]').forEach(button => button.addEventListener('click', () => {
-      confirmDialog({ owner: overlay, title: 'Передать клан', text: `Передать клан игроку ${button.dataset.name}? Ты станешь офицером.`, confirmLabel: 'Передать' })
-        .then(ok => { if (ok) activity({ action: 'transfer', targetId: button.dataset.clanTransfer }); });
-    }));
-    content.querySelectorAll('[data-clan-demote]').forEach(button => button.addEventListener('click', () => activity({ action: 'demote', targetId: button.dataset.clanDemote })));
     content.querySelector('[data-clan-settings-save]')?.addEventListener('click', () => {
       const changes = {
         tag: content.querySelector('[data-clan-settings-tag]')?.value ?? '',
@@ -706,6 +715,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     });
     content.querySelectorAll('[data-clan-task-claim]').forEach(button => button.addEventListener('click', () => activity({ action: 'task_claim', taskKey: button.dataset.clanTaskClaim })));
     content.querySelector('[data-clan-task-bonus]')?.addEventListener('click', () => activity({ action: 'task_claim_bonus' }));
+    content.querySelectorAll('[data-clan-member]').forEach(button => button.addEventListener('click', () => { haptic('light'); showMember(button.dataset.clanMember); }));
     content.querySelector('[data-clan-exit]')?.addEventListener('click', async () => {
       const actionName = dashboard.clan?.isOwner ? 'disband' : 'leave';
       const disband = actionName === 'disband';
@@ -719,6 +729,7 @@ export async function openClanGame({ api, renderState, haptic, statusElement }) 
     content.innerHTML = dashboard.clan ? overviewHtml(dashboard.clan) : discoverHtml();
     feedback.textContent = feedbackText;
     bind();
+    if (memberMenuId) showMember(memberMenuId);
   }
 
   render();

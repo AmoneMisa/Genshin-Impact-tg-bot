@@ -2,6 +2,7 @@ import {dialogHeading} from './dialog-heading.js';
 import {itemGridHtml} from './item-grid.js';
 import {enhanceSelects} from './design/select.js';
 import {installOverlayA11y} from './overlay-a11y.js';
+import {openDetailDialog} from './detail-dialog.js';
 import {l2SkillIcon} from './art/l2-extra-art.js';
 import {l2EffectIcon} from './art/l2-effects-art.js';
 import { escapeHtml } from './escape-html.js';
@@ -54,7 +55,7 @@ export async function openBuffsGame({ api, haptic, renderState }) {
     </div>`;
   const body = overlay.querySelector('[data-buffs-body]'), tabs = overlay.querySelector('[data-effect-tabs]');
   let detail = null;
-  const closeDetail = () => { openId = null; const node = detail; detail = null; if (node?.open) node.close(); node?.remove(); };
+  const closeDetail = () => { openId = null; detail?.close(); detail = null; };
   const close = () => { closeDetail(); overlay.classList.add('closing'); window.setTimeout(() => overlay.remove(), 180); };
   overlay.querySelector('.overlay-close').addEventListener('click', close);
   overlay.querySelector('.overlay-backdrop').addEventListener('click', close);
@@ -78,22 +79,9 @@ export async function openBuffsGame({ api, haptic, renderState }) {
   function showDetail(id) {
     const skill = all().find(s => String(s.id) === String(id));
     if (!skill) { closeDetail(); return; }
-    const opening = !detail;
-    if (opening) {
-      const node = document.createElement('dialog');
-      node.className = 'game-dialog-panel character-detail-dialog';
-      node.addEventListener('close', () => { if (detail === node) { openId = null; detail = null; } node.remove(); });
-      node.addEventListener('click', event => {
-        if (event.target === node) { const r = node.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) { closeDetail(); return; } }
-        if (event.target.closest('[data-dismiss]')) { closeDetail(); return; }
-        const button = event.target.closest('[data-buff-cast]'); if (button && !button.disabled) cast(button.dataset.buffCast);
-      });
-      overlay.append(node);
-      detail = node;
-    }
     openId = skill.id;
-    detail.innerHTML = dialogHeading(skill.name) + detailHtml(skill);
-    if (opening) detail.showModal();
+    if (detail?.open) detail.update(skill.name, detailHtml(skill));
+    else detail = openDetailDialog({ owner: overlay, title: skill.name, html: detailHtml(skill), onAction: button => { if (button.dataset.buffCast) cast(button.dataset.buffCast); }, onClose: () => { openId = null; detail = null; } });
   }
 
   function render() {
