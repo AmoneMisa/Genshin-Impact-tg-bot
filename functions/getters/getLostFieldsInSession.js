@@ -12,8 +12,12 @@ import {migrateBaseStats} from '../game/player/migrateBaseStats.js';
 import { migrateSessionEquipment } from '../game/equipment/migrateEquipment.js';
 import { migrateSessionClass } from '../game/classes/migrateClasses.js';
 
+// Mongoose members keep their fields on the document, not as own properties: hasOwnProperty is always
+// false for them, which used to reset these settings on every load. Check the stored value instead.
+const lacks = (value, key) => !value || typeof value !== 'object' || value[key] === undefined;
+
 export default function (session) {
-    if (!session.hasOwnProperty("whatsNewSettings")) {
+    if (lacks(session.whatsNewSettings, 'flag')) {
         session.whatsNewSettings = {
             flag: 0,
             button: {
@@ -23,7 +27,7 @@ export default function (session) {
         };
     }
 
-    if (!session.hasOwnProperty("horoscope")) {
+    if (lacks(session.horoscope, 'sign')) {
         session.horoscope = {
             sign: 'aries',
             style: 'cheeky'
