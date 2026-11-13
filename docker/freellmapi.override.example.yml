@@ -14,8 +14,8 @@ services:
     environment:
       FREE_LLM_API_BASE_URL: http://freellmapi:3001/v1
       FREE_LLM_API_KEY_FILE: /run/freellm/unified.key
-      # Keyless routes: fast non-reasoning models first, then automatic routing; prepared lines remain the safety net.
-      FREE_LLM_MODEL: mistral-small-3.2-24b,llama-3.3-70b,auto
+      # Fast models first (Groq qwen3.8-27b, Gemini Flash-Lite, keyless Mistral), then automatic routing; prepared lines remain the safety net.
+      FREE_LLM_MODEL: qwen3.8-27b,gemini-flash-lite,mistral-small-3.2-24b,auto
       FREE_LLM_TIMEOUT_MS: "8000"
     volumes:
       - freellm-data:/run/freellm:ro
