@@ -12,6 +12,14 @@ export function createAtlasCombat(root,action,{mapAvailable=true}={}){
  let state=null,selection='',optionsKey='',levelsKey='';
  host.innerHTML='<div class="atlas-combat-meters"></div><div class="atlas-combat-target"></div><div class="atlas-combat-controls"><label>Цель рядом<select aria-label="Цель рядом" data-native-target></select></label><div data-native-attack></div></div><div data-native-skills></div>';
  const select=host.querySelector('select');enhanceSelects(host);
+ const waterHost=document.createElement('section');waterHost.className='atlas-combat';waterHost.hidden=true;waterHost.setAttribute('aria-label','Плавание');
+ waterHost.innerHTML='<div data-water-meter></div><details class="ui-disclosure"><summary>Плавание</summary><div class="ui-action-stack"><div class="ui-control-row" role="group" aria-label="Глубина плавания">'+[['level','Плыть ровно'],['surface','Всплывать'],['bottom','Погружаться']].map(([id,title])=>`<button type="button" class="ui-button" data-water-depth="${id}" aria-pressed="false">${title}</button>`).join('')+'</div><p>Выберите направление на карте.</p>'+(!mapAvailable?'<div class="ui-control-row">'+[['north','На север'],['west','На запад'],['east','На восток'],['south','На юг']].map(([id,title])=>`<button type="button" class="ui-button" data-water-step="${id}">${title}</button>`).join('')+'</div>':'')+'</div></details>';
+ host.before(waterHost);waterHost.addEventListener('click',event=>{const button=event.target.closest('button');if(!button||button.disabled)return;if(button.dataset.waterDepth)action('/api/world/action',{action:'native_water_depth',depth:button.dataset.waterDepth});if(button.dataset.waterStep)action('/api/world/action',{action:'native_step',direction:button.dataset.waterStep});});
+ function renderWorld(world){
+  const water=world?.player?.water;waterHost.hidden=!water;if(!water){waterHost.querySelector('details').open=false;return;}
+  waterHost.querySelector('[data-water-meter]').innerHTML=bar('mp',Math.ceil(water.breathMs/1000),Math.ceil(water.breathMaxMs/1000),{label:'Воздух'});
+  for(const button of waterHost.querySelectorAll('button')){button.disabled=world.player.hp<=0;if(button.dataset.waterDepth){const active=button.dataset.waterDepth===water.depth;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));}}
+ }
  host.insertAdjacentHTML('beforeend','<details class="ui-disclosure"><summary>Расходники</summary><div data-native-supplies></div></details>');
  host.insertAdjacentHTML('beforeend','<details class="ui-disclosure" data-native-levels hidden><summary>Уровни локации</summary><div class="ui-action-stack"><div data-native-guide hidden></div><div class="ui-control-row" data-native-level-buttons></div><div class="ui-control-row" data-native-door-keys hidden></div></div></details>');
  host.insertAdjacentHTML('beforeend','<button type="button" class="ui-button ui-compact" data-last-loot hidden>Последняя добыча</button>');
@@ -68,5 +76,5 @@ export function createAtlasCombat(root,action,{mapAvailable=true}={}){
   host.querySelector('[data-last-loot]').hidden=!state.lastLoot;
   if(focusSelector)host.querySelector(focusSelector)?.focus({preventScroll:true});
  }
- return {render,hide:()=>{state=null;host.hidden=true;},select:id=>action('/api/hunt/target',{targetId:id})};
+ return {render,renderWorld,hide:()=>{state=null;host.hidden=true;},select:id=>action('/api/hunt/target',{targetId:id})};
 }

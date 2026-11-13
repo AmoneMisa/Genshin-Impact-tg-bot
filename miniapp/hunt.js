@@ -1,6 +1,7 @@
 import {nativeLevelOptions} from '../functions/game/world/nativeLevelTravel.js';
 import {nativeFloorGuide,nativeFloorGuides} from '../functions/game/world/nativeFloorTransports.js';
 import {nativeDoorKeyOptions} from '../functions/game/world/nativeDoorKeys.js';
+import {nativeWaterDto} from '../functions/game/world/nativeWater.js';
 import {treasureDto} from './treasures.js';
 import {getMaterialCount} from '../functions/game/player/materials.js';
 import {vortexMarkers} from '../functions/game/world/dragonVortex.js';
@@ -143,7 +144,7 @@ function fieldDto(hunt, now, session) {
     const nextSpawnMs = pending.length ? Math.max(0, Math.min(...pending.map(entry => entry.at)) - now) : 0;
     return {
     x: field.x, y: field.y, runSpeed:getSpeed(session), walls:field.walls||[], path: field.path || [], moveAt: field.moveAt, floor: displayFloor, floors:zone?.floors||(zone?.id==='tower-of-insolence'?14:1), target: field.target,
-        continuous:stream,native:field.native?{coordinateSpace:'l2j-world',point:nativeActorPoint(field),floor:displayFloor,outside:Boolean(field.native.outside),levels:nativeLevelOptions(hunt),guide:nativeFloorGuide(hunt),guides:nativeFloorGuides(hunt),doorKeys:nativeDoorKeyOptions(session,now)}:null,
+        continuous:stream,native:field.native?{coordinateSpace:'l2j-world',water:nativeWaterDto(session,now,nativeActorPoint(field)),point:nativeActorPoint(field),floor:displayFloor,outside:Boolean(field.native.outside),levels:nativeLevelOptions(hunt),guide:nativeFloorGuide(hunt),guides:nativeFloorGuides(hunt),doorKeys:nativeDoorKeyOptions(session,now)}:null,
         autoAttack:Boolean(field.autoAttack),attack:weaponSpatial(session,now),pendingRoom:field.pendingRoom||null,ship:shipDto(session,now),seed:seedDto(session,now),treasure:treasureDto(session,now),vortices:vortexMarkers(session),vortexBoneCount:getMaterialCount(session,'l2_17248'),raids:locationRaids(hunt.zone,field),links:regionLinks(hunt.zone,field),
         lastStrike:field.lastStrike&&now-field.lastStrike.at<900?field.lastStrike:null,
         action:field.action?.kind==='door-key'?{...field.action}:field.action?{...field.action,name:session.game.gameClass.skills[field.action.index]?.name,

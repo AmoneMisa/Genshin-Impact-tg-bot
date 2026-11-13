@@ -32,7 +32,14 @@ const near=(a,b,distance=180)=>Math.hypot(a.x-b.x,a.y-b.y)*2000<=distance;
 export function nextHallRegistration(rule,now){const d=new Date(now),[days,months,years,hour,minute]=rule.schedule;d.setDate(d.getDate()+days);d.setMonth(d.getMonth()+months);d.setFullYear(d.getFullYear()+years);d.setHours(hour,minute,0,0);return d.getTime();}
 export function ensureHallContest(record,h,now=Date.now()){
  const rule=hallScenario(h);if(!rule)return null;
- if(record.siege?.version===2)return record.siege;
+ if(record.siege?.version===2){
+  // Mongoose minimizes empty objects on save, so records stored before registration miss these maps.
+  const siege=record.siege;let healed=false;
+  for(const key of ['registrations','players','rewarded','bags','damage'])if(!siege[key]){siege[key]={};healed=true;}
+  if(!Array.isArray(siege.objectives)){siege.objectives=[];healed=true;}
+  if(healed)record.markModified?.('siege');
+  return siege;
+ }
  // Old generic flag encounters cannot award a High Five hall after migration.
  const closesAt=nextHallRegistration(rule,now);
  record.siege={version:2,kind:'hall',scenario:rule.kind,id:`${h.id}:${closesAt}`,registrationClosesAt:closesAt,startsAt:closesAt+rule.preparationMs,endsAt:closesAt+rule.preparationMs+rule.durationMs,phase:'registration',registrations:{},players:{},objectives:[],rewarded:{},bags:{},damage:{},settled:false,winner:null};

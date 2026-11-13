@@ -146,7 +146,7 @@ export async function openFishingGame({ api, renderState, haptic, statusElement 
         ${state.skill.learned && state.fishLevel > 0 ? '' : '<p class="party-note">Изучи рыбалку и мастерство во вкладке «Гильдия».</p>'}
         <p class="party-note">Заброс: ${state.rod ? seconds(state.rod.castMs) : '—'} · рыбы сегодня ${number(state.fishToday)} / ${number(state.limit)} · всего забросов ${number(state.total)}</p>
         ${state.overLimit ? `<p class="party-note">Дневная норма выловлена: теперь клюёт крайне редко (${(state.overChance * 100).toFixed(1)}% на заброс).</p>` : ''}
-        ${state.shot ? `<label class="merchant-filter"><input type="checkbox" data-shots ${state.shots ? 'checked' : ''}> ${materialIcon(state.shot.key)} ${escapeHtml(state.shot.name)}: ${number(state.shot.count)} шт. — вдвое быстрее</label>` : ''}
+        ${state.shot ? `<label class="ui-check"><input type="checkbox" data-shots ${state.shots ? 'checked' : ''}> ${materialIcon(state.shot.key)} ${escapeHtml(state.shot.name)}: ${number(state.shot.count)} шт. — вдвое быстрее</label>` : ''}
         <div class="party-actions">
           <button type="button" class="equipment-action forge-action" data-cast ${ready ? '' : 'disabled'}>${state.nextCastMs > 0 && state.rod ? `Через ${seconds(state.nextCastMs)}` : l2SkillIcon('fishing')+' Забросить удочку'}</button>
           <button type="button" class="equipment-action ${state.auto ? 'active' : ''}" data-auto="${state.auto ? '0' : '1'}" ${state.rod ? '' : 'disabled'}>${state.auto ? 'Остановить автоловлю' : 'Автоловля'}</button>

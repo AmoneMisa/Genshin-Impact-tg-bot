@@ -9,6 +9,8 @@ import {nativeGroundAllowed,nativeGroundForActor,nativeDoorStates,nativePaganDoo
 import {findNativePath} from './nativeNavigation.js';
 import {nativeStaticSight} from './nativeVisibility.js';
 import {createNativeJourney,advanceNativeJourney} from './nativeJourney.js';
+import {createNativeSwimJourney,nativeSwimAim} from './nativeSwimJourney.js';
+import {nativeInWater,nativeWaterSurface} from './nativeWaterGeometry.js';
 import {rememberNativeTrail} from './nativeTrail.js';
 import {nativeSpawnDistance,sampleNativeTerritory,nativeTerritorySource,nativeTerritoryGround} from './nativeSpawnTerritory.js';
 import {sourcePopulationActive} from '../hunt/sourcePopulation.js';
@@ -191,6 +193,13 @@ export function moveNativeActor(actor,target,now,speed){
  const goal={x:worldAxis(target.x),y:worldAxis(target.y),z:Number.isFinite(target.native?.z)?target.native.z:from.z};
  if(Math.hypot(goal.x-from.x,goal.y-from.y)>8192)return {ok:false,reason:'path_blocked'};
  const allowed=nativeGroundForActor(actor,now);
+ const wet=worldGeodata.point(goal);
+ if(nativeInWater(from)||nativeWaterSurface(from)||wet&&nativeInWater(wet)){
+  const swimmingAllowed=nativeGroundForActor(actor,now,{swimming:true}),destination=nativeInWater(from)||nativeWaterSurface(from)?nativeSwimAim(from,goal,actor.native.waterDepth):wet;
+  const trip=createNativeSwimJourney(from,destination,{now,speed:nativeInWater(from)?actor.native.swimSpeed||speed:speed,allowed:swimmingAllowed});
+  if(trip){trip.native.historyStart={...from};actor.native.journey=trip;actor.moveAt=now;actor.path=trip.native.path.map(p=>({x:p.x/ROOM_SIZE,y:p.y/ROOM_SIZE,z:p.z}));return {ok:true};}
+  if(nativeInWater(from)||nativeWaterSurface(from))return {ok:false,reason:'path_blocked'};
+ }
  const plan=findNativePath(from,goal,{allowed,maxNodes:6000,stride:2,reversible:true,heuristicWeight:2});
  if(!plan.ok)return plan;
  const trip=createNativeJourney(plan.start,plan.path,{now,speed,allowed});
@@ -199,9 +208,9 @@ export function moveNativeActor(actor,target,now,speed){
  actor.native.journey=trip;actor.moveAt=now;actor.path=trip.native.path.slice(0,16).map(p=>({x:p.x/ROOM_SIZE,y:p.y/ROOM_SIZE,z:p.z}));
  return {ok:true};
 }
-export function advanceNativeActor(actor,now,speed){
+export function advanceNativeActor(actor,now,speed,options={}){
  const trip=actor.native?.journey;if(!trip){actor.path=[];actor.moveAt=now;return;}
- const done=advanceNativeJourney(trip,now,speed,{allowed:nativeGroundForActor(actor,now)}),p=trip.native.point;
+ const done=advanceNativeJourney(trip,now,speed,{...options,allowed:nativeGroundForActor(actor,now,{swimming:Boolean(trip.native.swimming)})}),p=trip.native.point;
  actor.x=p.x/ROOM_SIZE;actor.y=p.y/ROOM_SIZE;actor.native.z=p.z;actor.moveAt=now;
  actor.path=trip.native.blocked?[]:trip.native.path.slice(trip.native.index,trip.native.index+16).map(p=>({x:p.x/ROOM_SIZE,y:p.y/ROOM_SIZE,z:p.z}));
  if(done&&trip.native.floorTarget)actor.native.sourceFloor=trip.native.floorTarget;

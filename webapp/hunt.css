@@ -153,12 +153,11 @@
 .party-loot-modes .equipment-filter{display:flex;align-items:center;gap:4px;min-width:0;}
 
 .merchant-note{font:12px/1.5 system-ui;opacity:.8;margin:0 0 6px}
-.merchant-filter{display:flex;gap:8px;align-items:center;font:12px/1.4 system-ui;padding:4px 2px}
 .merchant-item .missing{color:#e07a6a}
 .merchants-panel .shop-categories{overflow-x:auto}
 .pager{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 0;font:12px/1.4 system-ui}
 .shop-search{width:100%;box-sizing:border-box;margin:6px 0;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,214,120,.35);background:rgba(0,0,0,.35);color:inherit}
-.merchant-filters{display:grid;gap:6px;padding:4px 0}
+.merchant-filters{display:grid;gap:var(--space-2);padding:var(--space-1) 0}
 .merchant-row{display:flex;gap:6px}
 .merchant-row select,.merchant-row input{flex:1;min-width:0;padding:7px 9px;border-radius:8px;border:1px solid rgba(255,214,120,.35);background:rgba(0,0,0,.35);color:inherit}
 .convert-row{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center;padding:8px 0;border-top:1px solid rgba(255,255,255,.08)}
@@ -179,8 +178,7 @@
 .tattoos-panel .mmo-section-title{flex-wrap:wrap;gap:8px;margin:4px 0 12px;min-width:0}
 .tattoos-panel .mmo-section-title small{min-width:0;overflow-wrap:anywhere;line-height:1.5}
 .tattoos-panel .equipment-filters{display:flex;flex-wrap:wrap;gap:6px;overflow:visible;min-width:0;margin-bottom:12px}
-.tattoos-panel .merchant-filter{min-width:0;align-items:flex-start;line-height:1.5;margin:6px 0}
-.tattoos-panel .merchant-filter input{margin-top:1px}
+.tattoos-panel .ui-check{min-width:0}
 .tattoos-panel .tattoo-slot,.tattoos-panel .tattoo-totals>span{min-width:0;overflow-wrap:anywhere}
 .tattoos-panel .tattoo-slot small{line-height:1.5}
 .tattoos-panel .tattoo-totals small{font:11px/1.4 system-ui}
@@ -226,7 +224,7 @@
 .fishing-scene picture{display:block;min-width:0}.fishing-scene .fishing-animation{display:block;width:100%;height:auto;aspect-ratio:8/5;object-fit:contain;border-radius:8px 8px 0 0}
 .fishing-phase{padding:10px 12px;text-align:center;color:#efe4c6;font:600 12px/1.5 system-ui;min-height:18px;overflow-wrap:anywhere}.fishing-scene[data-phase=success] .fishing-phase{color:#a6dfb6}.fishing-scene[data-phase=failure] .fishing-phase{color:#e4a499}
 .fishing-panel .mmo-section-title{align-items:center;gap:10px}.fishing-panel .mmo-section-title strong{display:flex;align-items:center;gap:8px;font:700 15px/1.5 Georgia;text-align:left}.fishing-panel .mmo-section-title small{display:inline-flex;align-items:center;gap:6px;font:11px/1.5 system-ui;text-align:left}.fishing-panel .mmo-section-title img{vertical-align:middle;flex-shrink:0}
-.fishing-panel .party-note,.fishing-panel .shop-item-copy{text-align:left}.fishing-panel .party-actions button{display:flex;align-items:center;justify-content:center;gap:6px;font:600 12px/1.5 Georgia}.fishing-panel .merchant-filter{display:flex;align-items:center;gap:8px;text-align:left;font:12px/1.5 system-ui}
+.fishing-panel .party-note,.fishing-panel .shop-item-copy{text-align:left}.fishing-panel .party-actions button{display:flex;align-items:center;justify-content:center;gap:6px;font:600 12px/1.5 Georgia}.fishing-panel .ui-check{text-align:left}
 .fishing-rods strong{display:flex;justify-content:space-between;align-items:baseline;gap:8px;text-align:left}.fishing-rods strong>span{min-width:0}.fishing-rods strong>b{white-space:nowrap}.fishing-rods small{text-align:left}.fishing-tabs button{display:flex;align-items:center;justify-content:center;text-align:center;min-height:38px}
 .fishing-panel .guild-row{display:grid;grid-template-columns:32px minmax(0,1fr);align-items:center;gap:10px;padding:10px 0;text-align:left}.guild-row>img{width:32px;height:32px;object-fit:contain}.guild-row strong{display:block;font:600 12px/1.5 system-ui}.guild-row small{display:flex;align-items:center;gap:5px;margin-top:3px;font:11px/1.5 system-ui;color:#a99f8b}.guild-row small img{width:16px;height:16px;object-fit:contain}
 /* .mmo-frame is a two-column grid; these panels hold stacked rows, so keep one full-width column */

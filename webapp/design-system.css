@@ -1207,6 +1207,10 @@ body .ui-map-control,body .ui-map-tools .ds-select-trigger {background:var(--sur
 body .ui-map-control {font-size:24px;}
 body .ui-map-tools .ds-select-trigger {font-size:13px;}
 .ui-choice-list {border:1px solid var(--border-soft);border-radius:var(--radius-sm);background:var(--surface-control);overflow:hidden;}
+/* Checkbox / radio with its caption: one row, 44px touch target, padding from the shared scale. */
+.ui-check {display:flex;align-items:center;gap:var(--space-2);min-height:44px;padding:var(--space-2);font-size:14px;line-height:1.4;cursor:pointer;}
+/* Long lists scroll inside their own box; the box keeps the rounded border. */
+.ui-choice-list.ui-scroll {overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
 body .ui-button.ui-choice-row {display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);width:100%;min-height:56px;padding:var(--space-3) var(--space-4);border:0;border-bottom:1px solid var(--border-soft);border-radius:0;background:transparent;box-shadow:none;font-size:14px;}
 body .ui-button.ui-choice-row:last-child {border-bottom:0;}
 body .ui-button.ui-choice-row.active {background:var(--button-gold);color:var(--gold-bright);}

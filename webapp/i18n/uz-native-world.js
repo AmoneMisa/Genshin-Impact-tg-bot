@@ -1,4 +1,11 @@
 export default {
+ 'Плавание':'Suzish',
+ 'Глубина плавания':'Suzish chuqurligi',
+ 'Плыть ровно':'Bir chuqurlikda suzish',
+ 'Всплывать':'Yuzaga suzish',
+ 'Погружаться':'Chuqurga suzish',
+ 'Выберите направление на карте.':'Xaritada yo‘nalishni tanlang.',
+ 'Воздух':'Havo',
  'Войти в Храм Язычников': 'Majusiylar ibodatxonasiga kirish',
  'Спуститься к зеркалу Триола': 'Triol oynasiga tushish',
  'Продолжить спуск к зеркалу Триола': 'Triol oynasiga tushishni davom ettirish',

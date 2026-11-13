@@ -3,6 +3,7 @@ import { token, myId } from '../config.js';
 import bot from '../bot.js';
 import getSession from '../functions/getters/getSession.js';
 import { validateTelegramInitData, resolveGameChatId } from './telegramAuth.js';
+import { devValidated } from './http/auth.js';
 import { getChatSettingsState, updateChatSettingForMiniApp } from './chatSettings.js';
 import { getSelfMuteStateForMiniApp, performSelfMuteForMiniApp } from './selfMute.js';
 import {
@@ -84,7 +85,7 @@ function replayRequest(req, rawBody) {
 }
 
 async function authorize(req) {
-  const validated = validateTelegramInitData(getInitData(req), token);
+  const validated = devValidated(req) || validateTelegramInitData(getInitData(req), token);
   if (!validated.user?.id) throw new Error('Telegram user is missing');
 
   const chatId = resolveGameChatId(validated);

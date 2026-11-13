@@ -1,5 +1,6 @@
 import {itemGridHtml} from './item-grid.js';
 import { escapeHtml } from './escape-html.js';
+import { quantityControlHtml, bindQuantityControl } from './stock-quantity.js';
 
 // The inside of a shop category, laid out like the Lineage II store window: a grid of item icons on the left,
 // the selected item's information, the items it costs and the quantity on the right, Confirm / Cancel below.
@@ -29,7 +30,7 @@ export function storeViewHtml({ items, selectedId, quantity = 1, emptyText = 'Н
         ${selected.description ? `<p>${escapeHtml(selected.description)}</p>` : ''}${selected.extraHtml || ''}
       </section>
       <section class="store-box"><h4>Необходимо</h4><ul class="store-req">${rows || '<li><span class="store-req-name">Бесплатно</span></li>'}</ul></section>
-      ${selected.countable ? `<label class="store-quantity"><span>Количество</span><input type="number" min="1" max="${selected.maxCount || 1000}" step="1" inputmode="numeric" value="${count}" data-store-quantity></label>` : ''}
+      ${selected.countable ? `<div class="store-quantity" data-store-quantity>${quantityControlHtml({value: count, max: selected.maxCount || 1000})}</div>` : ''}
     </div>`;
   }
   return `<div class="store-view">${itemGridHtml(grid, {className: 'store-grid', label: 'Товары'})}${info}</div>
@@ -39,7 +40,13 @@ export function storeViewHtml({ items, selectedId, quantity = 1, emptyText = 'Н
 /** Wires the events of a rendered store view inside `root`. */
 export function bindStoreView(root, { onSelect, onQuantity, onConfirm, onCancel }) {
   root.querySelectorAll('[data-store-slot]').forEach(button => button.addEventListener('click', () => onSelect(button.dataset.storeSlot)));
-  root.querySelector('[data-store-quantity]')?.addEventListener('input', event => onQuantity(Math.max(1, Math.floor(Number(event.target.value) || 1))));
+  const box = root.querySelector('[data-store-quantity]');
+  if (box) {
+    // The shared control reports its initial value too; only a real change may redraw the view.
+    const input = box.querySelector('[data-quantity-value]');
+    let current = Number(input.value);
+    bindQuantityControl(box, {max: Number(input.max) || 1, onChange: value => { if (value !== current) { current = value; onQuantity(value); } }});
+  }
   root.querySelector('[data-store-confirm]')?.addEventListener('click', onConfirm);
   root.querySelector('[data-store-cancel]')?.addEventListener('click', onCancel);
 }

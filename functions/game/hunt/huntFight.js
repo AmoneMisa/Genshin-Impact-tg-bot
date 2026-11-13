@@ -2,6 +2,8 @@ import {nativeFieldRooms} from '../world/nativeFieldRooms.js';
 import {syncNativeMinions} from '../world/nativeMinions.js';
 import {recordSeedKill} from '../world/seedInstances.js';
 import {recordDeath} from '../player/deathPenalties.js';
+import {nativeInWater} from '../world/nativeWaterGeometry.js';
+import {nativeSwimSpeed,advanceNativeWater,advanceNativeWaterSegment} from '../world/nativeWater.js';
 import {playerName} from '../player/playerName.js';
 import {armAttackRune, clearAttackRune, defenseRuneFactor} from '../runes/labRunes.js';
 import {l2OnDamageReceived,l2PreventDeath,l2TransferDamage} from '../player/l2Effects.js';
@@ -42,7 +44,7 @@ import {syncResidentRooms,neighborhood,battleField,battleWalls,battleActor,remov
 import getSpeed from '../player/getters/getSpeed.js';
 import {BASIC_ATTACK, hostileSkill, skillSpatial, weaponSpatial, needsTarget, inSkillReach, spatialTargets, spatialDistance,clearLine} from './huntSpatial.js';
 import {skillCombatType} from '../player/combatType.js';
-import {syncNativePopulation,moveNativeActor,advanceNativeActor,placeNativeActor,placeNativeSpawn,stopNativeActor,nativeFamilySocial} from '../world/nativeFieldSpace.js';
+import {syncNativePopulation,moveNativeActor,advanceNativeActor,placeNativeActor,placeNativeSpawn,stopNativeActor,nativeFamilySocial,nativeActorPoint} from '../world/nativeFieldSpace.js';
 import {syncNativeDoors} from '../world/nativeDoorContext.js';
 import {advanceNativeDoorKey} from '../world/nativeDoorKeys.js';
 import {advanceNativeFallDamage} from '../world/nativeFallDamage.js';
@@ -197,6 +199,12 @@ function applyHit(session, dmg, now) {
  */
 export function advanceHunt(session, now = Date.now(), random = Math.random) {
     advanceNativeFallDamage(session,now);
+    const swimmingField=session.game.hunt?.field;
+    if(swimmingField?.native?.journey?.native?.swimming){
+        swimmingField.native.swimSpeed=nativeSwimSpeed(session,now);
+        advanceNativeActor(swimmingField,now,l2ActionBlock(session,{move:true},now)?0:nativeInWater(nativeActorPoint(swimmingField))?swimmingField.native.swimSpeed:getSpeed(session)*l2MoveMultiplier(session,now),{swimSpeed:swimmingField.native.swimSpeed,onSegment:(...args)=>advanceNativeWaterSegment(session,...args)});
+    }
+    if(swimmingField?.native)advanceNativeWater(session,now,nativeInWater(nativeActorPoint(swimmingField)));
     tickL2Effects(session,now,{hp:getMaxHp(session)});
     const hunt = ensureHunt(session,now,random);
     if(isDead(session,now)){if(hunt.field)stopHuntAction(hunt.field,now);return [];}
@@ -219,7 +227,8 @@ export function advanceHunt(session, now = Date.now(), random = Math.random) {
         }
     }
     if (l2ActionBlock(session,{move:true},now)) {field.path=[];if(field.native)stopNativeActor(field);delete field.pendingRoom;delete field.crossing;field.moveAt=now;}
-    else if(field.native)advanceNativeActor(field,now,getSpeed(session)*l2MoveMultiplier(session,now));
+    // A swimming journey was already advanced above with its water timing.
+    else if(field.native&&!field.native.journey?.native?.swimming)advanceNativeActor(field,now,getSpeed(session)*l2MoveMultiplier(session,now));
     else if(field.crossing){
         const speed=getSpeed(session)*l2MoveMultiplier(session,now);
         let remaining=Math.max(0,(now-(field.moveAt??now))/1000)*Math.max(0,speed)/ROOM_SIZE;field.moveAt=now;
@@ -632,6 +641,8 @@ export function moveHuntField(session, direction, now = Date.now(), random = Mat
     if(field.native){
         if(typeof direction!=='object'||!direction)return {ok:false,reason:'invalid_move'};
         stopHuntAction(field,now);
+        field.native.swimSpeed=nativeSwimSpeed(session,now);
+        field.native.waterDepth=session.game.world?.waterDepth||'level';
         const result=moveNativeActor(field,{x:Number(direction.x),y:Number(direction.y)},now,getSpeed(session)*l2MoveMultiplier(session,now));
         if(result.ok){hunt.lastActionAt=now;if(session.game.world)session.game.world.channel=null;}
         return result;

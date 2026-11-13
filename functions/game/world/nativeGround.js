@@ -18,15 +18,16 @@ function add(record){
 }
 // Without a trusted script state, doors remain closed. Water and holdings keep their own vetoes.
 for(const door of nativeWorld.doors)add({...door,kind:'door',minZ:door.minZ-16,maxZ:door.maxZ+16});
-for(const zone of nativeWorld.water)add({...zone,kind:'water'});
+for(const zone of nativeWorld.water)add({...zone,kind:'water',minZ:Math.min(zone.minZ,zone.maxZ),maxZ:Math.max(zone.minZ,zone.maxZ)});
 for(const holding of holdings.filter(h=>h.kind==='castle'||h.kind==='fort'))add({...holding,kind:'holding',minZ:-Infinity,maxZ:Infinity});
 
-export function nativeGroundBlock(point,{openDoors=null}={}){
+export function nativeGroundBlock(point,{openDoors=null,swimming=false}={}){
  if(![point?.x,point?.y,point?.z].every(Number.isFinite))return 'geodata_missing';
  for(const r of index.get(Math.floor(point.x/SIZE)+':'+Math.floor(point.y/SIZE))||[]){
   if(point.x<r.left||point.x>r.right||point.y<r.top||point.y>r.bottom||point.z<r.minZ||point.z>r.maxZ)continue;
   if(r.kind==='door'&&openDoors?.has(String(r.id)))continue;
   if(r.kind==='water'&&r.shape!=='Cuboid'&&!pointInPolygon(point,r.polygon))continue;
+  if(r.kind==='water'&&swimming)continue;
   return r.kind==='water'?'swimming_required':r.kind==='door'?'door_state_required':'holding_region_required';
  }
  return null;
@@ -37,13 +38,13 @@ export function nativeGroundDoorIds(point){
  return (index.get(Math.floor(point.x/SIZE)+':'+Math.floor(point.y/SIZE))||[]).filter(r=>r.kind==='door'&&point.x>=r.left&&point.x<=r.right&&point.y>=r.top&&point.y<=r.bottom&&point.z>=r.minZ&&point.z<=r.maxZ).map(r=>String(r.id));
 }
 /** Only pinned engine thresholds and trusted server phases can open doors. */
-export function nativeGroundAtStage(stage,{doors,now}={}){
+export function nativeGroundAtStage(stage,{doors,now,swimming=false}={}){
  const openDoors=new Set(hellbound.doors.filter(d=>Number.isFinite(stage)&&stage>=d.minimumStage).map(d=>String(d.id)));
  for(const id of nativeOpenDoors(doors,now))openDoors.add(id);
- return point=>!nativeGroundBlock(point,{openDoors});
+ return point=>!nativeGroundBlock(point,{openDoors,swimming});
 }
-export const nativeGroundFor=(session,now=Date.now())=>nativeGroundAtStage(hellboundStage(session),{doors:nativeDoorStore(session),now});
-export const nativeGroundForActor=(actor,now=actor?.native?.doorClock)=>nativeGroundAtStage(actor?.native?.hellboundStage,{doors:actor?.native?.doors,now});
+export const nativeGroundFor=(session,now=Date.now(),options={})=>nativeGroundAtStage(hellboundStage(session),{...options,doors:nativeDoorStore(session),now});
+export const nativeGroundForActor=(actor,now=actor?.native?.doorClock,options={})=>nativeGroundAtStage(actor?.native?.hellboundStage,{...options,doors:actor?.native?.doors,now});
 export const nativeDoorStates=stage=>hellboundDoors.filter(d=>d.geometry).map(d=>({id:String(d.id),polygon:d.geometry.polygon,open:Number.isFinite(stage)&&stage>=d.minimumStage}));
 export function nativePaganDoorStates(records,now){
  const open=nativeOpenDoors(records,now),ids=new Set([...pagan.doors.flatMap(d=>d.doorIds.map(String)),...Object.keys(keys.doors)]);

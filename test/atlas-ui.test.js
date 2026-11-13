@@ -22,3 +22,13 @@ test('scroll tab preserves return and contextual exit without offering exit in t
  assert.match(movementHtml({...state,scrolls:0},{tab:'scroll'}),/data-escape disabled/);
  assert.match(movementHtml({...state,player:{...state.player,mode:'road'}},{tab:'scroll'}),/data-leave disabled/);
 });
+
+test('the teleport menu stays minimal: filters on one row, a scrolling list and one action with the price',()=>{
+ const html=movementHtml(state,{section:'hunting'});
+ assert.doesNotMatch(html,/ui-inset-row|Пункт назначения|ui-selection-summary|atlas-travel-note/,'no balance row, caption, summary panel or idle note');
+ assert.equal((html.match(/class="atlas-travel-filters"/g)||[]).length,1);assert.match(html,/atlas-travel-filters"><select data-travel-section[\s\S]*data-travel-level[\s\S]*<\/select><\/div>/);
+ assert.match(html,/ui-choice-list ui-scroll quick-travel-list/);
+ assert.equal((html.match(/data-quick-confirm/g)||[]).length,1);
+ assert.match(movementHtml(state,{selected:{kind:'city',id:'giran'}}),/<span>Телепортироваться<\/span><small>60\s000 адены<\/small>/);
+ assert.match(movementHtml(state,{blocked:'Быстрый телепорт недоступен в бою.'}),/class="atlas-travel-note" role="status">Быстрый телепорт недоступен в бою\./);
+});

@@ -141,3 +141,20 @@ test('a dye row shows the pair of stats of its symbol, the level and the number 
   assert.equal(mammon.cost.aa, 174000);
   assert.equal(getMerchantsState(player, {merchant: 'weapons'}).items[0].symbol, null);
 });
+
+test('the shop quantity and filter checkboxes reuse the shared controls instead of private copies',async()=>{
+ const {storeViewHtml}=await import('../webapp/store-view.js');
+ const item={id:'a',iconHtml:'',name:'Arrow',requires:[{iconHtml:'',label:'Адена',need:100,have:1000}],canBuy:true,countable:true,maxCount:50};
+ const html=storeViewHtml({items:[item],selectedId:'a',quantity:3});
+ assert.match(html,/data-store-quantity>[\s\S]*ui-quantity-control/);assert.match(html,/data-quantity-step="-1"/);assert.match(html,/data-quantity-step="1"/);
+ assert.match(html,/data-quantity-value[^>]*max="50"[^>]*value="3"/);assert.doesNotMatch(html,/data-store-quantity>\s*<span>Количество<\/span><input/);
+ const fs=await import('node:fs');
+ for(const file of ['merchants','tattoos','fishing'])assert.doesNotMatch(fs.readFileSync(new URL(`../webapp/${file}.js`,import.meta.url),'utf8'),/class="merchant-filter"/,file+' uses the shared ui-check row');
+ assert.match(fs.readFileSync(new URL('../webapp/merchants.js',import.meta.url),'utf8'),/class="ui-check"><input type="checkbox" data-affordable/);
+});
+
+test('a store view inside the two-column shop list keeps its full width, so actions never become a side column',async()=>{
+ const fs=await import('node:fs'),read=name=>fs.readFileSync(new URL(`../webapp/${name}`,import.meta.url),'utf8');
+ assert.match(read('shop.css'),/min-width:\s*700px\)\s*\{\s*\.shop-list\s*\{\s*grid-template-columns:\s*repeat\(2/);
+ assert.match(read('store-view.css'),/\.shop-list > \.store-view,\s*\.shop-list > \.store-actions\s*\{\s*grid-column:\s*1 \/ -1;/);
+});

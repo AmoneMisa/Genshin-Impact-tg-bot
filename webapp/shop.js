@@ -204,7 +204,10 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
     enhanceSelects(categories);
   }
 
+  // The list is redrawn on every selection; keep the reader where they were instead of jumping to the top.
+  const scroller = overlay.querySelector('.overlay-panel') || list.parentElement;
   function renderItems() {
+    const top = scroller.scrollTop;
     const matching = (category === 'all' ? state.items : state.items.filter((item) => item.category === category))
       .filter((item) => !search || item.name.toLowerCase().includes(search));
     const pages = Math.max(1, Math.ceil(matching.length / PAGE_SIZE));
@@ -233,6 +236,8 @@ export async function openShopGoods({ api, renderState, haptic, statusElement, i
       onConfirm: () => buy(selectedCommand),
       onCancel: () => { selectedCommand = null; renderItems(); },
     });
+    scroller.scrollTop = top;
+    window.requestAnimationFrame(() => { scroller.scrollTop = top; });
   }
 
   function renderAll() {

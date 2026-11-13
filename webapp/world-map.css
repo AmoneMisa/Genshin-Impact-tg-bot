@@ -29,7 +29,10 @@
 .movement-tabs{--tab-height:44px}
 
 .movement-tabs>button{flex:1;min-width:0;--tab-font-size:14px}
-.quick-travel-list{overflow:auto;max-height:40dvh;flex-shrink:1;min-height:0}
+.quick-travel-list{flex:1 1 auto;min-height:96px}
+.atlas-travel-confirm .ui-button{flex-direction:column;gap:var(--space-1)}
+.atlas-travel-confirm .ui-button small{font-size:12px;font-weight:400;opacity:.85}
+.atlas-travel-filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--space-2)}
 .atlas-travel-confirm{display:grid;gap:var(--space-3);margin-top:auto;padding-top:var(--space-3)}
 @media(max-width:520px){.atlas-panel{height:calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}.atlas-tabs{width:100%;}.atlas-map-filter>.ds-select{width:160px}.atlas-map-filter{gap:0}.atlas-popup{width:100%;}}
 .atlas-navigation :is([data-city-view],[data-interior-objects])[hidden]{display:none}

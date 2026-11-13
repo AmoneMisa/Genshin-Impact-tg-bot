@@ -116,8 +116,8 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
         <select data-group aria-label="Вид товара">${groups}</select>
         <input type="search" data-search placeholder="Поиск по названию" value="${escapeHtml(query.search)}" maxlength="40">
       </div>
-      <label class="merchant-filter"><input type="checkbox" data-usable ${query.usable ? 'checked' : ''}> Только то, что подходит мне</label>
-      <label class="merchant-filter"><input type="checkbox" data-affordable ${query.affordable ? 'checked' : ''}> Только то, что мне по карману</label>
+      <label class="ui-check"><input type="checkbox" data-usable ${query.usable ? 'checked' : ''}> Только то, что подходит мне</label>
+      <label class="ui-check"><input type="checkbox" data-affordable ${query.affordable ? 'checked' : ''}> Только то, что мне по карману</label>
     </div>`;
   }
 
@@ -131,8 +131,11 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
     return `<p class="merchant-note">Чёрный торговец Маммона меняет стрелы на болты и обратно один к одному, бесплатно. Нужны для луков и арбалетов своего грейда.</p>${rows}`;
   }
 
+  // The whole body is redrawn on every selection; keep the reader where they were instead of jumping to the top.
+  const scroller = body.closest('.overlay-panel') || body.parentElement;
   function render() {
     if (!state) { body.innerHTML = '<div class="shop-empty">Загрузка…</div>'; return; }
+    const top = scroller.scrollTop;
     const active = tab || state.merchant;
     const ammo = state.ammo ? `<p class="merchant-note">В руках: ${escapeHtml(state.ammo.name)} — ${number(state.ammo.count)} шт.</p>` : '';
     if (active === CONVERT_TAB) {
@@ -148,6 +151,8 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
     }
     bind();
     enhanceSelects(body);
+    scroller.scrollTop = top;
+    window.requestAnimationFrame(() => { scroller.scrollTop = top; });
   }
 
   function bind() {
@@ -163,7 +168,7 @@ export async function openMerchantsGame({ api, renderState, haptic, statusElemen
     body.querySelectorAll('[data-page]').forEach(button => button.addEventListener('click', () => { query.page = Number(button.dataset.page); selectedId = null; load(); }));
     bindStoreView(body, {
       onSelect: id => { selectedId = id; quantity = 1; haptic('light'); render(); },
-      onQuantity: value => { quantity = value; render(); body.querySelector('[data-store-quantity]')?.focus(); },
+      onQuantity: value => { quantity = value; render(); },
       onConfirm: () => buy(selectedId),
       onCancel: () => { selectedId = null; quantity = 1; render(); },
     });

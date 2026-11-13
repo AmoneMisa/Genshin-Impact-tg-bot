@@ -42,9 +42,9 @@ function combatCharacteristics(slot, values, statName, damageType) {
     return result;
 }
 
-export default function (session, statName, isMul = false, damageType) {
+export default function (session, statName, isMul = false, damageType, now = Date.now()) {
     if (!session.game || !session.game.equipmentStats) {
-        const potion=potionStatBonus(session,statName,isMul,Date.now(),damageType),lineage=l2StatBonus(session,statName,isMul,Date.now(),damageType);
+        const potion=potionStatBonus(session,statName,isMul,now,damageType),lineage=l2StatBonus(session,statName,isMul,now,damageType);
         const extra=isMul?(statName==='dropRateMul'?1+runeRate(session,'drop'):1):0;
         const bonus=isMul?potion*lineage*extra:potion+lineage+extra;
         return isMul ? bonus : (damageType ? bonus : 1+bonus);
@@ -132,6 +132,6 @@ export default function (session, statName, isMul = false, damageType) {
         }
     }
 
-    const potionBonus=potionStatBonus(session,statName,isMul,Date.now(),damageType)*(isMul ? extraStatBonus(session,statName,true,damageType) : 1);
-    return isMul ? totalStatValue*potionBonus*soulBuffStat(session,statName,true)*l2StatBonus(session,statName,true,Date.now(),damageType) : totalStatValue+potionBonus+extraStatBonus(session,statName,false,damageType)+soulBuffStat(session,statName,false)+l2StatBonus(session,statName,false,Date.now(),damageType);
+    const potionBonus=potionStatBonus(session,statName,isMul,now,damageType)*(isMul ? extraStatBonus(session,statName,true,damageType) : 1);
+    return isMul ? totalStatValue*potionBonus*soulBuffStat(session,statName,true)*l2StatBonus(session,statName,true,now,damageType) : totalStatValue+potionBonus+extraStatBonus(session,statName,false,damageType)+soulBuffStat(session,statName,false)+l2StatBonus(session,statName,false,now,damageType);
 }

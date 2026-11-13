@@ -109,8 +109,8 @@ export async function openTattoosGame({ api, renderState, haptic, statusElement,
       <section class="mmo-frame">
         <div class="mmo-section-title"><strong>Краски</strong><small>${number(state.total)}</small></div>
         <div class="equipment-filters">${statChips}</div>
-        <label class="merchant-filter"><input type="checkbox" data-owned ${query.owned ? 'checked' : ''}> Только те, что у меня есть</label>
-        <label class="merchant-filter"><input type="checkbox" data-usable ${query.usable ? 'checked' : ''}> Только подходящие мне</label>
+        <label class="ui-check"><input type="checkbox" data-owned ${query.owned ? 'checked' : ''}> Только те, что у меня есть</label>
+        <label class="ui-check"><input type="checkbox" data-usable ${query.usable ? 'checked' : ''}> Только подходящие мне</label>
         <div class="tattoo-dyes">${state.dyes.length ? state.dyes.map(dyeHtml).join('') : '<p class="shop-empty">Подходящих красок нет.</p>'}</div>
         <div class="pager"><button type="button" class="equipment-action" data-page="${state.page - 1}" ${state.page <= 1 ? 'disabled' : ''}>←</button>
           <span>${state.page} / ${state.pages}</span>

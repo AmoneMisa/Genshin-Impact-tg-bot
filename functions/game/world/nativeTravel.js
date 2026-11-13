@@ -12,6 +12,9 @@ import islands from '../../../template/nativeIslandRoutes.js';
 import {nativeTrailBack,resumeNativeJourney,rememberNativeTrail} from './nativeTrail.js';
 import {nativeFieldPoint,nativeFieldIsland} from './nativeFieldSpace.js';
 import {nativeWalkingExitAvailable} from './nativeFloorTransports.js';
+import {nativeInWater,nativeWaterSurface} from './nativeWaterGeometry.js';
+import {createNativeSwimJourney,nativeSwimAim} from './nativeSwimJourney.js';
+import {nativeSwimSpeed} from './nativeWater.js';
 
 // Walking may continue through a checked cave approach. Paid teleports retain
 // the original outside entry, carried separately on the server-owned route.
@@ -146,6 +149,12 @@ export function nativeFreeWalk(session,point,now,speed){
  if(!['city','native','road'].includes(w.mode)||!from||w.mode==='road'&&!w.walkHome?.native)return {ok:false,reason:'no_field'};
  const x=Number(point?.x),y=Number(point?.y);
  if(![x,y].every(Number.isFinite)||Math.hypot(x-from.x,y-from.y)>8192)return {ok:false,reason:'path_blocked'};
+  const ground=worldGeodata.point({x,y,z:from.z});
+  if(nativeInWater(from)||nativeWaterSurface(from)||ground&&nativeInWater(ground)){
+   const target=nativeInWater(from)||nativeWaterSurface(from)?nativeSwimAim(from,{x,y},w.waterDepth):ground,trip=createNativeSwimJourney(from,target,{now,speed:nativeInWater(from)?nativeSwimSpeed(session,now):speed,allowed:nativeGroundFor(session,now,{swimming:true})});
+   if(trip){trip.native.historyStart={...from};delete w.nativeResume;return {ok:true,trip};}
+   if(nativeInWater(from)||nativeWaterSurface(from))return {ok:false,reason:'path_blocked'};
+  }
  // The client never selects a height, layer, room, instance, or zone.
  const allowed=nativeGroundFor(session,now),plan=findNativePath(from,{x,y,z:from.z},{allowed,maxNodes:6000,reversible:true});
  if(!plan.ok)return plan;

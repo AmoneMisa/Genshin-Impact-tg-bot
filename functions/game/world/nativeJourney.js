@@ -2,6 +2,7 @@ import source from '../../../data/l2j-geodata/source.js';
 import {nativeSegment} from './nativeNavigation.js';
 import {nativeGroundAllowed} from './nativeGround.js';
 import {worldGeodata} from './l2jGeodata.js';
+import {advanceNativeSwimJourney} from './nativeSwimJourney.js';
 
 export const nativeDistance=(a,b)=>Math.hypot(b.x-a.x,b.y-a.y);
 /** Joined roads can retrace a shared branch. Remove only exact XYZ loops. */
@@ -24,10 +25,11 @@ export function createNativeJourney(from,path,{now,speed,location=null,city=null
 }
 
 /** Walk saved, source-verified segments with one distance budget across all region boundaries. */
-export function advanceNativeJourney(trip,now,speed,{allowed=nativeGroundAllowed}={}){
+export function advanceNativeJourney(trip,now,speed,{allowed=nativeGroundAllowed,...options}={}){
  const route=trip?.native;if(!route)return false;
- const elapsed=Math.max(0,now-route.moveAt);route.moveAt=Math.max(now,route.moveAt);
  if(route.commit!==source.commit){route.blocked='geodata_revision_changed';return false;}
+ if(route.swimming)return advanceNativeSwimJourney(trip,now,speed,{...options,allowed});
+ const elapsed=Math.max(0,now-route.moveAt);route.moveAt=Math.max(now,route.moveAt);
  if(!Array.isArray(route.path)||!Number.isInteger(route.index)||route.index<0||route.index>route.path.length||route.path.length>512||![route.point?.x,route.point?.y,route.point?.z,route.legStart?.x,route.legStart?.y,route.legStart?.z,route.remaining].every(Number.isFinite)){route.blocked='path_blocked';return false;}
  if(route.blocked)return false;
  let budget=elapsed/1000*Math.max(0,speed);

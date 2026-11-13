@@ -20,7 +20,7 @@ try {
    if(url.pathname==='/fixture.html')return route.fulfill({contentType:'text/html',body:`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${styles}<body><div class="app-shell">${hud}</div><main style="padding:16px">
     <section class="storage-panel"><div class="storage-actions"><button>Основное действие</button><button id="storage-action">Действие</button></div><input aria-label="Поиск" placeholder="Поиск"></section>
     <section class="buffs-overlay"><div class="party-actions"><button id="buff-action">Действие</button></div><label class="feedback-field"><input id="buff-check" type="checkbox"> Бафф игроку</label></section>
-    <label class="merchant-filter"><input id="shop-check" type="checkbox"> Подходит мне</label>
+    <label class="ui-check"><input id="shop-check" type="checkbox"> Подходит мне</label>
     <label><input id="radio" type="radio" name="mode"> Режим</label>
     <select aria-label="Раздел"><option value="a">Первый</option><option value="b">Второй</option><option disabled>Недоступный</option></select>
     <nav class="ui-folder-tabs" aria-label="Фильтры"><button class="active">Все</button><button>Экипировка</button></nav>

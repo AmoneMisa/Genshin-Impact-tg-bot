@@ -29,8 +29,18 @@ export function enforceRateLimit(userId) {
   }
 }
 
+// Local testing only: MINI_APP_DEV_AUTH=<telegram user id> signs in that user for loopback requests. Off by default.
+export function devValidated(req) {
+  const id = Number(process.env.MINI_APP_DEV_AUTH);
+  const local = ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(req.socket?.remoteAddress)
+    && /^(localhost|127\.0\.0\.1)(:\d+)?$/.test(req.headers.host || '')
+    && !req.headers['x-forwarded-for'];
+  if (!Number.isSafeInteger(id) || id <= 0 || !local) return null;
+  return { user: { id, first_name: 'Dev', language_code: 'ru' }, chat: null, startParam: null, chatType: 'private', chatInstance: null, authDate: Math.floor(Date.now() / 1000) };
+}
+
 export async function authorize(req) {
-  const validated = validateTelegramInitData(getInitData(req), token);
+  const validated = devValidated(req) || validateTelegramInitData(getInitData(req), token);
   if (validated.user?.id) enforceRateLimit(validated.user.id);
   if (!validated.user?.id) {
     throw httpError(401, 'Telegram user is missing');
