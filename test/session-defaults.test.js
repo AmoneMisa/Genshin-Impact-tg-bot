@@ -32,3 +32,11 @@ test('the chosen sign and style survive a reload and reach the generator', async
   assert.equal(result.horoscope.sign.code, 'virgo');
   assert.equal(result.horoscope.style.key, 'sarcastic');
 });
+
+test('a generated line gets exactly one sign prefix whatever icon the model used', async () => {
+  const {withSignPrefix, getSignByCode} = await import('../functions/game/horoscope/horoscope.js');
+  const libra = getSignByCode('libra');
+  for (const line of ['⚖️ Весы: Снова пицца.', '♎ Весы: Снова пицца.', 'Весы: Снова пицца.', 'Снова пицца.']) {
+    assert.equal(withSignPrefix(line, libra), '♎ Весы: Снова пицца.', line);
+  }
+});

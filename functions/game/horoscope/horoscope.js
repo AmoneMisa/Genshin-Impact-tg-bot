@@ -92,11 +92,13 @@ export function getStyleByKey(key) {
     return item ? { key: item[0], label: item[1] } : { key: 'cheeky', label: 'Ироничный' };
 }
 
-function withSignPrefix(line, sign) {
+export function withSignPrefix(line, sign) {
     const prefix = `${sign.icon} ${sign.name}:`;
     const normalized = String(line || '').trim();
     if (normalized.startsWith(prefix)) return normalized;
-    return `${prefix} ${normalized.replace(/^[♈♉♊♋♌♍♎♏♐♑♒♓]\s*[^:]{1,20}:\s*/, '')}`;
+    // Models sometimes start with another emoji (⚖️ for Libra) or no icon: drop any short lead-in before the sign name.
+    const named = new RegExp(`^[^\\p{L}]{0,6}${sign.name}\\s*:\\s*`, 'iu');
+    return `${prefix} ${normalized.replace(named, '').replace(/^[♈♉♊♋♌♍♎♏♐♑♒♓]\s*[^:]{1,20}:\s*/, '')}`;
 }
 
 function fallbacksFor(style, sign) {
