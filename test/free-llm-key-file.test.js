@@ -52,3 +52,23 @@ test('a model chain skips rate limits and English reasoning, then answers in Rus
     }
   }
 });
+
+test('a reply cut by the token limit goes to the next model', async () => {
+  const saved = {key: process.env.FREE_LLM_API_KEY, model: process.env.FREE_LLM_MODEL, fetch: globalThis.fetch};
+  process.env.FREE_LLM_API_KEY = 'k';
+  process.env.FREE_LLM_MODEL = 'short, full';
+  globalThis.fetch = async (url, options) => {
+    const {model} = JSON.parse(options.body);
+    const choice = model === 'short' ? {finish_reason: 'length', message: {content: '♌ Лев: Они просто перестанут ответ'}} : {finish_reason: 'stop', message: {content: '♌ Лев: Признание придёт. Вместе с просьбой одолжить денег.'}};
+    return {ok: true, json: async () => ({choices: [choice]})};
+  };
+  try {
+    const {generateFunnyLine} = await import(`../functions/llm/freeLlmClient.js?length=${Date.now()}`);
+    assert.equal(await generateFunnyLine({fallbacks: ['F']}), '♌ Лев: Признание придёт. Вместе с просьбой одолжить денег.');
+  } finally {
+    globalThis.fetch = saved.fetch;
+    for (const [name, value] of [['FREE_LLM_API_KEY', saved.key], ['FREE_LLM_MODEL', saved.model]]) {
+      if (value === undefined) delete process.env[name]; else process.env[name] = value;
+    }
+  }
+});

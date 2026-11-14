@@ -9,16 +9,18 @@ function endpoint() {
   return base.endsWith('/chat/completions') ? base : `${base}/chat/completions`;
 }
 
+/** First line of the answer; up to two sentences, so a set-up and its punchline stay together. */
 function normalizeLine(value, maxLength = 160) {
-  let text = String(value || '')
+  const firstLine = String(value || '')
     .replace(/```[\s\S]*?```/g, ' ')
-    .replace(/[\r\n]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-  text = text.replace(/^['"«]+|['"»]+$/g, '').trim();
-  const firstSentence = text.split(/(?<=[.!?…])\s+/)[0] || text;
-  text = firstSentence.trim();
+    .split(/[\r\n]+/)
+    .map(line => line.trim())
+    .find(Boolean) || '';
+  let text = firstLine.replace(/\s+/g, ' ').replace(/^['"«]+|['"»]+$/g, '').trim();
+  const sentences = text.split(/(?<=[.!?…])\s+/);
+  text = sentences[0] || text;
+  if (sentences[1] && `${text} ${sentences[1]}`.length <= maxLength) text = `${text} ${sentences[1]}`;
+  text = text.trim();
 
   if (text.length > maxLength) {
     const boundary = text.lastIndexOf(' ', maxLength - 1);
@@ -87,7 +89,7 @@ export async function generateFunnyLine({
             { role: 'user', content: String(user || '') },
           ],
           temperature,
-          max_tokens: 100,
+          max_tokens: 160,
           stream: false,
         }),
         signal: AbortSignal.timeout(left),
@@ -99,6 +101,8 @@ export async function generateFunnyLine({
       }
 
       const payload = await response.json();
+      // A reply cut by the token limit ends mid-word; the next model gets the request instead.
+      if (payload?.choices?.[0]?.finish_reason === 'length') throw new Error('cut by the token limit');
       const generated = normalizeLine(payload?.choices?.[0]?.message?.content, maxLength);
       if (!generated) throw new Error('empty completion');
       if (!usableLine(generated)) throw new Error('reasoning text instead of an answer');
