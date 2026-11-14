@@ -72,3 +72,30 @@ test('a reply cut by the token limit goes to the next model', async () => {
     }
   }
 });
+
+test('best-of-N keeps the variant the model chose and skips placeholder answers', async () => {
+  const saved = {key: process.env.FREE_LLM_API_KEY, model: process.env.FREE_LLM_MODEL, fetch: globalThis.fetch};
+  process.env.FREE_LLM_API_KEY = 'k';
+  process.env.FREE_LLM_MODEL = 'lazy, good';
+  const bodies = [];
+  globalThis.fetch = async (url, options) => {
+    const body = JSON.parse(options.body);
+    bodies.push(body);
+    const content = body.model === 'lazy'
+      ? '["...", "...", "..."]'
+      : '```json\n{"variants": ["Сегодня ты закроешь все долги! Новыми долгами.", "Слабый вариант без поворота."], "best": 1}\n```';
+    return {ok: true, json: async () => ({choices: [{finish_reason: 'stop', message: {content}}]})};
+  };
+  try {
+    const {generateFunnyLine} = await import(`../functions/llm/freeLlmClient.js?best=${Date.now()}`);
+    assert.equal(await generateFunnyLine({system: 'S', fallbacks: ['F'], variants: 5}), 'Сегодня ты закроешь все долги! Новыми долгами.');
+    assert.equal(bodies[0].response_format.type, 'json_object');
+    assert.match(bodies[0].messages[0].content, /5 разных вариантов/);
+    assert.deepEqual(bodies.map(b => b.model), ['lazy', 'good']);
+  } finally {
+    globalThis.fetch = saved.fetch;
+    for (const [name, value] of [['FREE_LLM_API_KEY', saved.key], ['FREE_LLM_MODEL', saved.model]]) {
+      if (value === undefined) delete process.env[name]; else process.env[name] = value;
+    }
+  }
+});
