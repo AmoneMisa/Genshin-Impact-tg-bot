@@ -99,3 +99,19 @@ test('best-of-N keeps the variant the model chose and skips placeholder answers'
     }
   }
 });
+
+test('best-of-N accepts variants with the explained joke', async () => {
+  const saved = {key: process.env.FREE_LLM_API_KEY, model: process.env.FREE_LLM_MODEL, fetch: globalThis.fetch};
+  process.env.FREE_LLM_API_KEY = 'k';
+  process.env.FREE_LLM_MODEL = 'one';
+  globalThis.fetch = async () => ({ok: true, json: async () => ({choices: [{finish_reason: 'stop', message: {content: '{"variants":[{"text":"Слабо.","joke":"нет шутки"},{"text":"Жди повышения. Тебя назначат главным виноватым.","joke":"рост оказывается наказанием"}],"best":2}'}}]})});
+  try {
+    const {generateFunnyLine} = await import(`../functions/llm/freeLlmClient.js?joke=${Date.now()}`);
+    assert.equal(await generateFunnyLine({system: 'S', fallbacks: ['F'], variants: 5}), 'Жди повышения. Тебя назначат главным виноватым.');
+  } finally {
+    globalThis.fetch = saved.fetch;
+    for (const [name, value] of [['FREE_LLM_API_KEY', saved.key], ['FREE_LLM_MODEL', saved.model]]) {
+      if (value === undefined) delete process.env[name]; else process.env[name] = value;
+    }
+  }
+});

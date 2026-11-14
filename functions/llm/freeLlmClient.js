@@ -90,7 +90,7 @@ export async function generateFunnyLine({
             { role: 'user', content: String(user || '') },
           ],
           temperature,
-          max_tokens: variants > 1 ? Math.max(400, variants * 140) : 160,
+          max_tokens: variants > 1 ? Math.max(600, variants * 240) : 160,
           ...(variants > 1 ? { response_format: { type: 'json_object' } } : {}),
           stream: false,
         }),
@@ -120,13 +120,14 @@ export async function generateFunnyLine({
 
 /** Best-of-N in one request: the model writes variants, checks them and names the best one. */
 function bestOfInstruction(count) {
-  return `\n\nСначала придумай ${count} разных вариантов. Проверь каждый: понятна ли шутка сразу, связаны ли начало и концовка, грамотен ли русский. Выбери самый смешной из прошедших проверку.\nОтветь только JSON без пояснений: {"variants": ["...", ...], "best": <номер лучшего, начиная с 1>}`;
+  return `\n\nПридумай ${count} разных вариантов. Для каждого одной фразой объясни, в чём шутка. Если объяснение не складывается или шутка требует пояснений — вариант плохой.\nВыбери самый смешной хороший вариант.\nОтветь только JSON без пояснений: {"variants": [{"text": "...", "joke": "..."}], "best": <номер лучшего, начиная с 1>}`;
 }
 
 /** The chosen variant of a best-of-N JSON answer; throws when the answer is not usable JSON. */
 function bestVariant(content) {
   const parsed = JSON.parse(String(content || '').replace(/^\s*```(?:json)?|```\s*$/g, '').trim());
-  const list = Array.isArray(parsed?.variants) ? parsed.variants.map(item => String(item || '').trim()).filter(item => item && !/^\.{3}$/.test(item)) : [];
+  // Variants are {text, joke} objects; plain strings are accepted too.
+  const list = Array.isArray(parsed?.variants) ? parsed.variants.map(item => String((item && typeof item === 'object' ? item.text : item) || '').trim()).filter(item => item && !/^\.{3}$/.test(item)) : [];
   if (!list.length) throw new Error('no variants in the answer');
   const picked = list[Number(parsed.best) - 1];
   return picked && !/^\.{3}$/.test(picked) ? picked : list[0];
