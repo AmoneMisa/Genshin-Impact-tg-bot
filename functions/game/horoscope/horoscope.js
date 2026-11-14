@@ -1,5 +1,25 @@
 import getUserName from "../../getters/getUserName.js";
 import { generateFunnyLine } from '../../llm/freeLlmClient.js';
+import SARCASM_BANK from '../../../template/horoscopeSarcasm.js';
+
+// Hand-written lines carry the sarcastic style; the model only adds variety.
+const BANKS = { sarcastic: SARCASM_BANK };
+export const BANK_SHARE = 0.75;
+const RECENT_LIMIT = 40;
+
+/** A bank line this player has not seen recently (oldest repeats only after the whole bank). */
+export function pickBankLine(bank, recent = [], random = Math.random) {
+    const seen = new Set(recent);
+    const fresh = bank.filter(line => !seen.has(line));
+    const pool = fresh.length ? fresh : bank.filter(line => line !== recent.at(-1));
+    return pool[Math.floor(random() * pool.length)] || bank[0];
+}
+
+function rememberLine(session, line) {
+    if (!session.horoscope || typeof session.horoscope !== 'object') return;
+    const recent = Array.isArray(session.horoscope.recent) ? session.horoscope.recent : [];
+    session.horoscope.recent = [...recent.filter(item => item !== line), line].slice(-RECENT_LIMIT);
+}
 
 // One shared brief plus a tone with examples: without them models wrote broken Russian
 // ("перфекционизм-зависимость забита") and odd comparisons.
@@ -192,7 +212,7 @@ export function kbStyle(selectedKey) {
     return { selective: true, inline_keyboard: rows };
 }
 
-export async function generateShortHoroText(session, { avoid = '' } = {}) {
+export async function generateShortHoroText(session, { avoid = '', random = Math.random } = {}) {
     const nick = session?.userChatData?.user?.username || await getUserName(session, 'nickname');
     const handle = nick && !/^\d+$/.test(String(nick)) ? `@${nick}` : (await getUserName(session, 'name')) || 'Путник';
     const { horoscope } = session;
@@ -201,18 +221,26 @@ export async function generateShortHoroText(session, { avoid = '' } = {}) {
     const plain = PLAIN_STYLES.has(style.key);
     const system = HORO_SYSTEM[style.key] || HORO_SYSTEM.cheeky;
     const user = HORO_USER({ signName: sign.name, signIcon: sign.icon }, plain);
+    const bank = BANKS[style.key];
+    const recent = [...(Array.isArray(horoscope?.recent) ? horoscope.recent : []), ...(avoid ? [avoid.split(/\n\s*\n/).at(-1).trim()] : [])];
+    if (bank && random() < BANK_SHARE) {
+        const line = pickBankLine(bank, recent, random);
+        rememberLine(session, line);
+        return `Предсказание для ${handle}:\n\n${line}`;
+    }
 
     const generated = await generateFunnyLine({
         system,
         user,
         maxLength: 160,
         temperature: style.key === 'sweet' ? 0.8 : 0.9,
-        fallbacks: fallbacksFor(style.key, sign),
+        fallbacks: bank ? [pickBankLine(bank, recent, random)] : fallbacksFor(style.key, sign),
         // The model writes five variants and keeps the most coherent and funny one.
         variants: 5,
         avoid
     });
 
     const line = plain ? withoutSign(generated, sign) : withSignPrefix(generated, sign);
+    if (bank) rememberLine(session, line);
     return `Предсказание для ${handle}:\n\n${line}`;
 }
